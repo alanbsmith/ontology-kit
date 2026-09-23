@@ -263,11 +263,10 @@ export function locate(doc: MdDoc, quote: string): QuoteHit[] {
     const hits: QuoteHit[] = [];
     let from = 0;
     for (;;) {
-      const pos = joined.indexOf(pieces[0], from);
-      if (pos < 0) break;
-      const start = pos;
+      const start = joined.indexOf(pieces[0], from);
+      if (start < 0) break;
       let ok = true;
-      let end = pos + pieces[0].length;
+      let end = start + pieces[0].length;
       for (const p of pieces.slice(1)) {
         const k = joined.indexOf(p, end);
         if (k < 0) {

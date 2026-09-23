@@ -89,9 +89,9 @@ function say(notes: string[]) {
   for (const n of notes) console.log(TIP.test(n) ? c.dim("  " + n) : n);
 }
 
-/** Print `data` as JSON under --json; otherwise run the human-readable printer. */
-function output(v: Record<string, any>, data: unknown, human: () => void): void {
-  if (v.json) console.log(JSON.stringify(data, null, 2));
+/** Under --json print what `data` builds; otherwise run the human-readable printer. */
+function output(v: Record<string, any>, data: () => unknown, human: () => void): void {
+  if (v.json) console.log(JSON.stringify(data(), null, 2));
   else human();
 }
 
@@ -161,7 +161,7 @@ async function main(argvIn: string[]) {
       }
       const m = ont.meta;
       const row = (k: string, val: unknown) => console.log(`  ${c.dim(k.padEnd(13))} ${Array.isArray(val) ? val.join(", ") || c.yellow("—") : val || c.yellow("—")}`);
-      return output(v, m, () => {
+      return output(v, () => m, () => {
         console.log(c.bold(m.name));
         row("domain", m.domain);
         row("purpose", m.purpose);
@@ -212,7 +212,7 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const qs = ont.ofType("CompetencyQuestion");
-      return output(v, qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), () => {
+      return output(v, () => qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), () => {
         if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
         for (const q of qs) {
           const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
@@ -236,7 +236,7 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const ts = ont.ofType("Term");
-      return output(v, ts, () => {
+      return output(v, () => ts, () => {
         const groups = new Map<string, string[]>();
         for (const t of ts) {
           const d = t.disposition ?? "undecided";
@@ -359,7 +359,7 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const ds = ont.ofType("DesignDecision");
-      return output(v, ds, () => {
+      return output(v, () => ds, () => {
         for (const d of ds) {
           console.log(`${c.bold(d.id)} ${d.title}`);
           console.log(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
@@ -386,7 +386,7 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(rest);
       const ont = load(v);
       const n = ont.find(p[0] ?? "ontology");
-      return output(v, { node: n, out: ont.edges.filter((e) => e.from === n.id), in: ont.edges.filter((e) => e.to === n.id) }, () => console.log(show(ont, n)));
+      return output(v, () => ({ node: n, out: ont.edges.filter((e) => e.from === n.id), in: ont.edges.filter((e) => e.to === n.id) }), () => console.log(show(ont, n)));
     }
 
     case "tree": {
@@ -410,7 +410,7 @@ async function main(argvIn: string[]) {
       const ont = load(v);
       const findings = runChecks(ont, { all: v.all, only: v.rule }, { pages: await loadSourcePages(ont) });
       const hiddenLater = (findings as any).hiddenLater ?? 0;
-      output(v, { step: ont.step, metaKbVersion: MetaKB.get().version, hiddenLater, findings }, () => {
+      output(v, () => ({ step: ont.step, metaKbVersion: MetaKB.get().version, hiddenLater, findings }), () => {
         console.log(formatFindings(findings, ont, { all: v.all, verbose: v.why }));
         if (hiddenLater) console.log(c.dim(`(${hiddenLater} warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)`));
       });
@@ -425,7 +425,7 @@ async function main(argvIn: string[]) {
       const ont = load(v);
       const findings = runChecks(ont, { all: true }, { pages: await loadSourcePages(ont) });
       const st = computeStatus(ont, findings);
-      return output(v, { currentStep: ont.step, ...st }, () => {
+      return output(v, () => ({ currentStep: ont.step, ...st }), () => {
         const meta = MetaKB.get();
         const shown = findings.filter((f) => !f.explainedBy && (f.severity === "error" || (meta.rule(f.rule).fromStep ?? 1) <= ont.step));
         const count = (sev: string) => shown.filter((f) => f.severity === sev).length;
@@ -488,7 +488,7 @@ async function main(argvIn: string[]) {
       if (!p.length) return void console.log(listExplainable());
       const q = p.join(" ");
       const hits = meta.resolve(q);
-      return output(v, hits.map((h) => ({ ...h, citations: meta.citations(h.id), rationale: h.type === "Rule" ? meta.rationale(h) : undefined })), () => {
+      return output(v, () => hits.map((h) => ({ ...h, citations: meta.citations(h.id), rationale: h.type === "Rule" ? meta.rationale(h) : undefined })), () => {
         if (!hits.length) return void console.log(`Nothing called '${q}'. Try: okb explain --search ${q}`);
         console.log(explain(hits[0]));
         if (hits.length > 1) console.log(c.dim(`\nAlso matches: ${hits.slice(1, 6).map((h) => h.key ?? h.name).join(", ")}`));
@@ -501,12 +501,12 @@ async function main(argvIn: string[]) {
       const { v } = parse(rest, { all: bool });
       const ont = load(v);
       const items = buildReview(ont, v.all);
-      const classes = ont.ofType("Class").map((cl) => ({
+      const classes = () => ont.ofType("Class").map((cl) => ({
         id: cl.id, name: cl.name, description: cl.description, parents: ont.parents(cl.id).map((x) => ont.label(x)),
         children: ont.children(cl.id).map((x) => ont.label(x)), ownSlots: ont.ownSlots(cl.id).map((s) => ont.label(s)),
         abstract: cl.abstract, terminological: cl.terminological, instances: ont.sources(cl.id, "INSTANCE_OF").length,
       }));
-      return output(v, { step: ont.step, scope: ont.meta, judgmentRules: items, classes, decisions: ont.ofType("DesignDecision") }, () => {
+      return output(v, () => ({ step: ont.step, scope: ont.meta, judgmentRules: items, classes: classes(), decisions: ont.ofType("DesignDecision") }), () => {
         console.log(c.bold(v.all ? "Review: what only a person can judge (all rules)" : `Review: what only a person can judge (step ${ont.step} and anything already visible)`) + "\n");
         for (const it of items) {
           console.log(`${SYMBOL.ask} ${c.bold(it.rule)} ${c.dim(`(${it.modality.replace("_", " ")})`)}  ${it.question}`);
@@ -576,10 +576,10 @@ async function main(argvIn: string[]) {
           for (let n = l.startLine; n <= (l.endLine ?? l.startLine); n++) quoted.set(n, [...(quoted.get(n) ?? []), id]);
         }
         const blocks = doc.blocks.filter((b) => !v.quotable || b.quotable);
-        const outline = {
+        const outline = () => ({
           source: src.id, title: doc.title, frontmatter: doc.frontmatter, problems: doc.problems,
           blocks: blocks.map((b) => ({ index: b.index, kind: b.kind, headingPath: b.headingPath, lines: [b.startLine, b.endLine], quotable: b.quotable, note: b.note, calloutType: b.calloutType, row: b.row, text: b.kind === "code" ? undefined : b.text, alreadyQuoted: [...new Set(Array.from({ length: b.endLine - b.startLine + 1 }, (_, k) => quoted.get(b.startLine + k) ?? []).flat())] })),
-        };
+        });
         return output(v, outline, () => {
           console.log(c.bold(`${doc.title ?? src.id}`) + c.dim(`  ${src.localPath} · ${doc.blocks.length} blocks, ${doc.blocks.filter((b) => b.quotable).length} quotable`));
           if (doc.problems.length) {
@@ -623,7 +623,7 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const locs = ont.ofType("SourceLocation").filter((l) => !p[0] || ont.targets(l.id, "PART_OF").includes(ont.find(p[0], "Source").id));
-      return output(v, locs.map((l) => ({ ...l, citedBy: ont.sources(l.id, "CITES") })), () => {
+      return output(v, () => locs.map((l) => ({ ...l, citedBy: ont.sources(l.id, "CITES") })), () => {
         for (const l of locs) {
           const by = ont.sources(l.id, "CITES").map((x) => ont.label(x));
           console.log(`${c.bold(l.id)} ${c.dim(`${l.locator}${l.lines ? `, line ${l.lines}` : ""}`)}\n   "${l.quote}"${by.length ? c.dim(`\n   cited by: ${by.join(", ")}`) : ""}`);
@@ -657,7 +657,7 @@ async function main(argvIn: string[]) {
       const onts = (p.length ? p : ["."]).map((d) => Ontology.load(d));
       const merged = Ontology.fromData(onts.flatMap((o) => o.nodes.filter((n) => n.type !== "Ontology")), onts.flatMap((o) => o.edges));
       const hits = duplicateQuotes(merged);
-      return output(v, hits, () => {
+      return output(v, () => hits, () => {
         if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
         for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
       });

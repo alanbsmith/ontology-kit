@@ -12,15 +12,12 @@
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { stripAccents } from "./naming.ts";
+import { key } from "./naming.ts";
 
 const ELLIPSIS = /\.\.\.|…/;
 
-export function normalize(text: string): string {
-  return stripAccents(text)
-    .toLowerCase()
-    .replace(/[^0-9a-z]/g, "");
-}
+/** Letters and digits only, lowercased and without accents: the same fold as a name's identity key. */
+export const normalize = key;
 
 function hasPdftotext(): boolean {
   try {

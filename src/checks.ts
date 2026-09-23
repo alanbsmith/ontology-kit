@@ -817,7 +817,7 @@ export const CHECKS: Record<string, Check> = {
 };
 
 /** Near-identical quotes attributed to different sources (also used by `okb drift`). */
-export function duplicateQuotes(ont: Ontology, threshold = DUPLICATE_QUOTE_SIMILARITY): Hit[] {
+export function duplicateQuotes(ont: Ontology): Hit[] {
   const hits: Hit[] = [];
   const locs = ont.ofType("SourceLocation").filter((l) => l.quote);
   const src = (l: GraphNode) => ont.targets(l.id, "PART_OF")[0];
@@ -833,7 +833,7 @@ export function duplicateQuotes(ont: Ontology, threshold = DUPLICATE_QUOTE_SIMIL
         const [a, b] = [group[i], group[j]];
         if (!src(a) || !src(b) || src(a) === src(b)) continue;
         const sim = similarity(normalize(a.quote), normalize(b.quote));
-        if (sim >= threshold) {
+        if (sim >= DUPLICATE_QUOTE_SIMILARITY) {
           hits.push({ message: `${a.id} (${ont.label(src(a))}) and ${b.id} (${ont.label(src(b))}) are ${sim === 1 ? "identical" : Math.round(sim * 100) + "% similar"}. Possibly copy-pasted; check each is right for its own document.`, nodes: [a.id, b.id] });
         }
       }
