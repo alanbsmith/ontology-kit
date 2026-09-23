@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { loadSourcePages, runChecks } from "../src/checks.ts";
 import { deepLinks, inlineToText, locate, parseMarkdown, splitRow } from "../src/markdown.ts";
-import { Ontology } from "../src/model.ts";
+import { OkbError, Ontology } from "../src/model.ts";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 
@@ -106,6 +106,14 @@ describe("extraction commands", () => {
     prov.verify(ont, rule, { approve: true });
     assert.equal(blocking(), "");
     assert.equal(ont.require(rule, "Rule").extractionConfidence, "corrected");
+  });
+
+  it("explains, rather than crashes, when a source has no local file", async () => {
+    const { ont } = setup();
+    ont.addNode({ type: "Source", id: "src.web", title: "Web page", format: "markdown", url: "https://site/button" });
+    assert.throws(() => prov.refreshSource(ont, "src.web"), OkbError);
+    assert.throws(() => prov.readMarkdownSource(ont, ont.require("src.web", "Source")), /no local file/);
+    await assert.rejects(prov.addQuote(ont, "src.web", "anything"), OkbError);
   });
 
   it("notices when the document changes, and refresh re-links moved quotes", async () => {

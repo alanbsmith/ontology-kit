@@ -20,8 +20,8 @@ const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 export const isMarkdown = (p: string) => /\.(md|markdown)$/i.test(p);
 
 export function sourcePath(ont: Ontology, src: SourceNode): string {
-  // TODO(next commit): a Source without localPath crashes here (outline, refresh).
-  const p = src.localPath!;
+  const p = src.localPath;
+  if (!p) throw new OkbError(`Source ${src.id} has no local file (localPath), so okb can't read it. Register the file with okb source add.`);
   return isAbsolute(p) ? p : join(ont.root, p);
 }
 
