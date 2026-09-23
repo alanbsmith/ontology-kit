@@ -10,12 +10,21 @@ import type { Finding } from "./types.ts";
 
 type StepCheck = (ont: Ontology, all: Finding[]) => boolean;
 
-const HIERARCHY_RULES = /^(struct-|hier-|inst-are-leaves|disjoint-|naming-)/;
-const SLOT_RULES = /^(slot-(?!values-respect|value-slot)|struct-)/;
-const INSTANCE_RULES = /^(inst-|slot-values-respect|slot-value-slot|struct-)/;
 /** Step 3's brainstorm should reach this many terms before sorting them into classes and slots. */
 const MIN_TERMS = 10;
-const noErrors = (all: Finding[], re?: RegExp) => !all.some((f) => f.severity === "error" && (!re || re.test(f.rule)));
+const noErrors = (all: Finding[]) => !all.some((f) => f.severity === "error");
+
+/**
+ * "No errors in this part yet": no errors from the rules the meta-KB applies at
+ * these steps, or from the file's structure (struct-well-formed breaks every step).
+ */
+function noErrorsFrom(steps: number[]): StepCheck {
+  return (_o, all) => {
+    const meta = MetaKB.get();
+    const rules = new Set(["struct-well-formed", ...steps.flatMap((s) => meta.stepRules(s).map((r) => r.key))]);
+    return noErrors(all.filter((f) => rules.has(f.rule)));
+  };
+}
 
 export const STEP_CHECKS: Record<string, StepCheck> = {
   scope_domain_purpose: (o) => Boolean(o.meta.domain && o.meta.purpose),
@@ -26,13 +35,13 @@ export const STEP_CHECKS: Record<string, StepCheck> = {
   terms_min10: (o) => o.ofType("Term").length >= MIN_TERMS,
   convention_set: (o) => Boolean(o.conventions),
   classes_min2_with_isa: (o) => o.ofType("Class").length >= 2 && o.edgesOf("IS_A").length >= 1,
-  no_errors_hierarchy: (_o, all) => noErrors(all, HIERARCHY_RULES),
+  no_errors_hierarchy: noErrorsFrom([4]),
   slots_min1: (o) => o.ofType("Slot").length >= 1,
   slots_attached: (o) => o.ofType("Slot").every((s) => o.domain(s.id).length > 0),
   slots_faceted: (o) => o.ofType("Slot").length > 0 && o.ofType("Slot").every((s) => s.valueType && s.cardinality),
-  no_errors_slots: (_o, all) => noErrors(all, SLOT_RULES),
+  no_errors_slots: noErrorsFrom([5, 6]),
   instances_min3: (o) => o.ofType("Instance").length >= 3,
-  no_errors_instances: (_o, all) => noErrors(all, INSTANCE_RULES),
+  no_errors_instances: noErrorsFrom([7]),
   cq_all_linked: (o) => {
     const qs = o.ofType("CompetencyQuestion");
     return qs.length > 0 && qs.every((q) => o.targets(q.id, "NEEDS").length > 0);

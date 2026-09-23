@@ -10,7 +10,7 @@ import { findQuote } from "../src/quotes.ts";
 import { Ontology } from "../src/model.ts";
 import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
-import { computeStatus } from "../src/status.ts";
+import { STEP_CHECKS, computeStatus } from "../src/status.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
 import type { OkbNode } from "../src/types.ts";
 
@@ -67,6 +67,20 @@ describe("meta-KB", () => {
     assert.equal(meta.resolve("range")[0].id, "concept.range");
     assert.equal(meta.resolve("is-a")[0].id, "concept.subclass");
     assert.equal(meta.resolve("4")[0].id, "step.4-classes");
+  });
+});
+
+describe("step progress", () => {
+  const finding = (rule: string) => ({ rule, severity: "error" as const, message: "", nodes: [] });
+  const ont = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" } as OkbNode], []);
+  it("counts errors from the rules the meta-KB applies at a step, plus structure errors", () => {
+    assert.equal(STEP_CHECKS.no_errors_hierarchy(ont, [finding("naming-unique")]), false);
+    assert.equal(STEP_CHECKS.no_errors_hierarchy(ont, [finding("slot-value-type-declared")]), true);
+    assert.equal(STEP_CHECKS.no_errors_slots(ont, [finding("slot-value-type-declared")]), false, "step 5 rules count for step 6");
+    assert.equal(STEP_CHECKS.no_errors_instances(ont, [finding("slot-values-respect-facets")]), false);
+    for (const check of ["no_errors_hierarchy", "no_errors_slots", "no_errors_instances"]) {
+      assert.equal(STEP_CHECKS[check](ont, [finding("struct-well-formed")]), false, check);
+    }
   });
 });
 
