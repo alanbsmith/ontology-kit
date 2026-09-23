@@ -61,3 +61,31 @@ Sizes: `checks.ts` 888 lines · `ops.ts` 668 · `cli.ts` 654 · `model.ts` 494 �
 7. `review.ts` → registry, and `parseMarkdown` → per-block readers, when those files are next touched for a feature (Tidy First: no pressing need until then).
 
 Per Beck, items 6–7 are "tidy when you're about to change it," not urgent. Items 3–5 pay off immediately, because the next features (relationship edge properties, multi-doc extraction, icon-scale data) all run through those areas.
+
+---
+
+## Status (2026-09-23)
+
+Worked through on the `refactor/code-review-worklist` branch, one commit per item. After each step, `npx tsc` and `npm test` passed, and CLI output (human and `--json`) was compared against the previous commit on the wine example, a markdown source fixture and a deliberately malformed ontology.
+
+| Item | Status | Commit |
+|---|---|---|
+| Quick tidyings (dead code, `stripAccents`, named constants, `output()` helper, `noUnused*`) | Done | `a8ef8e0`, `1acb523`, `f699caf` |
+| Performance: incremental indexes | Done, plus memoized `naming.key()`, which was the larger cost. 4,000 instances build in 0.7 s (was 11.2 s). Name lookups are still linear scans, so a name index is the next step if the icon graph needs it. | `9ecd23f` |
+| Typed node model (Effective TS, Design #2) | Done: `OkbNode` union, `ont.require()`, typed meta-KB. `any` 41 → 33, `!` 54 → 30. | `c2e8a99`, `1a89887` |
+| Bugs found by typing | A markdown Source without `localPath` crashed `okb source outline` and `refresh` | `0abbf58` |
+| `readonly` nodes/edges | Done | `6d4b287` |
+| Branded ids | Skipped. `find()` accepts names and ids on purpose, and ids arrive from JSON and edges, so a brand would need casts at every boundary for little gain. | — |
+| Output argument: `hiddenLater` | Done: `runChecks()` returns `{ findings, hiddenLater }` | `652aef5` |
+| Flag-shaped strings in `status.ts` | Done: uses `meta.stepRules()`. Two naming rules weren't linked to any step, which is now fixed in `steps.yaml`. One deliberate behavior change: `inst-are-leaves` no longer gates step 7's "no instance errors" item (it's a step-4 rule; it still gates steps 4 and 8). | `95c6a70`, `ffc2bc9` |
+| Boolean via side channel: `addLink()` | Already resolved before this pass: `addLink` checks `linkEdge()` instead of comparing edge counts | — |
+| Relationship module (Design #1) | Done: `src/relationships.ts`, reached as `ont.rel` | `c1b4e25` |
+| Split `ops.ts` | Done: `src/ops/`, re-exported by `src/ops.ts` | `43b7e68` |
+| CLI command table | Not done. Tidy when the CLI next changes (see the Beck note above). | — |
+| `review.ts` registry, `parseMarkdown` readers | Not done, for the same reason | — |
+| Duplicated iterators in `checks.ts`, splitting `struct-well-formed` | Not done. Low value until those checks change. | — |
+| Magic numbers as rule parameters in `rules.yaml` | Not done. The constants are named, but 3 and 10 still appear in `steps.yaml` text and in the check keys `cq_min3` and `terms_min10`. Needs a parameter mechanism in the meta-KB schema. | — |
+
+New observations from this pass:
+- `ops.coerce()` (slot values) and `coerceEdgeValue()` (edge properties) parse the same value types separately, and they disagree: slot Booleans accept `y`/`n`, edge-property Booleans don't. Unifying them is a small behavior change.
+- `an()` is still defined in three places (`checks.ts`, `model.ts`, `ops/common.ts`).

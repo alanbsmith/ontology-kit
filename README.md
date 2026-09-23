@@ -31,7 +31,7 @@ Needs **Node.js 24+** (okb runs its TypeScript source directly; there's no build
 cd ontology-kit
 npm install          # one runtime dependency (yaml, for markdown frontmatter); the rest are dev tools
 npm link             # puts `okb` on your PATH (or use: node src/cli.ts ...)
-npm test             # 83 tests, including building the wine example end to end
+npm test             # the test suite, including building the wine example end to end
 ```
 
 `pdftotext` (`brew install poppler`) is optional. It's used to check quotes against PDFs; without it, okb falls back to the optional `pdfjs-dist` package.
@@ -68,9 +68,11 @@ Full guide: [docs/METHOD.md](docs/METHOD.md) · Terms: [docs/GLOSSARY.md](docs/G
 ```
 bin/okb.js              launcher (npm link target)
 src/                    okb source (TypeScript, Node 24 type stripping)
-  cli.ts ops.ts         commands and the operations behind them
+  cli.ts ops.ts ops/    commands and the operations behind them (ops/ split by reason to change)
   checks.ts status.ts   validator (one check per rule) and step progress
-  model.ts naming.ts    graph model, naming conventions
+  model.ts types.ts     graph model and the typed okb file format
+  relationships.ts      how relationship values are stored as edges (inverses, renames, removal)
+  naming.ts errors.ts   naming conventions; OkbError
   metakb.ts render.ts   meta-KB access, terminal output
   export.ts review.ts   graph-database export, judgment-rule review
   markdown.ts provenance.ts   markdown reader; sources, quotes, extracted rules, verification
