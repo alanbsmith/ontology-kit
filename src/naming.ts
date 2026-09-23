@@ -32,11 +32,25 @@ export function rawTokens(name: string): string[] {
   return splitWords(name, true);
 }
 
-/** Case- and delimiter-insensitive identity for uniqueness checks. */
+/** Lowercase letters and digits only, without accents: 'Rosé Wine!' -> 'rosewine'. */
+export function fold(text: string): string {
+  return stripAccents(text).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+const keyCache = new Map<string, string>();
+
+/**
+ * Case- and delimiter-insensitive identity for uniqueness checks (the fold of a
+ * name). Memoized: name lookups compare against every node's name, so the same
+ * short strings recur constantly.
+ */
 export function key(name: string): string {
-  return stripAccents(name)
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
+  let k = keyCache.get(name);
+  if (k === undefined) {
+    k = fold(name);
+    keyCache.set(name, k);
+  }
+  return k;
 }
 
 export function slug(name: string): string {

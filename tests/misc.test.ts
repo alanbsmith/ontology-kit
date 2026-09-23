@@ -8,6 +8,7 @@ import { MetaKB } from "../src/metakb.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
 import { Ontology } from "../src/model.ts";
+import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
 import { computeStatus } from "../src/status.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
@@ -65,6 +66,35 @@ describe("meta-KB", () => {
     assert.equal(meta.resolve("range")[0].id, "concept.range");
     assert.equal(meta.resolve("is-a")[0].id, "concept.subclass");
     assert.equal(meta.resolve("4")[0].id, "step.4-classes");
+  });
+});
+
+describe("indexes", () => {
+  it("stay equal to a full rebuild through adds, links, inverses, renames and removals", () => {
+    const ont = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" }], []);
+    ops.setConventions(ont, {});
+    ops.addClass(ont, "Wine", { description: "d" });
+    ops.addClass(ont, "RedWine", { parents: ["Wine"], description: "d" });
+    ops.addClass(ont, "Winery", { description: "d" });
+    ops.addSlot(ont, "maker", { on: ["Wine"], type: "Instance", range: ["Winery"], card: "single", description: "d" });
+    ops.addSlot(ont, "produces", { on: ["Winery"], type: "Instance", range: ["Wine"], card: "multiple", description: "d" });
+    for (const i of [1, 2, 3]) {
+      ops.addInstance(ont, `Winery ${i}`, { of: ["Winery"] });
+      ops.addInstance(ont, `Wine ${i}`, { of: ["RedWine"], assignments: [`maker=Winery ${i}`] });
+    }
+    ops.inverse(ont, "maker", "produces");
+    ops.rename(ont, "maker", "madeBy");
+    ops.remove(ont, "Wine 2");
+    const fresh = Ontology.fromData(structuredClone(ont.nodes), structuredClone(ont.edges));
+    const types = [...new Set(ont.edges.map((e) => e.type))];
+    for (const n of ont.nodes) {
+      assert.deepEqual(ont.get(n.id), fresh.get(n.id));
+      for (const t of types) {
+        assert.deepEqual(ont.outEdges(n.id, t), fresh.outEdges(n.id, t), `out ${n.id} ${t}`);
+        assert.deepEqual(ont.inEdges(n.id, t), fresh.inEdges(n.id, t), `in ${n.id} ${t}`);
+      }
+    }
+    assert.deepEqual(ont.linked("i.winery-1", "s.produces"), ["i.wine-1"]);
   });
 });
 

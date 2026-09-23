@@ -12,12 +12,12 @@
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { key } from "./naming.ts";
+import { fold } from "./naming.ts";
 
 const ELLIPSIS = /\.\.\.|…/;
 
-/** Letters and digits only, lowercased and without accents: the same fold as a name's identity key. */
-export const normalize = key;
+/** Letters and digits only, lowercased and without accents (uncached: quotes and pages are long, one-off strings). */
+export const normalize = fold;
 
 function hasPdftotext(): boolean {
   try {

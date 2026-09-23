@@ -104,19 +104,27 @@ export class Ontology {
   }
 
   // ------------------------------------------------------------------ indexes
+  // addNode/addEdge update the indexes in place; everything else that changes
+  // nodes or edges (load, removal, retyping edges) calls reindex().
+
+  /** Rebuild every index from scratch. The first node with a given id wins. */
   reindex(): void {
     this.byId = new Map();
     for (const n of this.nodes) if (!this.byId.has(n.id)) this.byId.set(n.id, n);
     this.outIdx = new Map();
     this.incIdx = new Map();
-    for (const e of this.edges) {
-      const ko = `${e.from}\u0000${e.type}`;
-      const ki = `${e.to}\u0000${e.type}`;
-      if (!this.outIdx.has(ko)) this.outIdx.set(ko, []);
-      if (!this.incIdx.has(ki)) this.incIdx.set(ki, []);
-      this.outIdx.get(ko)!.push(e);
-      this.incIdx.get(ki)!.push(e);
-    }
+    for (const e of this.edges) this.indexEdge(e);
+  }
+
+  private indexEdge(e: GraphEdge): void {
+    const ko = `${e.from}\u0000${e.type}`;
+    const ki = `${e.to}\u0000${e.type}`;
+    let out = this.outIdx.get(ko);
+    if (!out) this.outIdx.set(ko, (out = []));
+    out.push(e);
+    let inc = this.incIdx.get(ki);
+    if (!inc) this.incIdx.set(ki, (inc = []));
+    inc.push(e);
   }
 
   get meta(): GraphNode {
@@ -243,7 +251,7 @@ export class Ontology {
   addNode(node: GraphNode): GraphNode {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
     this.nodes.push(node);
-    this.reindex();
+    this.byId.set(node.id, node);
     return node;
   }
 
@@ -254,7 +262,7 @@ export class Ontology {
     if (existing) return existing;
     const e: GraphEdge = { from, type, to, ...props };
     this.edges.push(e);
-    this.reindex();
+    this.indexEdge(e);
     return e;
   }
 
