@@ -708,7 +708,7 @@ export const CHECKS: Record<string, Check> = {
 
   "scope-competency-questions": (ont) => {
     const n = ont.ofType("CompetencyQuestion").length;
-    return n >= MIN_COMPETENCY_QUESTIONS ? [] : [{ message: `There ${n === 1 ? "is 1 competency question" : `are ${n} competency questions`}; write at least three (\`okb cq add\`).`, nodes: ["ontology"] }];
+    return n >= MIN_COMPETENCY_QUESTIONS ? [] : [{ message: `There ${n === 1 ? "is 1 competency question" : `are ${n} competency questions`}; write at least ${MIN_COMPETENCY_QUESTIONS} (\`okb cq add\`).`, nodes: ["ontology"] }];
   },
 
   "scope-cq-coverage": (ont) => {
