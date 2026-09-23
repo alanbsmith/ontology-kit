@@ -109,7 +109,7 @@ describe("indexes", () => {
         assert.deepEqual(ont.inEdges(n.id, t), fresh.inEdges(n.id, t), `in ${n.id} ${t}`);
       }
     }
-    assert.deepEqual(ont.linked("i.winery-1", "s.produces"), ["i.wine-1"]);
+    assert.deepEqual(ont.rel.values("i.winery-1", "s.produces"), ["i.wine-1"]);
   });
 });
 

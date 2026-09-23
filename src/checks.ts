@@ -117,7 +117,7 @@ export const CHECKS: Record<string, Check> = {
     if (onto.length !== 1 || onto[0].id !== "ontology") {
       hits.push({ message: `There must be exactly one Ontology node with id 'ontology' (found ${onto.length}).`, nodes: onto.map((o) => o.id) });
     }
-    const relTypes = ont.relationshipTypes();
+    const relTypes = ont.rel.edgeTypes();
     for (const e of ont.edges) {
       const et = edgeTypes.get(e.type);
       const tag = `${e.from} -${e.type}-> ${e.to}`;
@@ -249,7 +249,7 @@ export const CHECKS: Record<string, Check> = {
   "hier-subclass-adds-something": (ont) => {
     const hits: Hit[] = [];
     const rangeTargets = new Set(ont.edgesOf("RANGE").map((e) => e.to));
-    const relTypes = ont.relationshipTypes();
+    const relTypes = ont.rel.edgeTypes();
     const valueTargets = new Set(ont.edges.filter((e) => relTypes.has(e.type)).map((e) => e.to));
     const disjoint = new Set(ont.edgesOf("DISJOINT_WITH").flatMap((e) => [e.from, e.to]));
     for (const c of classes(ont)) {
@@ -257,7 +257,7 @@ export const CHECKS: Record<string, Check> = {
       const nonEmpty = (o: unknown) => o && typeof o === "object" && Object.keys(o).length > 0;
       const addsSomething =
         ont.ownSlots(c.id).length > 0 || nonEmpty(c.fixedValues) || nonEmpty(c.defaults) || nonEmpty(c.facetOverrides) ||
-        ont.linkedSlots(c.id).length > 0 || rangeTargets.has(c.id) || valueTargets.has(c.id) ||
+        ont.rel.slotsWithValues(c.id).length > 0 || rangeTargets.has(c.id) || valueTargets.has(c.id) ||
         disjoint.has(c.id) || ont.sources(c.id, "ABOUT").length > 0 || ont.parents(c.id).length > 1;
       if (!addsSomething) {
         hits.push({ message: `${L(ont, c.id)} doesn't add anything to ${list(ont, ont.parents(c.id))}: no own slots, values, restrictions or relationships.`, nodes: [c.id] });
@@ -467,7 +467,7 @@ export const CHECKS: Record<string, Check> = {
       const used = new Set<string>();
       const fields = n.type === "Instance" ? [n.values] : [n.fixedValues, n.defaults, n.facetOverrides];
       for (const field of fields) for (const sid of Object.keys(field ?? {})) used.add(sid);
-      for (const sid of ont.linkedSlots(n.id)) used.add(sid);
+      for (const sid of ont.rel.slotsWithValues(n.id)) used.add(sid);
       for (const sid of used) {
         if (!ont.get(sid)) hits.push({ message: `${L(ont, n.id)} has a value for '${sid}', which isn't a slot.`, nodes: [n.id] });
         else if (!applicable.has(sid)) {
@@ -498,7 +498,7 @@ export const CHECKS: Record<string, Check> = {
     const hits: Hit[] = [];
     const same = (a: unknown[], b: unknown[]) => JSON.stringify([...a].map(String).sort()) === JSON.stringify([...b].map(String).sort());
     for (const c of classes(ont)) {
-      const fixedSlots = new Set([...Object.keys(c.fixedValues ?? {}), ...ont.linkedSlots(c.id)]);
+      const fixedSlots = new Set([...Object.keys(c.fixedValues ?? {}), ...ont.rel.slotsWithValues(c.id)]);
       for (const sid of fixedSlots) {
         const fixed = ont.statedValues(c.id, sid);
         for (const d of ont.descendants(c.id)) {
@@ -541,7 +541,7 @@ export const CHECKS: Record<string, Check> = {
 
   "slot-edge-properties": (ont) => {
     const hits: Hit[] = [];
-    const rel = ont.relationshipTypes();
+    const rel = ont.rel.edgeTypes();
     for (const e of ont.edges) {
       const sid = rel.get(e.type);
       if (!sid) continue;

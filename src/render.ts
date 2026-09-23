@@ -229,7 +229,7 @@ function fmtFacets(ont: Ontology, slotId: string, classes: Iterable<string> = []
   const parts = [f.valueType ?? c.red("no type")];
   if (f.allowedValues) parts.push(`{${f.allowedValues.join(", ")}}`);
   if (f.range.length) {
-    const spec = ont.linkSpec(slotId);
+    const spec = ont.rel.spec(slotId);
     parts.push(`→ ${f.range.map((r) => ont.label(r)).join(" | ")}${spec ? c.dim(spec.reverse ? ` (reads :${spec.type} backwards)` : ` (:${spec.type})`) : ""}`);
   }
   parts.push(s.cardinality ?? c.yellow("cardinality?"));
@@ -243,7 +243,7 @@ function fmtFacets(ont: Ontology, slotId: string, classes: Iterable<string> = []
 
 /** A value for display; relationship values show their edge properties: SegmentedControl {condition: "2 to 7 options"} */
 function fmtVal(ont: Ontology, ownerId: string, slotId: string, v: unknown): string {
-  const e = typeof v === "string" ? ont.linkEdge(ownerId, slotId, v) : undefined;
+  const e = typeof v === "string" ? ont.rel.edge(ownerId, slotId, v) : undefined;
   const props = e ? Object.entries(edgeProps(e)).map(([k, x]) => `${k}: ${JSON.stringify(x)}`).join(", ") : "";
   return ont.label(String(v)) + (props ? c.dim(` {${props}}`) : "");
 }
@@ -282,7 +282,7 @@ export function show(ont: Ontology, n: OkbNode): string {
   } else if (n.type === "Slot") {
     line("kind", n.valueType === "Instance" ? "relationship (links to other things)" : "property (holds a value)");
     line("facets", fmtFacets(ont, n.id));
-    const primary = ont.get(ont.primarySlot(n.id));
+    const primary = ont.get(ont.rel.primary(n.id));
     const decls = (primary?.type === "Slot" && primary.edgeProperties) || [];
     if (decls.length) line("edge props", decls.map((d) => `${d.name} (${d.valueType}${d.allowedValues ? ` {${d.allowedValues.join(", ")}}` : ""}${d.required ? ", required" : ""})`).join(", ") + c.dim(" + rule"));
     line("attached to", ont.domain(n.id).map((d) => ont.label(d)).join(", ") || c.yellow("(no class yet)"));

@@ -1,11 +1,13 @@
 /** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). */
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { OkbError } from "./errors.ts";
 import * as naming from "./naming.ts";
+import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
 import {
   DISPOSITIONS, VALUE_TYPES,
   type ClassNode, type Conventions, type Facets, type GraphEdge, type InstanceNode, type Manifest, type NodeOf, type NodeType,
-  type OkbNode, type OntologyNode, type RelationshipSlot, type StoredValue,
+  type OkbNode, type OntologyNode, type StoredValue,
 } from "./types.ts";
 
 export { DISPOSITIONS, VALUE_TYPES };
@@ -19,8 +21,7 @@ const REF_PREFIX: Record<string, NodeType> = {
   class: "Class", slot: "Slot", instance: "Instance", term: "Term", cq: "CompetencyQuestion", question: "CompetencyQuestion", decision: "DesignDecision",
 };
 
-/** A user-facing problem (bad name, missing node...). The CLI prints it without a stack trace. */
-export class OkbError extends Error {}
+export { OkbError };
 
 /** What a node is called: its name, or a question's/term's text, or a decision's title. */
 export function nodeLabel(n: OkbNode): string {
@@ -35,9 +36,7 @@ function lookupNames(n: OkbNode): string[] {
   return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || ""];
 }
 
-export function isRelationship(s: OkbNode | undefined): s is RelationshipSlot {
-  return s?.type === "Slot" && s.valueType === "Instance" && Boolean(s.relType);
-}
+export { isRelationship };
 
 export function findRoot(start: string): string | null {
   let d = resolve(start);
@@ -60,6 +59,8 @@ export class Ontology {
   private _nodes: OkbNode[];
   private _edges: GraphEdge[];
   private byId = new Map<string, OkbNode>();
+  /** Relationship values and the edges that store them (see relationships.ts). */
+  readonly rel = new Relationships(this);
   private outIdx = new Map<string, GraphEdge[]>();
   private incIdx = new Map<string, GraphEdge[]>();
 
@@ -120,7 +121,7 @@ export class Ontology {
     const old = this.edges.filter((e) => e.type === "HAS_VALUE");
     this._edges = this._edges.filter((e) => e.type !== "HAS_VALUE");
     this.reindex();
-    for (const e of old) if (typeof e.slot === "string") this.addLink(e.from, e.slot, e.to);
+    for (const e of old) if (typeof e.slot === "string") this.rel.link(e.from, e.slot, e.to);
     this.manifest.format = FORMAT;
   }
 
@@ -324,12 +325,16 @@ export class Ontology {
     return before - this.edges.length;
   }
 
+  /** Change every edge of one type to another (a relationship's edge type was renamed). */
+  retypeEdges(from: string, to: string): void {
+    for (const e of this._edges) if (e.type === from) e.type = to;
+    this.reindex();
+  }
+
+  /** Remove a node, every edge touching it, and every value stored under its id. For a relationship slot, call rel.drop() first. */
   removeNode(id: string): void {
-    const n = this.byId.get(id);
-    // A removed relationship slot takes its stored edges with it (ops.remove promotes an inverse first).
-    const relType = n?.type === "Slot" && this.primarySlot(id) === id ? n.relType : undefined;
     this._nodes = this._nodes.filter((x) => x.id !== id);
-    this._edges = this._edges.filter((e) => e.from !== id && e.to !== id && (!relType || e.type !== relType));
+    this._edges = this._edges.filter((e) => e.from !== id && e.to !== id);
     for (const x of this.nodes) {
       if (x.type === "Instance") delete x.values?.[id];
       else if (x.type === "Class") {
@@ -465,80 +470,6 @@ export class Ontology {
     return f;
   }
 
-  // ------------------------------------------------------------------ relationships
-  //
-  // A value of an Instance-type slot is stored as an edge whose type is the slot's
-  // relationship type: (wine)-[:MAKER]->(winery). Inverse slots share one edge: the
-  // slot on the `from` side of INVERSE_OF is the stored direction; its inverse reads
-  // the same edges backwards, so `produces` = incoming MAKER edges.
-
-  /** The stored slot for a relationship: the slot itself, or the one it is the inverse of. */
-  primarySlot(slotId: string): string {
-    return this.sources(slotId, "INVERSE_OF")[0] ?? slotId;
-  }
-
-  /** How a slot's values are stored: edge type and whether this slot reads it backwards. */
-  linkSpec(slotId: string): { type: string; reverse: boolean } | null {
-    const s = this.byId.get(slotId);
-    if (s?.type !== "Slot" || s.valueType !== "Instance") return null;
-    const primary = this.primarySlot(slotId);
-    const p = this.byId.get(primary);
-    if (p?.type !== "Slot" || !p.relType) return null;
-    return { type: p.relType, reverse: primary !== slotId };
-  }
-
-  /** Edge types used by relationships, mapped to the slot that stores them. */
-  relationshipTypes(): Map<string, string> {
-    const m = new Map<string, string>();
-    for (const s of this.ofType("Slot")) if (isRelationship(s) && this.primarySlot(s.id) === s.id) m.set(s.relType, s.id);
-    return m;
-  }
-
-  /** Nodes a node is linked to through a relationship slot (either direction). */
-  linked(id: string, slotId: string): string[] {
-    const spec = this.linkSpec(slotId);
-    if (!spec) return [];
-    return spec.reverse ? this.sources(id, spec.type) : this.targets(id, spec.type);
-  }
-
-  /**
-   * Link `id` to `target` through a relationship slot. There is at most one edge per
-   * (from, relationship, to); `props` (edge properties such as a condition, or `rule`)
-   * are merged into it. Returns whether a new edge was created.
-   */
-  addLink(id: string, slotId: string, target: string, props: Record<string, unknown> = {}): boolean {
-    const existing = this.linkEdge(id, slotId, target);
-    if (existing) {
-      Object.assign(existing, props);
-      return false;
-    }
-    const spec = this.linkSpec(slotId);
-    if (!spec) throw new OkbError(`${this.label(slotId)} isn't a relationship.`);
-    const [from, to] = spec.reverse ? [target, id] : [id, target];
-    this.addEdge(from, spec.type, to, props);
-    return true;
-  }
-
-  /** The stored edge behind one relationship value, whichever end it's read from. */
-  linkEdge(id: string, slotId: string, target: string): GraphEdge | undefined {
-    const spec = this.linkSpec(slotId);
-    if (!spec) return undefined;
-    const [from, to] = spec.reverse ? [target, id] : [id, target];
-    return this.outEdges(from, spec.type).find((e) => e.to === to);
-  }
-
-  removeLink(id: string, slotId: string, target: string): void {
-    const spec = this.linkSpec(slotId);
-    if (!spec) return;
-    const [from, to] = spec.reverse ? [target, id] : [id, target];
-    this.removeEdges((e) => e.type === spec.type && e.from === from && e.to === to);
-  }
-
-  /** Relationship slots a node has any values for (either direction). */
-  linkedSlots(id: string): string[] {
-    return this.ofType("Slot").filter((s) => this.linked(id, s.id).length > 0).map((s) => s.id);
-  }
-
   /** Values a node states for a slot: literals (values / fixedValues) plus relationship targets. */
   statedValues(id: string, slotId: string): unknown[] {
     const n = this.byId.get(id);
@@ -546,7 +477,7 @@ export class Ontology {
     const out: unknown[] = [];
     const lit = literalValue(n, slotId);
     if (lit !== undefined) out.push(...(Array.isArray(lit) ? lit : [lit]));
-    out.push(...this.linked(id, slotId));
+    out.push(...this.rel.values(id, slotId));
     return out;
   }
 
@@ -578,11 +509,7 @@ export function nameOrText(n: OkbNode): string | undefined {
   return "name" in n ? n.name : "text" in n ? n.text : undefined;
 }
 
-/** An edge's own properties (everything except from/type/to). */
-export function edgeProps(e: GraphEdge): Record<string, unknown> {
-  const { from: _f, type: _t, to: _to, ...rest } = e;
-  return rest;
-}
+export { edgeProps };
 
 export function editDistance(a: string, b: string): number {
   const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);

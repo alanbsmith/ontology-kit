@@ -68,13 +68,13 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
       const s = ont.require(sid, "Slot");
       if (s.valueType === "Instance") {
         // A class-level link to an instance (e.g. every Merlot has grape = Merlot grape) is inherited by each member.
-        if (inherited && ont.linked(inst.id, sid).length === 0) {
+        if (inherited && ont.rel.values(inst.id, sid).length === 0) {
           const fixed = ont.inheritedFixed(sid, ctx);
-          const spec = ont.linkSpec(sid);
+          const spec = ont.rel.spec(sid);
           for (const t of fixed?.values ?? []) {
             if (ont.get(String(t))?.type !== "Instance" || !spec) continue;
             const [from, to] = spec.reverse ? [String(t), inst.id] : [inst.id, String(t)];
-            const classEdge = ont.linkEdge(fixed!.cls, sid, String(t));
+            const classEdge = ont.rel.edge(fixed!.cls, sid, String(t));
             inheritedRels.push({ type: spec.type, from, to, properties: { ...(classEdge ? edgeProps(classEdge) : {}), inheritedFrom: ont.label(fixed!.cls) } });
           }
         }
@@ -91,7 +91,7 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
   }
 
   rels.push(...inheritedRels);
-  const relTypes = ont.relationshipTypes();
+  const relTypes = ont.rel.edgeTypes();
   let classLevel = 0;
   for (const e of ont.edges) {
     if (!relTypes.has(e.type)) continue;

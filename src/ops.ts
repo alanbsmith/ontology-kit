@@ -322,12 +322,12 @@ export function assign(ont: Ontology, ownerId: string, assignments: string[], mo
   const owner = ont.require(ownerId);
   if (owner.type !== "Instance" && owner.type !== "Class") throw new OkbError(`Only instances and classes have values; ${ont.label(ownerId)} is ${an(owner.type)}.`);
   const notes: Notes = [];
-  const firstFixed = mode === "fixed" && !ont.ofType("Class").some((c) => Object.keys(c.fixedValues ?? {}).length || ont.linkedSlots(c.id).length);
+  const firstFixed = mode === "fixed" && !ont.ofType("Class").some((c) => Object.keys(c.fixedValues ?? {}).length || ont.rel.slotsWithValues(c.id).length);
   for (const a of parseAssignments(assignments)) {
     const slot = findSlotFor(ont, ownerId, a.slot);
     const vals = a.raw === "" ? [] : splitValues(slot, a.raw).map((r) => coerce(ont, slot, r, owner.type === "Class"));
     if (slot.valueType === "Instance") {
-      const current = ont.linked(ownerId, slot.id);
+      const current = ont.rel.values(ownerId, slot.id);
       const next = a.op === "=" ? (vals as string[]) : a.op === "+=" ? [...new Set([...current, ...(vals as string[])])] : current.filter((x) => !vals.includes(x));
       const f = ont.effectiveFacets(slot.id, ont.classContext(ownerId));
       for (const v of next) {
@@ -339,9 +339,9 @@ export function assign(ont: Ontology, ownerId: string, assignments: string[], mo
           if (!ok) throw new OkbError(`${owner.name}.${slot.name} must point at ${f.range.map((r) => an(ont.label(r))).join(" or ")}; ${nameOrText(t)} is ${an(t.type === "Instance" ? ont.targets(v, "INSTANCE_OF").map((c) => ont.label(c)).join("/") || "instance with no class" : "class outside that range")}.`);
         }
       }
-      for (const gone of current.filter((x) => !next.includes(x))) ont.removeLink(ownerId, slot.id, gone);
-      for (const v of next) ont.addLink(ownerId, slot.id, v);
-      const spec = ont.linkSpec(slot.id)!;
+      for (const gone of current.filter((x) => !next.includes(x))) ont.rel.unlink(ownerId, slot.id, gone);
+      for (const v of next) ont.rel.link(ownerId, slot.id, v);
+      const spec = ont.rel.spec(slot.id)!;
       const shown = next.map((x) => ont.label(x)).join(", ") || "(nothing)";
       notes.push(`${owner.name}.${slot.name} ${mode === "fixed" ? "fixed to" : "="} ${shown}`);
       if (spec.reverse && next.length) {
@@ -394,16 +394,6 @@ export function restrict(ont: Ontology, ref: string, slotRef: string, o: { value
 }
 
 // ------------------------------------------------------------------ slots
-/** Relationship edge type for a slot, checked against structural edge types and other slots. */
-function claimRelType(ont: Ontology, name: string, slotId: string): string {
-  const t = naming.relType(name);
-  const { edgeTypes } = MetaKB.get().formatRegistry();
-  if (edgeTypes.has(t)) throw new OkbError(`A relationship called '${name}' would be stored as ${t}, which okb uses for its own structure. Pick another name.`);
-  const other = ont.ofType("Slot").find((x) => x.id !== slotId && x.relType === t);
-  if (other) throw new OkbError(`'${name}' would be stored as ${t}, which ${other.name} already uses. Pick another name.`);
-  return t;
-}
-
 export interface SlotOpts {
   on?: string[]; off?: string[]; type?: string; values?: string[]; range?: string[]; addRange?: string[]; removeRange?: string[];
   card?: string; min?: number; max?: number; default?: string; description?: string; force?: boolean;
@@ -445,15 +435,12 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
     if (t !== "Instance") {
       ont.removeEdges((e) => e.from === s.id && e.type === "RANGE");
       if (wasRel) {
-        const rt = s.relType;
-        const n = rt ? ont.edgesOf(rt).length : 0;
-        if (rt && ont.primarySlot(s.id) === s.id) ont.removeEdges((e) => e.type === rt);
-        ont.removeEdges((e) => e.type === "INVERSE_OF" && (e.from === s.id || e.to === s.id));
-        if (n) notes.push(`Removed ${n} ${rt} link(s): ${s.name} no longer links to other things.`);
+        const dropped = ont.rel.becomeProperty(s);
+        if (dropped.links) notes.push(`Removed ${dropped.links} ${dropped.type} link(s): ${s.name} no longer links to other things.`);
       }
       delete s.relType;
-    } else if (!s.relType) {
-      s.relType = claimRelType(ont, s.name, s.id);
+    } else {
+      ont.rel.becomeRelationship(s);
     }
   }
   if (o.values?.length) {
@@ -515,20 +502,10 @@ export function inverse(ont: Ontology, a: string, b: string): Notes {
   for (const x of [sa, sb]) {
     if (ont.inverses(x.id).length) throw new OkbError(`${x.name} already has an inverse (${ont.inverses(x.id).map((i) => ont.label(i)).join(", ")}).`);
   }
-  // Move any edges stored under b's own type onto a's type, reversed: one edge per fact.
-  const moved = ont.edgesOf(sb.relType);
-  ont.removeEdges((e) => e.type === sb.relType);
-  for (const e of moved) {
-    const existing = ont.outEdges(e.to, sa.relType).find((x) => x.to === e.from);
-    if (existing) Object.assign(existing, edgeProps(e));
-    else ont.addEdge(e.to, sa.relType, e.from, edgeProps(e));
-  }
-  // Edge-property declarations follow the stored side.
-  if (sb.edgeProperties?.length) sa.edgeProperties = [...(sa.edgeProperties ?? []), ...sb.edgeProperties.filter((p) => !(sa.edgeProperties ?? []).some((q) => q.name === p.name))];
-  ont.addEdge(sa.id, "INVERSE_OF", sb.id);
+  const moved = ont.rel.declareInverse(sa, sb);
   return [
     `${sa.name} and ${sb.name} are now inverses: one relationship read from both ends.`,
-    `Stored as (${ont.domain(sa.id).map((d) => ont.label(d)).join("|") || "?"})-[:${sa.relType}]->(${ont.range(sa.id).map((d) => ont.label(d)).join("|") || "?"}); ${sb.name} follows ${sa.relType} backwards, so nothing is stored twice.${moved.length ? ` Moved ${moved.length} existing ${sb.relType} edge(s) onto ${sa.relType}.` : ""}`,
+    `Stored as (${ont.domain(sa.id).map((d) => ont.label(d)).join("|") || "?"})-[:${sa.relType}]->(${ont.range(sa.id).map((d) => ont.label(d)).join("|") || "?"}); ${sb.name} follows ${sa.relType} backwards, so nothing is stored twice.${moved ? ` Moved ${moved} existing ${sb.relType} edge(s) onto ${sa.relType}.` : ""}`,
   ];
 }
 
@@ -541,7 +518,7 @@ export const EDGE_VALUE_TYPES: LiteralType[] = ["String", "Integer", "Float", "N
 const RESERVED_EDGE_KEYS = new Set(["from", "to", "type", "rule"]);
 
 export function declareEdgeProperty(ont: Ontology, relRef: string, name: string, o: { type?: string; values?: string[]; required?: boolean; description?: string; remove?: boolean }): Notes {
-  const rel = ont.require(ont.primarySlot(ont.find(relRef, "Slot").id), "Slot");
+  const rel = ont.require(ont.rel.primary(ont.find(relRef, "Slot").id), "Slot");
   if (rel.valueType !== "Instance") throw new OkbError(`${rel.name} is a property, not a relationship; only relationships have edge properties.`);
   const decls = (rel.edgeProperties ??= []);
   if (o.remove) {
@@ -592,7 +569,7 @@ export function link(ont: Ontology, fromRef: string, relRef: string, toRef: stri
   const slot = findSlotFor(ont, owner.id, relRef);
   if (slot.valueType !== "Instance") throw new OkbError(`${slot.name} is a property, not a relationship. Use okb instance set / class fix for values.`);
   const target = ont.find(toRef, owner.type === "Class" ? ["Class", "Instance"] : ["Instance"]);
-  const primary = ont.require(ont.primarySlot(slot.id), "Slot");
+  const primary = ont.require(ont.rel.primary(slot.id), "Slot");
   const decls = primary.edgeProperties ?? [];
   const props: Record<string, unknown> = {};
   for (const a of parseAssignments(o.props ?? [])) {
@@ -604,17 +581,17 @@ export function link(ont: Ontology, fromRef: string, relRef: string, toRef: stri
     const r = ont.find(o.rule, "Rule");
     props.rule = r.id;
   }
-  const existing = ont.linkEdge(owner.id, slot.id, target.id);
+  const existing = ont.rel.edge(owner.id, slot.id, target.id);
   if (!existing) {
     // New value: same range/cardinality rules as okb instance set.
-    const current = ont.linked(owner.id, slot.id);
+    const current = ont.rel.values(owner.id, slot.id);
     const f = ont.effectiveFacets(slot.id, ont.classContext(owner.id));
     if (f.max !== null && current.length + 1 > f.max) {
       throw new OkbError(`${owner.name}.${slot.name} allows at most ${f.max} value(s) and already has ${current.map((x) => ont.label(x)).join(", ")}. Remove one first (okb unlink ...).`);
     }
     assign(ont, owner.id, [`${slot.name}+=${target.name}`], owner.type === "Class" ? "fixed" : "value");
   }
-  const edge = ont.linkEdge(owner.id, slot.id, target.id)!;
+  const edge = ont.rel.edge(owner.id, slot.id, target.id)!;
   Object.assign(edge, props);
   for (const k of o.clear ?? []) delete edge[k];
   const missing = decls.filter((d) => d.required && edge[d.name] === undefined).map((d) => d.name);
@@ -629,8 +606,8 @@ export function unlink(ont: Ontology, fromRef: string, relRef: string, toRef: st
   const owner = ont.find(fromRef, ["Instance", "Class"]);
   const slot = findSlotFor(ont, owner.id, relRef);
   const target = ont.find(toRef, ["Instance", "Class"]);
-  if (!ont.linkEdge(owner.id, slot.id, target.id)) throw new OkbError(`${owner.name} isn't linked to ${target.name} by ${slot.name}.`);
-  ont.removeLink(owner.id, slot.id, target.id);
+  if (!ont.rel.edge(owner.id, slot.id, target.id)) throw new OkbError(`${owner.name} isn't linked to ${target.name} by ${slot.name}.`);
+  ont.rel.unlink(owner.id, slot.id, target.id);
   return [`Removed ${owner.name} ${slot.name} ${target.name} (and its edge properties).`];
 }
 
@@ -658,7 +635,7 @@ export function addInstance(ont: Ontology, name: string, o: { of: string[]; desc
     const fromClass = ctx.map((c) => ont.require(c, "Class").defaults?.[sid]).find((v) => v !== undefined);
     const dv = fromClass ?? s.default;
     if (dv === undefined) continue;
-    if (s.valueType === "Instance") ont.addLink(id, sid, String(dv));
+    if (s.valueType === "Instance") ont.rel.link(id, sid, String(dv));
     else literalValues(inst)[sid] = s.cardinality === "multiple" ? [dv].flat() : dv;
     notes.push(`Filled in default ${s.name} = ${JSON.stringify(dv)}.`);
   }
@@ -706,15 +683,8 @@ export function rename(ont: Ontology, ref: string, next: string, force = false):
   }
   const old = n.name;
   if (n.type === "Slot" && n.valueType === "Instance") {
-    const t = claimRelType(ont, next, n.id);
-    if (t !== n.relType) {
-      if (ont.primarySlot(n.id) === n.id) {
-        for (const e of ont.edges) if (e.type === n.relType) e.type = t;
-        ont.reindex();
-        notes.push(`Its links are now stored as ${t} (were ${n.relType}).`);
-      }
-      n.relType = t;
-    }
+    const retyped = ont.rel.rename(n, next);
+    if (retyped) notes.push(`Its links are now stored as ${retyped.to} (were ${retyped.from}).`);
   }
   n.name = next;
   notes.unshift(`Renamed ${n.type} '${old}' → '${next}' (id ${n.id} unchanged).`);
@@ -739,18 +709,9 @@ export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
       throw new OkbError(`${n.name} has instances (${inst.map((i) => ont.label(i)).join(", ")}) and no parent to move them to. Move them first: okb instance set "<name>" --of <OtherClass>`);
     }
   }
-  if (isRelationship(n) && ont.primarySlot(n.id) === n.id) {
-    const inv = ont.targets(n.id, "INVERSE_OF")[0];
-    if (inv) {
-      const invNode = ont.require(inv, "Slot");
-      if (!isRelationship(invNode)) throw new OkbError(`${n.name}'s inverse ${invNode.name} isn't a relationship. Fix it (okb slot set ${invNode.name} --type Instance) or remove the inverse first.`);
-      const relType = n.relType;
-      const moved = ont.edgesOf(relType);
-      ont.removeEdges((e) => e.type === relType || (e.type === "INVERSE_OF" && e.from === n.id));
-      for (const e of moved) ont.addEdge(e.to, invNode.relType, e.from, edgeProps(e));
-      if (n.edgeProperties?.length && !invNode.edgeProperties?.length) invNode.edgeProperties = n.edgeProperties;
-      notes.push(`Its ${moved.length} link(s) are kept, now stored from the other end as ${invNode.relType} (${invNode.name}).`);
-    }
+  if (n.type === "Slot") {
+    const kept = ont.rel.drop(n);
+    if (kept) notes.push(`Its ${kept.links} link(s) are kept, now stored from the other end as ${kept.type} (${kept.name}).`);
   }
   for (const t of ont.ofType("Term")) {
     if (ont.targets(t.id, "BECAME").includes(n.id)) {
@@ -776,7 +737,7 @@ export function setInstanceClasses(ont: Ontology, ref: string, classes: string[]
   checkParents(ont, cs.map((c) => c.id), inst.name);
   ont.removeEdges((e) => e.from === inst.id && e.type === "INSTANCE_OF");
   for (const c of cs) ont.addEdge(inst.id, "INSTANCE_OF", c.id);
-  const lost = [...Object.keys(inst.values ?? {}), ...ont.linkedSlots(inst.id)].filter((s) => !ont.applicableSlots(inst.id).includes(s));
+  const lost = [...Object.keys(inst.values ?? {}), ...ont.rel.slotsWithValues(inst.id)].filter((s) => !ont.applicableSlots(inst.id).includes(s));
   const notes = [`${inst.name} is now ${cs.map((c) => an(c.name)).join(" and ")}.`];
   if (lost.length) notes.push(`Warning: its values for ${[...new Set(lost)].map((s) => ont.label(s)).join(", ")} don't apply to the new class. Remove them (okb instance set "${inst.name}" <slot>=) or pick another class.`);
   return notes;

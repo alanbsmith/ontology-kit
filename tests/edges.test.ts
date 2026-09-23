@@ -81,7 +81,7 @@ describe("edge properties", () => {
     assert.equal(ont.edgesOf("RECOMMENDED_OVER")[0].condition, "capture 2 togglable states");
     ops.addSlot(ont, "lessPreferredThan", { on: ["Component"], type: "Instance", range: ["Component"], card: "multiple", description: "inverse" });
     ops.inverse(ont, "recommendedOver", "lessPreferredThan");
-    assert.equal(ont.linkEdge("c.button", ont.find("lessPreferredThan", "Slot").id, "c.segmented-control")!.condition, "capture 2 togglable states", "readable from the other end");
+    assert.equal(ont.rel.edge("c.button", ont.find("lessPreferredThan", "Slot").id, "c.segmented-control")!.condition, "capture 2 togglable states", "readable from the other end");
     const g = exportGraph(ont, { schema: true });
     const r = g.relationships.find((x) => x.type === "RECOMMENDED_OVER")!;
     assert.equal(r.properties.condition, "capture 2 togglable states");
