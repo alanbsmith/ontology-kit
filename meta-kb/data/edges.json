@@ -1,0 +1,3122 @@
+[
+  {
+    "from": "loc.o101.why-share",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.not-a-goal",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.structural-not-operational",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-single-methodology",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.def-ontology",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.def-kb",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.classes-focus",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.subclasses",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.slots-describe",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.in-practice",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.rule-alternatives",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.rule-iterative",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.rule-nouns-verbs",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.evaluate",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step1",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.scope-changes",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cq",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cq-litmus",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cq-sketch",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step2",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step2-requirement",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step3",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step3-no-worry",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.intertwined",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.top-down",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.bottom-up",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.combination",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-best-approach",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.combination-easiest",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.select-classes",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.isa-test",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.superclass",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step5",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.remaining-terms",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.slot-kinds",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.slots-attached",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.inherit",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.most-general",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step6",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cardinality",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.min-max",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.max",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.max-zero",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.value-type",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.enumerated",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.instance-type",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.range",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.domain",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dr-most-general",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dr-not-overly-general",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dr-remove-subclass",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dr-all-subclasses",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dr-all-but-few",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.attach-can-have",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.step7",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.stand-back",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.singular-plural-avoid",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.is-a",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.singular-plural",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.transitive",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.chardonnay-direct",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.direct-subclass",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.evolution",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.class-not-name",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.synonyms",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.synonym-list",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cycles",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.subclass-must",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.siblings-def",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.siblings-generality",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.root-exception",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.how-many",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.one-child",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.dozen",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-artificial",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.multiple-inheritance",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.multiple-inherit-slots",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.new-class-hard",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.new-class-rule",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.new-class-practical",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.terminological",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.expert-distinction",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.not-each-restriction",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.balance",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.class-or-value",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.class-or-value-kinds",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.stable-membership",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.numbers-are-values",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.instance-or-class",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.granularity",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.cq-individuals",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.instances-most-specific",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.natural-hierarchy",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.abstract",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-sub-instance",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.classes-without-instances",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.limit-scope",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.limit-properties",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.record-decisions",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.disjoint",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.disjoint-validate",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.inverse",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.inverse-auto",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.inverse-figure",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.defaults",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.defaults-convenience",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.fixed-values",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.naming-why",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.naming",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.name-spaces",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.capitalization",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.other-systems",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.singular-plural-consistent",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.prefix-suffix",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.things-to-consider",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-type-words",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.abbreviations",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.subclass-names",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.diagnostics",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.no-single-correct",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.o101.pudding",
+    "type": "PART_OF",
+    "to": "src.o101"
+  },
+  {
+    "from": "loc.g93.conceptualization",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "loc.g93.definition",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "loc.g93.definitions-text",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "loc.g93.knowledge-level",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "loc.g93.consistency-not-completeness",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "loc.g93.documentation",
+    "type": "PART_OF",
+    "to": "src.g93"
+  },
+  {
+    "from": "principle.no-single-correct-model",
+    "type": "CITES",
+    "to": "loc.o101.rule-alternatives"
+  },
+  {
+    "from": "principle.no-single-correct-model",
+    "type": "CITES",
+    "to": "loc.o101.no-single-correct"
+  },
+  {
+    "from": "principle.no-single-correct-model",
+    "type": "CITES",
+    "to": "loc.o101.no-single-methodology"
+  },
+  {
+    "from": "principle.iterate",
+    "type": "CITES",
+    "to": "loc.o101.rule-iterative"
+  },
+  {
+    "from": "principle.iterate",
+    "type": "CITES",
+    "to": "loc.o101.evaluate"
+  },
+  {
+    "from": "principle.nouns-and-verbs",
+    "type": "CITES",
+    "to": "loc.o101.rule-nouns-verbs"
+  },
+  {
+    "from": "principle.purpose-driven",
+    "type": "CITES",
+    "to": "loc.o101.not-a-goal"
+  },
+  {
+    "from": "principle.purpose-driven",
+    "type": "CITES",
+    "to": "loc.o101.pudding"
+  },
+  {
+    "from": "principle.structure-not-behavior",
+    "type": "CITES",
+    "to": "loc.o101.structural-not-operational"
+  },
+  {
+    "from": "principle.knowledge-level",
+    "type": "CITES",
+    "to": "loc.g93.knowledge-level"
+  },
+  {
+    "from": "principle.knowledge-level",
+    "type": "CITES",
+    "to": "loc.g93.definition"
+  },
+  {
+    "from": "principle.document-meaning",
+    "type": "CITES",
+    "to": "loc.g93.definitions-text"
+  },
+  {
+    "from": "principle.document-meaning",
+    "type": "CITES",
+    "to": "loc.g93.documentation"
+  },
+  {
+    "from": "concept.ontology",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.def-ontology"
+  },
+  {
+    "from": "concept.ontology",
+    "type": "DEFINED_IN",
+    "to": "loc.g93.definition"
+  },
+  {
+    "from": "concept.conceptualization",
+    "type": "DEFINED_IN",
+    "to": "loc.g93.conceptualization"
+  },
+  {
+    "from": "concept.knowledge-base",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.def-kb"
+  },
+  {
+    "from": "concept.class",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.classes-focus"
+  },
+  {
+    "from": "concept.class",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.select-classes"
+  },
+  {
+    "from": "concept.instance",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.instances-most-specific"
+  },
+  {
+    "from": "concept.instance",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.no-sub-instance"
+  },
+  {
+    "from": "concept.subclass",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.superclass"
+  },
+  {
+    "from": "concept.subclass",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.is-a"
+  },
+  {
+    "from": "concept.subclass",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.isa-test"
+  },
+  {
+    "from": "concept.direct-subclass",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.direct-subclass"
+  },
+  {
+    "from": "concept.transitivity",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.transitive"
+  },
+  {
+    "from": "concept.class-hierarchy",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.in-practice"
+  },
+  {
+    "from": "concept.class-hierarchy",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.isa-test"
+  },
+  {
+    "from": "concept.sibling",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.siblings-def"
+  },
+  {
+    "from": "concept.sibling",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.siblings-generality"
+  },
+  {
+    "from": "concept.multiple-inheritance",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.multiple-inheritance"
+  },
+  {
+    "from": "concept.multiple-inheritance",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.multiple-inherit-slots"
+  },
+  {
+    "from": "concept.abstract-class",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.abstract"
+  },
+  {
+    "from": "concept.terminological-hierarchy",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.terminological"
+  },
+  {
+    "from": "concept.slot",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.def-ontology"
+  },
+  {
+    "from": "concept.slot",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.slots-describe"
+  },
+  {
+    "from": "concept.slot",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.slot-kinds"
+  },
+  {
+    "from": "concept.intrinsic-extrinsic",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.slot-kinds"
+  },
+  {
+    "from": "concept.intrinsic-extrinsic",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.stable-membership"
+  },
+  {
+    "from": "concept.inheritance",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.inherit"
+  },
+  {
+    "from": "concept.facet",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.step6"
+  },
+  {
+    "from": "concept.facet",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.def-ontology"
+  },
+  {
+    "from": "concept.value-type",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.value-type"
+  },
+  {
+    "from": "concept.value-type",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.enumerated"
+  },
+  {
+    "from": "concept.value-type",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.instance-type"
+  },
+  {
+    "from": "concept.cardinality",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.cardinality"
+  },
+  {
+    "from": "concept.cardinality",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.min-max"
+  },
+  {
+    "from": "concept.cardinality",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.max"
+  },
+  {
+    "from": "concept.cardinality",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.max-zero"
+  },
+  {
+    "from": "concept.domain",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.domain"
+  },
+  {
+    "from": "concept.range",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.range"
+  },
+  {
+    "from": "concept.range",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.instance-type"
+  },
+  {
+    "from": "concept.inverse-slots",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.inverse"
+  },
+  {
+    "from": "concept.inverse-slots",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.inverse-auto"
+  },
+  {
+    "from": "concept.default-value",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.defaults"
+  },
+  {
+    "from": "concept.default-value",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.defaults-convenience"
+  },
+  {
+    "from": "concept.fixed-value",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.fixed-values"
+  },
+  {
+    "from": "concept.facet-override",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.new-class-practical"
+  },
+  {
+    "from": "concept.facet-override",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.max-zero"
+  },
+  {
+    "from": "concept.disjoint",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.disjoint"
+  },
+  {
+    "from": "concept.disjoint",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.disjoint-validate"
+  },
+  {
+    "from": "concept.synonym",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.synonyms"
+  },
+  {
+    "from": "concept.synonym",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.synonym-list"
+  },
+  {
+    "from": "concept.synonym",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.class-not-name"
+  },
+  {
+    "from": "concept.naming-convention",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.naming"
+  },
+  {
+    "from": "concept.naming-convention",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.naming-why"
+  },
+  {
+    "from": "concept.naming-convention",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.capitalization"
+  },
+  {
+    "from": "concept.competency-question",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.cq"
+  },
+  {
+    "from": "concept.competency-question",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.cq-litmus"
+  },
+  {
+    "from": "concept.competency-question",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.cq-sketch"
+  },
+  {
+    "from": "concept.scope",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.step1"
+  },
+  {
+    "from": "concept.scope",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.scope-changes"
+  },
+  {
+    "from": "concept.design-decision",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.record-decisions"
+  },
+  {
+    "from": "concept.development-approach",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.top-down"
+  },
+  {
+    "from": "concept.development-approach",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.bottom-up"
+  },
+  {
+    "from": "concept.development-approach",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.combination"
+  },
+  {
+    "from": "concept.development-approach",
+    "type": "DEFINED_IN",
+    "to": "loc.o101.no-best-approach"
+  },
+  {
+    "from": "rule.hier-is-a-means-kind-of",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-is-a-means-kind-of"
+  },
+  {
+    "from": "rat.hier-is-a-means-kind-of",
+    "type": "CITES",
+    "to": "loc.o101.is-a"
+  },
+  {
+    "from": "rat.hier-is-a-means-kind-of",
+    "type": "CITES",
+    "to": "loc.o101.superclass"
+  },
+  {
+    "from": "rat.hier-is-a-means-kind-of",
+    "type": "CITES",
+    "to": "loc.o101.subclass-must"
+  },
+  {
+    "from": "rat.hier-is-a-means-kind-of",
+    "type": "CITES",
+    "to": "loc.o101.isa-test"
+  },
+  {
+    "from": "rule.hier-is-a-means-kind-of",
+    "type": "GOVERNS",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "rule.hier-no-cycles",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-no-cycles"
+  },
+  {
+    "from": "rat.hier-no-cycles",
+    "type": "CITES",
+    "to": "loc.o101.cycles"
+  },
+  {
+    "from": "rule.hier-no-cycles",
+    "type": "GOVERNS",
+    "to": "concept.class-hierarchy"
+  },
+  {
+    "from": "rule.hier-no-singular-plural-pair",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-no-singular-plural-pair"
+  },
+  {
+    "from": "rat.hier-no-singular-plural-pair",
+    "type": "CITES",
+    "to": "loc.o101.singular-plural"
+  },
+  {
+    "from": "rule.hier-no-singular-plural-pair",
+    "type": "GOVERNS",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "rule.hier-no-singular-plural-pair",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.hier-no-synonym-classes",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-no-synonym-classes"
+  },
+  {
+    "from": "rat.hier-no-synonym-classes",
+    "type": "CITES",
+    "to": "loc.o101.synonyms"
+  },
+  {
+    "from": "rat.hier-no-synonym-classes",
+    "type": "CITES",
+    "to": "loc.o101.class-not-name"
+  },
+  {
+    "from": "rat.hier-no-synonym-classes",
+    "type": "CITES",
+    "to": "loc.o101.synonym-list"
+  },
+  {
+    "from": "rule.hier-no-synonym-classes",
+    "type": "GOVERNS",
+    "to": "concept.synonym"
+  },
+  {
+    "from": "rule.hier-no-synonym-classes",
+    "type": "GOVERNS",
+    "to": "concept.class"
+  },
+  {
+    "from": "rule.hier-siblings-same-generality",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-siblings-same-generality"
+  },
+  {
+    "from": "rat.hier-siblings-same-generality",
+    "type": "CITES",
+    "to": "loc.o101.siblings-generality"
+  },
+  {
+    "from": "rat.hier-siblings-same-generality",
+    "type": "CITES",
+    "to": "loc.o101.root-exception"
+  },
+  {
+    "from": "rule.hier-siblings-same-generality",
+    "type": "GOVERNS",
+    "to": "concept.sibling"
+  },
+  {
+    "from": "rule.hier-no-redundant-isa",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-no-redundant-isa"
+  },
+  {
+    "from": "rat.hier-no-redundant-isa",
+    "type": "CITES",
+    "to": "loc.o101.transitive"
+  },
+  {
+    "from": "rat.hier-no-redundant-isa",
+    "type": "CITES",
+    "to": "loc.o101.chardonnay-direct"
+  },
+  {
+    "from": "rat.hier-no-redundant-isa",
+    "type": "CITES",
+    "to": "loc.o101.siblings-generality"
+  },
+  {
+    "from": "rule.hier-no-redundant-isa",
+    "type": "GOVERNS",
+    "to": "concept.transitivity"
+  },
+  {
+    "from": "rule.hier-no-redundant-isa",
+    "type": "GOVERNS",
+    "to": "concept.sibling"
+  },
+  {
+    "from": "rule.hier-single-child",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-single-child"
+  },
+  {
+    "from": "rat.hier-single-child",
+    "type": "CITES",
+    "to": "loc.o101.one-child"
+  },
+  {
+    "from": "rat.hier-single-child",
+    "type": "CITES",
+    "to": "loc.o101.how-many"
+  },
+  {
+    "from": "rule.hier-single-child",
+    "type": "GOVERNS",
+    "to": "concept.class-hierarchy"
+  },
+  {
+    "from": "rule.hier-too-many-children",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-too-many-children"
+  },
+  {
+    "from": "rat.hier-too-many-children",
+    "type": "CITES",
+    "to": "loc.o101.dozen"
+  },
+  {
+    "from": "rat.hier-too-many-children",
+    "type": "CITES",
+    "to": "loc.o101.no-artificial"
+  },
+  {
+    "from": "rule.hier-too-many-children",
+    "type": "GOVERNS",
+    "to": "concept.class-hierarchy"
+  },
+  {
+    "from": "rule.hier-subclass-adds-something",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-subclass-adds-something"
+  },
+  {
+    "from": "rat.hier-subclass-adds-something",
+    "type": "CITES",
+    "to": "loc.o101.new-class-rule"
+  },
+  {
+    "from": "rat.hier-subclass-adds-something",
+    "type": "CITES",
+    "to": "loc.o101.new-class-practical"
+  },
+  {
+    "from": "rat.hier-subclass-adds-something",
+    "type": "CITES",
+    "to": "loc.o101.terminological"
+  },
+  {
+    "from": "rat.hier-subclass-adds-something",
+    "type": "CITES",
+    "to": "loc.o101.expert-distinction"
+  },
+  {
+    "from": "rule.hier-subclass-adds-something",
+    "type": "GOVERNS",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "rule.hier-subclass-adds-something",
+    "type": "GOVERNS",
+    "to": "concept.terminological-hierarchy"
+  },
+  {
+    "from": "rule.hier-no-subclass-per-restriction",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-no-subclass-per-restriction"
+  },
+  {
+    "from": "rat.hier-no-subclass-per-restriction",
+    "type": "CITES",
+    "to": "loc.o101.not-each-restriction"
+  },
+  {
+    "from": "rat.hier-no-subclass-per-restriction",
+    "type": "CITES",
+    "to": "loc.o101.balance"
+  },
+  {
+    "from": "rule.hier-no-subclass-per-restriction",
+    "type": "GOVERNS",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "rule.hier-class-or-value",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-class-or-value"
+  },
+  {
+    "from": "rat.hier-class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.class-or-value"
+  },
+  {
+    "from": "rat.hier-class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.class-or-value-kinds"
+  },
+  {
+    "from": "rat.hier-class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.numbers-are-values"
+  },
+  {
+    "from": "rule.hier-class-or-value",
+    "type": "GOVERNS",
+    "to": "concept.class"
+  },
+  {
+    "from": "rule.hier-class-or-value",
+    "type": "GOVERNS",
+    "to": "concept.slot"
+  },
+  {
+    "from": "rule.hier-stable-membership",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.hier-stable-membership"
+  },
+  {
+    "from": "rat.hier-stable-membership",
+    "type": "CITES",
+    "to": "loc.o101.stable-membership"
+  },
+  {
+    "from": "rule.hier-stable-membership",
+    "type": "GOVERNS",
+    "to": "concept.intrinsic-extrinsic"
+  },
+  {
+    "from": "rule.inst-are-leaves",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.inst-are-leaves"
+  },
+  {
+    "from": "rat.inst-are-leaves",
+    "type": "CITES",
+    "to": "loc.o101.instances-most-specific"
+  },
+  {
+    "from": "rat.inst-are-leaves",
+    "type": "CITES",
+    "to": "loc.o101.no-sub-instance"
+  },
+  {
+    "from": "rule.inst-are-leaves",
+    "type": "GOVERNS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "rule.inst-natural-hierarchy-as-classes",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.inst-natural-hierarchy-as-classes"
+  },
+  {
+    "from": "rat.inst-natural-hierarchy-as-classes",
+    "type": "CITES",
+    "to": "loc.o101.natural-hierarchy"
+  },
+  {
+    "from": "rat.inst-natural-hierarchy-as-classes",
+    "type": "CITES",
+    "to": "loc.o101.classes-without-instances"
+  },
+  {
+    "from": "rat.inst-natural-hierarchy-as-classes",
+    "type": "CITES",
+    "to": "loc.o101.no-sub-instance"
+  },
+  {
+    "from": "rule.inst-natural-hierarchy-as-classes",
+    "type": "GOVERNS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "rule.inst-natural-hierarchy-as-classes",
+    "type": "GOVERNS",
+    "to": "concept.class"
+  },
+  {
+    "from": "rule.inst-granularity",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.inst-granularity"
+  },
+  {
+    "from": "rat.inst-granularity",
+    "type": "CITES",
+    "to": "loc.o101.instance-or-class"
+  },
+  {
+    "from": "rat.inst-granularity",
+    "type": "CITES",
+    "to": "loc.o101.granularity"
+  },
+  {
+    "from": "rat.inst-granularity",
+    "type": "CITES",
+    "to": "loc.o101.cq-individuals"
+  },
+  {
+    "from": "rule.inst-granularity",
+    "type": "GOVERNS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "rule.inst-granularity",
+    "type": "GOVERNS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "rule.inst-not-of-abstract",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.inst-not-of-abstract"
+  },
+  {
+    "from": "rat.inst-not-of-abstract",
+    "type": "CITES",
+    "to": "loc.o101.abstract"
+  },
+  {
+    "from": "rule.inst-not-of-abstract",
+    "type": "GOVERNS",
+    "to": "concept.abstract-class"
+  },
+  {
+    "from": "rule.slot-attach-most-general",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-attach-most-general"
+  },
+  {
+    "from": "rat.slot-attach-most-general",
+    "type": "CITES",
+    "to": "loc.o101.most-general"
+  },
+  {
+    "from": "rat.slot-attach-most-general",
+    "type": "CITES",
+    "to": "loc.o101.inherit"
+  },
+  {
+    "from": "rat.slot-attach-most-general",
+    "type": "CITES",
+    "to": "loc.o101.dr-remove-subclass"
+  },
+  {
+    "from": "rat.slot-attach-most-general",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-subclasses"
+  },
+  {
+    "from": "rule.slot-attach-most-general",
+    "type": "GOVERNS",
+    "to": "concept.domain"
+  },
+  {
+    "from": "rule.slot-attach-most-general",
+    "type": "GOVERNS",
+    "to": "concept.inheritance"
+  },
+  {
+    "from": "rule.slot-domain-fits-all",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-domain-fits-all"
+  },
+  {
+    "from": "rat.slot-domain-fits-all",
+    "type": "CITES",
+    "to": "loc.o101.attach-can-have"
+  },
+  {
+    "from": "rat.slot-domain-fits-all",
+    "type": "CITES",
+    "to": "loc.o101.dr-not-overly-general"
+  },
+  {
+    "from": "rule.slot-domain-fits-all",
+    "type": "GOVERNS",
+    "to": "concept.domain"
+  },
+  {
+    "from": "rule.slot-range-remove-subclass",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-range-remove-subclass"
+  },
+  {
+    "from": "rat.slot-range-remove-subclass",
+    "type": "CITES",
+    "to": "loc.o101.dr-remove-subclass"
+  },
+  {
+    "from": "rule.slot-range-remove-subclass",
+    "type": "GOVERNS",
+    "to": "concept.range"
+  },
+  {
+    "from": "rule.slot-range-collapse-subclasses",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-range-collapse-subclasses"
+  },
+  {
+    "from": "rat.slot-range-collapse-subclasses",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-subclasses"
+  },
+  {
+    "from": "rule.slot-range-collapse-subclasses",
+    "type": "GOVERNS",
+    "to": "concept.range"
+  },
+  {
+    "from": "rule.slot-range-all-but-few",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-range-all-but-few"
+  },
+  {
+    "from": "rat.slot-range-all-but-few",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-but-few"
+  },
+  {
+    "from": "rule.slot-range-all-but-few",
+    "type": "GOVERNS",
+    "to": "concept.range"
+  },
+  {
+    "from": "rule.slot-range-not-too-general",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-range-not-too-general"
+  },
+  {
+    "from": "rat.slot-range-not-too-general",
+    "type": "CITES",
+    "to": "loc.o101.dr-not-overly-general"
+  },
+  {
+    "from": "rat.slot-range-not-too-general",
+    "type": "CITES",
+    "to": "loc.o101.dr-most-general"
+  },
+  {
+    "from": "rule.slot-range-not-too-general",
+    "type": "GOVERNS",
+    "to": "concept.range"
+  },
+  {
+    "from": "rule.slot-value-type-declared",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-value-type-declared"
+  },
+  {
+    "from": "rat.slot-value-type-declared",
+    "type": "CITES",
+    "to": "loc.o101.value-type"
+  },
+  {
+    "from": "rule.slot-value-type-declared",
+    "type": "GOVERNS",
+    "to": "concept.value-type"
+  },
+  {
+    "from": "rule.slot-instance-needs-range",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-instance-needs-range"
+  },
+  {
+    "from": "rat.slot-instance-needs-range",
+    "type": "CITES",
+    "to": "loc.o101.instance-type"
+  },
+  {
+    "from": "rule.slot-instance-needs-range",
+    "type": "GOVERNS",
+    "to": "concept.range"
+  },
+  {
+    "from": "rule.slot-instance-needs-range",
+    "type": "GOVERNS",
+    "to": "concept.value-type"
+  },
+  {
+    "from": "rule.slot-enum-needs-values",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-enum-needs-values"
+  },
+  {
+    "from": "rat.slot-enum-needs-values",
+    "type": "CITES",
+    "to": "loc.o101.enumerated"
+  },
+  {
+    "from": "rule.slot-enum-needs-values",
+    "type": "GOVERNS",
+    "to": "concept.value-type"
+  },
+  {
+    "from": "rule.slot-cardinality-declared",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-cardinality-declared"
+  },
+  {
+    "from": "rat.slot-cardinality-declared",
+    "type": "CITES",
+    "to": "loc.o101.step6"
+  },
+  {
+    "from": "rat.slot-cardinality-declared",
+    "type": "CITES",
+    "to": "loc.o101.cardinality"
+  },
+  {
+    "from": "rule.slot-cardinality-declared",
+    "type": "GOVERNS",
+    "to": "concept.cardinality"
+  },
+  {
+    "from": "rule.slot-cardinality-coherent",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-cardinality-coherent"
+  },
+  {
+    "from": "rat.slot-cardinality-coherent",
+    "type": "CITES",
+    "to": "loc.o101.cardinality"
+  },
+  {
+    "from": "rat.slot-cardinality-coherent",
+    "type": "CITES",
+    "to": "loc.o101.min-max"
+  },
+  {
+    "from": "rat.slot-cardinality-coherent",
+    "type": "CITES",
+    "to": "loc.o101.max"
+  },
+  {
+    "from": "rule.slot-cardinality-coherent",
+    "type": "GOVERNS",
+    "to": "concept.cardinality"
+  },
+  {
+    "from": "rule.slot-values-respect-facets",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-values-respect-facets"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.min-max"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.max"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.value-type"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.enumerated"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.instance-type"
+  },
+  {
+    "from": "rat.slot-values-respect-facets",
+    "type": "CITES",
+    "to": "loc.o101.new-class-practical"
+  },
+  {
+    "from": "rule.slot-values-respect-facets",
+    "type": "GOVERNS",
+    "to": "concept.facet"
+  },
+  {
+    "from": "rule.slot-values-respect-facets",
+    "type": "GOVERNS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "rule.slot-value-slot-applies",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-value-slot-applies"
+  },
+  {
+    "from": "rat.slot-value-slot-applies",
+    "type": "CITES",
+    "to": "loc.o101.slots-attached"
+  },
+  {
+    "from": "rat.slot-value-slot-applies",
+    "type": "CITES",
+    "to": "loc.o101.domain"
+  },
+  {
+    "from": "rat.slot-value-slot-applies",
+    "type": "CITES",
+    "to": "loc.o101.inherit"
+  },
+  {
+    "from": "rule.slot-value-slot-applies",
+    "type": "GOVERNS",
+    "to": "concept.domain"
+  },
+  {
+    "from": "rule.slot-value-slot-applies",
+    "type": "GOVERNS",
+    "to": "concept.inheritance"
+  },
+  {
+    "from": "rule.slot-default-allowed",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-default-allowed"
+  },
+  {
+    "from": "rat.slot-default-allowed",
+    "type": "CITES",
+    "to": "loc.o101.defaults"
+  },
+  {
+    "from": "rat.slot-default-allowed",
+    "type": "CITES",
+    "to": "loc.o101.defaults-convenience"
+  },
+  {
+    "from": "rule.slot-default-allowed",
+    "type": "GOVERNS",
+    "to": "concept.default-value"
+  },
+  {
+    "from": "rule.slot-fixed-not-overridden",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-fixed-not-overridden"
+  },
+  {
+    "from": "rat.slot-fixed-not-overridden",
+    "type": "CITES",
+    "to": "loc.o101.fixed-values"
+  },
+  {
+    "from": "rule.slot-fixed-not-overridden",
+    "type": "GOVERNS",
+    "to": "concept.fixed-value"
+  },
+  {
+    "from": "rule.slot-inverse-consistent",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-inverse-consistent"
+  },
+  {
+    "from": "rat.slot-inverse-consistent",
+    "type": "CITES",
+    "to": "loc.o101.inverse"
+  },
+  {
+    "from": "rat.slot-inverse-consistent",
+    "type": "CITES",
+    "to": "loc.o101.inverse-auto"
+  },
+  {
+    "from": "rat.slot-inverse-consistent",
+    "type": "CITES",
+    "to": "loc.o101.inverse-figure"
+  },
+  {
+    "from": "rule.slot-inverse-consistent",
+    "type": "GOVERNS",
+    "to": "concept.inverse-slots"
+  },
+  {
+    "from": "rule.slot-edge-properties",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.slot-edge-properties"
+  },
+  {
+    "from": "rule.slot-edge-properties",
+    "type": "GOVERNS",
+    "to": "concept.edge-property"
+  },
+  {
+    "from": "rule.disjoint-no-shared-members",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.disjoint-no-shared-members"
+  },
+  {
+    "from": "rat.disjoint-no-shared-members",
+    "type": "CITES",
+    "to": "loc.o101.disjoint"
+  },
+  {
+    "from": "rat.disjoint-no-shared-members",
+    "type": "CITES",
+    "to": "loc.o101.disjoint-validate"
+  },
+  {
+    "from": "rule.disjoint-no-shared-members",
+    "type": "GOVERNS",
+    "to": "concept.disjoint"
+  },
+  {
+    "from": "rule.disjoint-consider-siblings",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.disjoint-consider-siblings"
+  },
+  {
+    "from": "rat.disjoint-consider-siblings",
+    "type": "CITES",
+    "to": "loc.o101.disjoint-validate"
+  },
+  {
+    "from": "rule.disjoint-consider-siblings",
+    "type": "GOVERNS",
+    "to": "concept.disjoint"
+  },
+  {
+    "from": "rule.naming-convention-defined",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-convention-defined"
+  },
+  {
+    "from": "rat.naming-convention-defined",
+    "type": "CITES",
+    "to": "loc.o101.naming"
+  },
+  {
+    "from": "rat.naming-convention-defined",
+    "type": "CITES",
+    "to": "loc.o101.naming-why"
+  },
+  {
+    "from": "rule.naming-convention-defined",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-follow-convention",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-follow-convention"
+  },
+  {
+    "from": "rat.naming-follow-convention",
+    "type": "CITES",
+    "to": "loc.o101.naming"
+  },
+  {
+    "from": "rule.naming-follow-convention",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-singular-plural-consistent",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-singular-plural-consistent"
+  },
+  {
+    "from": "rat.naming-singular-plural-consistent",
+    "type": "CITES",
+    "to": "loc.o101.singular-plural-consistent"
+  },
+  {
+    "from": "rat.naming-singular-plural-consistent",
+    "type": "CITES",
+    "to": "loc.o101.singular-plural-avoid"
+  },
+  {
+    "from": "rule.naming-singular-plural-consistent",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-no-type-words",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-no-type-words"
+  },
+  {
+    "from": "rat.naming-no-type-words",
+    "type": "CITES",
+    "to": "loc.o101.no-type-words"
+  },
+  {
+    "from": "rat.naming-no-type-words",
+    "type": "CITES",
+    "to": "loc.o101.things-to-consider"
+  },
+  {
+    "from": "rule.naming-no-type-words",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-no-abbreviations",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-no-abbreviations"
+  },
+  {
+    "from": "rat.naming-no-abbreviations",
+    "type": "CITES",
+    "to": "loc.o101.abbreviations"
+  },
+  {
+    "from": "rule.naming-no-abbreviations",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-subclass-names-consistent",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-subclass-names-consistent"
+  },
+  {
+    "from": "rat.naming-subclass-names-consistent",
+    "type": "CITES",
+    "to": "loc.o101.subclass-names"
+  },
+  {
+    "from": "rule.naming-subclass-names-consistent",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.naming-subclass-names-consistent",
+    "type": "GOVERNS",
+    "to": "concept.sibling"
+  },
+  {
+    "from": "rule.naming-unique",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.naming-unique"
+  },
+  {
+    "from": "rat.naming-unique",
+    "type": "CITES",
+    "to": "loc.o101.name-spaces"
+  },
+  {
+    "from": "rat.naming-unique",
+    "type": "CITES",
+    "to": "loc.o101.other-systems"
+  },
+  {
+    "from": "rule.naming-unique",
+    "type": "GOVERNS",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "rule.scope-defined",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.scope-defined"
+  },
+  {
+    "from": "rat.scope-defined",
+    "type": "CITES",
+    "to": "loc.o101.step1"
+  },
+  {
+    "from": "rat.scope-defined",
+    "type": "CITES",
+    "to": "loc.o101.scope-changes"
+  },
+  {
+    "from": "rule.scope-defined",
+    "type": "GOVERNS",
+    "to": "concept.scope"
+  },
+  {
+    "from": "rule.scope-competency-questions",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.scope-competency-questions"
+  },
+  {
+    "from": "rat.scope-competency-questions",
+    "type": "CITES",
+    "to": "loc.o101.cq"
+  },
+  {
+    "from": "rat.scope-competency-questions",
+    "type": "CITES",
+    "to": "loc.o101.cq-litmus"
+  },
+  {
+    "from": "rat.scope-competency-questions",
+    "type": "CITES",
+    "to": "loc.o101.cq-sketch"
+  },
+  {
+    "from": "rule.scope-competency-questions",
+    "type": "GOVERNS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "rule.scope-cq-coverage",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.scope-cq-coverage"
+  },
+  {
+    "from": "rat.scope-cq-coverage",
+    "type": "CITES",
+    "to": "loc.o101.cq-litmus"
+  },
+  {
+    "from": "rat.scope-cq-coverage",
+    "type": "CITES",
+    "to": "loc.o101.step5"
+  },
+  {
+    "from": "rule.scope-cq-coverage",
+    "type": "GOVERNS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "rule.scope-no-unneeded",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.scope-no-unneeded"
+  },
+  {
+    "from": "rat.scope-no-unneeded",
+    "type": "CITES",
+    "to": "loc.o101.limit-scope"
+  },
+  {
+    "from": "rat.scope-no-unneeded",
+    "type": "CITES",
+    "to": "loc.o101.limit-properties"
+  },
+  {
+    "from": "rule.scope-no-unneeded",
+    "type": "GOVERNS",
+    "to": "concept.scope"
+  },
+  {
+    "from": "rule.scope-no-unneeded",
+    "type": "GOVERNS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "rule.doc-descriptions",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.doc-descriptions"
+  },
+  {
+    "from": "rat.doc-descriptions",
+    "type": "CITES",
+    "to": "loc.g93.definitions-text"
+  },
+  {
+    "from": "rat.doc-descriptions",
+    "type": "CITES",
+    "to": "loc.o101.synonym-list"
+  },
+  {
+    "from": "rule.doc-descriptions",
+    "type": "GOVERNS",
+    "to": "concept.class"
+  },
+  {
+    "from": "rule.doc-descriptions",
+    "type": "GOVERNS",
+    "to": "concept.slot"
+  },
+  {
+    "from": "rule.doc-record-decisions",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.doc-record-decisions"
+  },
+  {
+    "from": "rat.doc-record-decisions",
+    "type": "CITES",
+    "to": "loc.o101.record-decisions"
+  },
+  {
+    "from": "rule.doc-record-decisions",
+    "type": "GOVERNS",
+    "to": "concept.design-decision"
+  },
+  {
+    "from": "rule.reuse-considered",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.reuse-considered"
+  },
+  {
+    "from": "rat.reuse-considered",
+    "type": "CITES",
+    "to": "loc.o101.step2"
+  },
+  {
+    "from": "rat.reuse-considered",
+    "type": "CITES",
+    "to": "loc.o101.step2-requirement"
+  },
+  {
+    "from": "rule.reuse-considered",
+    "type": "GOVERNS",
+    "to": "concept.ontology"
+  },
+  {
+    "from": "rule.terms-dispositioned",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.terms-dispositioned"
+  },
+  {
+    "from": "rat.terms-dispositioned",
+    "type": "CITES",
+    "to": "loc.o101.select-classes"
+  },
+  {
+    "from": "rat.terms-dispositioned",
+    "type": "CITES",
+    "to": "loc.o101.remaining-terms"
+  },
+  {
+    "from": "rule.terms-dispositioned",
+    "type": "GOVERNS",
+    "to": "concept.class"
+  },
+  {
+    "from": "rule.terms-dispositioned",
+    "type": "GOVERNS",
+    "to": "concept.slot"
+  },
+  {
+    "from": "rule.reuse-recorded",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.reuse-recorded"
+  },
+  {
+    "from": "rule.reuse-recorded",
+    "type": "GOVERNS",
+    "to": "concept.ontology"
+  },
+  {
+    "from": "rule.struct-well-formed",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.struct-well-formed"
+  },
+  {
+    "from": "rule.struct-well-formed",
+    "type": "GOVERNS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "rule.prov-verified",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.prov-verified"
+  },
+  {
+    "from": "rule.prov-verified",
+    "type": "GOVERNS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "rule.prov-cites-quote",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.prov-cites-quote"
+  },
+  {
+    "from": "rule.prov-cites-quote",
+    "type": "GOVERNS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "rule.prov-quote-current",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.prov-quote-current"
+  },
+  {
+    "from": "rule.prov-quote-current",
+    "type": "GOVERNS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "rule.prov-duplicate-quotes",
+    "type": "JUSTIFIED_BY",
+    "to": "rat.prov-duplicate-quotes"
+  },
+  {
+    "from": "rule.prov-duplicate-quotes",
+    "type": "GOVERNS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "decision.approach",
+    "type": "CITES",
+    "to": "loc.o101.no-best-approach"
+  },
+  {
+    "from": "decision.approach",
+    "type": "CITES",
+    "to": "loc.o101.combination-easiest"
+  },
+  {
+    "from": "decision.is-a",
+    "type": "CITES",
+    "to": "loc.o101.isa-test"
+  },
+  {
+    "from": "decision.is-a",
+    "type": "CITES",
+    "to": "loc.o101.is-a"
+  },
+  {
+    "from": "decision.is-a",
+    "type": "CITES",
+    "to": "loc.o101.singular-plural"
+  },
+  {
+    "from": "decision.is-a",
+    "type": "CITES",
+    "to": "loc.o101.transitive"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.new-class-rule"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.new-class-practical"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.terminological"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.expert-distinction"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.not-each-restriction"
+  },
+  {
+    "from": "decision.new-class",
+    "type": "CITES",
+    "to": "loc.o101.balance"
+  },
+  {
+    "from": "decision.class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.class-or-value"
+  },
+  {
+    "from": "decision.class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.class-or-value-kinds"
+  },
+  {
+    "from": "decision.class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.stable-membership"
+  },
+  {
+    "from": "decision.class-or-value",
+    "type": "CITES",
+    "to": "loc.o101.numbers-are-values"
+  },
+  {
+    "from": "decision.instance-or-class",
+    "type": "CITES",
+    "to": "loc.o101.instance-or-class"
+  },
+  {
+    "from": "decision.instance-or-class",
+    "type": "CITES",
+    "to": "loc.o101.cq-individuals"
+  },
+  {
+    "from": "decision.instance-or-class",
+    "type": "CITES",
+    "to": "loc.o101.natural-hierarchy"
+  },
+  {
+    "from": "decision.disjoint",
+    "type": "CITES",
+    "to": "loc.o101.disjoint"
+  },
+  {
+    "from": "decision.disjoint",
+    "type": "CITES",
+    "to": "loc.o101.disjoint-validate"
+  },
+  {
+    "from": "decision.slot-placement",
+    "type": "CITES",
+    "to": "loc.o101.most-general"
+  },
+  {
+    "from": "decision.slot-placement",
+    "type": "CITES",
+    "to": "loc.o101.attach-can-have"
+  },
+  {
+    "from": "decision.slot-placement",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-subclasses"
+  },
+  {
+    "from": "decision.range",
+    "type": "CITES",
+    "to": "loc.o101.dr-most-general"
+  },
+  {
+    "from": "decision.range",
+    "type": "CITES",
+    "to": "loc.o101.dr-not-overly-general"
+  },
+  {
+    "from": "decision.range",
+    "type": "CITES",
+    "to": "loc.o101.dr-remove-subclass"
+  },
+  {
+    "from": "decision.range",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-subclasses"
+  },
+  {
+    "from": "decision.range",
+    "type": "CITES",
+    "to": "loc.o101.dr-all-but-few"
+  },
+  {
+    "from": "decision.naming",
+    "type": "CITES",
+    "to": "loc.o101.naming"
+  },
+  {
+    "from": "decision.naming",
+    "type": "CITES",
+    "to": "loc.o101.capitalization"
+  },
+  {
+    "from": "decision.naming",
+    "type": "CITES",
+    "to": "loc.o101.singular-plural-consistent"
+  },
+  {
+    "from": "decision.naming",
+    "type": "CITES",
+    "to": "loc.o101.prefix-suffix"
+  },
+  {
+    "from": "decision.naming",
+    "type": "CITES",
+    "to": "loc.o101.other-systems"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "CITES",
+    "to": "loc.o101.step1"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "CITES",
+    "to": "loc.o101.cq"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "CITES",
+    "to": "loc.o101.cq-sketch"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "CITES",
+    "to": "loc.o101.scope-changes"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "APPLIES",
+    "to": "rule.scope-defined"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "APPLIES",
+    "to": "rule.scope-competency-questions"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "INTRODUCES",
+    "to": "concept.scope"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "INTRODUCES",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "INTRODUCES",
+    "to": "concept.conceptualization"
+  },
+  {
+    "from": "step.1-scope",
+    "type": "PRECEDES",
+    "to": "step.2-reuse"
+  },
+  {
+    "from": "step.2-reuse",
+    "type": "CITES",
+    "to": "loc.o101.step2"
+  },
+  {
+    "from": "step.2-reuse",
+    "type": "CITES",
+    "to": "loc.o101.step2-requirement"
+  },
+  {
+    "from": "step.2-reuse",
+    "type": "APPLIES",
+    "to": "rule.reuse-considered"
+  },
+  {
+    "from": "step.2-reuse",
+    "type": "APPLIES",
+    "to": "rule.reuse-recorded"
+  },
+  {
+    "from": "step.2-reuse",
+    "type": "PRECEDES",
+    "to": "step.3-terms"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "CITES",
+    "to": "loc.o101.step3"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "CITES",
+    "to": "loc.o101.step3-no-worry"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "CITES",
+    "to": "loc.o101.rule-nouns-verbs"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "INTRODUCES",
+    "to": "concept.class"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "INTRODUCES",
+    "to": "concept.slot"
+  },
+  {
+    "from": "step.3-terms",
+    "type": "PRECEDES",
+    "to": "step.4-classes"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.select-classes"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.isa-test"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.top-down"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.bottom-up"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.combination"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.stand-back"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "CITES",
+    "to": "loc.o101.intertwined"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-is-a-means-kind-of"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-no-cycles"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-no-singular-plural-pair"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-no-synonym-classes"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-siblings-same-generality"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-no-redundant-isa"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-single-child"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-too-many-children"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-no-subclass-per-restriction"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-class-or-value"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.hier-stable-membership"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.inst-are-leaves"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.inst-natural-hierarchy-as-classes"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.disjoint-no-shared-members"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.disjoint-consider-siblings"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-convention-defined"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-follow-convention"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-singular-plural-consistent"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-no-type-words"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-subclass-names-consistent"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.doc-descriptions"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.class"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.class-hierarchy"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.sibling"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.transitivity"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.multiple-inheritance"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.abstract-class"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.disjoint"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.synonym"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.naming-convention"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "INTRODUCES",
+    "to": "concept.development-approach"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.approach"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.is-a"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.new-class"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.class-or-value"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.instance-or-class"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.disjoint"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "USES",
+    "to": "decision.naming"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "PRECEDES",
+    "to": "step.5-slots"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "CITES",
+    "to": "loc.o101.step5"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "CITES",
+    "to": "loc.o101.remaining-terms"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "CITES",
+    "to": "loc.o101.slot-kinds"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "CITES",
+    "to": "loc.o101.most-general"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "CITES",
+    "to": "loc.o101.inherit"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "APPLIES",
+    "to": "rule.slot-attach-most-general"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "APPLIES",
+    "to": "rule.slot-domain-fits-all"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "APPLIES",
+    "to": "rule.slot-value-type-declared"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "APPLIES",
+    "to": "rule.doc-descriptions"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "INTRODUCES",
+    "to": "concept.slot"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "INTRODUCES",
+    "to": "concept.intrinsic-extrinsic"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "INTRODUCES",
+    "to": "concept.inheritance"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "INTRODUCES",
+    "to": "concept.domain"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "USES",
+    "to": "decision.slot-placement"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "USES",
+    "to": "decision.class-or-value"
+  },
+  {
+    "from": "step.5-slots",
+    "type": "PRECEDES",
+    "to": "step.6-facets"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "CITES",
+    "to": "loc.o101.step6"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "CITES",
+    "to": "loc.o101.dr-most-general"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "CITES",
+    "to": "loc.o101.dr-not-overly-general"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-instance-needs-range"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-enum-needs-values"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-cardinality-declared"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-cardinality-coherent"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-range-remove-subclass"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-range-collapse-subclasses"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-range-all-but-few"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-range-not-too-general"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-default-allowed"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-fixed-not-overridden"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-inverse-consistent"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.slot-edge-properties"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.hier-subclass-adds-something"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "APPLIES",
+    "to": "rule.terms-dispositioned"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.facet"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.value-type"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.cardinality"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.range"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.inverse-slots"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.default-value"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.fixed-value"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.facet-override"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "INTRODUCES",
+    "to": "concept.edge-property"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "USES",
+    "to": "decision.range"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "USES",
+    "to": "decision.edge-or-class"
+  },
+  {
+    "from": "step.6-facets",
+    "type": "PRECEDES",
+    "to": "step.7-instances"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "CITES",
+    "to": "loc.o101.step7"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "CITES",
+    "to": "loc.o101.cq-individuals"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "APPLIES",
+    "to": "rule.inst-granularity"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "APPLIES",
+    "to": "rule.inst-not-of-abstract"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "APPLIES",
+    "to": "rule.slot-values-respect-facets"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "APPLIES",
+    "to": "rule.slot-value-slot-applies"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "INTRODUCES",
+    "to": "concept.instance"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "INTRODUCES",
+    "to": "concept.knowledge-base"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "USES",
+    "to": "decision.instance-or-class"
+  },
+  {
+    "from": "step.7-instances",
+    "type": "PRECEDES",
+    "to": "step.8-review"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.stand-back"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.evaluate"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.cq-litmus"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.pudding"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.rule-iterative"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.evolution"
+  },
+  {
+    "from": "step.8-review",
+    "type": "CITES",
+    "to": "loc.o101.diagnostics"
+  },
+  {
+    "from": "step.8-review",
+    "type": "APPLIES",
+    "to": "rule.scope-cq-coverage"
+  },
+  {
+    "from": "step.8-review",
+    "type": "APPLIES",
+    "to": "rule.scope-no-unneeded"
+  },
+  {
+    "from": "step.8-review",
+    "type": "APPLIES",
+    "to": "rule.doc-record-decisions"
+  },
+  {
+    "from": "step.8-review",
+    "type": "INTRODUCES",
+    "to": "concept.design-decision"
+  },
+  {
+    "from": "step.8-review",
+    "type": "INTRODUCES",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "nodetype.Ontology",
+    "type": "MODELS",
+    "to": "concept.scope"
+  },
+  {
+    "from": "nodetype.CompetencyQuestion",
+    "type": "MODELS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "nodetype.Term",
+    "type": "MODELS",
+    "to": "concept.class"
+  },
+  {
+    "from": "nodetype.ReusedOntology",
+    "type": "MODELS",
+    "to": "concept.ontology"
+  },
+  {
+    "from": "nodetype.Class",
+    "type": "MODELS",
+    "to": "concept.class"
+  },
+  {
+    "from": "nodetype.Slot",
+    "type": "MODELS",
+    "to": "concept.slot"
+  },
+  {
+    "from": "nodetype.Instance",
+    "type": "MODELS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "nodetype.DesignDecision",
+    "type": "MODELS",
+    "to": "concept.design-decision"
+  },
+  {
+    "from": "nodetype.Source",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "nodetype.SourceLocation",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "nodetype.Rule",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "edgetype.IS_A",
+    "type": "MODELS",
+    "to": "concept.subclass"
+  },
+  {
+    "from": "edgetype.INSTANCE_OF",
+    "type": "MODELS",
+    "to": "concept.instance"
+  },
+  {
+    "from": "edgetype.HAS_SLOT",
+    "type": "MODELS",
+    "to": "concept.domain"
+  },
+  {
+    "from": "edgetype.RANGE",
+    "type": "MODELS",
+    "to": "concept.range"
+  },
+  {
+    "from": "edgetype.INVERSE_OF",
+    "type": "MODELS",
+    "to": "concept.inverse-slots"
+  },
+  {
+    "from": "edgetype.DISJOINT_WITH",
+    "type": "MODELS",
+    "to": "concept.disjoint"
+  },
+  {
+    "from": "edgetype.NEEDS",
+    "type": "MODELS",
+    "to": "concept.competency-question"
+  },
+  {
+    "from": "edgetype.BECAME",
+    "type": "MODELS",
+    "to": "concept.class"
+  },
+  {
+    "from": "edgetype.ABOUT",
+    "type": "MODELS",
+    "to": "concept.design-decision"
+  },
+  {
+    "from": "edgetype.CITES",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "edgetype.PART_OF",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  },
+  {
+    "from": "edgetype.GOVERNS",
+    "type": "MODELS",
+    "to": "concept.lpg"
+  }
+]

@@ -1,0 +1,45 @@
+# Principles: guidance you can't check with code but that shapes every decision.
+# `cites` lists SourceLocation keys as <source>/<key>.
+
+principles:
+  - id: principle.no-single-correct-model
+    name: "There is no single correct model"
+    statement: "There is no one correct way to model a domain; there are always viable alternatives, and the best one depends on the application you have in mind and the extensions you expect."
+    plainLanguage: "Two careful people will build two different ontologies of the same thing, and both can be good. Stop looking for the right answer and look for the one that fits your purpose. When you get stuck, go back to your competency questions."
+    cites: [src.o101/rule-alternatives, src.o101/no-single-correct, src.o101/no-single-methodology]
+
+  - id: principle.iterate
+    name: "Build it iteratively"
+    statement: "Ontology development is necessarily an iterative process: start with a rough first pass, then revise and refine it."
+    plainLanguage: "Your first version will be wrong in places, and that's expected. Get a rough version working end to end (scope → classes → slots → a few instances), test it against your questions, then go back and fix it."
+    cites: [src.o101/rule-iterative, src.o101/evaluate]
+
+  - id: principle.nouns-and-verbs
+    name: "Model what's really in the domain"
+    statement: "Concepts in the ontology should be close to objects (physical or logical) and relationships in your domain of interest; these are most likely to be nouns (objects) or verbs (relationships) in sentences that describe your domain."
+    plainLanguage: "Write a few plain sentences about your domain. The nouns are usually your classes and the verbs are usually your relationships. If a class isn't something people in the domain would recognize, be suspicious of it."
+    cites: [src.o101/rule-nouns-verbs]
+
+  - id: principle.purpose-driven
+    name: "An ontology exists to serve a purpose"
+    statement: "An ontology is usually not a goal in itself; its quality can only be assessed by using it in the applications it was designed for."
+    plainLanguage: "You aren't cataloguing everything that's true about a domain. You're building something that can answer specific questions for specific people. If a detail doesn't help answer one of your questions, leave it out."
+    cites: [src.o101/not-a-goal, src.o101/pudding]
+
+  - id: principle.structure-not-behavior
+    name: "Think in structure, not behavior (it's not object-oriented design)"
+    statement: "A programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class."
+    plainLanguage: "If you write software, be careful: an ontology class is not a code class. You aren't grouping things by what they do or which code they share. You're grouping them by what they are. 'Is every X necessarily a Y?' is the only question that makes X a subclass of Y."
+    cites: [src.o101/structural-not-operational]
+
+  - id: principle.knowledge-level
+    name: "Model the domain, not the database"
+    statement: "Shared terms should ideally be defined at the knowledge level, independent of any specific representation language or system."
+    plainLanguage: "Decide what your concepts mean before you think about how they'll be stored. The toolkit saves your ontology as graph (LPG) JSON, but you should never make a modeling choice because it's convenient for a graph database. The graph is just the storage format."
+    cites: [src.g93/knowledge-level, src.g93/definition]
+
+  - id: principle.document-meaning
+    name: "Write down what every term means"
+    statement: "Definitions associate the names of entities with human-readable text describing what the names are meant to denote, and formal constraints on their use."
+    plainLanguage: "A class name alone is ambiguous: does 'Order' mean a purchase or a sequence? Give every class and slot a one-sentence description. The structure tells a machine how to use a term, and the description tells a person what it means."
+    cites: [src.g93/definitions-text, src.g93/documentation]

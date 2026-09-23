@@ -1,0 +1,204 @@
+# The method: Ontology 101's seven steps plus a review-and-iterate step.
+#   doneWhen items with a `check` key are evaluated by `okb status`; the rest are
+#   judgment calls the coach asks the learner about.
+#   wine: how the paper's running example handles the step.
+
+steps:
+  - id: step.1-scope
+    order: 1
+    name: "Determine the domain and scope"
+    goal: "Write down what the ontology is about, what it's for, who will use and maintain it, and which questions it must answer."
+    whyItMatters: "Scope is what lets you say 'no' to things later. Without it, every interesting fact looks like it belongs, and the ontology never finishes."
+    guidingQuestions:
+      - "What is the domain that the ontology will cover? (One sentence.)"
+      - "What are we going to use the ontology for? What app, search, report or decision will it feed?"
+      - "What types of questions should it be able to answer? (These become competency questions.)"
+      - "Who will use it, and who will maintain it? Do they use the same words for things?"
+      - "What is related but deliberately out of scope?"
+    outputs: ["Ontology node: domain, purpose, users, maintainers, outOfScope", "3 or more CompetencyQuestion nodes"]
+    doneWhen:
+      - {text: "Domain and purpose are written down", check: scope_domain_purpose}
+      - {text: "Users (and ideally maintainers) are named", check: scope_users}
+      - {text: "At least three competency questions", check: cq_min3}
+      - {text: "At least one thing is explicitly out of scope", check: scope_out}
+    tips:
+      - "Competency questions are a sketch, not a contract. You'll add and change them."
+      - "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'."
+      - "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
+    wine: "Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'"
+    commands: ["okb scope", "okb cq add"]
+    rules: [scope-defined, scope-competency-questions]
+    concepts: [concept.scope, concept.competency-question, concept.conceptualization]
+    cites: [src.o101/step1, src.o101/cq, src.o101/cq-sketch, src.o101/scope-changes]
+
+  - id: step.2-reuse
+    order: 2
+    name: "Consider reusing existing ontologies"
+    goal: "Check whether someone has already modeled part of your domain, and decide whether to borrow, adapt, just reference it, or skip it."
+    whyItMatters: "Reuse saves time and makes your ontology compatible with others. If you have to talk to systems that already use a vocabulary, reuse may not be optional."
+    guidingQuestions:
+      - "Is there an industry standard, taxonomy or controlled vocabulary for this domain?"
+      - "Does any system you must integrate with already use a particular vocabulary?"
+      - "Is there an internal list, spreadsheet, glossary or schema that already names these things?"
+    outputs: ["ReusedOntology nodes (with a decision each), or a recorded 'none found'"]
+    doneWhen:
+      - {text: "Reuse has been considered and recorded", check: reuse_reviewed}
+    tips:
+      - "Even a glossary page or an existing database schema counts as a source of terms."
+      - "Don't let this step stall you. 30 minutes of looking is usually enough for a first version."
+    wine: "The paper notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes."
+    commands: ["okb reuse add", "okb reuse none"]
+    rules: [reuse-considered, reuse-recorded]
+    concepts: []
+    cites: [src.o101/step2, src.o101/step2-requirement]
+
+  - id: step.3-terms
+    order: 3
+    name: "Enumerate important terms"
+    goal: "Brainstorm every term you'd want to make statements about or explain to a user, without worrying yet about what kind of thing each one is."
+    whyItMatters: "It separates what matters from how to model it. Trying to do both at once is the main reason beginners freeze."
+    guidingQuestions:
+      - "What are the things we'd like to talk about?"
+      - "What properties do those things have?"
+      - "What would we like to say about those things?"
+      - "Read your competency questions: which nouns and verbs appear in them?"
+    outputs: ["Term nodes (an unsorted list, ideally 15–40 for a first pass)"]
+    doneWhen:
+      - {text: "At least 10 terms listed", check: terms_min10}
+    tips:
+      - "Include nouns (wine, winery), adjectives and properties (color, body, sweet), and verbs (produces, goes well with)."
+      - "Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5."
+      - "Mine your competency questions and any documents you collected in Step 2."
+    wine: "wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat, white wine, and so on."
+    commands: ["okb term add"]
+    rules: []
+    concepts: [concept.class, concept.slot]
+    cites: [src.o101/step3, src.o101/step3-no-worry, src.o101/rule-nouns-verbs]
+
+  - id: step.4-classes
+    order: 4
+    name: "Define the classes and the class hierarchy"
+    goal: "Pick the terms that name things with independent existence, make them classes, and arrange them by 'is a kind of'."
+    whyItMatters: "The hierarchy is the backbone: slots are inherited down it and instances hang off it. Most modeling mistakes are hierarchy mistakes."
+    guidingQuestions:
+      - "Which terms name things that exist on their own (not descriptions of other things)?"
+      - "Where does your head naturally start: general, specific, or somewhere in the middle?"
+      - "For each pair: is every X necessarily (by definition) a Y?"
+      - "Do any siblings overlap? Can something be both? If not, they're disjoint."
+    outputs: ["Class nodes with IS_A edges", "Naming convention on the Ontology node", "DISJOINT_WITH declarations where appropriate"]
+    doneWhen:
+      - {text: "A naming convention is set", check: convention_set}
+      - {text: "At least two classes, organized with at least one is-a link", check: classes_min2_with_isa}
+      - {text: "No errors in hierarchy checks", check: no_errors_hierarchy}
+      - {text: "You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a"}
+    tips:
+      - "Steps 4 and 5 are intertwined. It's normal to add a few classes, then a few slots, then go back."
+      - "Say each is-a link out loud: 'Every Pinot Noir is a Red Wine.' If it sounds wrong, it is."
+      - "Use singular names consistently (Wine, not Wines)."
+      - "Mark 'grouping only' classes as abstract."
+    wine: "Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine."
+    commands: ["okb convention", "okb class add", "okb class disjoint", "okb tree", "okb term set"]
+    decisions: [decision.approach, decision.is-a, decision.new-class, decision.class-or-value, decision.instance-or-class, decision.disjoint, decision.naming]
+    rules: [hier-is-a-means-kind-of, hier-no-cycles, hier-no-singular-plural-pair, hier-no-synonym-classes, hier-siblings-same-generality, hier-no-redundant-isa, hier-single-child, hier-too-many-children, hier-no-subclass-per-restriction, hier-class-or-value, hier-stable-membership, inst-are-leaves, inst-natural-hierarchy-as-classes, disjoint-no-shared-members, disjoint-consider-siblings, naming-convention-defined, naming-follow-convention, naming-singular-plural-consistent, naming-no-type-words, naming-subclass-names-consistent, doc-descriptions]
+    concepts: [concept.class, concept.subclass, concept.class-hierarchy, concept.sibling, concept.transitivity, concept.multiple-inheritance, concept.abstract-class, concept.disjoint, concept.synonym, concept.naming-convention, concept.development-approach]
+    cites: [src.o101/select-classes, src.o101/isa-test, src.o101/top-down, src.o101/bottom-up, src.o101/combination, src.o101/stand-back, src.o101/intertwined]
+
+  - id: step.5-slots
+    order: 5
+    name: "Define the properties of classes (slots)"
+    goal: "Turn the remaining terms into slots and attach each one to the most general class whose members all have it."
+    whyItMatters: "Classes alone can't answer your questions. Slots hold the facts and relationships the answers are made of."
+    guidingQuestions:
+      - "Which remaining terms describe a class rather than being one?"
+      - "For each: is it intrinsic (flavor), extrinsic (name, region), a part, or a relationship to another thing (maker)?"
+      - "What is the most general class whose members all have this property?"
+      - "Which competency question needs this slot?"
+    outputs: ["Slot nodes attached with HAS_SLOT edges"]
+    doneWhen:
+      - {text: "At least one slot", check: slots_min1}
+      - {text: "Every slot is attached to at least one class", check: slots_attached}
+    tips:
+      - "Two kinds of slot: properties hold a value (name, year, one of a list); relationships point at another thing (maker → Winery)."
+      - "Name relationships as verbs or roles read from the domain class: a Wine has a maker; a Winery produces wines."
+      - "If you're attaching the same slot to every child, attach it to the parent instead."
+    wine: "Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces. Red Wine gets tanninLevel, because white wines aren't described by tannin."
+    commands: ["okb property add", "okb relationship add", "okb show", "okb term set"]
+    decisions: [decision.slot-placement, decision.class-or-value]
+    rules: [slot-attach-most-general, slot-domain-fits-all, slot-value-type-declared, doc-descriptions]
+    concepts: [concept.slot, concept.intrinsic-extrinsic, concept.inheritance, concept.domain]
+    cites: [src.o101/step5, src.o101/remaining-terms, src.o101/slot-kinds, src.o101/most-general, src.o101/inherit]
+
+  - id: step.6-facets
+    order: 6
+    name: "Define the facets of the slots"
+    goal: "For every slot, decide its value type, allowed values or range, cardinality, and any defaults, fixed values or inverse."
+    whyItMatters: "Facets turn a list of fields into rules a machine can check. This is where most data-quality errors get caught later."
+    guidingQuestions:
+      - "Is the value text, a number, yes/no, one of a fixed list, or another thing (Instance)?"
+      - "If it's a fixed list, what are all the allowed values?"
+      - "If it's another thing, what is the most general class of things it can be (the range)? Not too general, not too narrow."
+      - "One value or many? Is it required (minimum 1)?"
+      - "Is there a value most instances share (default), or one every instance of a class must have (fixed value)?"
+      - "Is this relationship the reverse of another slot (maker ↔ produces)?"
+      - "Does each link need extra information of its own, like a condition or a strength? (Edge properties; see decision.edge-or-class.)"
+    outputs: ["Facets on every Slot node", "RANGE edges for Instance slots", "INVERSE_OF edges", "Class-level fixed values/defaults/overrides"]
+    doneWhen:
+      - {text: "Every slot has a value type and cardinality", check: slots_faceted}
+      - {text: "No errors in slot checks", check: no_errors_slots}
+    tips:
+      - "When in doubt about range, pick the most general class that still only contains valid fillers."
+      - "Defaults are suggestions; fixed values are facts. Don't confuse them."
+    wine: "body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine, multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet."
+    commands: ["okb slot set", "okb relationship inverse", "okb relationship property", "okb class fix", "okb class default", "okb class restrict"]
+    decisions: [decision.range, decision.edge-or-class]
+    rules: [slot-instance-needs-range, slot-enum-needs-values, slot-cardinality-declared, slot-cardinality-coherent, slot-range-remove-subclass, slot-range-collapse-subclasses, slot-range-all-but-few, slot-range-not-too-general, slot-default-allowed, slot-fixed-not-overridden, slot-inverse-consistent, slot-edge-properties, hier-subclass-adds-something, terms-dispositioned]
+    concepts: [concept.facet, concept.value-type, concept.cardinality, concept.range, concept.inverse-slots, concept.default-value, concept.fixed-value, concept.facet-override, concept.edge-property]
+    cites: [src.o101/step6, src.o101/dr-most-general, src.o101/dr-not-overly-general]
+
+  - id: step.7-instances
+    order: 7
+    name: "Create instances"
+    goal: "Add real individuals: choose a class, create the instance, and fill in its slot values."
+    whyItMatters: "Instances are the real test. Filling them in shows up missing slots, wrong facets and classes that don't fit."
+    guidingQuestions:
+      - "What are the most specific things that appear in answers to your competency questions? Those are your instances."
+      - "Which class does each belong to? (The most specific one that fits.)"
+      - "Can you fill in every required slot? If not, is the data missing or is the facet wrong?"
+    outputs: ["Instance nodes with INSTANCE_OF edges, property values, and relationship edges"]
+    doneWhen:
+      - {text: "At least a few instances (enough to answer one competency question end to end)", check: instances_min3}
+      - {text: "No errors in instance checks", check: no_errors_instances}
+    tips:
+      - "Start with instances that answer one competency question completely. It's the fastest way to find gaps."
+      - "An instance that won't fit anywhere usually means a class is missing or a facet is too strict."
+    wine: "Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate, tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry."
+    commands: ["okb instance add", "okb instance set"]
+    decisions: [decision.instance-or-class]
+    rules: [inst-granularity, inst-not-of-abstract, slot-values-respect-facets, slot-value-slot-applies]
+    concepts: [concept.instance, concept.knowledge-base]
+    cites: [src.o101/step7, src.o101/cq-individuals]
+
+  - id: step.8-review
+    order: 8
+    name: "Review against your questions, and iterate"
+    goal: "Stand back: check each competency question can be answered, run the full validator, review the judgment-only rules, record decisions, and go around again."
+    whyItMatters: "The only real test of an ontology is whether it does the job it was built for. Expect to loop back to earlier steps."
+    guidingQuestions:
+      - "For each competency question: which classes, slots and instances answer it? Is anything missing?"
+      - "Is there anything in the ontology no question needs?"
+      - "Would a domain expert agree with the hierarchy? Show it to one."
+      - "Which choices would surprise someone reusing this ontology? Are they recorded as design decisions?"
+    outputs: ["NEEDS links from every competency question", "DesignDecision records", "A clean `okb validate` (no errors; warnings resolved or explained)"]
+    doneWhen:
+      - {text: "Every competency question is linked to what answers it", check: cq_all_linked}
+      - {text: "No errors from okb validate", check: no_errors}
+      - {text: "Every remaining warning is fixed or explained in a design decision", check: warnings_explained}
+      - {text: "Someone who knows the domain has looked at it"}
+    tips:
+      - "Iteration is part of the method, not a sign you went wrong."
+      - "Use the ontology-review skill for the judgment rules a script can't check."
+    wine: "The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel."
+    commands: ["okb cq link", "okb validate --all", "okb decision add", "okb diagram"]
+    rules: [scope-cq-coverage, scope-no-unneeded, doc-record-decisions]
+    concepts: [concept.design-decision, concept.competency-question]
+    cites: [src.o101/stand-back, src.o101/evaluate, src.o101/cq-litmus, src.o101/pudding, src.o101/rule-iterative, src.o101/evolution, src.o101/diagnostics]

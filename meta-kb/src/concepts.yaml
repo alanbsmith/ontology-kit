@@ -1,0 +1,294 @@
+# Glossary: the vocabulary a beginner needs.
+#   definition     - grounded in the cited passage(s)
+#   plainLanguage  - how to explain it to someone who has never built an ontology
+#   example        - mostly from the paper's wine & food ontology
+#   inThisToolkit  - where the idea shows up in the okb file format / CLI
+# `origin: operational` marks toolkit concepts that aren't in the sources.
+
+concepts:
+  - id: concept.ontology
+    name: Ontology
+    definition: "A formal, explicit description of the concepts in a domain (classes), the properties of each concept (slots), and restrictions on those properties (facets). Gruber's shorter version: an explicit specification of a conceptualization."
+    plainLanguage: "A shared, precise vocabulary for one subject: what kinds of things exist, how they relate, and which statements about them make sense. It's written down so that people and software use the words the same way."
+    example: "The wine ontology says there are Wines, Wineries and Grapes; that a Red Wine is a kind of Wine; that every Wine has a body (light, medium or full) and a maker that is a Winery."
+    inThisToolkit: "Your Class, Slot and CompetencyQuestion nodes plus the Ontology node that records scope and conventions."
+    cites: [src.o101/def-ontology, src.g93/definition]
+
+  - id: concept.conceptualization
+    name: Conceptualization
+    definition: "An abstract, simplified view of the world that we wish to represent for some purpose."
+    plainLanguage: "The picture of the domain in your head: which things you think matter and how you think they fit together. The ontology is you writing that picture down explicitly."
+    example: "A sommelier and a wine-label printer have different conceptualizations of wine. One cares about pairings and the other about label sizes."
+    inThisToolkit: "Step 1 (scope) is where you make your conceptualization explicit."
+    cites: [src.g93/conceptualization]
+
+  - id: concept.knowledge-base
+    name: Knowledge base
+    definition: "An ontology together with a set of individual instances of classes. The line between where the ontology ends and the knowledge base begins is a fine one."
+    plainLanguage: "The ontology is the empty form: which fields exist and what's allowed in them. The knowledge base is the form filled in with real things."
+    example: "The ontology defines the Wine class and its slots; adding 'Château Morgon Beaujolais' with body=light turns it into a knowledge base."
+    inThisToolkit: "The same nodes.json/edges.json hold both. Instance nodes are the knowledge-base part."
+    cites: [src.o101/def-kb]
+
+  - id: concept.class
+    name: Class
+    aliases: [concept, type, category]
+    definition: "A description of a concept in the domain. A class represents the set of all things of that kind; classes are the focus of most ontologies."
+    plainLanguage: "A kind of thing, like 'Wine' or 'Winery'. It's the category, not any particular one. Classes are usually nouns that name things with an independent existence."
+    example: "The class Wine represents all wines. Bordeaux is a class of the more specific Bordeaux wines."
+    inThisToolkit: "A node of type Class, created with `okb class add`."
+    cites: [src.o101/classes-focus, src.o101/select-classes]
+
+  - id: concept.instance
+    name: Instance
+    aliases: [individual]
+    definition: "An individual member of a class, and the most specific kind of concept represented in a knowledge base."
+    plainLanguage: "One specific, real thing, like this particular wine. An instance belongs to a class, but nothing can be a 'kind of' an instance."
+    example: "Château Morgon Beaujolais is an instance of the class Beaujolais."
+    inThisToolkit: "A node of type Instance with an INSTANCE_OF edge to its class. Created with `okb instance add`."
+    cites: [src.o101/instances-most-specific, src.o101/no-sub-instance]
+
+  - id: concept.subclass
+    name: Subclass / superclass (is-a)
+    aliases: [is-a, kind-of, specialization, parent, child]
+    definition: "Class B is a subclass of class A if every instance of B is necessarily an instance of A; B represents a concept that is a 'kind of' A."
+    plainLanguage: "Ask: 'Is every B, by definition, also an A?' If yes, B is a subclass of A. If the answer is 'usually', 'is part of' or 'is related to', it is NOT a subclass."
+    example: "Every Pinot Noir is necessarily a Red Wine, so Pinot Noir is a subclass of Red Wine. A Wheel is part of a Car, but a Wheel is not a kind of Car."
+    inThisToolkit: "An IS_A edge from the subclass to the superclass (`okb class add PinotNoir --parent RedWine`)."
+    cites: [src.o101/superclass, src.o101/is-a, src.o101/isa-test]
+
+  - id: concept.direct-subclass
+    name: Direct subclass
+    definition: "The closest subclass of a class: there are no classes between it and the parent in the hierarchy."
+    plainLanguage: "Its immediate child, as opposed to a grandchild."
+    example: "Chardonnay is a direct subclass of White Wine and an indirect subclass of Wine."
+    inThisToolkit: "An IS_A edge you actually wrote. Indirect subclasses are worked out automatically."
+    cites: [src.o101/direct-subclass]
+
+  - id: concept.transitivity
+    name: Transitivity (of is-a)
+    definition: "The subclass relationship is transitive: if B is a subclass of A and C is a subclass of B, then C is a subclass of A."
+    plainLanguage: "Kind-of relationships chain together. You only need to state the direct parent, and everything further up follows automatically."
+    example: "Chardonnay ⊂ White Wine ⊂ Wine, so Chardonnay is a Wine."
+    inThisToolkit: "okb follows IS_A chains when it checks inheritance, disjointness and slot values. Don't add shortcut edges (see rule hier-no-redundant-isa)."
+    cites: [src.o101/transitive]
+
+  - id: concept.class-hierarchy
+    name: Class hierarchy (taxonomy)
+    definition: "The classes arranged by subclass–superclass (is-a) relations."
+    plainLanguage: "The family tree of your classes, from general at the top to specific at the bottom."
+    example: "Wine → Red Wine → Bordeaux → Médoc → Pauillac."
+    inThisToolkit: "`okb tree` prints it; `okb diagram` draws it."
+    cites: [src.o101/in-practice, src.o101/isa-test]
+
+  - id: concept.sibling
+    name: Siblings
+    definition: "Classes that are direct subclasses of the same class."
+    plainLanguage: "Classes that share the same parent. Like same-level headings in a book outline, siblings should be about equally general."
+    example: "Red Wine, White Wine and Rosé Wine are siblings under Wine."
+    inThisToolkit: "Several classes with IS_A edges to the same parent."
+    cites: [src.o101/siblings-def, src.o101/siblings-generality]
+
+  - id: concept.multiple-inheritance
+    name: Multiple inheritance
+    definition: "A class that is a subclass of several classes, inheriting slots and facets from all of its parents."
+    plainLanguage: "A class can have more than one parent when it really is a kind of each of them. It's allowed and sometimes the right answer, so write down why you did it."
+    example: "Port is both a Red Wine and a Dessert Wine."
+    inThisToolkit: "Two or more IS_A edges from the same class (`--parent RedWine --parent DessertWine`)."
+    cites: [src.o101/multiple-inheritance, src.o101/multiple-inherit-slots]
+
+  - id: concept.abstract-class
+    name: Abstract class
+    definition: "A class that cannot have any direct instances; only its subclasses can."
+    plainLanguage: "A grouping class that exists to organize other classes. Nothing is ever 'just' one of these without also belonging to a more specific subclass."
+    example: "In the paper, every wine-region class is abstract."
+    inThisToolkit: "Class property `abstract: true` (`okb class add ... --abstract`)."
+    cites: [src.o101/abstract]
+
+  - id: concept.terminological-hierarchy
+    name: Terminological hierarchy
+    definition: "A reference hierarchy of terms whose classes do not have to introduce new properties; it is organized as a hierarchy for navigation and to let users pick a level of generality."
+    plainLanguage: "Sometimes the hierarchy itself is the point, like a classification of diseases or product categories. In that case it's fine for subclasses to add nothing new."
+    example: "A classification of diseases in a medical-records ontology."
+    inThisToolkit: "Class property `terminological: true` (or on the Ontology node for the whole ontology). It switches off the 'subclass adds nothing new' warning."
+    cites: [src.o101/terminological]
+
+  - id: concept.slot
+    name: Slot
+    aliases: [property, relationship, role, attribute, datatype property, object property]
+    definition: "A property of a class describing features and attributes of its instances. Slots can hold simple values (like a name) or relationships to other individuals (like a maker)."
+    plainLanguage: "A field every member of a class has. There are two kinds. A property holds a plain value, such as a name, a year or one of a fixed list. A relationship points at another thing: a wine's maker is a Winery. 'Slot' is the paper's word for both. OWL calls them datatype properties and object properties, and a graph database stores them as node properties and relationship types."
+    example: "Wine has slots color, body, flavor, sugar, name, maker and grape."
+    inThisToolkit: "A node of type Slot, attached to classes with HAS_SLOT edges. `okb property add body --on Wine ...` creates a property; `okb relationship add maker --from Wine --to Winery` creates a relationship (a Slot with value type Instance, stored as edges of type MAKER)."
+    cites: [src.o101/def-ontology, src.o101/slots-describe, src.o101/slot-kinds]
+
+  - id: concept.intrinsic-extrinsic
+    name: Intrinsic vs. extrinsic property
+    definition: "Intrinsic properties belong to the thing itself (a wine's flavor); extrinsic properties are assigned from outside (a wine's name, the area it comes from)."
+    plainLanguage: "A rough test (the toolkit's, not the paper's): would the property stay the same if nobody was looking? Flavor would, so it's intrinsic. A name, a location, or whether it's currently chilled is extrinsic. Extrinsic properties make poor classes because things move in and out of them."
+    example: "Chilled Wine should not be a class: a bottle goes in and out of the fridge. 'chilled' is a slot."
+    inThisToolkit: "It matters when you decide between a class and a slot value (decision guide class-or-value)."
+    cites: [src.o101/slot-kinds, src.o101/stable-membership]
+
+  - id: concept.inheritance
+    name: Slot inheritance
+    definition: "All subclasses of a class inherit the slots of that class."
+    plainLanguage: "Attach a slot once, as high in the tree as it applies, and every class below gets it for free."
+    example: "Because body is attached to Wine, Red Wine and Pauillac have a body slot too."
+    inThisToolkit: "okb works out inherited slots automatically; `okb show <Class>` lists them."
+    cites: [src.o101/inherit]
+
+  - id: concept.facet
+    name: Facet
+    aliases: [role restriction, slot constraint]
+    definition: "A restriction on a slot: its value type, allowed values, number of values (cardinality), and other features of the values it can take."
+    plainLanguage: "The rules for filling in a field: what kind of value goes in it, which values are allowed, and how many."
+    example: "body: value type Enumerated, allowed values {light, medium, full}, cardinality single."
+    inThisToolkit: "Properties on the Slot node: valueType, allowedValues, cardinality, minCardinality, maxCardinality, default."
+    cites: [src.o101/step6, src.o101/def-ontology]
+
+  - id: concept.value-type
+    name: Value type
+    definition: "A facet describing what types of values can fill a slot: String, Number (Integer/Float), Boolean, Enumerated (a fixed list of symbols) or Instance (a relationship to another individual)."
+    plainLanguage: "Is it text, a number, yes/no, one of a fixed list of words, or a link to another thing?"
+    example: "name: String; price: Float; sparkling: Boolean; flavor: Enumerated {strong, moderate, delicate}; maker: Instance of Winery."
+    inThisToolkit: "Slot.valueType, one of String, Integer, Float, Number, Boolean, Enumerated, Instance."
+    cites: [src.o101/value-type, src.o101/enumerated, src.o101/instance-type]
+
+  - id: concept.cardinality
+    name: Cardinality
+    definition: "How many values a slot can have: single (at most one) or multiple, optionally with an explicit minimum and maximum."
+    plainLanguage: "'Exactly one', 'zero or one', 'at least one', or 'any number'. Minimum 1 means the field is required. Maximum 0 on a subclass means 'this subclass never has this field'."
+    example: "A wine has one body (single). A winery produces many wines (multiple). grape has minimum 1, because every wine is made of at least one grape."
+    inThisToolkit: "Slot.cardinality ('single' | 'multiple'), Slot.minCardinality, Slot.maxCardinality. A class can override them in facetOverrides."
+    cites: [src.o101/cardinality, src.o101/min-max, src.o101/max, src.o101/max-zero]
+
+  - id: concept.domain
+    name: Domain (of a slot)
+    definition: "The classes to which a slot is attached, i.e. the classes whose property the slot describes."
+    plainLanguage: "Which kinds of things have this field."
+    example: "Winery is the domain of produces."
+    inThisToolkit: "HAS_SLOT edges from each domain class to the slot."
+    cites: [src.o101/domain]
+
+  - id: concept.range
+    name: Range (of a slot)
+    definition: "For slots of value type Instance, the allowed classes that values must come from."
+    plainLanguage: "For a field that points at another thing, what kind of thing it's allowed to point at."
+    example: "Wine is the range of produces; Winery is the range of maker."
+    inThisToolkit: "RANGE edges from the slot to each allowed class (`okb relationship add maker --from Wine --to Winery`)."
+    cites: [src.o101/range, src.o101/instance-type]
+
+  - id: concept.inverse-slots
+    name: Inverse slots
+    definition: "Two slots describing the same relationship from opposite directions. Storing both is redundant, but convenient for entering data, and a tool can fill in the inverse automatically to keep them consistent."
+    plainLanguage: "'Wine → maker → Winery' and 'Winery → produces → Wine' are the same fact seen from each end. Declare them as inverses and okb keeps the two sides in sync."
+    example: "maker (on Wine) and produces (on Winery)."
+    inThisToolkit: "An INVERSE_OF edge between the two slots (`okb relationship inverse maker produces`). Each fact is stored once, as a MAKER edge from wine to winery; `produces` reads those edges backwards. In a graph every edge can be followed from either end, so storing both directions would duplicate data."
+    cites: [src.o101/inverse, src.o101/inverse-auto]
+
+  - id: concept.default-value
+    name: Default value
+    definition: "A value filled in automatically for new instances because it is the same for most of them; it can be changed to any value the facets allow and adds no restriction to the model."
+    plainLanguage: "A starting suggestion that you can override."
+    example: "If most wines you describe are full-bodied, body defaults to full."
+    inThisToolkit: "Slot.default, or a per-class default in Class.defaults."
+    cites: [src.o101/defaults, src.o101/defaults-convenience]
+
+  - id: concept.fixed-value
+    name: Fixed (class-level) slot value
+    definition: "A slot value stated for a class that all of its subclasses and instances have and cannot change."
+    plainLanguage: "A fact about the whole class, not a starting suggestion. Every Dessert Wine is sweet, full stop."
+    example: "sugar = SWEET for Dessert Wine."
+    inThisToolkit: "Class.fixedValues for property values; for relationships, an edge of the relationship's type from the class node, e.g. (RedWine)-[:GOES_WELL_WITH]->(RedMeat) (`okb class fix DessertWine sugar=sweet`)."
+    cites: [src.o101/fixed-values]
+
+  - id: concept.facet-override
+    name: Facet override (restriction on a subclass)
+    definition: "A subclass restricting an inherited slot's facets more tightly, such as fewer allowed values or a different maximum cardinality."
+    plainLanguage: "The subclass inherits the field but tightens its rules."
+    example: "Single-varietal wines restrict grape to maximum cardinality 1."
+    inThisToolkit: "Class.facetOverrides: {<slot id>: {allowedValues | minCardinality | maxCardinality | range}}."
+    cites: [src.o101/new-class-practical, src.o101/max-zero]
+
+  - id: concept.disjoint
+    name: Disjoint classes
+    definition: "Classes that cannot have any instances in common. Declaring them lets a system catch a class or instance placed under both."
+    plainLanguage: "'Nothing can be both.' Declaring it lets okb catch mistakes like a wine that is both red and white."
+    example: "Red Wine and White Wine are disjoint. Dessert Wine and White Wine are not (a sweet Riesling is both)."
+    inThisToolkit: "A DISJOINT_WITH edge (`okb class disjoint RedWine WhiteWine RoseWine`)."
+    cites: [src.o101/disjoint, src.o101/disjoint-validate]
+
+  - id: concept.synonym
+    name: Synonym
+    definition: "A different name for the same concept. Synonyms are not different classes; they can be recorded as a list attached to the class."
+    plainLanguage: "Shrimp and Prawn are two words for one thing, so they belong in one class with the other name listed as a synonym."
+    example: "One class named Shrimp, with synonyms [Prawn, Crevette]."
+    inThisToolkit: "Class.synonyms (`okb class add Shrimp --synonym Prawn`)."
+    cites: [src.o101/synonyms, src.o101/synonym-list, src.o101/class-not-name]
+
+  - id: concept.naming-convention
+    name: Naming convention
+    definition: "An agreed scheme for naming classes and slots (capitalization, word delimiters, singular vs. plural, prefixes/suffixes), chosen once and followed throughout."
+    plainLanguage: "Decide once how names look, for example classes in PascalCase and singular, slots in camelCase, and then never deviate."
+    example: "Classes: RedWine, Winery. Slots: tanninLevel, maker."
+    inThisToolkit: "Ontology.conventions, set with `okb convention`. okb checks every name against it."
+    cites: [src.o101/naming, src.o101/naming-why, src.o101/capitalization]
+
+  - id: concept.competency-question
+    name: Competency question
+    definition: "A question the knowledge base built on the ontology should be able to answer. Together they sketch the scope, and later serve as the litmus test for whether the ontology contains enough information."
+    plainLanguage: "Before building anything, write down the actual questions you want answered. They tell you what to include, what to leave out, and when you're done."
+    example: "'Does Cabernet Sauvignon go well with seafood?' 'What is the best choice of wine for grilled meat?'"
+    inThisToolkit: "CompetencyQuestion nodes (`okb cq add`). NEEDS edges link each question to the classes and slots that answer it."
+    cites: [src.o101/cq, src.o101/cq-litmus, src.o101/cq-sketch]
+
+  - id: concept.scope
+    name: Scope
+    definition: "The domain an ontology covers, what it will be used for, which questions it should answer, and who will use and maintain it."
+    plainLanguage: "The fence around your project. It's what lets you say 'that's out of scope' with confidence."
+    example: "Wine & food pairing: in scope. Winery inventory and restaurant staffing: out of scope."
+    inThisToolkit: "The Ontology node: domain, purpose, users, maintainers, outOfScope (`okb scope`)."
+    cites: [src.o101/step1, src.o101/scope-changes]
+
+  - id: concept.design-decision
+    name: Design decision (record)
+    definition: "A written note of a modeling choice and the reason for it, for people who reuse the ontology without knowing the application it was designed for."
+    plainLanguage: "When you deliberately leave something out, or pick between two reasonable options, write one sentence on what you chose and why. Future readers, including you in six months, will need it. (The paper asks for this for scope decisions; the toolkit suggests it for any choice a reader wouldn't expect.)"
+    example: "'Experimenter is NOT modeled as a subclass of Biological Organism, because we never run experiments on experimenters.'"
+    inThisToolkit: "DesignDecision nodes with ABOUT edges (`okb decision add`)."
+    cites: [src.o101/record-decisions]
+
+  - id: concept.development-approach
+    name: Top-down / bottom-up / combination
+    definition: "Three ways to grow a class hierarchy: start from the most general concepts and specialize (top-down), start from the most specific and group them (bottom-up), or start from the most salient concepts and go both ways (combination)."
+    plainLanguage: "Start wherever your head naturally is. Many people find the middle easiest ('Red Wine', 'Bordeaux') and work up and down from there."
+    example: "Top-down: Wine → Red Wine → Syrah. Bottom-up: Pauillac, Margaux → Médoc → Bordeaux. Combination: Wine and Margaux, then Médoc in the middle."
+    inThisToolkit: "Decision guide `decision.approach`."
+    cites: [src.o101/top-down, src.o101/bottom-up, src.o101/combination, src.o101/no-best-approach]
+
+  # ---- toolkit (operational) concepts ----------------------------------------
+  - id: concept.lpg
+    name: Labeled property graph (LPG)
+    origin: operational
+    definition: "The storage format used by this toolkit: nodes and edges that each carry a type label and a set of key/value properties."
+    plainLanguage: "Your ontology is saved as two JSON lists, nodes and edges, which is how graph databases like Neo4j and Neptune think. Classes, slots and instances are nodes. Structural links (IS_A, HAS_SLOT...) and relationship values ((wine)-[:MAKER]->(winery)) are edges. `okb export` writes the data the way a graph database expects it: instances as nodes labeled with their classes. It's still just the storage format, so model the meaning first (see principle.knowledge-level)."
+    example: '{"type": "Class", "id": "c.red-wine", "name": "RedWine"} and {"from": "c.red-wine", "type": "IS_A", "to": "c.wine"}'
+    inThisToolkit: "nodes.json and edges.json in your ontology folder. See docs/FORMAT.md."
+
+  - id: concept.edge-property
+    name: Edge property (relationship property)
+    aliases: [relationship property, link property, qualifier]
+    origin: operational
+    definition: "A property stored on one relationship edge rather than on either end: a fact about the link itself, such as the condition under which one component is preferred over another. Declared once per relationship (name, value type, allowed values, required) and checked like a slot facet. An edge may also carry a `rule` reference to the Rule node whose quote justifies it."
+    plainLanguage: "Some facts belong to the connection, not to either thing it connects. 'Use Radio instead of Segmented Control *when there are 2 to 7 options*': the condition isn't a property of Radio or of Segmented Control, it's a property of that recommendation."
+    example: "(Radio)-[:PREFERRED_OVER {condition: \"2 to 7 options\", rule: \"rule.use-radio-for-2-7-options\"}]->(SegmentedControl)"
+    inThisToolkit: "`okb relationship property preferredOver condition --type String --required`, then `okb link Radio preferredOver SegmentedControl condition=\"2 to 7 options\" --rule <rule id>`. The frame model in Ontology 101 has no equivalent; see decision.edge-or-class for when a qualifier should become its own class instead."
+
+  - id: concept.modality
+    name: Modality (MUST / SHOULD / MAY)
+    origin: operational
+    definition: "How strong a rule is. The toolkit takes each rule's modality from the wording of the passage it cites: 'must', 'should always', 'it is wrong' → MUST; 'should', or a plain imperative guideline → SHOULD; 'consider', 'may', 'can', 'there may be' → MAY."
+    plainLanguage: "MUST findings are errors to fix. SHOULD findings are warnings: fix them or record why not. MAY findings are hints worth a look."
+    example: "'Slots with value type Instance must also define a list of allowed classes' → MUST. 'If a class has only one direct subclass there may be a modeling problem' → MAY."
+    inThisToolkit: "Rule.modality in the meta-KB; `okb validate` maps MUST→error, SHOULD→warning, MAY→info unless a rule states a documented override."

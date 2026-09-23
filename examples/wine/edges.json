@@ -1,0 +1,508 @@
+[
+  {
+    "from": "d.1",
+    "type": "ABOUT",
+    "to": "ontology"
+  },
+  {
+    "from": "t.wine",
+    "type": "BECAME",
+    "to": "c.wine"
+  },
+  {
+    "from": "c.red-wine",
+    "type": "IS_A",
+    "to": "c.wine"
+  },
+  {
+    "from": "t.red-wine",
+    "type": "BECAME",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "c.white-wine",
+    "type": "IS_A",
+    "to": "c.wine"
+  },
+  {
+    "from": "t.white-wine",
+    "type": "BECAME",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "c.rose-wine",
+    "type": "IS_A",
+    "to": "c.wine"
+  },
+  {
+    "from": "c.dessert-wine",
+    "type": "IS_A",
+    "to": "c.wine"
+  },
+  {
+    "from": "t.dessert-wine",
+    "type": "BECAME",
+    "to": "c.dessert-wine"
+  },
+  {
+    "from": "c.red-wine",
+    "type": "DISJOINT_WITH",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "c.red-wine",
+    "type": "DISJOINT_WITH",
+    "to": "c.rose-wine"
+  },
+  {
+    "from": "c.white-wine",
+    "type": "DISJOINT_WITH",
+    "to": "c.rose-wine"
+  },
+  {
+    "from": "c.bordeaux",
+    "type": "IS_A",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "t.bordeaux",
+    "type": "BECAME",
+    "to": "c.bordeaux"
+  },
+  {
+    "from": "c.medoc",
+    "type": "IS_A",
+    "to": "c.bordeaux"
+  },
+  {
+    "from": "c.pauillac",
+    "type": "IS_A",
+    "to": "c.medoc"
+  },
+  {
+    "from": "c.margaux",
+    "type": "IS_A",
+    "to": "c.medoc"
+  },
+  {
+    "from": "c.beaujolais",
+    "type": "IS_A",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "t.beaujolais",
+    "type": "BECAME",
+    "to": "c.beaujolais"
+  },
+  {
+    "from": "c.merlot",
+    "type": "IS_A",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "c.port",
+    "type": "IS_A",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "c.port",
+    "type": "IS_A",
+    "to": "c.dessert-wine"
+  },
+  {
+    "from": "c.chardonnay",
+    "type": "IS_A",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "c.riesling",
+    "type": "IS_A",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "c.chardonnay",
+    "type": "DISJOINT_WITH",
+    "to": "c.riesling"
+  },
+  {
+    "from": "c.sauternes",
+    "type": "IS_A",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "c.sauternes",
+    "type": "IS_A",
+    "to": "c.dessert-wine"
+  },
+  {
+    "from": "d.2",
+    "type": "ABOUT",
+    "to": "c.sauternes"
+  },
+  {
+    "from": "t.winery",
+    "type": "BECAME",
+    "to": "c.winery"
+  },
+  {
+    "from": "t.food",
+    "type": "BECAME",
+    "to": "c.food"
+  },
+  {
+    "from": "c.seafood",
+    "type": "IS_A",
+    "to": "c.food"
+  },
+  {
+    "from": "t.seafood",
+    "type": "BECAME",
+    "to": "c.seafood"
+  },
+  {
+    "from": "c.red-meat",
+    "type": "IS_A",
+    "to": "c.food"
+  },
+  {
+    "from": "t.red-meat",
+    "type": "BECAME",
+    "to": "c.red-meat"
+  },
+  {
+    "from": "c.seafood",
+    "type": "DISJOINT_WITH",
+    "to": "c.red-meat"
+  },
+  {
+    "from": "t.port",
+    "type": "BECAME",
+    "to": "c.port"
+  },
+  {
+    "from": "t.rose-wine",
+    "type": "BECAME",
+    "to": "c.rose-wine"
+  },
+  {
+    "from": "d.3",
+    "type": "ABOUT",
+    "to": "c.bordeaux"
+  },
+  {
+    "from": "d.3",
+    "type": "ABOUT",
+    "to": "c.medoc"
+  },
+  {
+    "from": "d.3",
+    "type": "ABOUT",
+    "to": "c.beaujolais"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.color"
+  },
+  {
+    "from": "t.color",
+    "type": "BECAME",
+    "to": "s.color"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.body"
+  },
+  {
+    "from": "t.body",
+    "type": "BECAME",
+    "to": "s.body"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.flavor"
+  },
+  {
+    "from": "t.flavor",
+    "type": "BECAME",
+    "to": "s.flavor"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.sugar"
+  },
+  {
+    "from": "t.sugar",
+    "type": "BECAME",
+    "to": "s.sugar"
+  },
+  {
+    "from": "c.red-wine",
+    "type": "HAS_SLOT",
+    "to": "s.tannin-level"
+  },
+  {
+    "from": "t.tannin-level",
+    "type": "BECAME",
+    "to": "s.tannin-level"
+  },
+  {
+    "from": "s.maker",
+    "type": "RANGE",
+    "to": "c.winery"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.maker"
+  },
+  {
+    "from": "s.produces",
+    "type": "RANGE",
+    "to": "c.wine"
+  },
+  {
+    "from": "c.winery",
+    "type": "HAS_SLOT",
+    "to": "s.produces"
+  },
+  {
+    "from": "s.grape",
+    "type": "RANGE",
+    "to": "c.wine-grape"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.grape"
+  },
+  {
+    "from": "t.grape",
+    "type": "BECAME",
+    "to": "s.grape"
+  },
+  {
+    "from": "s.region",
+    "type": "RANGE",
+    "to": "c.wine-region"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.region"
+  },
+  {
+    "from": "c.winery",
+    "type": "HAS_SLOT",
+    "to": "s.location"
+  },
+  {
+    "from": "t.location",
+    "type": "BECAME",
+    "to": "s.location"
+  },
+  {
+    "from": "s.goes-well-with",
+    "type": "RANGE",
+    "to": "c.food"
+  },
+  {
+    "from": "c.wine",
+    "type": "HAS_SLOT",
+    "to": "s.goes-well-with"
+  },
+  {
+    "from": "t.goes-well-with",
+    "type": "BECAME",
+    "to": "s.goes-well-with"
+  },
+  {
+    "from": "s.maker",
+    "type": "INVERSE_OF",
+    "to": "s.produces"
+  },
+  {
+    "from": "c.red-wine",
+    "type": "GOES_WELL_WITH",
+    "to": "c.red-meat",
+    "strength": "classic"
+  },
+  {
+    "from": "c.white-wine",
+    "type": "GOES_WELL_WITH",
+    "to": "c.seafood"
+  },
+  {
+    "from": "i.chateau-morgon",
+    "type": "INSTANCE_OF",
+    "to": "c.winery"
+  },
+  {
+    "from": "i.sterling-vineyards",
+    "type": "INSTANCE_OF",
+    "to": "c.winery"
+  },
+  {
+    "from": "i.gamay",
+    "type": "INSTANCE_OF",
+    "to": "c.wine-grape"
+  },
+  {
+    "from": "i.merlot-grape",
+    "type": "INSTANCE_OF",
+    "to": "c.wine-grape"
+  },
+  {
+    "from": "i.chardonnay-grape",
+    "type": "INSTANCE_OF",
+    "to": "c.wine-grape"
+  },
+  {
+    "from": "i.riesling-grape",
+    "type": "INSTANCE_OF",
+    "to": "c.wine-grape"
+  },
+  {
+    "from": "i.beaujolais-region",
+    "type": "INSTANCE_OF",
+    "to": "c.wine-region"
+  },
+  {
+    "from": "c.merlot",
+    "type": "GRAPE",
+    "to": "i.merlot-grape"
+  },
+  {
+    "from": "c.chardonnay",
+    "type": "GRAPE",
+    "to": "i.chardonnay-grape"
+  },
+  {
+    "from": "c.riesling",
+    "type": "GRAPE",
+    "to": "i.riesling-grape"
+  },
+  {
+    "from": "i.chateau-morgon-beaujolais",
+    "type": "INSTANCE_OF",
+    "to": "c.beaujolais"
+  },
+  {
+    "from": "i.chateau-morgon-beaujolais",
+    "type": "GRAPE",
+    "to": "i.gamay"
+  },
+  {
+    "from": "i.chateau-morgon-beaujolais",
+    "type": "MAKER",
+    "to": "i.chateau-morgon"
+  },
+  {
+    "from": "i.chateau-morgon-beaujolais",
+    "type": "REGION",
+    "to": "i.beaujolais-region"
+  },
+  {
+    "from": "i.sterling-vineyards-merlot",
+    "type": "INSTANCE_OF",
+    "to": "c.merlot"
+  },
+  {
+    "from": "i.sterling-vineyards-merlot",
+    "type": "MAKER",
+    "to": "i.sterling-vineyards"
+  },
+  {
+    "from": "cq.1",
+    "type": "NEEDS",
+    "to": "s.color"
+  },
+  {
+    "from": "cq.1",
+    "type": "NEEDS",
+    "to": "s.body"
+  },
+  {
+    "from": "cq.1",
+    "type": "NEEDS",
+    "to": "s.flavor"
+  },
+  {
+    "from": "cq.1",
+    "type": "NEEDS",
+    "to": "s.sugar"
+  },
+  {
+    "from": "cq.1",
+    "type": "NEEDS",
+    "to": "s.tannin-level"
+  },
+  {
+    "from": "cq.2",
+    "type": "NEEDS",
+    "to": "c.bordeaux"
+  },
+  {
+    "from": "cq.2",
+    "type": "NEEDS",
+    "to": "c.red-wine"
+  },
+  {
+    "from": "cq.2",
+    "type": "NEEDS",
+    "to": "c.white-wine"
+  },
+  {
+    "from": "cq.3",
+    "type": "NEEDS",
+    "to": "s.goes-well-with"
+  },
+  {
+    "from": "cq.3",
+    "type": "NEEDS",
+    "to": "s.grape"
+  },
+  {
+    "from": "cq.3",
+    "type": "NEEDS",
+    "to": "c.seafood"
+  },
+  {
+    "from": "cq.4",
+    "type": "NEEDS",
+    "to": "c.red-meat"
+  },
+  {
+    "from": "cq.4",
+    "type": "NEEDS",
+    "to": "s.goes-well-with"
+  },
+  {
+    "from": "cq.5",
+    "type": "NEEDS",
+    "to": "s.goes-well-with"
+  },
+  {
+    "from": "cq.5",
+    "type": "NEEDS",
+    "to": "s.body"
+  },
+  {
+    "from": "cq.5",
+    "type": "NEEDS",
+    "to": "s.flavor"
+  },
+  {
+    "from": "cq.6",
+    "type": "NEEDS",
+    "to": "s.produces"
+  },
+  {
+    "from": "cq.6",
+    "type": "NEEDS",
+    "to": "c.winery"
+  }
+]

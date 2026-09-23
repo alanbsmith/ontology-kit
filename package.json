@@ -1,0 +1,32 @@
+{
+  "name": "ontology-kit",
+  "version": "1.0.0",
+  "description": "A beginner-friendly toolkit for building ontologies the Ontology 101 way: guided method, meta-knowledge base of rules, and the okb CLI.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "okb": "bin/okb.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "okb": "node src/cli.ts",
+    "build:meta": "node meta-kb/build.ts",
+    "verify:quotes": "node meta-kb/build.ts --pdf src.o101=sources/ontology101.pdf --pdf src.g93=sources/ontolingua-kaj-1993.pdf",
+    "docs": "node src/gendocs.ts",
+    "example": "node examples/build-wine.ts",
+    "typecheck": "tsc",
+    "test": "node --test \"tests/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "optionalDependencies": {
+    "pdfjs-dist": "^5.4.0"
+  },
+  "dependencies": {
+    "yaml": "^2.8.0"
+  }
+}

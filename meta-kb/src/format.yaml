@@ -1,0 +1,62 @@
+# The okb file format: node and edge types an ontology built with this toolkit may use.
+# okb validate reads this registry (rule struct-well-formed), so it is the single
+# source of truth for the format. docs/FORMAT.md explains it for humans.
+#
+#   models   - the glossary concept this type implements
+#   origin   - ontology101 (the paper's modeling primitive) or operational (toolkit/LPG plumbing)
+
+version: "okb-lpg/2"
+
+nodeTypes:
+  - {name: Ontology, origin: operational, models: concept.scope, required: [id, name],
+     description: "Exactly one per ontology (id 'ontology'). Holds scope (domain, purpose, users, maintainers, outOfScope), conventions, reuseReviewed, and kind ('application' or 'terminological')."}
+  - {name: CompetencyQuestion, origin: ontology101, models: concept.competency-question, required: [id, text],
+     description: "A question the ontology must answer. status: draft | answerable."}
+  - {name: Term, origin: ontology101, models: concept.class, required: [id, text],
+     description: "A Step-3 brainstorm term. disposition: undecided | class | slot | instance | value | synonym | out-of-scope."}
+  - {name: ReusedOntology, origin: ontology101, models: concept.ontology, required: [id, name, decision],
+     description: "An existing ontology/vocabulary considered in Step 2. decision: reuse | adapt | reference | rejected."}
+  - {name: Class, origin: ontology101, models: concept.class, required: [id, name],
+     description: "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
+  - {name: Slot, origin: ontology101, models: concept.slot, required: [id, name],
+     description: "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as)."}
+  - {name: Instance, origin: ontology101, models: concept.instance, required: [id, name],
+     description: "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
+  - {name: DesignDecision, origin: ontology101, models: concept.design-decision, required: [id, title, decision],
+     description: "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date."}
+  - {name: Source, origin: operational, models: concept.lpg, required: [id, title],
+     description: "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."}
+  - {name: SourceLocation, origin: operational, models: concept.lpg, required: [id, quote],
+     description: "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."}
+  - {name: Rule, origin: operational, models: concept.lpg, required: [id, modality, statement],
+     description: "A domain rule extracted from documentation (`okb rule add`), e.g. 'Buttons meet a 24px minimum touch target'. extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft."}
+
+# Relationship values are NOT listed here: an Instance-type Slot gets a `relType`
+# (its name in UPPER_SNAKE case, e.g. maker -> MAKER), and each value is an edge of
+# that type: (instance)-[:MAKER]->(instance), or (Class)-[:GOES_WELL_WITH]->(Class)
+# for a fixed class-level value. Inverse slots share one edge type (see INVERSE_OF).
+edgeTypes:
+  - {name: IS_A, from: [Class], to: [Class], origin: ontology101, models: concept.subclass,
+     description: "Subclass → superclass. Transitive; no cycles."}
+  - {name: INSTANCE_OF, from: [Instance], to: [Class], origin: ontology101, models: concept.instance,
+     description: "Instance → its class (most specific one that fits). An instance may have more than one."}
+  - {name: HAS_SLOT, from: [Class], to: [Slot], origin: ontology101, models: concept.domain,
+     description: "Class → slot attached to it. The set of these classes is the slot's domain."}
+  - {name: RANGE, from: [Slot], to: [Class], origin: ontology101, models: concept.range,
+     description: "Instance-type slot → allowed class of its values."}
+  - {name: INVERSE_OF, from: [Slot], to: [Slot], origin: ontology101, models: concept.inverse-slots,
+     description: "Declares two relationship slots inverse. The `from` slot's relType is the stored direction; the `to` slot reads those edges backwards. Stored once."}
+  - {name: DISJOINT_WITH, from: [Class], to: [Class], origin: ontology101, models: concept.disjoint,
+     description: "Declares two classes disjoint. Stored once; symmetric."}
+  - {name: NEEDS, from: [CompetencyQuestion], to: [Class, Slot, Instance], origin: operational, models: concept.competency-question,
+     description: "Competency question → an element needed to answer it."}
+  - {name: BECAME, from: [Term], to: [Class, Slot, Instance], origin: operational, models: concept.class,
+     description: "Step-3 term → what it turned into."}
+  - {name: ABOUT, from: [DesignDecision], to: [Class, Slot, Instance, CompetencyQuestion, Term, ReusedOntology, Ontology, Rule], origin: operational, models: concept.design-decision,
+     description: "Design decision → what it's about."}
+  - {name: CITES, from: [Class, Slot, Instance, Rule, DesignDecision], to: [SourceLocation], origin: operational, models: concept.lpg,
+     description: "Provenance: element → the verbatim passage it came from."}
+  - {name: PART_OF, from: [SourceLocation], to: [Source], origin: operational, models: concept.lpg,
+     description: "Provenance: passage → its document."}
+  - {name: GOVERNS, from: [Rule], to: [Class, Slot, Instance], origin: operational, models: concept.lpg,
+     description: "Domain rule → what it constrains."}

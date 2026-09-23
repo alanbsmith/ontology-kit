@@ -1,0 +1,280 @@
+# Sources and the verbatim passages (SourceLocations) the meta-KB cites.
+#
+# EVERY quote here must be copied word-for-word from the source. `build.py --pdf`
+# re-checks each one against the PDF and fails if a quote is missing or its page
+# number is wrong. Page numbers are PDF page numbers. Use "..." to mark an intentional gap inside a quote.
+
+sources:
+  - id: src.o101
+    title: "Ontology Development 101: A Guide to Creating Your First Ontology"
+    authors: "Noy, N.F. and McGuinness, D.L."
+    year: 2001
+    url: "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf"
+    shortName: "Ontology 101"
+  - id: src.g93
+    title: "A Translation Approach to Portable Ontology Specifications"
+    authors: "Gruber, T.R."
+    year: 1993
+    venue: "Knowledge Acquisition 5(2):199-220"
+    shortName: "Gruber 1993"
+
+locations:
+  # ---------------------------------------------------------------- Ontology 101
+  src.o101:
+    why-share: {section: "§1 Why develop an ontology?", page: 1,
+      quote: "To share common understanding of the structure of information among people or software agents"}
+    not-a-goal: {section: "§1 Why develop an ontology?", page: 2,
+      quote: "Often an ontology of the domain is not a goal in itself."}
+    structural-not-operational: {section: "§1 About this guide", page: 2,
+      quote: "a programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class."}
+    no-single-methodology: {section: "§1 About this guide", page: 3,
+      quote: "there is no single correct ontology-design methodology and we did not attempt to define one."}
+    def-ontology: {section: "§2 What is in an ontology?", page: 3,
+      quote: "an ontology is a formal explicit description of concepts in a domain of discourse (classes (sometimes called concepts)), properties of each concept describing various features and attributes of the concept (slots (sometimes called roles or properties)), and restrictions on slots (facets (sometimes called role restrictions))."}
+    def-kb: {section: "§2 What is in an ontology?", page: 3,
+      quote: "An ontology together with a set of individual instances of classes constitutes a knowledge base. In reality, there is a fine line where the ontology ends and the knowledge base begins."}
+    classes-focus: {section: "§2 What is in an ontology?", page: 3,
+      quote: "Classes are the focus of most ontologies. Classes describe concepts in the domain."}
+    subclasses: {section: "§2 What is in an ontology?", page: 3,
+      quote: "A class can have subclasses that represent concepts that are more specific than the superclass."}
+    slots-describe: {section: "§2 What is in an ontology?", page: 3,
+      quote: "Slots describe properties of classes and instances"}
+    in-practice: {section: "§2 What is in an ontology?", page: 3,
+      quote: "In practical terms, developing an ontology includes: defining classes in the ontology, arranging the classes in a taxonomic (subclass–superclass) hierarchy, defining slots and describing allowed values for these slots, filling in the values for slots for instances."}
+    rule-alternatives: {section: "§3 A Simple Knowledge-Engineering Methodology", page: 4,
+      quote: "There is no one correct way to model a domain— there are always viable alternatives. The best solution almost always depends on the application that you have in mind and the extensions that you anticipate."}
+    rule-iterative: {section: "§3 A Simple Knowledge-Engineering Methodology", page: 4,
+      quote: "Ontology development is necessarily an iterative process."}
+    rule-nouns-verbs: {section: "§3 A Simple Knowledge-Engineering Methodology", page: 4,
+      quote: "Concepts in the ontology should be close to objects (physical or logical) and relationships in your domain of interest. These are most likely to be nouns (objects) or verbs (relationships) in sentences that describe your domain."}
+    evaluate: {section: "§3 A Simple Knowledge-Engineering Methodology", page: 4,
+      quote: "After we define an initial version of the ontology, we can evaluate and debug it by using it in applications or problem-solving methods or by discussing it with experts in the field, or both."}
+    step1: {section: "§3 Step 1. Determine the domain and scope", page: 5,
+      quote: "We suggest starting the development of an ontology by defining its domain and scope. That is, answer several basic questions: What is the domain that the ontology will cover? For what we are going to use the ontology? For what types of questions the information in the ontology should provide answers? Who will use and maintain the ontology?"}
+    scope-changes: {section: "§3 Step 1. Determine the domain and scope", page: 5,
+      quote: "The answers to these questions may change during the ontology-design process, but at any given time they help limit the scope of the model."}
+    cq: {section: "§3 Step 1, Competency questions", page: 5,
+      quote: "One of the ways to determine the scope of the ontology is to sketch a list of questions that a knowledge base based on the ontology should be able to answer, competency questions"}
+    cq-litmus: {section: "§3 Step 1, Competency questions", page: 5,
+      quote: "These questions will serve as the litmus test later: Does the ontology contain enough information to answer these types of questions?"}
+    cq-sketch: {section: "§3 Step 1, Competency questions", page: 5,
+      quote: "These competency questions are just a sketch and do not need to be exhaustive."}
+    step2: {section: "§3 Step 2. Consider reusing existing ontologies", page: 5,
+      quote: "It is almost always worth considering what someone else has done and checking if we can refine and extend existing sources for our particular domain and task."}
+    step2-requirement: {section: "§3 Step 2. Consider reusing existing ontologies", page: "5-6",
+      quote: "Reusing existing ontologies may be a requirement if our system needs to interact with other applications that have already committed to particular ontologies or controlled vocabularies."}
+    step3: {section: "§3 Step 3. Enumerate important terms", page: 6,
+      quote: "It is useful to write down a list of all terms we would like either to make statements about or to explain to a user."}
+    step3-no-worry: {section: "§3 Step 3. Enumerate important terms", page: 6,
+      quote: "Initially, it is important to get a comprehensive list of terms without worrying about overlap between concepts they represent, relations among the terms, or any properties that the concepts may have, or whether the concepts are classes or slots."}
+    intertwined: {section: "§3 Step 3. Enumerate important terms", page: 6,
+      quote: "The next two steps—developing the class hierarchy and defining properties of concepts (slots)—are closely intertwined. It is hard to do one of them first and then do the other."}
+    top-down: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 6,
+      quote: "A top-down development process starts with the definition of the most general concepts in the domain and subsequent specialization of the concepts."}
+    bottom-up: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 7,
+      quote: "A bottom-up development process starts with the definition of the most specific classes, the leaves of the hierarchy, with subsequent grouping of these classes into more general concepts."}
+    combination: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 7,
+      quote: "A combination development process is a combination of the top-down and bottom-up approaches: We define the more salient concepts first and then generalize and specialize them appropriately."}
+    no-best-approach: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 7,
+      quote: "None of these three methods is inherently better than any of the others. The approach to take depends strongly on the personal view of the domain."}
+    combination-easiest: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 7,
+      quote: "The combination approach is often the easiest for many ontology developers, since the concepts “in the middle” tend to be the more descriptive concepts in the domain"}
+    select-classes: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 7,
+      quote: "From the list created in Step 3, we select the terms that describe objects having independent existence rather than terms that describe these objects."}
+    isa-test: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 8,
+      quote: "We organize the classes into a hierarchical taxonomy by asking if by being an instance of one class, the object will necessarily (i.e., by definition) be an instance of some other class."}
+    superclass: {section: "§3 Step 4. Define the classes and the class hierarchy", page: 8,
+      quote: "If a class A is a superclass of class B, then every instance of B is also an instance of A In other words, the class B represents a concept that is a “kind of” A."}
+    step5: {section: "§3 Step 5. Define the properties of classes—slots", page: 8,
+      quote: "The classes alone will not provide enough information to answer the competency questions from Step 1."}
+    remaining-terms: {section: "§3 Step 5. Define the properties of classes—slots", page: 8,
+      quote: "Most of the remaining terms are likely to be properties of these classes."}
+    slot-kinds: {section: "§3 Step 5. Define the properties of classes—slots", page: 8,
+      quote: "In general, there are several types of object properties that can become slots in an ontology: “intrinsic” properties such as the flavor of a wine; “extrinsic” properties such as a wine’s name, and area it comes from; parts, if the object is structured; these can be both physical and abstract “parts” (e.g., the courses of a meal) relationships to other individuals;"}
+    slots-attached: {section: "§3 Step 5. Define the properties of classes—slots", page: 8,
+      quote: "For each property in the list, we must determine which class it describes. These properties become slots attached to classes."}
+    inherit: {section: "§3 Step 5. Define the properties of classes—slots", page: 9,
+      quote: "All subclasses of a class inherit the slot of that class."}
+    most-general: {section: "§3 Step 5. Define the properties of classes—slots", page: 9,
+      quote: "A slot should be attached at the most general class that can have that property."}
+    step6: {section: "§3 Step 6. Define the facets of the slots", page: 9,
+      quote: "Slots can have different facets describing the value type, allowed values, the number of the values (cardinality), and other features of the values the slot can take."}
+    cardinality: {section: "§3 Step 6, Slot cardinality", page: 9,
+      quote: "Slot cardinality defines how many values a slot can have. Some systems distinguish only between single cardinality (allowing at most one value) and multiple cardinality (allowing any number of values)."}
+    min-max: {section: "§3 Step 6, Slot cardinality", page: 9,
+      quote: "Minimum cardinality of N means that a slot must have at least N values."}
+    max: {section: "§3 Step 6, Slot cardinality", page: 9,
+      quote: "Maximum cardinality of M means that a slot can have at most M values."}
+    max-zero: {section: "§3 Step 6, Slot cardinality", page: 9,
+      quote: "Sometimes it may be useful to set the maximum cardinality to 0. This setting would indicate that the slot cannot have any values for a particular subclass."}
+    value-type: {section: "§3 Step 6, Slot-value type", page: 9,
+      quote: "A value-type facet describes what types of values can fill in the slot."}
+    enumerated: {section: "§3 Step 6, Slot-value type", page: 9,
+      quote: "Enumerated slots specify a list of specific allowed values for the slot."}
+    instance-type: {section: "§3 Step 6, Slot-value type", page: 10,
+      quote: "Instance-type slots allow definition of relationships between individuals. Slots with value type Instance must also define a list of allowed classes from which the instances can come."}
+    range: {section: "§3 Step 6, Domain and range of a slot", page: 10,
+      quote: "Allowed classes for slots of type Instance are often called a range of a slot."}
+    domain: {section: "§3 Step 6, Domain and range of a slot", page: 10,
+      quote: "The classes to which a slot is attached or a classes which property a slot describes, are called the domain of the slot."}
+    dr-most-general: {section: "§3 Step 6, Domain and range of a slot", page: 10,
+      quote: "When defining a domain or a range for a slot, find the most general classes or class that can be respectively the domain or the range for the slots."}
+    dr-not-overly-general: {section: "§3 Step 6, Domain and range of a slot", page: 10,
+      quote: "do not define a domain and range that is overly general: all the classes in the domain of a slot should be described by the slot and instances of all the classes in the range of a slot should be potential fillers for the slot. Do not choose an overly general class for range (i.e., one would not want to make the range THING) but one would want to choose a class that will cover all fillers"}
+    dr-remove-subclass: {section: "§3 Step 6, Domain and range of a slot", page: 11,
+      quote: "If a list of classes defining a range or a domain of a slot includes a class and its subclass, remove the subclass."}
+    dr-all-subclasses: {section: "§3 Step 6, Domain and range of a slot", page: 11,
+      quote: "If a list of classes defining a range or a domain of a slot contains all subclasses of a class A, but not the class A itself, the range should contain only the class A and not the subclasses."}
+    dr-all-but-few: {section: "§3 Step 6, Domain and range of a slot", page: 11,
+      quote: "If a list of classes defining a range or a domain of a slot contains all but a few subclasses of a class A, consider if the class A would make a more appropriate range definition."}
+    attach-can-have: {section: "§3 Step 6, Domain and range of a slot", page: 11,
+      quote: "On the other hand, we must ensure that each class to which we attach the slot can indeed have the property that the slot represents."}
+    step7: {section: "§3 Step 7. Create instances", page: 11,
+      quote: "Defining an individual instance of a class requires (1) choosing a class, (2) creating an individual instance of that class, and (3) filling in the slot values."}
+    stand-back: {section: "§4 Defining classes and a class hierarchy", page: 12,
+      quote: "After defining a considerable number of new classes, it is helpful to stand back and check if the emerging hierarchy conforms to these guidelines."}
+    singular-plural-avoid: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 12,
+      quote: "The best way to avoid such an error is always to use either singular or plural in naming classes"}
+    is-a: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 12,
+      quote: "The class hierarchy represents an “is-a” relation: a class A is a subclass of B if every instance of A is also an instance of B."}
+    singular-plural: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 12,
+      quote: "A common modeling mistake is to include both a singular and a plural version of the same concept in the hierarchy making the former a subclass of the latter. For example, it is wrong to define a class Wines and a class Wine as a subclass of Wines."}
+    transitive: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "A subclass relationship is transitive: If B is a subclass of A and C is a subclass of B, then C is a subclass of A"}
+    chardonnay-direct: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "In our example, Chardonnay is a direct subclass of White wine and is not a direct subclass of Wine."}
+    direct-subclass: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "A direct subclass is the “closest” subclass of the class: there are no classes between a class and its direct subclass in a hierarchy."}
+    evolution: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "Maintaining a consistent class hierarchy may become challenging as domains evolve."}
+    class-not-name: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "Classes represent concepts in the domain and not the words that denote these concepts."}
+    synonyms: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "the following rule should always be followed: Synonyms for the same concept do not represent different classes"}
+    synonym-list: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "Many systems allow associating a list of synonyms, translations, or presentation names with a class. If a system does not allow these associations, synonyms could always be listed in the class documentation."}
+    cycles: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "We should avoid cycles in the class hierarchy. We say that there is a cycle in a hierarchy when some class A has a subclass B and at the same time B is a superclass of A. Creating such a cycle in a hierarchy amounts to declaring that the classes A and B are equivalent"}
+    subclass-must: {section: "§4.1 Ensuring that the class hierarchy is correct", page: 13,
+      quote: "Indeed, since B is a subclass of A, all B’s instances must be instances of the class A."}
+    siblings-def: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "Siblings in the hierarchy are classes that are direct subclasses of the same class"}
+    siblings-generality: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "All the siblings in the hierarchy (except for the ones at the root) must be at the same level of generality. For example, White wine and Chardonnay should not be subclasses of the same class (say, Wine)."}
+    root-exception: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "The concepts at the root of the hierarchy however (which are often represented as direct subclasses of some very general class, such as Thing) represent major divisions of the domain and do not have to be similar concepts."}
+    how-many: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "There are no hard rules for the number of direct subclasses that a class should have. However, many well-structured ontologies have between two and a dozen direct subclasses."}
+    one-child: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "If a class has only one direct subclass there may be a modeling problem or the ontology is not complete."}
+    dozen: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 14,
+      quote: "If there are more than a dozen subclasses for a given class then additional intermediate categories may be necessary."}
+    no-artificial: {section: "§4.2 Analyzing siblings in a class hierarchy", page: 15,
+      quote: "However, if no natural classes exist to group concepts in the long list of siblings, there is no need to create artificial classes—just leave the classes the way they are."}
+    multiple-inheritance: {section: "§4.3 Multiple inheritance", page: 15,
+      quote: "Most knowledge-representation systems allow multiple inheritance in the class hierarchy: a class can be a subclass of several classes."}
+    multiple-inherit-slots: {section: "§4.3 Multiple inheritance", page: 16,
+      quote: "The Port class will inherit its slots and their facets from both its parents."}
+    new-class-hard: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "One of the hardest decisions to make during modeling is when to introduce a new class or when to represent a distinction through different property values."}
+    new-class-rule: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "Subclasses of a class usually (1) have additional properties that the superclass does not have, or (2) restrictions different from those of the superclass, or (3) participate in different relationships than the superclasses"}
+    new-class-practical: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "In practical terms, each subclass should either have new slots added to it, or have new slot values defined, or override some facets for the inherited slots."}
+    terminological: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "Classes in terminological hierarchies do not have to introduce new properties"}
+    expert-distinction: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "Another reason to introduce new classes without any new properties is to model concepts among which domain experts commonly make a distinction even though we may have decided not to model the distinction itself."}
+    not-each-restriction: {section: "§4.4 When to introduce a new class (or not)", page: 16,
+      quote: "Finally, we should not create subclasses of a class for each additional restriction."}
+    balance: {section: "§4.4 When to introduce a new class (or not)", page: 17,
+      quote: "When defining a class hierarchy, our goal is to strike a balance between creating new classes useful for class organization and creating too many classes."}
+    class-or-value: {section: "§4.5 A new class or a property value?", page: 17,
+      quote: "If the concepts with different slot values become restrictions for different slots in other classes, then we should create a new class for the distinction. Otherwise, we represent the distinction in a slot value."}
+    class-or-value-kinds: {section: "§4.5 A new class or a property value?", page: 17,
+      quote: "If a distinction is important in the domain and we think of the objects with different values for the distinction as different kinds of objects, then we should create a new class for the distinction."}
+    stable-membership: {section: "§4.5 A new class or a property value?", page: 17,
+      quote: "A class to which an individual instance belongs should not change often. Usually when we use extrinsic rather than intrinsic properties of concepts to differentiate among classes, instances of those classes will have to migrate often from one class to another."}
+    numbers-are-values: {section: "§4.5 A new class or a property value?", page: 17,
+      quote: "Usually numbers, colors, locations are slot values and do not cause the creation of new classes."}
+    instance-or-class: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "Deciding whether a particular concept is a class in an ontology or an individual instance depends on what the potential applications of the ontology are."}
+    granularity: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "The level of granularity is in turn determined by a potential application of the ontology."}
+    cq-individuals: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "the most specific concepts that will constitute answers to those questions are very good candidates for individuals in the knowledge base."}
+    instances-most-specific: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "Individual instances are the most specific concepts represented in a knowledge base."}
+    natural-hierarchy: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "If concepts form a natural hierarchy, then we should represent them as classes"}
+    abstract: {section: "§4.6 An instance or a class?", page: 18,
+      quote: "Protégé-2000 allows users to specify some classes as Abstract, signifying that the class cannot have any direct instances."}
+    no-sub-instance: {section: "§4.6 An instance or a class?", page: 19,
+      quote: "Only classes can be arranged in a hierarchy—knowledge-representation systems do not have a notion of sub-instance."}
+    classes-without-instances: {section: "§4.6 An instance or a class?", page: 19,
+      quote: "we should define these terms as classes even though they may not have any instances of their own."}
+    limit-scope: {section: "§4.7 Limiting the scope", page: 19,
+      quote: "The ontology should not contain all the possible information about the domain: you do not need to specialize (or generalize) more than you need for your application (at most one extra level each way)."}
+    limit-properties: {section: "§4.7 Limiting the scope", page: 19,
+      quote: "The ontology should not contain all the possible properties of and distinctions among classes in the hierarchy."}
+    record-decisions: {section: "§4.7 Limiting the scope", page: 20,
+      quote: "However, we should record such design decision in the documentation for the benefit of the users who will be looking at this ontology and who may not be aware of the application we had in mind."}
+    disjoint: {section: "§4.8 Disjoint subclasses", page: 20,
+      quote: "Classes are disjoint if they cannot have any instances in common."}
+    disjoint-validate: {section: "§4.8 Disjoint subclasses", page: 20,
+      quote: "Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error."}
+    inverse: {section: "§5.1 Inverse slots", page: 20,
+      quote: "Storing the information “in both directions” is redundant. When we know that a wine is produced by a winery, an application using the knowledge base can always infer the value for the inverse relation that the winery produces the wine. However, from the knowledge-acquisition perspective it is convenient to have both pieces of information explicitly available."}
+    inverse-auto: {section: "§5.1 Inverse slots", page: 20,
+      quote: "The knowledge-acquisition system could then automatically fill in the value for the inverse relation insuring consistency of the knowledge base."}
+    inverse-figure: {section: "§5.1 Inverse slots, Figure 9", page: 21,
+      quote: "The slot produces for the class Winery is an inverse of the slot maker for the class Wine."}
+    defaults: {section: "§5.2 Default values", page: 21,
+      quote: "If a particular slot value is the same for most instances of a class, we can define this value to be a default value for the slot."}
+    defaults-convenience: {section: "§5.2 Default values", page: 21,
+      quote: "We can then change the value to any other value that the facets will allow. That is, default values are there for convenience: they do not enforce any new restrictions on the model or change the model in any way."}
+    fixed-values: {section: "§5.2 Default values", page: 21,
+      quote: "Slot values cannot be changed. For example, we can say that the slot sugar has value SWEET for the Dessert wine class. Then all the subclasses and instances of the Dessert wine class will have the SWEET value for the slot sugar. This value cannot be changed in any of the subclasses or instances of the class."}
+    naming-why: {section: "§6 What's in a name?", page: 21,
+      quote: "Defining naming conventions for concepts in an ontology and then strictly adhering to these conventions not only makes the ontology easier to understand but also helps avoid some common modeling mistakes."}
+    naming: {section: "§6 What's in a name?", page: 21,
+      quote: "However, we need to Define a naming convention for classes and slots and adhere to it."}
+    name-spaces: {section: "§6 What's in a name?", page: 22,
+      quote: "Does the system have the same name space for classes, slots, and instances? That is, does the system allow having a class and a slot with the same name (such as a class winery and a slot winery)? Is the system case-sensitive?"}
+    capitalization: {section: "§6.1 Capitalization and delimiters", page: 22,
+      quote: "it is common to capitalize class names and use lower case for slot names (assuming the system is case-sensitive)."}
+    other-systems: {section: "§6.1 Capitalization and delimiters", page: 22,
+      quote: "It is however, important to consider other systems with which your system may interact."}
+    singular-plural-consistent: {section: "§6.2 Singular or plural", page: 22,
+      quote: "No alternative is better or worse than the other (although singular for class names is used more often in practice). However, whatever the choice, it should be consistent throughout the whole ontology."}
+    prefix-suffix: {section: "§6.3 Prefix and suffix conventions", page: 22,
+      quote: "Two common practices are to add a has- or a suffix –of to slot names."}
+    things-to-consider: {section: "§6.4 Other naming considerations", page: 23,
+      quote: "Here are a few more things to consider when defining naming conventions:"}
+    no-type-words: {section: "§6.4 Other naming considerations", page: 23,
+      quote: "Do not add strings such as “class”, “property”, “slot”, and so on to concept names."}
+    abbreviations: {section: "§6.4 Other naming considerations", page: 23,
+      quote: "It is usually a good idea to avoid abbreviations in concept names (that is, use Cabernet Sauvignon rather than Cab)"}
+    subclass-names: {section: "§6.4 Other naming considerations", page: 23,
+      quote: "Names of direct subclasses of a class should either all include or not include the name of the superclass."}
+    diagnostics: {section: "§7 Other Resources", page: 23,
+      quote: "An ontology designer may want to run Chimaera diagnostics over the evolving ontology to determine the conformance to common ontology-modeling practices."}
+    no-single-correct: {section: "§8 Conclusions", page: 23,
+      quote: "there is no single correct ontology for any domain."}
+    pudding: {section: "§8 Conclusions", page: 23,
+      quote: "we can assess the quality of our ontology only by using it in applications for which we designed it."}
+
+  # ---------------------------------------------------------------- Gruber 1993
+  src.g93:
+    conceptualization: {section: "§1 Introduction", page: 2,
+      quote: "A conceptualization is an abstract, simplified view of the world that we wish to represent for some purpose."}
+    definition: {section: "§1 Introduction", page: 2,
+      quote: "An ontology is an explicit specification of a conceptualization."}
+    definitions-text: {section: "§1 Introduction", page: 3,
+      quote: "definitions associate the names of entities in the universe of discourse (e.g., classes, relations, functions, or other objects) with human-readable text describing what the names are meant to denote, and formal axioms that constrain the interpretation and well-formed use of these terms."}
+    knowledge-level: {section: "§1 Introduction", page: 3,
+      quote: "Ideally, shared terms should be defined at the knowledge level, independent of specific representation languages."}
+    consistency-not-completeness: {section: "§2 Ontologies and knowledge sharing", page: 5,
+      quote: "a commitment to a common ontology is a guarantee of consistency, but not completeness, with respect to queries and assertions using the vocabulary defined"}
+    documentation: {section: "§3.1 Syntax and semantics", page: 8,
+      quote: "The natural language text is not parsed or translated, but is passed on to those systems that have a place for documentation (surprisingly, many representation systems do not!)."}

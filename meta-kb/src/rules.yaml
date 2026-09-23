@@ -1,0 +1,720 @@
+# Rules: what makes an ontology well-formed.
+#
+# Fields
+#   modality   MUST | MUST_NOT | SHOULD | SHOULD_NOT | MAY  -- taken from the WORDING of the
+#              cited passage (see concept.modality). Never stronger than the quote.
+#   basis      direct       - the cited passage states this rule
+#              interpretive - follows from a cited definition/description; the gap is explained
+#                             in `rationale`
+#              operational  - a toolkit convention with no source; says so plainly
+#   check      mechanical   - okb validate checks it exactly
+#              heuristic    - okb validate flags likely cases (can have false positives,
+#                             so severity is capped at warning unless a high-confidence case says otherwise)
+#              judgment     - only a person (or the ontology-review skill) can decide; `review`
+#                             says what to ask
+#   severity   optional override of the modality mapping (MUST→error, SHOULD→warning, MAY→info),
+#              always with `severityReason`
+#   fromStep   the methodology step from which the check is relevant (okb validate hides
+#              it before then unless --all)
+
+rules:
+  # ======================================================================= HIERARCHY
+  - id: hier-is-a-means-kind-of
+    modality: MUST
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.subclass]
+    statement: "An IS_A link from B to A must mean that every instance of B is necessarily an instance of A."
+    plainLanguage: "Only use 'is a' for 'is a kind of'. 'Is part of', 'is made by', 'is related to' and 'is usually' are not is-a."
+    rationale: "This is the definition of the subclass relation; everything else (inheritance, disjointness, transitivity) depends on it holding."
+    review: "For each IS_A edge, say out loud: 'Every <child> is, by definition, a <parent>.' If you hesitate, or the honest word is 'part of' / 'has' / 'usually', it is not an is-a."
+    fix: "Replace the IS_A with a slot (e.g. partOf, madeBy) or move the class under its real parent."
+    cites: [src.o101/is-a, src.o101/superclass, src.o101/subclass-must, src.o101/isa-test]
+
+  - id: hier-no-cycles
+    modality: SHOULD_NOT
+    basis: direct
+    check: mechanical
+    severity: error
+    severityReason: "The paper says cycles 'should' be avoided because a cycle declares the classes equivalent. The checker can't tell an intended equivalence from a mistake, and okb has no equivalence construct, so a cycle is treated as an error: merge the classes and keep the other name as a synonym."
+    fromStep: 4
+    governs: [concept.class-hierarchy]
+    statement: "The class hierarchy should not contain cycles (A is a subclass of B and B is, directly or indirectly, a subclass of A)."
+    plainLanguage: "A class can't be its own ancestor. If A is a kind of B and B is a kind of A, they're the same class."
+    rationale: "A cycle amounts to declaring the classes equivalent: all instances of A are instances of B and vice versa."
+    fix: "If they're the same concept, merge them (keep one name, add the other as a synonym). If not, remove the IS_A edge that's wrong."
+    cites: [src.o101/cycles]
+
+  - id: hier-no-singular-plural-pair
+    modality: MUST_NOT
+    basis: direct
+    check: heuristic
+    fromStep: 4
+    governs: [concept.subclass, concept.naming-convention]
+    statement: "The hierarchy must not make the singular and plural versions of the same concept subclasses of one another (such as Wine as a subclass of Wines)."
+    plainLanguage: "'Wine' is not a kind of 'Wines'. Pick singular or plural for every class name and use only that form."
+    rationale: "The paper calls this a common modeling mistake and says it is wrong: a single Wine is not a kind of Wines. okb reports a singular/plural pair that is NOT linked as a warning only: that's the naming-consistency concern, not this rule's."
+    fix: "Delete one of the two classes and move its children and instances to the other."
+    cites: [src.o101/singular-plural]
+
+  - id: hier-no-synonym-classes
+    modality: MUST_NOT
+    basis: direct
+    check: heuristic
+    fromStep: 4
+    governs: [concept.synonym, concept.class]
+    statement: "Synonyms for the same concept must not be represented as different classes."
+    plainLanguage: "Shrimp and Prawn are one class with two names, not two classes."
+    rationale: "Classes represent concepts, not the words for them; the paper states this rule 'should always be followed'. okb catches a class whose name matches another class's name or listed synonym; true synonyms with unrelated spellings need a human eye."
+    review: "Scan class names for pairs a domain expert would call 'the same thing'."
+    fix: "Merge the classes: keep one, add the other name to its synonyms, and move edges over."
+    cites: [src.o101/synonyms, src.o101/class-not-name, src.o101/synonym-list]
+
+  - id: hier-siblings-same-generality
+    modality: MUST
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.sibling]
+    statement: "All siblings in the hierarchy, except those at the root, must be at the same level of generality."
+    plainLanguage: "Classes that share a parent should be about equally specific, like chapter headings in the same book. White Wine and Chardonnay shouldn't both sit directly under Wine."
+    rationale: "Siblings at mismatched generality mean the hierarchy has skipped a level; the more specific one usually belongs under the more general one."
+    review: "For each parent with 2+ children, ask: 'Is any of these a kind of another one?' and 'Would an expert put these on the same level?'"
+    fix: "Move the more specific class under the more general sibling."
+    cites: [src.o101/siblings-generality, src.o101/root-exception]
+
+  - id: hier-no-redundant-isa
+    modality: SHOULD_NOT
+    basis: interpretive
+    check: mechanical
+    fromStep: 4
+    governs: [concept.transitivity, concept.sibling]
+    statement: "A class should not have a direct IS_A edge to an ancestor it already reaches through another parent."
+    plainLanguage: "If Chardonnay is a White Wine, and White Wine is a Wine, don't also link Chardonnay directly to Wine. That link is already implied."
+    rationale: "Subclassing is transitive, so the shortcut edge adds nothing. It also makes the class a sibling of its own parent, which is exactly the mismatched-generality mistake the paper's White Wine / Chardonnay example warns about."
+    fix: "Remove the direct edge to the higher ancestor."
+    cites: [src.o101/transitive, src.o101/chardonnay-direct, src.o101/siblings-generality]
+
+  - id: hier-single-child
+    modality: MAY
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.class-hierarchy]
+    statement: "A class with only one direct subclass may indicate a modeling problem or an incomplete ontology."
+    plainLanguage: "A parent with one child is like a bulleted list with one bullet. Either a sibling is missing, or the child isn't really different from the parent."
+    rationale: "If the only subclass is effectively equivalent to its parent, it adds no information; if it isn't, its siblings are probably missing."
+    review: "Is something missing next to the only child? If not, is the child really different from its parent?"
+    fix: "Add the missing sibling(s), or remove the child and fold it into the parent. If neither applies, record a design decision."
+    cites: [src.o101/one-child, src.o101/how-many]
+
+  - id: hier-too-many-children
+    modality: MAY
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.class-hierarchy]
+    statement: "A class with more than a dozen direct subclasses may need additional intermediate categories."
+    plainLanguage: "A long flat list of children usually hides natural groups. Look for them, but don't invent groups that don't exist in the domain."
+    rationale: "Many well-structured ontologies have between two and a dozen direct subclasses; but if no natural grouping exists, the paper says to leave the list as it is."
+    review: "Do domain experts group these children somehow (by color, region, size...)? If yes, add those groups as intermediate classes."
+    fix: "Add intermediate classes for natural groupings, or record a design decision that none exist."
+    cites: [src.o101/dozen, src.o101/no-artificial]
+
+  - id: hier-subclass-adds-something
+    modality: SHOULD
+    basis: direct
+    check: heuristic
+    fromStep: 6
+    governs: [concept.subclass, concept.terminological-hierarchy]
+    statement: "Each subclass should add something its superclass doesn't have: new slots, new slot values, overridden facets, or different relationships. Classes in terminological hierarchies, and distinctions experts commonly make, are exceptions."
+    plainLanguage: "If you can't say anything about the subclass that isn't also true of its parent, it may not need to exist."
+    rationale: "The paper: we introduce a new class 'usually only when there is something that we can say about this class that we cannot say about the superclass'. okb looks for own slots, fixed values, defaults, facet overrides, being the range or value of some slot, and disjointness declarations. It skips classes marked terminological or covered by a design decision."
+    review: "What can you say about this class that you can't say about its parent? If the answer is 'experts always distinguish these', mark it terminological or record that decision."
+    fix: "Add the slot, value, restriction or relationship that makes it different; or mark it `terminological`; or merge it into its parent."
+    cites: [src.o101/new-class-rule, src.o101/new-class-practical, src.o101/terminological, src.o101/expert-distinction]
+
+  - id: hier-no-subclass-per-restriction
+    modality: SHOULD_NOT
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.subclass]
+    statement: "Do not create a subclass for each additional restriction; strike a balance between useful organization and too many classes."
+    plainLanguage: "Red/White/Rosé are natural classes; 'Delicate Wine', 'Moderate Wine' and 'Strong Wine' are just flavor values."
+    rationale: "A hierarchy with a class per restriction becomes deeply nested and hard to navigate."
+    review: "For each class created mainly to hold one value of one slot, ask whether it's really just that slot's value."
+    fix: "Replace the class with a slot value on the parent."
+    cites: [src.o101/not-each-restriction, src.o101/balance]
+
+  - id: hier-class-or-value
+    modality: SHOULD
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.class, concept.slot]
+    statement: "Create a new class for a distinction if objects with different values are thought of as different kinds of things, or if the distinction restricts slots in other classes; otherwise represent it as a slot value."
+    plainLanguage: "In a wine-pairing ontology, red vs. white is a class split because it changes which foods go with the wine. In an ontology for a wine-label factory, the same color distinction is just a value."
+    rationale: "The decision depends on the scope: the same distinction can be a class in one ontology and a value in another."
+    review: "Use decision guide decision.class-or-value on each suspicious class/value."
+    fix: "Convert between class and slot value as the decision guide suggests, and record the decision."
+    cites: [src.o101/class-or-value, src.o101/class-or-value-kinds, src.o101/numbers-are-values]
+
+  - id: hier-stable-membership
+    modality: SHOULD
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.intrinsic-extrinsic]
+    statement: "The class an individual belongs to should not change often; avoid classes defined by extrinsic properties that instances move in and out of."
+    plainLanguage: "'Chilled Wine' is a bad class: the same bottle would keep switching classes. Use a slot ('chilled: true/false')."
+    rationale: "Classes built on extrinsic properties force instances to migrate between classes."
+    review: "Could a given instance leave this class and come back tomorrow?"
+    fix: "Turn the class into a Boolean or Enumerated slot on the parent."
+    cites: [src.o101/stable-membership]
+
+  # ======================================================================= INSTANCES
+  - id: inst-are-leaves
+    modality: MUST_NOT
+    basis: interpretive
+    check: mechanical
+    fromStep: 4
+    governs: [concept.instance]
+    statement: "Instances must not be arranged in a hierarchy: only classes can have subclasses or instances."
+    plainLanguage: "Nothing can be a 'kind of' one particular thing. If you need children, make it a class."
+    rationale: "Individual instances are the most specific concepts in a knowledge base; there is no notion of a sub-instance. That nothing can be an instance of an instance follows from the same point: only classes have members."
+    fix: "Turn the instance into a class, or link it with a slot instead of IS_A/INSTANCE_OF."
+    cites: [src.o101/instances-most-specific, src.o101/no-sub-instance]
+
+  - id: inst-natural-hierarchy-as-classes
+    modality: SHOULD
+    basis: direct
+    check: judgment
+    fromStep: 4
+    governs: [concept.instance, concept.class]
+    statement: "If concepts form a natural hierarchy, represent them as classes, even if some have no instances of their own."
+    plainLanguage: "Wine regions nest (France → Bourgogne → Côtes d'Or), so they are all classes, not a mix of classes and instances."
+    rationale: "Only classes can be arranged in a hierarchy, and the paper finds the class/instance line arbitrary when concepts nest."
+    review: "Are any instances 'inside' other instances in the domain (regions, org units, categories)?"
+    fix: "Make them classes (often abstract)."
+    cites: [src.o101/natural-hierarchy, src.o101/classes-without-instances, src.o101/no-sub-instance]
+
+  - id: inst-granularity
+    modality: SHOULD
+    basis: interpretive
+    check: judgment
+    fromStep: 7
+    governs: [concept.instance, concept.competency-question]
+    statement: "Choose the level at which classes end and instances begin from the application: the most specific things that answer your competency questions are good candidates for instances."
+    plainLanguage: "For wine pairing, 'Sterling Vineyards Merlot' is an instance. For a cellar inventory, each bottle might be."
+    rationale: "The paper says the lowest level of granularity 'is in turn determined by a potential application', and calls the answers to competency questions 'very good candidates' for individuals. Those are descriptive; turning them into a SHOULD is the toolkit's reading."
+    review: "What are the most specific things that appear in answers to your competency questions? Those should be instances."
+    fix: "Move the class/instance boundary up or down and record the decision."
+    cites: [src.o101/instance-or-class, src.o101/granularity, src.o101/cq-individuals]
+
+  - id: inst-not-of-abstract
+    modality: MUST_NOT
+    basis: direct
+    check: mechanical
+    fromStep: 7
+    governs: [concept.abstract-class]
+    statement: "An abstract class must not have direct instances."
+    plainLanguage: "Instances of an abstract class have to belong to one of its subclasses."
+    rationale: "Being abstract means the class cannot have any direct instances."
+    fix: "Point the instance at the right subclass, or remove `abstract` from the class."
+    cites: [src.o101/abstract]
+
+  # ======================================================================= SLOTS & FACETS
+  - id: slot-attach-most-general
+    modality: SHOULD
+    basis: direct
+    check: mechanical
+    fromStep: 5
+    governs: [concept.domain, concept.inheritance]
+    statement: "A slot should be attached at the most general class that can have the property. Don't attach it to a class and its subclass, and if it's on every direct subclass of A, attach it to A instead."
+    plainLanguage: "Put a slot as high up the tree as it truly applies, once. Children inherit it."
+    rationale: "Subclasses inherit slots, so attaching to both parent and child is redundant. Listing every child instead of the parent is the same set of classes but harder to maintain. The paper states these rules for domain lists."
+    fix: "Remove the HAS_SLOT edges on the subclasses and attach the slot to the parent."
+    cites: [src.o101/most-general, src.o101/inherit, src.o101/dr-remove-subclass, src.o101/dr-all-subclasses]
+
+  - id: slot-domain-fits-all
+    modality: MUST
+    basis: direct
+    check: judgment
+    fromStep: 5
+    governs: [concept.domain]
+    statement: "Every class a slot is attached to must be able to have the property the slot represents."
+    plainLanguage: "Don't push a slot up so high that it lands on classes it doesn't describe. tanninLevel belongs on Red Wine, not Wine, because white wines aren't described by tannin."
+    rationale: "Too general a domain lets meaningless values in."
+    review: "For each slot, check every class it's inherited by. Does each one really have this property?"
+    fix: "Move the slot down to the most general class for which it is always meaningful."
+    cites: [src.o101/attach-can-have, src.o101/dr-not-overly-general]
+
+  - id: slot-range-remove-subclass
+    modality: SHOULD
+    basis: direct
+    check: mechanical
+    fromStep: 6
+    governs: [concept.range]
+    statement: "If a slot's range includes a class and its subclass, remove the subclass."
+    plainLanguage: "Range 'Wine, Red Wine' is just 'Wine'. Red Wine is already included."
+    rationale: "The subclass adds no information; the range already implicitly includes it."
+    fix: "Delete the RANGE edge to the subclass."
+    cites: [src.o101/dr-remove-subclass]
+
+  - id: slot-range-collapse-subclasses
+    modality: SHOULD
+    basis: direct
+    check: mechanical
+    fromStep: 6
+    governs: [concept.range]
+    statement: "If a slot's range lists all subclasses of a class A but not A itself, the range should contain only A."
+    plainLanguage: "Range 'Red Wine, White Wine, Rosé Wine' should just be 'Wine'."
+    rationale: "It's the same set of allowed classes, stated once, and it stays correct when a new subclass is added."
+    fix: "Replace the RANGE edges with one edge to A."
+    cites: [src.o101/dr-all-subclasses]
+
+  - id: slot-range-all-but-few
+    modality: MAY
+    basis: direct
+    check: heuristic
+    fromStep: 6
+    governs: [concept.range]
+    statement: "If a slot's range lists all but a few subclasses of a class A, consider whether A would be a more appropriate range."
+    plainLanguage: "Listing nearly every child is often a sign the parent is what you meant."
+    rationale: "Stated by the paper as something to consider, not a requirement."
+    fix: "Consider using A as the range; if the excluded subclasses really can't be values, keep the list and record why."
+    cites: [src.o101/dr-all-but-few]
+
+  - id: slot-range-not-too-general
+    modality: SHOULD_NOT
+    basis: direct
+    check: heuristic
+    fromStep: 6
+    governs: [concept.range]
+    statement: "A slot's range should not be overly general (such as Thing): instances of every class in the range should be potential values."
+    plainLanguage: "'maker: Thing' says nothing. 'maker: Winery' says what fills it."
+    rationale: "An overly general range stops being informative and lets invalid values in. okb flags ranges named Thing/Entity/Object/Item and ranges that are the single root above every class."
+    fix: "Narrow the range to the most general class that covers all real values."
+    cites: [src.o101/dr-not-overly-general, src.o101/dr-most-general]
+
+  - id: slot-value-type-declared
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 5
+    governs: [concept.value-type]
+    statement: "Every slot must declare a value type (String, Integer, Float, Number, Boolean, Enumerated or Instance)."
+    plainLanguage: "okb needs to know what kind of value goes in a field before it can check your data."
+    rationale: "The paper describes value type as one facet a slot 'can' have; the toolkit requires it so that instance values can be checked mechanically. That makes this a toolkit rule, not the paper's."
+    fix: "`okb slot set <slot> --type <Type>`."
+    cites: [src.o101/value-type]
+
+  - id: slot-instance-needs-range
+    modality: MUST
+    basis: direct
+    check: mechanical
+    fromStep: 6
+    governs: [concept.range, concept.value-type]
+    statement: "Slots with value type Instance must define a list of allowed classes (a range)."
+    plainLanguage: "A field that points at other things has to say what kind of things."
+    rationale: "Without a range, any individual could be a value and nothing can be checked."
+    fix: "`okb slot set <slot> --range <Class>`."
+    cites: [src.o101/instance-type]
+
+  - id: slot-enum-needs-values
+    modality: MUST
+    basis: interpretive
+    check: mechanical
+    fromStep: 6
+    governs: [concept.value-type]
+    statement: "Enumerated slots must list their allowed values."
+    plainLanguage: "'One of a fixed list' needs the list."
+    rationale: "The paper defines enumerated slots as ones that specify a list of allowed values; an enumerated slot without the list isn't one."
+    fix: "`okb slot set <slot> --values a,b,c`."
+    cites: [src.o101/enumerated]
+
+  - id: slot-cardinality-declared
+    modality: SHOULD
+    basis: operational
+    check: mechanical
+    fromStep: 6
+    governs: [concept.cardinality]
+    statement: "Every slot should declare its cardinality (single or multiple)."
+    plainLanguage: "Decide whether this field holds one value or many. It's easy to forget and hard to fix later."
+    rationale: "The paper says slots 'can' have cardinality facets and that some systems only distinguish single from multiple; it never requires every slot to declare one. The toolkit asks for it explicitly (instead of silently defaulting) because single vs. multiple is easy to forget and hard to fix once instances exist. A toolkit rule, not the paper's."
+    fix: "`okb slot set <slot> --card single` (or multiple)."
+    cites: [src.o101/step6, src.o101/cardinality]
+
+  - id: slot-cardinality-coherent
+    modality: MUST
+    basis: interpretive
+    check: mechanical
+    fromStep: 6
+    governs: [concept.cardinality]
+    statement: "Cardinality facets must be coherent: minimum ≤ maximum, neither negative, and single cardinality means a maximum of 1."
+    plainLanguage: "'At least 3 and at most 1' can never be satisfied."
+    rationale: "Follows from the paper's definitions of minimum, maximum and single cardinality."
+    fix: "Fix the numbers with `okb slot set`."
+    cites: [src.o101/cardinality, src.o101/min-max, src.o101/max]
+
+  - id: slot-values-respect-facets
+    modality: MUST
+    basis: interpretive
+    check: mechanical
+    fromStep: 7
+    governs: [concept.facet, concept.instance]
+    statement: "Every slot value must satisfy the slot's facets: its value type, allowed values, range, and minimum and maximum cardinality (including overrides on the instance's classes)."
+    plainLanguage: "The data has to follow the rules you set: body must be light, medium or full; a wine needs at least one grape; a maker has to be a Winery."
+    rationale: "Only minimum cardinality is worded as a 'must' in the paper ('a slot must have at least N values'). The other facets are definitions of what 'can fill in the slot' (value type, allowed values, allowed classes, 'at most M values'), and subclasses may 'override some facets'. The toolkit infers that values outside those definitions are errors, because a facet nothing enforces constrains nothing."
+    fix: "Correct the value, or loosen the facet if the data shows the rule was wrong (and record why)."
+    cites: [src.o101/min-max, src.o101/max, src.o101/value-type, src.o101/enumerated, src.o101/instance-type, src.o101/new-class-practical]
+
+  - id: slot-value-slot-applies
+    modality: MUST
+    basis: interpretive
+    check: mechanical
+    fromStep: 7
+    governs: [concept.domain, concept.inheritance]
+    statement: "An instance (or class) may only have values for slots attached to its class or inherited from an ancestor."
+    plainLanguage: "A Winery can't have a tanninLevel: that slot belongs to Red Wine and its subclasses."
+    rationale: "The paper attaches each property to the class it describes, and subclasses inherit it. Treating any other value as an error is the toolkit's closed-world reading of that: the paper doesn't say values for unattached slots are forbidden, but a value no class declares can't be checked or queried reliably."
+    fix: "Attach the slot to the right class, or remove the value."
+    cites: [src.o101/slots-attached, src.o101/domain, src.o101/inherit]
+
+  - id: slot-default-allowed
+    modality: MUST
+    basis: interpretive
+    check: mechanical
+    fromStep: 6
+    governs: [concept.default-value]
+    statement: "A default value must be a value the slot's facets allow."
+    plainLanguage: "The default for body can't be 'sparkly' if the allowed values are light, medium and full."
+    rationale: "Defaults can be changed to 'any other value that the facets will allow', so the default must itself be one of them."
+    fix: "Change the default or the allowed values."
+    cites: [src.o101/defaults, src.o101/defaults-convenience]
+
+  - id: slot-fixed-not-overridden
+    modality: MUST_NOT
+    basis: direct
+    check: mechanical
+    fromStep: 6
+    governs: [concept.fixed-value]
+    statement: "A fixed slot value set on a class must not be changed by any of its subclasses or instances."
+    plainLanguage: "If every Dessert Wine is sweet, no dessert wine may say sugar=dry."
+    rationale: "Unlike defaults, class-level slot values cannot be changed in subclasses or instances."
+    fix: "Remove the conflicting value, or turn the fixed value into a default if it really can vary."
+    cites: [src.o101/fixed-values]
+
+  - id: slot-inverse-consistent
+    modality: SHOULD
+    basis: interpretive
+    check: heuristic
+    fromStep: 6
+    governs: [concept.inverse-slots]
+    statement: "Inverse slots should mirror each other: the range of one should match the domain of the other."
+    plainLanguage: "If maker goes Wine → Winery, produces should go Winery → Wine."
+    rationale: "Inverse slots describe one relation from both ends (maker on Wine, produces on Winery). That the range of one should line up with the domain of the other is the toolkit's inference from 'one relation, two ends'; the paper doesn't state it. Values can't disagree in okb, because each fact is stored as a single edge that both slots read."
+    fix: "Adjust the range or domain of one slot so they match (`okb slot set <slot> --range ...` / `--on ...`)."
+    cites: [src.o101/inverse, src.o101/inverse-auto, src.o101/inverse-figure]
+
+  - id: slot-edge-properties
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 6
+    governs: [concept.edge-property]
+    statement: "Properties on relationship edges must be declared on the relationship and must match their declared type, allowed values and required-ness; an edge's `rule` must point at a Rule node."
+    plainLanguage: "If PREFERRED_OVER edges carry a condition, declare `condition` once, and every edge's condition gets checked like any other value."
+    rationale: "Ontology 101's frame model has no properties on relationships (a qualified relation would be reified as its own class). Labeled property graphs support them natively, so the toolkit allows them and gives them facets, so they get the same checking as slots. A toolkit rule, not the paper's. Undeclared properties are reported as warnings (usually a hand edit or a typo); wrong types, missing required values and broken rule references are errors."
+    fix: "`okb relationship property <rel> <name> --type ...` to declare; `okb link <from> <rel> <to> name=value` to set."
+    cites: []
+
+  # ======================================================================= DISJOINTNESS
+  - id: disjoint-no-shared-members
+    modality: MUST_NOT
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.disjoint]
+    statement: "No class or instance may fall under two classes declared disjoint, and a class must not be declared disjoint with its own ancestor."
+    plainLanguage: "If Red Wine and White Wine are disjoint, nothing can be under both, directly or through its parents."
+    rationale: "Disjoint classes cannot have any instances in common, and declaring disjointness lets the system report exactly this modeling error (the Riesling/Port example). The ancestor case is the toolkit's inference: a class disjoint with its own ancestor could never have members, which is consistent but almost certainly a mistake."
+    fix: "Move the class/instance under the right parent, or remove the disjointness if it was wrong."
+    cites: [src.o101/disjoint, src.o101/disjoint-validate]
+
+  - id: disjoint-consider-siblings
+    modality: MAY
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.disjoint]
+    statement: "Consider declaring sibling classes disjoint when nothing can belong to more than one of them."
+    plainLanguage: "Can anything be both a Red Wine and a White Wine? No? Say so, and okb will catch mistakes for you."
+    rationale: "Specifying disjointness enables the system to validate the ontology better."
+    fix: "`okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine and White Wine can)."
+    cites: [src.o101/disjoint-validate]
+
+  # ======================================================================= NAMING
+  - id: naming-convention-defined
+    modality: MUST
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.naming-convention]
+    statement: "Define a naming convention for classes and slots (capitalization, delimiters, singular/plural, prefixes) before creating many names."
+    plainLanguage: "Pick how names look. okb starts you on its defaults so you can keep moving, but you need to confirm them (or choose your own) with `okb convention`."
+    rationale: "The paper says 'we need to' define one; strictly adhering to it makes the ontology easier to understand and avoids common mistakes."
+    fix: "`okb convention` (the defaults are PascalCase singular classes, camelCase slots)."
+    cites: [src.o101/naming, src.o101/naming-why]
+
+  - id: naming-follow-convention
+    modality: MUST
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.naming-convention]
+    statement: "Class and slot names must follow the declared naming convention."
+    plainLanguage: "Once you've chosen a style, every name uses it."
+    rationale: "A convention only helps if it is adhered to; the paper says to define one 'and adhere to it'."
+    fix: "`okb rename <old> <new>`."
+    cites: [src.o101/naming]
+
+  - id: naming-singular-plural-consistent
+    modality: SHOULD
+    basis: direct
+    check: heuristic
+    fromStep: 4
+    governs: [concept.naming-convention]
+    statement: "Class names should consistently be singular or consistently plural, as declared in the convention."
+    plainLanguage: "All classes singular (Wine, Winery) or all plural (Wines, Wineries). Don't mix."
+    rationale: "Neither is better (singular is more common), but the choice should be consistent throughout, and this also prevents the Wine/Wines mistake. okb guesses plurals from English endings, so check its suggestions."
+    fix: "`okb rename`, or ignore a false positive (e.g. 'Glass', 'Series')."
+    cites: [src.o101/singular-plural-consistent, src.o101/singular-plural-avoid]
+
+  - id: naming-no-type-words
+    modality: SHOULD_NOT
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.naming-convention]
+    statement: "Do not add strings such as 'class', 'property' or 'slot' to concept names."
+    plainLanguage: "Call it Wine, not WineClass; maker, not makerProperty."
+    rationale: "Context and the naming convention already show whether a name is a class or a slot. The paper lists this among naming things 'to consider', hence SHOULD NOT rather than MUST NOT."
+    fix: "`okb rename`."
+    cites: [src.o101/no-type-words, src.o101/things-to-consider]
+
+  - id: naming-no-abbreviations
+    modality: SHOULD_NOT
+    basis: direct
+    check: heuristic
+    fromStep: 4
+    governs: [concept.naming-convention]
+    statement: "Avoid abbreviations in concept names."
+    plainLanguage: "CabernetSauvignon, not Cab."
+    rationale: "Stated as 'usually a good idea'. okb only flags all-caps words and names ending in '.', so it misses most abbreviations; the review skill looks for the rest."
+    fix: "`okb rename`, or add the short form as a synonym."
+    cites: [src.o101/abbreviations]
+    severity: info
+    severityReason: "Abbreviation detection is a guess; downgraded to info to avoid noisy warnings."
+
+  - id: naming-subclass-names-consistent
+    modality: SHOULD
+    basis: direct
+    check: mechanical
+    fromStep: 4
+    governs: [concept.naming-convention, concept.sibling]
+    statement: "Names of direct subclasses of a class should either all include or all omit the superclass name."
+    plainLanguage: "RedWine and WhiteWine, or Red and White, but not RedWine and White."
+    rationale: "Inconsistent sibling names make the structure harder to read."
+    fix: "`okb rename` the odd one(s) out."
+    cites: [src.o101/subclass-names]
+
+  - id: naming-unique
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 3
+    governs: [concept.naming-convention]
+    statement: "Names must be unique among classes, among slots and among instances (ignoring case and delimiters)."
+    plainLanguage: "Two classes called RedWine and Red_Wine would be confusing and break lookups."
+    rationale: "The paper points out that systems differ in whether classes, slots and instances share a name space and whether names are case-sensitive. okb chooses one namespace per node type, case- and delimiter-insensitive, so names stay portable to whichever system you exchange them with."
+    fix: "`okb rename` one of them, or merge them if they're the same concept."
+    cites: [src.o101/name-spaces, src.o101/other-systems]
+
+  # ======================================================================= SCOPE & DOCUMENTATION
+  - id: scope-defined
+    modality: SHOULD
+    basis: direct
+    check: mechanical
+    fromStep: 1
+    governs: [concept.scope]
+    statement: "Start by defining the domain and scope: the domain covered, what the ontology is for, and who will use and maintain it."
+    plainLanguage: "Write down what it's about, what it's for, and who it's for, before you build anything."
+    rationale: "The answers may change later, but at any given time they help limit the scope of the model."
+    fix: "`okb scope --domain ... --purpose ... --users ...`."
+    cites: [src.o101/step1, src.o101/scope-changes]
+
+  - id: scope-competency-questions
+    modality: SHOULD
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.competency-question]
+    statement: "An ontology should have competency questions (the toolkit suggests at least three to start)."
+    plainLanguage: "Write down a few questions your ontology must be able to answer. You'll use them to decide what to include and to test the result."
+    rationale: "The paper offers competency questions as 'one of the ways' to scope an ontology and as the later litmus test. The toolkit makes them expected because every later check on scope depends on them. The number three is a toolkit suggestion; the paper says the list 'does not need to be exhaustive'."
+    fix: "`okb cq add \"...\"`."
+    cites: [src.o101/cq, src.o101/cq-litmus, src.o101/cq-sketch]
+
+  - id: scope-cq-coverage
+    modality: SHOULD
+    basis: interpretive
+    check: mechanical
+    fromStep: 8
+    governs: [concept.competency-question]
+    statement: "Each competency question should be linked to the classes and slots needed to answer it."
+    plainLanguage: "For each question, point at the parts of the ontology that answer it. A question with nothing to point at isn't answerable yet."
+    rationale: "Competency questions are the litmus test: does the ontology contain enough information to answer them? NEEDS links make that test explicit and checkable."
+    fix: "`okb cq link <cq> <Class|slot>...`, or add what's missing."
+    cites: [src.o101/cq-litmus, src.o101/step5]
+
+  - id: scope-no-unneeded
+    modality: SHOULD_NOT
+    basis: direct
+    check: heuristic
+    fromStep: 8
+    governs: [concept.scope, concept.competency-question]
+    statement: "The ontology should not contain all possible information, properties and distinctions: don't specialize or generalize more than the application needs (at most one extra level each way)."
+    plainLanguage: "If no competency question needs a class or slot (or its parent or child), ask whether it belongs."
+    rationale: "Extra detail costs maintenance and can actively hurt (the Experimenter example). okb reports classes and slots not reachable within one level from anything a competency question needs. It only does this once questions have been linked."
+    review: "For each flagged element: which question needs it? If none, remove it or add the question it serves."
+    fix: "Remove it, or link it to (or add) the question that needs it."
+    cites: [src.o101/limit-scope, src.o101/limit-properties]
+    severity: info
+    severityReason: "Whether something is 'needed' depends on how completely questions were linked, so this is a prompt, not a warning."
+
+  - id: doc-descriptions
+    modality: SHOULD
+    basis: interpretive
+    check: mechanical
+    fromStep: 4
+    governs: [concept.class, concept.slot]
+    statement: "Every class and slot should have a human-readable description of what it denotes."
+    plainLanguage: "One sentence per class and slot saying what it means. The name alone is ambiguous."
+    rationale: "Gruber describes ontology definitions as associating names with human-readable text as well as formal constraints; the Ontology 101 paper relies on class documentation for synonyms and design decisions. It is framed as what a definition contains, not as a 'must', hence SHOULD."
+    fix: "`okb class set <Class> --desc \"...\"` / `okb slot set <slot> --desc \"...\"`."
+    cites: [src.g93/definitions-text, src.o101/synonym-list]
+
+  - id: doc-record-decisions
+    modality: SHOULD
+    basis: interpretive
+    check: judgment
+    fromStep: 4
+    governs: [concept.design-decision]
+    statement: "Record design decisions in the documentation, above all deliberate omissions made for your application, and (toolkit extension) other non-obvious modeling choices."
+    plainLanguage: "Every time you choose between two reasonable options, write a one-line design decision."
+    rationale: "The paper's instruction is about scope-limiting choices: record that Experimenter was deliberately not made a Biological Organism, so reusers don't assume otherwise. The toolkit extends the same reasoning to any choice a reuser might not expect (multiple inheritance, terminological classes, kept warnings)."
+    review: "Look for multiple inheritance, terminological classes, class-vs-value choices, things deliberately left out, and flagged findings you decided to keep. Does each have a DesignDecision?"
+    fix: "`okb decision add --title ... --decision ... --why ... --about <node>`."
+    cites: [src.o101/record-decisions]
+
+  - id: reuse-considered
+    modality: SHOULD
+    basis: direct
+    check: judgment
+    fromStep: 3
+    governs: [concept.ontology]
+    statement: "Consider reusing existing ontologies or vocabularies before building from scratch."
+    plainLanguage: "Spend a little time looking for an existing ontology, standard list or glossary you can borrow from."
+    rationale: "It is almost always worth considering, and reuse may be required if your system must interact with applications that already committed to a vocabulary."
+    fix: "Look, then record what you found (see reuse-recorded)."
+    cites: [src.o101/step2, src.o101/step2-requirement]
+    review: "Did you look for an industry standard, internal glossary, spreadsheet or schema that already names these things? Is there a system you must interoperate with?"
+
+  - id: terms-dispositioned
+    modality: SHOULD
+    basis: operational
+    check: mechanical
+    fromStep: 6
+    governs: [concept.class, concept.slot]
+    statement: "Every term brainstormed in Step 3 should end up as a class, slot, instance, slot value or synonym, or be marked out of scope."
+    plainLanguage: "Go back to your term list and make sure nothing was forgotten."
+    rationale: "The paper derives classes (Step 4) and slots (Step 5) from the Step 3 list; tracking what became of each term is the toolkit's way of making sure the list was actually used."
+    fix: "`okb term set <term> --as class|slot|instance|value|synonym|out-of-scope`."
+    cites: [src.o101/select-classes, src.o101/remaining-terms]
+
+  - id: reuse-recorded
+    modality: SHOULD
+    basis: operational
+    check: mechanical
+    fromStep: 3
+    governs: [concept.ontology]
+    statement: "Record the outcome of Step 2: each existing ontology considered, or that none was found."
+    plainLanguage: "Even 'we looked and found nothing' is worth writing down."
+    rationale: "The paper asks you to consider reuse; recording the outcome is the toolkit's way of making that step visible to later readers and to `okb status`."
+    fix: "`okb reuse add ...` for each candidate, or `okb reuse none --why ...`."
+    cites: []
+
+  # ======================================================================= STRUCTURE (toolkit)
+  - id: struct-well-formed
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.lpg]
+    statement: "Files must be well-formed: unique node ids, known node and edge types, edges pointing at existing nodes of the allowed types, and required properties present."
+    plainLanguage: "The JSON has to hang together. If you only use okb commands, this never fails; it catches hand edits."
+    rationale: "Every other check assumes the graph is structurally sound."
+    fix: "Fix the node/edge named in the finding (or undo the hand edit)."
+    cites: []
+
+  # ======================================================================= PROVENANCE (document extraction)
+  - id: prov-verified
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.lpg]
+    statement: "A node extracted from a document must be verified against its quote, and anything not SUPPORTED (including corrected OVERREACH results, until a person approves them) must be resolved before the ontology is published."
+    plainLanguage: "If the independent check said a statement claims more than its quote supports, a human decides before it ships."
+    rationale: "The extraction pipeline's gate (docs/EXTRACTION-PIPELINE.md): drafting and verifying are separate passes, and only SUPPORTED claims merge without review."
+    fix: "Edit the statement to match the quote, then set verification.status to SUPPORTED with a note, or delete the node."
+    cites: []
+
+  - id: prov-cites-quote
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.lpg]
+    statement: "Every domain Rule, and every node marked as extracted, must CITE at least one SourceLocation with a non-empty verbatim quote that is PART_OF a Source."
+    plainLanguage: "Anything taken from a document has to point at the exact words it came from."
+    rationale: "Quote-first extraction: no quote, no claim."
+    fix: "Add the SourceLocation and CITES edge, or delete the unsupported node."
+    cites: []
+
+  - id: prov-quote-current
+    modality: MUST
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.lpg]
+    statement: "Each SourceLocation quote must still appear verbatim in its source document (checked when the Source has a readable localPath)."
+    plainLanguage: "If the source document changed and the quote is gone, the citation is stale."
+    rationale: "Catches citations that went stale after the source was edited, which the original pipeline listed as unsolved."
+    fix: "Re-extract from the current document, or update localPath to the version you cited."
+    cites: []
+
+  - id: prov-duplicate-quotes
+    modality: MAY
+    basis: operational
+    check: mechanical
+    fromStep: 1
+    governs: [concept.lpg]
+    statement: "Near-identical quotes attributed to different source documents may indicate copy-pasted documentation; check each is accurate for its own source."
+    plainLanguage: "The same paragraph appearing in two different docs is often a copy-paste that's only right in one of them."
+    rationale: "A documentation-quality signal carried over from the original validator (it found a button size table pasted into unrelated component docs)."
+    fix: "Confirm each quote against its own document; fix the documentation if one copy is wrong."
+    cites: []

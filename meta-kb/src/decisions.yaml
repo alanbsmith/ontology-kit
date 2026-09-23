@@ -1,0 +1,111 @@
+# Decision guides: the recurring "which way do I model this?" questions, as a short
+# series of yes/no tests a coach can walk a beginner through.
+#   tests[].ask       - the question to put to the learner
+#   tests[].ifYes / ifNo - what that answer suggests ("continue" = go to the next test)
+
+decisions:
+  - id: decision.approach
+    name: "Top-down, bottom-up, or combination?"
+    whenYouFaceIt: "At the start of Step 4, before you add classes."
+    tests:
+      - {ask: "Do you naturally think of this domain starting from its broadest categories?", ifYes: "Go top-down: create the most general classes first, then specialize.", ifNo: continue}
+      - {ask: "Do you think in concrete examples first (specific products, cases, items)?", ifYes: "Go bottom-up: create the most specific classes, then group them.", ifNo: "Use combination: start with the most obvious concepts at any level and grow up and down from them."}
+    note: "None of the three is better than the others. Combination is often the easiest for beginners, because the middle-level concepts tend to be the most descriptive."
+    wine: "Combination: start with Wine and Margaux, then add Médoc between them."
+    cites: [src.o101/no-best-approach, src.o101/combination-easiest]
+
+  - id: decision.is-a
+    name: "Is this really a subclass?"
+    whenYouFaceIt: "Every time you add an IS_A (parent) link."
+    tests:
+      - {ask: "Is every single X, by definition, also a Y (not just usually)?", ifYes: continue, ifNo: "Not a subclass. If X is part of Y, made by Y, or related to Y, use a slot."}
+      - {ask: "Is X a singular/plural or alternative name for Y?", ifYes: "Not a subclass. It's the same class; add the other name as a synonym.", ifNo: continue}
+      - {ask: "Is X one particular thing rather than a kind of thing?", ifYes: "It's an instance of Y, not a subclass.", ifNo: continue}
+      - {ask: "Is X already a subclass of Y through another parent?", ifYes: "Don't add the direct link; it's implied.", ifNo: "Yes, X IS_A Y."}
+    wine: "Pinot Noir → Red Wine: every Pinot Noir is necessarily red. ✓. Wine → Wines: ✗ (plural). Château Morgon Beaujolais → Beaujolais: ✗, it's an instance."
+    cites: [src.o101/isa-test, src.o101/is-a, src.o101/singular-plural, src.o101/transitive]
+
+  - id: decision.new-class
+    name: "Should I introduce a new subclass here?"
+    whenYouFaceIt: "When you're tempted to split a class into more specific ones."
+    tests:
+      - {ask: "Will the subclass have slots the parent doesn't have?", ifYes: "Create it.", ifNo: continue}
+      - {ask: "Will it have different restrictions (a fixed value, fewer allowed values, a different cardinality)?", ifYes: "Create it.", ifNo: continue}
+      - {ask: "Will it take part in relationships the parent doesn't (e.g. 'goes well with seafood')?", ifYes: "Create it.", ifNo: continue}
+      - {ask: "Is this a reference hierarchy people browse to pick a level of detail, or a distinction experts always make?", ifYes: "Create it, mark it terminological, and record why.", ifNo: "Probably don't. Use a slot value on the parent instead."}
+    note: "Aim for a balance: neither a deep hierarchy of near-identical classes nor a flat one that stuffs everything into slots."
+    wine: "Red Wine ✓ (adds tanninLevel). Dessert Wine ✓ (fixes sugar = sweet). 'Delicate Wine' ✗ (it's just flavor = delicate)."
+    cites: [src.o101/new-class-rule, src.o101/new-class-practical, src.o101/terminological, src.o101/expert-distinction, src.o101/not-each-restriction, src.o101/balance]
+
+  - id: decision.class-or-value
+    name: "New class, or just a slot value?"
+    whenYouFaceIt: "When a term is a distinction among things (red/white, small/large, active/inactive)."
+    tests:
+      - {ask: "Would things with different values change which values are allowed in OTHER classes' slots? (e.g. red vs white changes which dishes pair well)", ifYes: "Make classes.", ifNo: continue}
+      - {ask: "Do people in the domain think of things with different values as different kinds of things?", ifYes: "Make classes.", ifNo: continue}
+      - {ask: "Could one individual change its value over time (chilled/not chilled, active/inactive)?", ifYes: "Slot value. Class membership shouldn't change often.", ifNo: continue}
+      - {ask: "Is it a number, color, location or similar measurement?", ifYes: "Slot value (usually).", ifNo: "Slot value, unless one of the earlier tests applied."}
+    note: "The same distinction can be a class in one ontology and a value in another. It depends on your scope. Record which you chose."
+    wine: "Wine color is a class split in the pairing ontology (red and white pair differently), but just a value in a label-printing ontology."
+    cites: [src.o101/class-or-value, src.o101/class-or-value-kinds, src.o101/stable-membership, src.o101/numbers-are-values]
+
+  - id: decision.instance-or-class
+    name: "Instance or class?"
+    whenYouFaceIt: "When a term names something specific, or when you reach the bottom of the hierarchy."
+    tests:
+      - {ask: "Do the concepts form a natural hierarchy (one inside another, like regions)?", ifYes: "Classes (possibly abstract), even if they have no instances yet.", ifNo: continue}
+      - {ask: "Is it among the most specific things that appear in the answers to your competency questions?", ifYes: "Instance.", ifNo: continue}
+      - {ask: "Will you need to record different facts about finer-grained versions of it (e.g. each vintage)?", ifYes: "Class, with the finer-grained things as its instances.", ifNo: "Instance."}
+    wine: "For pairing, Sterling Vineyards Merlot is an instance. If you track each vintage, it becomes a class and the vintages become instances. Wine regions are all classes because they nest."
+    cites: [src.o101/instance-or-class, src.o101/cq-individuals, src.o101/natural-hierarchy]
+
+  - id: decision.disjoint
+    name: "Are these classes disjoint?"
+    whenYouFaceIt: "After creating siblings."
+    tests:
+      - {ask: "Can any single thing be a member of both classes at once?", ifYes: "Not disjoint. Leave them.", ifNo: "Declare them disjoint (okb class disjoint A B)."}
+    wine: "Red Wine / White Wine: disjoint. Dessert Wine / White Wine: not disjoint (sweet Riesling is both)."
+    cites: [src.o101/disjoint, src.o101/disjoint-validate]
+
+  - id: decision.slot-placement
+    name: "Which class does this slot go on?"
+    whenYouFaceIt: "Step 5, for each property."
+    tests:
+      - {ask: "Does every member of the parent class have this property?", ifYes: "Move up and ask again about the next parent.", ifNo: "Attach it to the current class, the highest one where every member has it."}
+      - {ask: "Are you about to attach it to every child of some class?", ifYes: "Attach it to that class instead.", ifNo: continue}
+    wine: "body goes on Wine (all wines have a body). tanninLevel goes on Red Wine, not Wine."
+    cites: [src.o101/most-general, src.o101/attach-can-have, src.o101/dr-all-subclasses]
+
+  - id: decision.range
+    name: "What should this slot's range be?"
+    whenYouFaceIt: "Step 6, for each Instance-type slot."
+    tests:
+      - {ask: "Is there one class that covers every valid value?", ifYes: "Use the most general such class that contains only valid values.", ifNo: "List several classes."}
+      - {ask: "Does your list include a class and its subclass?", ifYes: "Drop the subclass.", ifNo: continue}
+      - {ask: "Does your list include all (or nearly all) children of one class?", ifYes: "Use the parent instead.", ifNo: continue}
+      - {ask: "Is the range something like Thing/Entity/Object?", ifYes: "Too general. Narrow it.", ifNo: "Done."}
+    wine: "produces → Wine (not Red Wine + White Wine + Rosé Wine, and not Thing)."
+    cites: [src.o101/dr-most-general, src.o101/dr-not-overly-general, src.o101/dr-remove-subclass, src.o101/dr-all-subclasses, src.o101/dr-all-but-few]
+
+  - id: decision.naming
+    name: "Choosing a naming convention"
+    whenYouFaceIt: "Start of Step 4, before you create many names."
+    tests:
+      - {ask: "Will the names be used in code, a graph database, or URLs that don't handle spaces well?", ifYes: "Use PascalCase for classes and camelCase for slots (the toolkit default).", ifNo: "Title Case With Spaces is also fine for classes."}
+      - {ask: "Is there a reason to prefer plural class names (e.g. a system you integrate with uses them)?", ifYes: "Use plural everywhere.", ifNo: "Use singular (more common in practice) everywhere."}
+      - {ask: "Do you want slot names to show they're slots (hasMaker, makerOf)?", ifYes: "Set a has-/-of prefix/suffix convention and use it on every slot.", ifNo: "No prefix (the default)."}
+      - {ask: "Will the data go into a graph database?", ifYes: "Nothing extra to decide: okb stores each relationship under its name in UPPER_SNAKE case (maker → MAKER, goesWellWith → GOES_WELL_WITH), the usual openCypher style, and class names become node labels in `okb export`.", ifNo: "Nothing to decide."}
+    note: "There's often no reason to prefer one option; what matters is sticking to it. Consider other systems your ontology will be exchanged with."
+    wine: "Classes: RedWine, Winery (PascalCase, singular). Slots: tanninLevel, maker (camelCase)."
+    cites: [src.o101/naming, src.o101/capitalization, src.o101/singular-plural-consistent, src.o101/prefix-suffix, src.o101/other-systems]
+
+  - id: decision.edge-or-class
+    name: "Edge property, or make the relationship its own class?"
+    whenYouFaceIt: "When a relationship needs extra information: a condition, a strength, a date, a source."
+    tests:
+      - {ask: "Is the extra information a simple value about this one link (a short condition, a number, a date)?", ifYes: continue, ifNo: "Make the relationship a class (e.g. a Recommendation with slots from, to, condition, audience), so it can have its own relationships."}
+      - {ask: "Does the qualifier need relationships of its own (to people, sources, other components), or several values that vary independently?", ifYes: "Make it a class. Edges can only hold plain values (and a `rule` reference).", ifNo: continue}
+      - {ask: "Will you query or validate by it (e.g. 'all recommendations that apply to dense layouts')?", ifYes: "An Enumerated edge property works if the values are a fixed list; otherwise consider a class.", ifNo: "Use an edge property (okb relationship property ...)."}
+    note: "Ontology 101's frame model has no properties on relationships: the standard move there is to turn the relationship into a class (reification). Graph databases support edge properties natively, so for simple qualifiers they're the lighter choice. Record which you chose."
+    wine: "A wine–food pairing with a strength (\"excellent\", \"acceptable\") fits an Enumerated edge property on goesWellWith. A pairing that records who recommended it, for which menu and from which source would be a Pairing class."
+    cites: []

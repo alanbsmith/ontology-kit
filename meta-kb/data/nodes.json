@@ -1,0 +1,3380 @@
+[
+  {
+    "type": "MetaKB",
+    "id": "metakb",
+    "version": "2.2.0",
+    "formatVersion": "okb-lpg/2",
+    "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
+  },
+  {
+    "type": "Source",
+    "id": "src.o101",
+    "title": "Ontology Development 101: A Guide to Creating Your First Ontology",
+    "authors": "Noy, N.F. and McGuinness, D.L.",
+    "year": 2001,
+    "url": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf",
+    "shortName": "Ontology 101"
+  },
+  {
+    "type": "Source",
+    "id": "src.g93",
+    "title": "A Translation Approach to Portable Ontology Specifications",
+    "authors": "Gruber, T.R.",
+    "year": 1993,
+    "venue": "Knowledge Acquisition 5(2):199-220",
+    "shortName": "Gruber 1993"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.why-share",
+    "section": "§1 Why develop an ontology?",
+    "page": 1,
+    "quote": "To share common understanding of the structure of information among people or software agents",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=1"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.not-a-goal",
+    "section": "§1 Why develop an ontology?",
+    "page": 2,
+    "quote": "Often an ontology of the domain is not a goal in itself.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=2"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.structural-not-operational",
+    "section": "§1 About this guide",
+    "page": 2,
+    "quote": "a programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=2"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-single-methodology",
+    "section": "§1 About this guide",
+    "page": 3,
+    "quote": "there is no single correct ontology-design methodology and we did not attempt to define one.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.def-ontology",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "an ontology is a formal explicit description of concepts in a domain of discourse (classes (sometimes called concepts)), properties of each concept describing various features and attributes of the concept (slots (sometimes called roles or properties)), and restrictions on slots (facets (sometimes called role restrictions)).",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.def-kb",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "An ontology together with a set of individual instances of classes constitutes a knowledge base. In reality, there is a fine line where the ontology ends and the knowledge base begins.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.classes-focus",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "Classes are the focus of most ontologies. Classes describe concepts in the domain.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.subclasses",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "A class can have subclasses that represent concepts that are more specific than the superclass.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.slots-describe",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "Slots describe properties of classes and instances",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.in-practice",
+    "section": "§2 What is in an ontology?",
+    "page": 3,
+    "quote": "In practical terms, developing an ontology includes: defining classes in the ontology, arranging the classes in a taxonomic (subclass–superclass) hierarchy, defining slots and describing allowed values for these slots, filling in the values for slots for instances.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=3"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.rule-alternatives",
+    "section": "§3 A Simple Knowledge-Engineering Methodology",
+    "page": 4,
+    "quote": "There is no one correct way to model a domain— there are always viable alternatives. The best solution almost always depends on the application that you have in mind and the extensions that you anticipate.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=4"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.rule-iterative",
+    "section": "§3 A Simple Knowledge-Engineering Methodology",
+    "page": 4,
+    "quote": "Ontology development is necessarily an iterative process.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=4"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.rule-nouns-verbs",
+    "section": "§3 A Simple Knowledge-Engineering Methodology",
+    "page": 4,
+    "quote": "Concepts in the ontology should be close to objects (physical or logical) and relationships in your domain of interest. These are most likely to be nouns (objects) or verbs (relationships) in sentences that describe your domain.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=4"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.evaluate",
+    "section": "§3 A Simple Knowledge-Engineering Methodology",
+    "page": 4,
+    "quote": "After we define an initial version of the ontology, we can evaluate and debug it by using it in applications or problem-solving methods or by discussing it with experts in the field, or both.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=4"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step1",
+    "section": "§3 Step 1. Determine the domain and scope",
+    "page": 5,
+    "quote": "We suggest starting the development of an ontology by defining its domain and scope. That is, answer several basic questions: What is the domain that the ontology will cover? For what we are going to use the ontology? For what types of questions the information in the ontology should provide answers? Who will use and maintain the ontology?",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.scope-changes",
+    "section": "§3 Step 1. Determine the domain and scope",
+    "page": 5,
+    "quote": "The answers to these questions may change during the ontology-design process, but at any given time they help limit the scope of the model.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cq",
+    "section": "§3 Step 1, Competency questions",
+    "page": 5,
+    "quote": "One of the ways to determine the scope of the ontology is to sketch a list of questions that a knowledge base based on the ontology should be able to answer, competency questions",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cq-litmus",
+    "section": "§3 Step 1, Competency questions",
+    "page": 5,
+    "quote": "These questions will serve as the litmus test later: Does the ontology contain enough information to answer these types of questions?",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cq-sketch",
+    "section": "§3 Step 1, Competency questions",
+    "page": 5,
+    "quote": "These competency questions are just a sketch and do not need to be exhaustive.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step2",
+    "section": "§3 Step 2. Consider reusing existing ontologies",
+    "page": 5,
+    "quote": "It is almost always worth considering what someone else has done and checking if we can refine and extend existing sources for our particular domain and task.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step2-requirement",
+    "section": "§3 Step 2. Consider reusing existing ontologies",
+    "page": "5-6",
+    "quote": "Reusing existing ontologies may be a requirement if our system needs to interact with other applications that have already committed to particular ontologies or controlled vocabularies.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=5"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step3",
+    "section": "§3 Step 3. Enumerate important terms",
+    "page": 6,
+    "quote": "It is useful to write down a list of all terms we would like either to make statements about or to explain to a user.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=6"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step3-no-worry",
+    "section": "§3 Step 3. Enumerate important terms",
+    "page": 6,
+    "quote": "Initially, it is important to get a comprehensive list of terms without worrying about overlap between concepts they represent, relations among the terms, or any properties that the concepts may have, or whether the concepts are classes or slots.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=6"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.intertwined",
+    "section": "§3 Step 3. Enumerate important terms",
+    "page": 6,
+    "quote": "The next two steps—developing the class hierarchy and defining properties of concepts (slots)—are closely intertwined. It is hard to do one of them first and then do the other.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=6"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.top-down",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 6,
+    "quote": "A top-down development process starts with the definition of the most general concepts in the domain and subsequent specialization of the concepts.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=6"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.bottom-up",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 7,
+    "quote": "A bottom-up development process starts with the definition of the most specific classes, the leaves of the hierarchy, with subsequent grouping of these classes into more general concepts.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=7"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.combination",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 7,
+    "quote": "A combination development process is a combination of the top-down and bottom-up approaches: We define the more salient concepts first and then generalize and specialize them appropriately.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=7"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-best-approach",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 7,
+    "quote": "None of these three methods is inherently better than any of the others. The approach to take depends strongly on the personal view of the domain.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=7"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.combination-easiest",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 7,
+    "quote": "The combination approach is often the easiest for many ontology developers, since the concepts “in the middle” tend to be the more descriptive concepts in the domain",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=7"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.select-classes",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 7,
+    "quote": "From the list created in Step 3, we select the terms that describe objects having independent existence rather than terms that describe these objects.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=7"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.isa-test",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 8,
+    "quote": "We organize the classes into a hierarchical taxonomy by asking if by being an instance of one class, the object will necessarily (i.e., by definition) be an instance of some other class.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.superclass",
+    "section": "§3 Step 4. Define the classes and the class hierarchy",
+    "page": 8,
+    "quote": "If a class A is a superclass of class B, then every instance of B is also an instance of A In other words, the class B represents a concept that is a “kind of” A.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step5",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 8,
+    "quote": "The classes alone will not provide enough information to answer the competency questions from Step 1.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.remaining-terms",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 8,
+    "quote": "Most of the remaining terms are likely to be properties of these classes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.slot-kinds",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 8,
+    "quote": "In general, there are several types of object properties that can become slots in an ontology: “intrinsic” properties such as the flavor of a wine; “extrinsic” properties such as a wine’s name, and area it comes from; parts, if the object is structured; these can be both physical and abstract “parts” (e.g., the courses of a meal) relationships to other individuals;",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.slots-attached",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 8,
+    "quote": "For each property in the list, we must determine which class it describes. These properties become slots attached to classes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=8"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.inherit",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 9,
+    "quote": "All subclasses of a class inherit the slot of that class.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.most-general",
+    "section": "§3 Step 5. Define the properties of classes—slots",
+    "page": 9,
+    "quote": "A slot should be attached at the most general class that can have that property.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step6",
+    "section": "§3 Step 6. Define the facets of the slots",
+    "page": 9,
+    "quote": "Slots can have different facets describing the value type, allowed values, the number of the values (cardinality), and other features of the values the slot can take.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cardinality",
+    "section": "§3 Step 6, Slot cardinality",
+    "page": 9,
+    "quote": "Slot cardinality defines how many values a slot can have. Some systems distinguish only between single cardinality (allowing at most one value) and multiple cardinality (allowing any number of values).",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.min-max",
+    "section": "§3 Step 6, Slot cardinality",
+    "page": 9,
+    "quote": "Minimum cardinality of N means that a slot must have at least N values.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.max",
+    "section": "§3 Step 6, Slot cardinality",
+    "page": 9,
+    "quote": "Maximum cardinality of M means that a slot can have at most M values.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.max-zero",
+    "section": "§3 Step 6, Slot cardinality",
+    "page": 9,
+    "quote": "Sometimes it may be useful to set the maximum cardinality to 0. This setting would indicate that the slot cannot have any values for a particular subclass.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.value-type",
+    "section": "§3 Step 6, Slot-value type",
+    "page": 9,
+    "quote": "A value-type facet describes what types of values can fill in the slot.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.enumerated",
+    "section": "§3 Step 6, Slot-value type",
+    "page": 9,
+    "quote": "Enumerated slots specify a list of specific allowed values for the slot.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=9"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.instance-type",
+    "section": "§3 Step 6, Slot-value type",
+    "page": 10,
+    "quote": "Instance-type slots allow definition of relationships between individuals. Slots with value type Instance must also define a list of allowed classes from which the instances can come.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=10"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.range",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 10,
+    "quote": "Allowed classes for slots of type Instance are often called a range of a slot.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=10"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.domain",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 10,
+    "quote": "The classes to which a slot is attached or a classes which property a slot describes, are called the domain of the slot.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=10"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dr-most-general",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 10,
+    "quote": "When defining a domain or a range for a slot, find the most general classes or class that can be respectively the domain or the range for the slots.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=10"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dr-not-overly-general",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 10,
+    "quote": "do not define a domain and range that is overly general: all the classes in the domain of a slot should be described by the slot and instances of all the classes in the range of a slot should be potential fillers for the slot. Do not choose an overly general class for range (i.e., one would not want to make the range THING) but one would want to choose a class that will cover all fillers",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=10"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dr-remove-subclass",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 11,
+    "quote": "If a list of classes defining a range or a domain of a slot includes a class and its subclass, remove the subclass.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=11"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dr-all-subclasses",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 11,
+    "quote": "If a list of classes defining a range or a domain of a slot contains all subclasses of a class A, but not the class A itself, the range should contain only the class A and not the subclasses.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=11"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dr-all-but-few",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 11,
+    "quote": "If a list of classes defining a range or a domain of a slot contains all but a few subclasses of a class A, consider if the class A would make a more appropriate range definition.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=11"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.attach-can-have",
+    "section": "§3 Step 6, Domain and range of a slot",
+    "page": 11,
+    "quote": "On the other hand, we must ensure that each class to which we attach the slot can indeed have the property that the slot represents.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=11"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.step7",
+    "section": "§3 Step 7. Create instances",
+    "page": 11,
+    "quote": "Defining an individual instance of a class requires (1) choosing a class, (2) creating an individual instance of that class, and (3) filling in the slot values.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=11"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.stand-back",
+    "section": "§4 Defining classes and a class hierarchy",
+    "page": 12,
+    "quote": "After defining a considerable number of new classes, it is helpful to stand back and check if the emerging hierarchy conforms to these guidelines.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=12"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.singular-plural-avoid",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 12,
+    "quote": "The best way to avoid such an error is always to use either singular or plural in naming classes",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=12"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.is-a",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 12,
+    "quote": "The class hierarchy represents an “is-a” relation: a class A is a subclass of B if every instance of A is also an instance of B.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=12"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.singular-plural",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 12,
+    "quote": "A common modeling mistake is to include both a singular and a plural version of the same concept in the hierarchy making the former a subclass of the latter. For example, it is wrong to define a class Wines and a class Wine as a subclass of Wines.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=12"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.transitive",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "A subclass relationship is transitive: If B is a subclass of A and C is a subclass of B, then C is a subclass of A",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.chardonnay-direct",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "In our example, Chardonnay is a direct subclass of White wine and is not a direct subclass of Wine.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.direct-subclass",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "A direct subclass is the “closest” subclass of the class: there are no classes between a class and its direct subclass in a hierarchy.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.evolution",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "Maintaining a consistent class hierarchy may become challenging as domains evolve.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.class-not-name",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "Classes represent concepts in the domain and not the words that denote these concepts.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.synonyms",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "the following rule should always be followed: Synonyms for the same concept do not represent different classes",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.synonym-list",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "Many systems allow associating a list of synonyms, translations, or presentation names with a class. If a system does not allow these associations, synonyms could always be listed in the class documentation.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cycles",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "We should avoid cycles in the class hierarchy. We say that there is a cycle in a hierarchy when some class A has a subclass B and at the same time B is a superclass of A. Creating such a cycle in a hierarchy amounts to declaring that the classes A and B are equivalent",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.subclass-must",
+    "section": "§4.1 Ensuring that the class hierarchy is correct",
+    "page": 13,
+    "quote": "Indeed, since B is a subclass of A, all B’s instances must be instances of the class A.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=13"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.siblings-def",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "Siblings in the hierarchy are classes that are direct subclasses of the same class",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.siblings-generality",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "All the siblings in the hierarchy (except for the ones at the root) must be at the same level of generality. For example, White wine and Chardonnay should not be subclasses of the same class (say, Wine).",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.root-exception",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "The concepts at the root of the hierarchy however (which are often represented as direct subclasses of some very general class, such as Thing) represent major divisions of the domain and do not have to be similar concepts.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.how-many",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "There are no hard rules for the number of direct subclasses that a class should have. However, many well-structured ontologies have between two and a dozen direct subclasses.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.one-child",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "If a class has only one direct subclass there may be a modeling problem or the ontology is not complete.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.dozen",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 14,
+    "quote": "If there are more than a dozen subclasses for a given class then additional intermediate categories may be necessary.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=14"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-artificial",
+    "section": "§4.2 Analyzing siblings in a class hierarchy",
+    "page": 15,
+    "quote": "However, if no natural classes exist to group concepts in the long list of siblings, there is no need to create artificial classes—just leave the classes the way they are.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=15"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.multiple-inheritance",
+    "section": "§4.3 Multiple inheritance",
+    "page": 15,
+    "quote": "Most knowledge-representation systems allow multiple inheritance in the class hierarchy: a class can be a subclass of several classes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=15"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.multiple-inherit-slots",
+    "section": "§4.3 Multiple inheritance",
+    "page": 16,
+    "quote": "The Port class will inherit its slots and their facets from both its parents.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.new-class-hard",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "One of the hardest decisions to make during modeling is when to introduce a new class or when to represent a distinction through different property values.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.new-class-rule",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "Subclasses of a class usually (1) have additional properties that the superclass does not have, or (2) restrictions different from those of the superclass, or (3) participate in different relationships than the superclasses",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.new-class-practical",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "In practical terms, each subclass should either have new slots added to it, or have new slot values defined, or override some facets for the inherited slots.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.terminological",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "Classes in terminological hierarchies do not have to introduce new properties",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.expert-distinction",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "Another reason to introduce new classes without any new properties is to model concepts among which domain experts commonly make a distinction even though we may have decided not to model the distinction itself.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.not-each-restriction",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 16,
+    "quote": "Finally, we should not create subclasses of a class for each additional restriction.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=16"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.balance",
+    "section": "§4.4 When to introduce a new class (or not)",
+    "page": 17,
+    "quote": "When defining a class hierarchy, our goal is to strike a balance between creating new classes useful for class organization and creating too many classes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=17"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.class-or-value",
+    "section": "§4.5 A new class or a property value?",
+    "page": 17,
+    "quote": "If the concepts with different slot values become restrictions for different slots in other classes, then we should create a new class for the distinction. Otherwise, we represent the distinction in a slot value.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=17"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.class-or-value-kinds",
+    "section": "§4.5 A new class or a property value?",
+    "page": 17,
+    "quote": "If a distinction is important in the domain and we think of the objects with different values for the distinction as different kinds of objects, then we should create a new class for the distinction.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=17"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.stable-membership",
+    "section": "§4.5 A new class or a property value?",
+    "page": 17,
+    "quote": "A class to which an individual instance belongs should not change often. Usually when we use extrinsic rather than intrinsic properties of concepts to differentiate among classes, instances of those classes will have to migrate often from one class to another.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=17"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.numbers-are-values",
+    "section": "§4.5 A new class or a property value?",
+    "page": 17,
+    "quote": "Usually numbers, colors, locations are slot values and do not cause the creation of new classes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=17"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.instance-or-class",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "Deciding whether a particular concept is a class in an ontology or an individual instance depends on what the potential applications of the ontology are.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.granularity",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "The level of granularity is in turn determined by a potential application of the ontology.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.cq-individuals",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "the most specific concepts that will constitute answers to those questions are very good candidates for individuals in the knowledge base.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.instances-most-specific",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "Individual instances are the most specific concepts represented in a knowledge base.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.natural-hierarchy",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "If concepts form a natural hierarchy, then we should represent them as classes",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.abstract",
+    "section": "§4.6 An instance or a class?",
+    "page": 18,
+    "quote": "Protégé-2000 allows users to specify some classes as Abstract, signifying that the class cannot have any direct instances.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=18"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-sub-instance",
+    "section": "§4.6 An instance or a class?",
+    "page": 19,
+    "quote": "Only classes can be arranged in a hierarchy—knowledge-representation systems do not have a notion of sub-instance.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=19"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.classes-without-instances",
+    "section": "§4.6 An instance or a class?",
+    "page": 19,
+    "quote": "we should define these terms as classes even though they may not have any instances of their own.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=19"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.limit-scope",
+    "section": "§4.7 Limiting the scope",
+    "page": 19,
+    "quote": "The ontology should not contain all the possible information about the domain: you do not need to specialize (or generalize) more than you need for your application (at most one extra level each way).",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=19"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.limit-properties",
+    "section": "§4.7 Limiting the scope",
+    "page": 19,
+    "quote": "The ontology should not contain all the possible properties of and distinctions among classes in the hierarchy.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=19"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.record-decisions",
+    "section": "§4.7 Limiting the scope",
+    "page": 20,
+    "quote": "However, we should record such design decision in the documentation for the benefit of the users who will be looking at this ontology and who may not be aware of the application we had in mind.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=20"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.disjoint",
+    "section": "§4.8 Disjoint subclasses",
+    "page": 20,
+    "quote": "Classes are disjoint if they cannot have any instances in common.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=20"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.disjoint-validate",
+    "section": "§4.8 Disjoint subclasses",
+    "page": 20,
+    "quote": "Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=20"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.inverse",
+    "section": "§5.1 Inverse slots",
+    "page": 20,
+    "quote": "Storing the information “in both directions” is redundant. When we know that a wine is produced by a winery, an application using the knowledge base can always infer the value for the inverse relation that the winery produces the wine. However, from the knowledge-acquisition perspective it is convenient to have both pieces of information explicitly available.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=20"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.inverse-auto",
+    "section": "§5.1 Inverse slots",
+    "page": 20,
+    "quote": "The knowledge-acquisition system could then automatically fill in the value for the inverse relation insuring consistency of the knowledge base.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=20"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.inverse-figure",
+    "section": "§5.1 Inverse slots, Figure 9",
+    "page": 21,
+    "quote": "The slot produces for the class Winery is an inverse of the slot maker for the class Wine.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.defaults",
+    "section": "§5.2 Default values",
+    "page": 21,
+    "quote": "If a particular slot value is the same for most instances of a class, we can define this value to be a default value for the slot.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.defaults-convenience",
+    "section": "§5.2 Default values",
+    "page": 21,
+    "quote": "We can then change the value to any other value that the facets will allow. That is, default values are there for convenience: they do not enforce any new restrictions on the model or change the model in any way.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.fixed-values",
+    "section": "§5.2 Default values",
+    "page": 21,
+    "quote": "Slot values cannot be changed. For example, we can say that the slot sugar has value SWEET for the Dessert wine class. Then all the subclasses and instances of the Dessert wine class will have the SWEET value for the slot sugar. This value cannot be changed in any of the subclasses or instances of the class.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.naming-why",
+    "section": "§6 What's in a name?",
+    "page": 21,
+    "quote": "Defining naming conventions for concepts in an ontology and then strictly adhering to these conventions not only makes the ontology easier to understand but also helps avoid some common modeling mistakes.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.naming",
+    "section": "§6 What's in a name?",
+    "page": 21,
+    "quote": "However, we need to Define a naming convention for classes and slots and adhere to it.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=21"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.name-spaces",
+    "section": "§6 What's in a name?",
+    "page": 22,
+    "quote": "Does the system have the same name space for classes, slots, and instances? That is, does the system allow having a class and a slot with the same name (such as a class winery and a slot winery)? Is the system case-sensitive?",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=22"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.capitalization",
+    "section": "§6.1 Capitalization and delimiters",
+    "page": 22,
+    "quote": "it is common to capitalize class names and use lower case for slot names (assuming the system is case-sensitive).",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=22"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.other-systems",
+    "section": "§6.1 Capitalization and delimiters",
+    "page": 22,
+    "quote": "It is however, important to consider other systems with which your system may interact.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=22"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.singular-plural-consistent",
+    "section": "§6.2 Singular or plural",
+    "page": 22,
+    "quote": "No alternative is better or worse than the other (although singular for class names is used more often in practice). However, whatever the choice, it should be consistent throughout the whole ontology.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=22"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.prefix-suffix",
+    "section": "§6.3 Prefix and suffix conventions",
+    "page": 22,
+    "quote": "Two common practices are to add a has- or a suffix –of to slot names.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=22"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.things-to-consider",
+    "section": "§6.4 Other naming considerations",
+    "page": 23,
+    "quote": "Here are a few more things to consider when defining naming conventions:",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-type-words",
+    "section": "§6.4 Other naming considerations",
+    "page": 23,
+    "quote": "Do not add strings such as “class”, “property”, “slot”, and so on to concept names.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.abbreviations",
+    "section": "§6.4 Other naming considerations",
+    "page": 23,
+    "quote": "It is usually a good idea to avoid abbreviations in concept names (that is, use Cabernet Sauvignon rather than Cab)",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.subclass-names",
+    "section": "§6.4 Other naming considerations",
+    "page": 23,
+    "quote": "Names of direct subclasses of a class should either all include or not include the name of the superclass.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.diagnostics",
+    "section": "§7 Other Resources",
+    "page": 23,
+    "quote": "An ontology designer may want to run Chimaera diagnostics over the evolving ontology to determine the conformance to common ontology-modeling practices.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.no-single-correct",
+    "section": "§8 Conclusions",
+    "page": 23,
+    "quote": "there is no single correct ontology for any domain.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.o101.pudding",
+    "section": "§8 Conclusions",
+    "page": 23,
+    "quote": "we can assess the quality of our ontology only by using it in applications for which we designed it.",
+    "deepLink": "https://protege.stanford.edu/publications/ontology_development/ontology101.pdf#page=23"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.conceptualization",
+    "section": "§1 Introduction",
+    "page": 2,
+    "quote": "A conceptualization is an abstract, simplified view of the world that we wish to represent for some purpose."
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.definition",
+    "section": "§1 Introduction",
+    "page": 2,
+    "quote": "An ontology is an explicit specification of a conceptualization."
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.definitions-text",
+    "section": "§1 Introduction",
+    "page": 3,
+    "quote": "definitions associate the names of entities in the universe of discourse (e.g., classes, relations, functions, or other objects) with human-readable text describing what the names are meant to denote, and formal axioms that constrain the interpretation and well-formed use of these terms."
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.knowledge-level",
+    "section": "§1 Introduction",
+    "page": 3,
+    "quote": "Ideally, shared terms should be defined at the knowledge level, independent of specific representation languages."
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.consistency-not-completeness",
+    "section": "§2 Ontologies and knowledge sharing",
+    "page": 5,
+    "quote": "a commitment to a common ontology is a guarantee of consistency, but not completeness, with respect to queries and assertions using the vocabulary defined"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.g93.documentation",
+    "section": "§3.1 Syntax and semantics",
+    "page": 8,
+    "quote": "The natural language text is not parsed or translated, but is passed on to those systems that have a place for documentation (surprisingly, many representation systems do not!)."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.no-single-correct-model",
+    "name": "There is no single correct model",
+    "statement": "There is no one correct way to model a domain; there are always viable alternatives, and the best one depends on the application you have in mind and the extensions you expect.",
+    "plainLanguage": "Two careful people will build two different ontologies of the same thing, and both can be good. Stop looking for the right answer and look for the one that fits your purpose. When you get stuck, go back to your competency questions."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.iterate",
+    "name": "Build it iteratively",
+    "statement": "Ontology development is necessarily an iterative process: start with a rough first pass, then revise and refine it.",
+    "plainLanguage": "Your first version will be wrong in places, and that's expected. Get a rough version working end to end (scope → classes → slots → a few instances), test it against your questions, then go back and fix it."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.nouns-and-verbs",
+    "name": "Model what's really in the domain",
+    "statement": "Concepts in the ontology should be close to objects (physical or logical) and relationships in your domain of interest; these are most likely to be nouns (objects) or verbs (relationships) in sentences that describe your domain.",
+    "plainLanguage": "Write a few plain sentences about your domain. The nouns are usually your classes and the verbs are usually your relationships. If a class isn't something people in the domain would recognize, be suspicious of it."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.purpose-driven",
+    "name": "An ontology exists to serve a purpose",
+    "statement": "An ontology is usually not a goal in itself; its quality can only be assessed by using it in the applications it was designed for.",
+    "plainLanguage": "You aren't cataloguing everything that's true about a domain. You're building something that can answer specific questions for specific people. If a detail doesn't help answer one of your questions, leave it out."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.structure-not-behavior",
+    "name": "Think in structure, not behavior (it's not object-oriented design)",
+    "statement": "A programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class.",
+    "plainLanguage": "If you write software, be careful: an ontology class is not a code class. You aren't grouping things by what they do or which code they share. You're grouping them by what they are. 'Is every X necessarily a Y?' is the only question that makes X a subclass of Y."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.knowledge-level",
+    "name": "Model the domain, not the database",
+    "statement": "Shared terms should ideally be defined at the knowledge level, independent of any specific representation language or system.",
+    "plainLanguage": "Decide what your concepts mean before you think about how they'll be stored. The toolkit saves your ontology as graph (LPG) JSON, but you should never make a modeling choice because it's convenient for a graph database. The graph is just the storage format."
+  },
+  {
+    "type": "Principle",
+    "id": "principle.document-meaning",
+    "name": "Write down what every term means",
+    "statement": "Definitions associate the names of entities with human-readable text describing what the names are meant to denote, and formal constraints on their use.",
+    "plainLanguage": "A class name alone is ambiguous: does 'Order' mean a purchase or a sequence? Give every class and slot a one-sentence description. The structure tells a machine how to use a term, and the description tells a person what it means."
+  },
+  {
+    "type": "Concept",
+    "id": "concept.ontology",
+    "name": "Ontology",
+    "definition": "A formal, explicit description of the concepts in a domain (classes), the properties of each concept (slots), and restrictions on those properties (facets). Gruber's shorter version: an explicit specification of a conceptualization.",
+    "plainLanguage": "A shared, precise vocabulary for one subject: what kinds of things exist, how they relate, and which statements about them make sense. It's written down so that people and software use the words the same way.",
+    "example": "The wine ontology says there are Wines, Wineries and Grapes; that a Red Wine is a kind of Wine; that every Wine has a body (light, medium or full) and a maker that is a Winery.",
+    "inThisToolkit": "Your Class, Slot and CompetencyQuestion nodes plus the Ontology node that records scope and conventions.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.conceptualization",
+    "name": "Conceptualization",
+    "definition": "An abstract, simplified view of the world that we wish to represent for some purpose.",
+    "plainLanguage": "The picture of the domain in your head: which things you think matter and how you think they fit together. The ontology is you writing that picture down explicitly.",
+    "example": "A sommelier and a wine-label printer have different conceptualizations of wine. One cares about pairings and the other about label sizes.",
+    "inThisToolkit": "Step 1 (scope) is where you make your conceptualization explicit.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.knowledge-base",
+    "name": "Knowledge base",
+    "definition": "An ontology together with a set of individual instances of classes. The line between where the ontology ends and the knowledge base begins is a fine one.",
+    "plainLanguage": "The ontology is the empty form: which fields exist and what's allowed in them. The knowledge base is the form filled in with real things.",
+    "example": "The ontology defines the Wine class and its slots; adding 'Château Morgon Beaujolais' with body=light turns it into a knowledge base.",
+    "inThisToolkit": "The same nodes.json/edges.json hold both. Instance nodes are the knowledge-base part.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.class",
+    "name": "Class",
+    "aliases": [
+      "concept",
+      "type",
+      "category"
+    ],
+    "definition": "A description of a concept in the domain. A class represents the set of all things of that kind; classes are the focus of most ontologies.",
+    "plainLanguage": "A kind of thing, like 'Wine' or 'Winery'. It's the category, not any particular one. Classes are usually nouns that name things with an independent existence.",
+    "example": "The class Wine represents all wines. Bordeaux is a class of the more specific Bordeaux wines.",
+    "inThisToolkit": "A node of type Class, created with `okb class add`.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.instance",
+    "name": "Instance",
+    "aliases": [
+      "individual"
+    ],
+    "definition": "An individual member of a class, and the most specific kind of concept represented in a knowledge base.",
+    "plainLanguage": "One specific, real thing, like this particular wine. An instance belongs to a class, but nothing can be a 'kind of' an instance.",
+    "example": "Château Morgon Beaujolais is an instance of the class Beaujolais.",
+    "inThisToolkit": "A node of type Instance with an INSTANCE_OF edge to its class. Created with `okb instance add`.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.subclass",
+    "name": "Subclass / superclass (is-a)",
+    "aliases": [
+      "is-a",
+      "kind-of",
+      "specialization",
+      "parent",
+      "child"
+    ],
+    "definition": "Class B is a subclass of class A if every instance of B is necessarily an instance of A; B represents a concept that is a 'kind of' A.",
+    "plainLanguage": "Ask: 'Is every B, by definition, also an A?' If yes, B is a subclass of A. If the answer is 'usually', 'is part of' or 'is related to', it is NOT a subclass.",
+    "example": "Every Pinot Noir is necessarily a Red Wine, so Pinot Noir is a subclass of Red Wine. A Wheel is part of a Car, but a Wheel is not a kind of Car.",
+    "inThisToolkit": "An IS_A edge from the subclass to the superclass (`okb class add PinotNoir --parent RedWine`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.direct-subclass",
+    "name": "Direct subclass",
+    "definition": "The closest subclass of a class: there are no classes between it and the parent in the hierarchy.",
+    "plainLanguage": "Its immediate child, as opposed to a grandchild.",
+    "example": "Chardonnay is a direct subclass of White Wine and an indirect subclass of Wine.",
+    "inThisToolkit": "An IS_A edge you actually wrote. Indirect subclasses are worked out automatically.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.transitivity",
+    "name": "Transitivity (of is-a)",
+    "definition": "The subclass relationship is transitive: if B is a subclass of A and C is a subclass of B, then C is a subclass of A.",
+    "plainLanguage": "Kind-of relationships chain together. You only need to state the direct parent, and everything further up follows automatically.",
+    "example": "Chardonnay ⊂ White Wine ⊂ Wine, so Chardonnay is a Wine.",
+    "inThisToolkit": "okb follows IS_A chains when it checks inheritance, disjointness and slot values. Don't add shortcut edges (see rule hier-no-redundant-isa).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.class-hierarchy",
+    "name": "Class hierarchy (taxonomy)",
+    "definition": "The classes arranged by subclass–superclass (is-a) relations.",
+    "plainLanguage": "The family tree of your classes, from general at the top to specific at the bottom.",
+    "example": "Wine → Red Wine → Bordeaux → Médoc → Pauillac.",
+    "inThisToolkit": "`okb tree` prints it; `okb diagram` draws it.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.sibling",
+    "name": "Siblings",
+    "definition": "Classes that are direct subclasses of the same class.",
+    "plainLanguage": "Classes that share the same parent. Like same-level headings in a book outline, siblings should be about equally general.",
+    "example": "Red Wine, White Wine and Rosé Wine are siblings under Wine.",
+    "inThisToolkit": "Several classes with IS_A edges to the same parent.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.multiple-inheritance",
+    "name": "Multiple inheritance",
+    "definition": "A class that is a subclass of several classes, inheriting slots and facets from all of its parents.",
+    "plainLanguage": "A class can have more than one parent when it really is a kind of each of them. It's allowed and sometimes the right answer, so write down why you did it.",
+    "example": "Port is both a Red Wine and a Dessert Wine.",
+    "inThisToolkit": "Two or more IS_A edges from the same class (`--parent RedWine --parent DessertWine`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.abstract-class",
+    "name": "Abstract class",
+    "definition": "A class that cannot have any direct instances; only its subclasses can.",
+    "plainLanguage": "A grouping class that exists to organize other classes. Nothing is ever 'just' one of these without also belonging to a more specific subclass.",
+    "example": "In the paper, every wine-region class is abstract.",
+    "inThisToolkit": "Class property `abstract: true` (`okb class add ... --abstract`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.terminological-hierarchy",
+    "name": "Terminological hierarchy",
+    "definition": "A reference hierarchy of terms whose classes do not have to introduce new properties; it is organized as a hierarchy for navigation and to let users pick a level of generality.",
+    "plainLanguage": "Sometimes the hierarchy itself is the point, like a classification of diseases or product categories. In that case it's fine for subclasses to add nothing new.",
+    "example": "A classification of diseases in a medical-records ontology.",
+    "inThisToolkit": "Class property `terminological: true` (or on the Ontology node for the whole ontology). It switches off the 'subclass adds nothing new' warning.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.slot",
+    "name": "Slot",
+    "aliases": [
+      "property",
+      "relationship",
+      "role",
+      "attribute",
+      "datatype property",
+      "object property"
+    ],
+    "definition": "A property of a class describing features and attributes of its instances. Slots can hold simple values (like a name) or relationships to other individuals (like a maker).",
+    "plainLanguage": "A field every member of a class has. There are two kinds. A property holds a plain value, such as a name, a year or one of a fixed list. A relationship points at another thing: a wine's maker is a Winery. 'Slot' is the paper's word for both. OWL calls them datatype properties and object properties, and a graph database stores them as node properties and relationship types.",
+    "example": "Wine has slots color, body, flavor, sugar, name, maker and grape.",
+    "inThisToolkit": "A node of type Slot, attached to classes with HAS_SLOT edges. `okb property add body --on Wine ...` creates a property; `okb relationship add maker --from Wine --to Winery` creates a relationship (a Slot with value type Instance, stored as edges of type MAKER).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.intrinsic-extrinsic",
+    "name": "Intrinsic vs. extrinsic property",
+    "definition": "Intrinsic properties belong to the thing itself (a wine's flavor); extrinsic properties are assigned from outside (a wine's name, the area it comes from).",
+    "plainLanguage": "A rough test (the toolkit's, not the paper's): would the property stay the same if nobody was looking? Flavor would, so it's intrinsic. A name, a location, or whether it's currently chilled is extrinsic. Extrinsic properties make poor classes because things move in and out of them.",
+    "example": "Chilled Wine should not be a class: a bottle goes in and out of the fridge. 'chilled' is a slot.",
+    "inThisToolkit": "It matters when you decide between a class and a slot value (decision guide class-or-value).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.inheritance",
+    "name": "Slot inheritance",
+    "definition": "All subclasses of a class inherit the slots of that class.",
+    "plainLanguage": "Attach a slot once, as high in the tree as it applies, and every class below gets it for free.",
+    "example": "Because body is attached to Wine, Red Wine and Pauillac have a body slot too.",
+    "inThisToolkit": "okb works out inherited slots automatically; `okb show <Class>` lists them.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.facet",
+    "name": "Facet",
+    "aliases": [
+      "role restriction",
+      "slot constraint"
+    ],
+    "definition": "A restriction on a slot: its value type, allowed values, number of values (cardinality), and other features of the values it can take.",
+    "plainLanguage": "The rules for filling in a field: what kind of value goes in it, which values are allowed, and how many.",
+    "example": "body: value type Enumerated, allowed values {light, medium, full}, cardinality single.",
+    "inThisToolkit": "Properties on the Slot node: valueType, allowedValues, cardinality, minCardinality, maxCardinality, default.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.value-type",
+    "name": "Value type",
+    "definition": "A facet describing what types of values can fill a slot: String, Number (Integer/Float), Boolean, Enumerated (a fixed list of symbols) or Instance (a relationship to another individual).",
+    "plainLanguage": "Is it text, a number, yes/no, one of a fixed list of words, or a link to another thing?",
+    "example": "name: String; price: Float; sparkling: Boolean; flavor: Enumerated {strong, moderate, delicate}; maker: Instance of Winery.",
+    "inThisToolkit": "Slot.valueType, one of String, Integer, Float, Number, Boolean, Enumerated, Instance.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.cardinality",
+    "name": "Cardinality",
+    "definition": "How many values a slot can have: single (at most one) or multiple, optionally with an explicit minimum and maximum.",
+    "plainLanguage": "'Exactly one', 'zero or one', 'at least one', or 'any number'. Minimum 1 means the field is required. Maximum 0 on a subclass means 'this subclass never has this field'.",
+    "example": "A wine has one body (single). A winery produces many wines (multiple). grape has minimum 1, because every wine is made of at least one grape.",
+    "inThisToolkit": "Slot.cardinality ('single' | 'multiple'), Slot.minCardinality, Slot.maxCardinality. A class can override them in facetOverrides.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.domain",
+    "name": "Domain (of a slot)",
+    "definition": "The classes to which a slot is attached, i.e. the classes whose property the slot describes.",
+    "plainLanguage": "Which kinds of things have this field.",
+    "example": "Winery is the domain of produces.",
+    "inThisToolkit": "HAS_SLOT edges from each domain class to the slot.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.range",
+    "name": "Range (of a slot)",
+    "definition": "For slots of value type Instance, the allowed classes that values must come from.",
+    "plainLanguage": "For a field that points at another thing, what kind of thing it's allowed to point at.",
+    "example": "Wine is the range of produces; Winery is the range of maker.",
+    "inThisToolkit": "RANGE edges from the slot to each allowed class (`okb relationship add maker --from Wine --to Winery`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.inverse-slots",
+    "name": "Inverse slots",
+    "definition": "Two slots describing the same relationship from opposite directions. Storing both is redundant, but convenient for entering data, and a tool can fill in the inverse automatically to keep them consistent.",
+    "plainLanguage": "'Wine → maker → Winery' and 'Winery → produces → Wine' are the same fact seen from each end. Declare them as inverses and okb keeps the two sides in sync.",
+    "example": "maker (on Wine) and produces (on Winery).",
+    "inThisToolkit": "An INVERSE_OF edge between the two slots (`okb relationship inverse maker produces`). Each fact is stored once, as a MAKER edge from wine to winery; `produces` reads those edges backwards. In a graph every edge can be followed from either end, so storing both directions would duplicate data.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.default-value",
+    "name": "Default value",
+    "definition": "A value filled in automatically for new instances because it is the same for most of them; it can be changed to any value the facets allow and adds no restriction to the model.",
+    "plainLanguage": "A starting suggestion that you can override.",
+    "example": "If most wines you describe are full-bodied, body defaults to full.",
+    "inThisToolkit": "Slot.default, or a per-class default in Class.defaults.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.fixed-value",
+    "name": "Fixed (class-level) slot value",
+    "definition": "A slot value stated for a class that all of its subclasses and instances have and cannot change.",
+    "plainLanguage": "A fact about the whole class, not a starting suggestion. Every Dessert Wine is sweet, full stop.",
+    "example": "sugar = SWEET for Dessert Wine.",
+    "inThisToolkit": "Class.fixedValues for property values; for relationships, an edge of the relationship's type from the class node, e.g. (RedWine)-[:GOES_WELL_WITH]->(RedMeat) (`okb class fix DessertWine sugar=sweet`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.facet-override",
+    "name": "Facet override (restriction on a subclass)",
+    "definition": "A subclass restricting an inherited slot's facets more tightly, such as fewer allowed values or a different maximum cardinality.",
+    "plainLanguage": "The subclass inherits the field but tightens its rules.",
+    "example": "Single-varietal wines restrict grape to maximum cardinality 1.",
+    "inThisToolkit": "Class.facetOverrides: {<slot id>: {allowedValues | minCardinality | maxCardinality | range}}.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.disjoint",
+    "name": "Disjoint classes",
+    "definition": "Classes that cannot have any instances in common. Declaring them lets a system catch a class or instance placed under both.",
+    "plainLanguage": "'Nothing can be both.' Declaring it lets okb catch mistakes like a wine that is both red and white.",
+    "example": "Red Wine and White Wine are disjoint. Dessert Wine and White Wine are not (a sweet Riesling is both).",
+    "inThisToolkit": "A DISJOINT_WITH edge (`okb class disjoint RedWine WhiteWine RoseWine`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.synonym",
+    "name": "Synonym",
+    "definition": "A different name for the same concept. Synonyms are not different classes; they can be recorded as a list attached to the class.",
+    "plainLanguage": "Shrimp and Prawn are two words for one thing, so they belong in one class with the other name listed as a synonym.",
+    "example": "One class named Shrimp, with synonyms [Prawn, Crevette].",
+    "inThisToolkit": "Class.synonyms (`okb class add Shrimp --synonym Prawn`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.naming-convention",
+    "name": "Naming convention",
+    "definition": "An agreed scheme for naming classes and slots (capitalization, word delimiters, singular vs. plural, prefixes/suffixes), chosen once and followed throughout.",
+    "plainLanguage": "Decide once how names look, for example classes in PascalCase and singular, slots in camelCase, and then never deviate.",
+    "example": "Classes: RedWine, Winery. Slots: tanninLevel, maker.",
+    "inThisToolkit": "Ontology.conventions, set with `okb convention`. okb checks every name against it.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.competency-question",
+    "name": "Competency question",
+    "definition": "A question the knowledge base built on the ontology should be able to answer. Together they sketch the scope, and later serve as the litmus test for whether the ontology contains enough information.",
+    "plainLanguage": "Before building anything, write down the actual questions you want answered. They tell you what to include, what to leave out, and when you're done.",
+    "example": "'Does Cabernet Sauvignon go well with seafood?' 'What is the best choice of wine for grilled meat?'",
+    "inThisToolkit": "CompetencyQuestion nodes (`okb cq add`). NEEDS edges link each question to the classes and slots that answer it.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.scope",
+    "name": "Scope",
+    "definition": "The domain an ontology covers, what it will be used for, which questions it should answer, and who will use and maintain it.",
+    "plainLanguage": "The fence around your project. It's what lets you say 'that's out of scope' with confidence.",
+    "example": "Wine & food pairing: in scope. Winery inventory and restaurant staffing: out of scope.",
+    "inThisToolkit": "The Ontology node: domain, purpose, users, maintainers, outOfScope (`okb scope`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.design-decision",
+    "name": "Design decision (record)",
+    "definition": "A written note of a modeling choice and the reason for it, for people who reuse the ontology without knowing the application it was designed for.",
+    "plainLanguage": "When you deliberately leave something out, or pick between two reasonable options, write one sentence on what you chose and why. Future readers, including you in six months, will need it. (The paper asks for this for scope decisions; the toolkit suggests it for any choice a reader wouldn't expect.)",
+    "example": "'Experimenter is NOT modeled as a subclass of Biological Organism, because we never run experiments on experimenters.'",
+    "inThisToolkit": "DesignDecision nodes with ABOUT edges (`okb decision add`).",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.development-approach",
+    "name": "Top-down / bottom-up / combination",
+    "definition": "Three ways to grow a class hierarchy: start from the most general concepts and specialize (top-down), start from the most specific and group them (bottom-up), or start from the most salient concepts and go both ways (combination).",
+    "plainLanguage": "Start wherever your head naturally is. Many people find the middle easiest ('Red Wine', 'Bordeaux') and work up and down from there.",
+    "example": "Top-down: Wine → Red Wine → Syrah. Bottom-up: Pauillac, Margaux → Médoc → Bordeaux. Combination: Wine and Margaux, then Médoc in the middle.",
+    "inThisToolkit": "Decision guide `decision.approach`.",
+    "origin": "source"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.lpg",
+    "name": "Labeled property graph (LPG)",
+    "definition": "The storage format used by this toolkit: nodes and edges that each carry a type label and a set of key/value properties.",
+    "plainLanguage": "Your ontology is saved as two JSON lists, nodes and edges, which is how graph databases like Neo4j and Neptune think. Classes, slots and instances are nodes. Structural links (IS_A, HAS_SLOT...) and relationship values ((wine)-[:MAKER]->(winery)) are edges. `okb export` writes the data the way a graph database expects it: instances as nodes labeled with their classes. It's still just the storage format, so model the meaning first (see principle.knowledge-level).",
+    "example": "{\"type\": \"Class\", \"id\": \"c.red-wine\", \"name\": \"RedWine\"} and {\"from\": \"c.red-wine\", \"type\": \"IS_A\", \"to\": \"c.wine\"}",
+    "inThisToolkit": "nodes.json and edges.json in your ontology folder. See docs/FORMAT.md.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.edge-property",
+    "name": "Edge property (relationship property)",
+    "aliases": [
+      "relationship property",
+      "link property",
+      "qualifier"
+    ],
+    "definition": "A property stored on one relationship edge rather than on either end: a fact about the link itself, such as the condition under which one component is preferred over another. Declared once per relationship (name, value type, allowed values, required) and checked like a slot facet. An edge may also carry a `rule` reference to the Rule node whose quote justifies it.",
+    "plainLanguage": "Some facts belong to the connection, not to either thing it connects. 'Use Radio instead of Segmented Control *when there are 2 to 7 options*': the condition isn't a property of Radio or of Segmented Control, it's a property of that recommendation.",
+    "example": "(Radio)-[:PREFERRED_OVER {condition: \"2 to 7 options\", rule: \"rule.use-radio-for-2-7-options\"}]->(SegmentedControl)",
+    "inThisToolkit": "`okb relationship property preferredOver condition --type String --required`, then `okb link Radio preferredOver SegmentedControl condition=\"2 to 7 options\" --rule <rule id>`. The frame model in Ontology 101 has no equivalent; see decision.edge-or-class for when a qualifier should become its own class instead.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.modality",
+    "name": "Modality (MUST / SHOULD / MAY)",
+    "definition": "How strong a rule is. The toolkit takes each rule's modality from the wording of the passage it cites: 'must', 'should always', 'it is wrong' → MUST; 'should', or a plain imperative guideline → SHOULD; 'consider', 'may', 'can', 'there may be' → MAY.",
+    "plainLanguage": "MUST findings are errors to fix. SHOULD findings are warnings: fix them or record why not. MAY findings are hints worth a look.",
+    "example": "'Slots with value type Instance must also define a list of allowed classes' → MUST. 'If a class has only one direct subclass there may be a modeling problem' → MAY.",
+    "inThisToolkit": "Rule.modality in the meta-KB; `okb validate` maps MUST→error, SHOULD→warning, MAY→info unless a rule states a documented override.",
+    "origin": "operational"
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-is-a-means-kind-of",
+    "key": "hier-is-a-means-kind-of",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "An IS_A link from B to A must mean that every instance of B is necessarily an instance of A.",
+    "plainLanguage": "Only use 'is a' for 'is a kind of'. 'Is part of', 'is made by', 'is related to' and 'is usually' are not is-a.",
+    "review": "For each IS_A edge, say out loud: 'Every <child> is, by definition, a <parent>.' If you hesitate, or the honest word is 'part of' / 'has' / 'usually', it is not an is-a.",
+    "fix": "Replace the IS_A with a slot (e.g. partOf, madeBy) or move the class under its real parent."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-is-a-means-kind-of",
+    "explanation": "This is the definition of the subclass relation; everything else (inheritance, disjointness, transitivity) depends on it holding."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-no-cycles",
+    "key": "hier-no-cycles",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "severityReason": "The paper says cycles 'should' be avoided because a cycle declares the classes equivalent. The checker can't tell an intended equivalence from a mistake, and okb has no equivalence construct, so a cycle is treated as an error: merge the classes and keep the other name as a synonym.",
+    "fromStep": 4,
+    "statement": "The class hierarchy should not contain cycles (A is a subclass of B and B is, directly or indirectly, a subclass of A).",
+    "plainLanguage": "A class can't be its own ancestor. If A is a kind of B and B is a kind of A, they're the same class.",
+    "fix": "If they're the same concept, merge them (keep one name, add the other as a synonym). If not, remove the IS_A edge that's wrong."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-no-cycles",
+    "explanation": "A cycle amounts to declaring the classes equivalent: all instances of A are instances of B and vice versa."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-no-singular-plural-pair",
+    "key": "hier-no-singular-plural-pair",
+    "modality": "MUST_NOT",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "The hierarchy must not make the singular and plural versions of the same concept subclasses of one another (such as Wine as a subclass of Wines).",
+    "plainLanguage": "'Wine' is not a kind of 'Wines'. Pick singular or plural for every class name and use only that form.",
+    "fix": "Delete one of the two classes and move its children and instances to the other."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-no-singular-plural-pair",
+    "explanation": "The paper calls this a common modeling mistake and says it is wrong: a single Wine is not a kind of Wines. okb reports a singular/plural pair that is NOT linked as a warning only: that's the naming-consistency concern, not this rule's."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-no-synonym-classes",
+    "key": "hier-no-synonym-classes",
+    "modality": "MUST_NOT",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "Synonyms for the same concept must not be represented as different classes.",
+    "plainLanguage": "Shrimp and Prawn are one class with two names, not two classes.",
+    "review": "Scan class names for pairs a domain expert would call 'the same thing'.",
+    "fix": "Merge the classes: keep one, add the other name to its synonyms, and move edges over."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-no-synonym-classes",
+    "explanation": "Classes represent concepts, not the words for them; the paper states this rule 'should always be followed'. okb catches a class whose name matches another class's name or listed synonym; true synonyms with unrelated spellings need a human eye."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-siblings-same-generality",
+    "key": "hier-siblings-same-generality",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "All siblings in the hierarchy, except those at the root, must be at the same level of generality.",
+    "plainLanguage": "Classes that share a parent should be about equally specific, like chapter headings in the same book. White Wine and Chardonnay shouldn't both sit directly under Wine.",
+    "review": "For each parent with 2+ children, ask: 'Is any of these a kind of another one?' and 'Would an expert put these on the same level?'",
+    "fix": "Move the more specific class under the more general sibling."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-siblings-same-generality",
+    "explanation": "Siblings at mismatched generality mean the hierarchy has skipped a level; the more specific one usually belongs under the more general one."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-no-redundant-isa",
+    "key": "hier-no-redundant-isa",
+    "modality": "SHOULD_NOT",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "A class should not have a direct IS_A edge to an ancestor it already reaches through another parent.",
+    "plainLanguage": "If Chardonnay is a White Wine, and White Wine is a Wine, don't also link Chardonnay directly to Wine. That link is already implied.",
+    "fix": "Remove the direct edge to the higher ancestor."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-no-redundant-isa",
+    "explanation": "Subclassing is transitive, so the shortcut edge adds nothing. It also makes the class a sibling of its own parent, which is exactly the mismatched-generality mistake the paper's White Wine / Chardonnay example warns about."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-single-child",
+    "key": "hier-single-child",
+    "modality": "MAY",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "info",
+    "fromStep": 4,
+    "statement": "A class with only one direct subclass may indicate a modeling problem or an incomplete ontology.",
+    "plainLanguage": "A parent with one child is like a bulleted list with one bullet. Either a sibling is missing, or the child isn't really different from the parent.",
+    "review": "Is something missing next to the only child? If not, is the child really different from its parent?",
+    "fix": "Add the missing sibling(s), or remove the child and fold it into the parent. If neither applies, record a design decision."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-single-child",
+    "explanation": "If the only subclass is effectively equivalent to its parent, it adds no information; if it isn't, its siblings are probably missing."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-too-many-children",
+    "key": "hier-too-many-children",
+    "modality": "MAY",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "info",
+    "fromStep": 4,
+    "statement": "A class with more than a dozen direct subclasses may need additional intermediate categories.",
+    "plainLanguage": "A long flat list of children usually hides natural groups. Look for them, but don't invent groups that don't exist in the domain.",
+    "review": "Do domain experts group these children somehow (by color, region, size...)? If yes, add those groups as intermediate classes.",
+    "fix": "Add intermediate classes for natural groupings, or record a design decision that none exist."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-too-many-children",
+    "explanation": "Many well-structured ontologies have between two and a dozen direct subclasses; but if no natural grouping exists, the paper says to leave the list as it is."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-subclass-adds-something",
+    "key": "hier-subclass-adds-something",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "Each subclass should add something its superclass doesn't have: new slots, new slot values, overridden facets, or different relationships. Classes in terminological hierarchies, and distinctions experts commonly make, are exceptions.",
+    "plainLanguage": "If you can't say anything about the subclass that isn't also true of its parent, it may not need to exist.",
+    "review": "What can you say about this class that you can't say about its parent? If the answer is 'experts always distinguish these', mark it terminological or record that decision.",
+    "fix": "Add the slot, value, restriction or relationship that makes it different; or mark it `terminological`; or merge it into its parent."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-subclass-adds-something",
+    "explanation": "The paper: we introduce a new class 'usually only when there is something that we can say about this class that we cannot say about the superclass'. okb looks for own slots, fixed values, defaults, facet overrides, being the range or value of some slot, and disjointness declarations. It skips classes marked terminological or covered by a design decision."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-no-subclass-per-restriction",
+    "key": "hier-no-subclass-per-restriction",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Do not create a subclass for each additional restriction; strike a balance between useful organization and too many classes.",
+    "plainLanguage": "Red/White/Rosé are natural classes; 'Delicate Wine', 'Moderate Wine' and 'Strong Wine' are just flavor values.",
+    "review": "For each class created mainly to hold one value of one slot, ask whether it's really just that slot's value.",
+    "fix": "Replace the class with a slot value on the parent."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-no-subclass-per-restriction",
+    "explanation": "A hierarchy with a class per restriction becomes deeply nested and hard to navigate."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-class-or-value",
+    "key": "hier-class-or-value",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Create a new class for a distinction if objects with different values are thought of as different kinds of things, or if the distinction restricts slots in other classes; otherwise represent it as a slot value.",
+    "plainLanguage": "In a wine-pairing ontology, red vs. white is a class split because it changes which foods go with the wine. In an ontology for a wine-label factory, the same color distinction is just a value.",
+    "review": "Use decision guide decision.class-or-value on each suspicious class/value.",
+    "fix": "Convert between class and slot value as the decision guide suggests, and record the decision."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-class-or-value",
+    "explanation": "The decision depends on the scope: the same distinction can be a class in one ontology and a value in another."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.hier-stable-membership",
+    "key": "hier-stable-membership",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "The class an individual belongs to should not change often; avoid classes defined by extrinsic properties that instances move in and out of.",
+    "plainLanguage": "'Chilled Wine' is a bad class: the same bottle would keep switching classes. Use a slot ('chilled: true/false').",
+    "review": "Could a given instance leave this class and come back tomorrow?",
+    "fix": "Turn the class into a Boolean or Enumerated slot on the parent."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.hier-stable-membership",
+    "explanation": "Classes built on extrinsic properties force instances to migrate between classes."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.inst-are-leaves",
+    "key": "inst-are-leaves",
+    "modality": "MUST_NOT",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "Instances must not be arranged in a hierarchy: only classes can have subclasses or instances.",
+    "plainLanguage": "Nothing can be a 'kind of' one particular thing. If you need children, make it a class.",
+    "fix": "Turn the instance into a class, or link it with a slot instead of IS_A/INSTANCE_OF."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.inst-are-leaves",
+    "explanation": "Individual instances are the most specific concepts in a knowledge base; there is no notion of a sub-instance. That nothing can be an instance of an instance follows from the same point: only classes have members."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.inst-natural-hierarchy-as-classes",
+    "key": "inst-natural-hierarchy-as-classes",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "If concepts form a natural hierarchy, represent them as classes, even if some have no instances of their own.",
+    "plainLanguage": "Wine regions nest (France → Bourgogne → Côtes d'Or), so they are all classes, not a mix of classes and instances.",
+    "review": "Are any instances 'inside' other instances in the domain (regions, org units, categories)?",
+    "fix": "Make them classes (often abstract)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.inst-natural-hierarchy-as-classes",
+    "explanation": "Only classes can be arranged in a hierarchy, and the paper finds the class/instance line arbitrary when concepts nest."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.inst-granularity",
+    "key": "inst-granularity",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 7,
+    "statement": "Choose the level at which classes end and instances begin from the application: the most specific things that answer your competency questions are good candidates for instances.",
+    "plainLanguage": "For wine pairing, 'Sterling Vineyards Merlot' is an instance. For a cellar inventory, each bottle might be.",
+    "review": "What are the most specific things that appear in answers to your competency questions? Those should be instances.",
+    "fix": "Move the class/instance boundary up or down and record the decision."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.inst-granularity",
+    "explanation": "The paper says the lowest level of granularity 'is in turn determined by a potential application', and calls the answers to competency questions 'very good candidates' for individuals. Those are descriptive; turning them into a SHOULD is the toolkit's reading."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.inst-not-of-abstract",
+    "key": "inst-not-of-abstract",
+    "modality": "MUST_NOT",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 7,
+    "statement": "An abstract class must not have direct instances.",
+    "plainLanguage": "Instances of an abstract class have to belong to one of its subclasses.",
+    "fix": "Point the instance at the right subclass, or remove `abstract` from the class."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.inst-not-of-abstract",
+    "explanation": "Being abstract means the class cannot have any direct instances."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-attach-most-general",
+    "key": "slot-attach-most-general",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 5,
+    "statement": "A slot should be attached at the most general class that can have the property. Don't attach it to a class and its subclass, and if it's on every direct subclass of A, attach it to A instead.",
+    "plainLanguage": "Put a slot as high up the tree as it truly applies, once. Children inherit it.",
+    "fix": "Remove the HAS_SLOT edges on the subclasses and attach the slot to the parent."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-attach-most-general",
+    "explanation": "Subclasses inherit slots, so attaching to both parent and child is redundant. Listing every child instead of the parent is the same set of classes but harder to maintain. The paper states these rules for domain lists."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-domain-fits-all",
+    "key": "slot-domain-fits-all",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "error",
+    "fromStep": 5,
+    "statement": "Every class a slot is attached to must be able to have the property the slot represents.",
+    "plainLanguage": "Don't push a slot up so high that it lands on classes it doesn't describe. tanninLevel belongs on Red Wine, not Wine, because white wines aren't described by tannin.",
+    "review": "For each slot, check every class it's inherited by. Does each one really have this property?",
+    "fix": "Move the slot down to the most general class for which it is always meaningful."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-domain-fits-all",
+    "explanation": "Too general a domain lets meaningless values in."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-range-remove-subclass",
+    "key": "slot-range-remove-subclass",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "If a slot's range includes a class and its subclass, remove the subclass.",
+    "plainLanguage": "Range 'Wine, Red Wine' is just 'Wine'. Red Wine is already included.",
+    "fix": "Delete the RANGE edge to the subclass."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-range-remove-subclass",
+    "explanation": "The subclass adds no information; the range already implicitly includes it."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-range-collapse-subclasses",
+    "key": "slot-range-collapse-subclasses",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "If a slot's range lists all subclasses of a class A but not A itself, the range should contain only A.",
+    "plainLanguage": "Range 'Red Wine, White Wine, Rosé Wine' should just be 'Wine'.",
+    "fix": "Replace the RANGE edges with one edge to A."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-range-collapse-subclasses",
+    "explanation": "It's the same set of allowed classes, stated once, and it stays correct when a new subclass is added."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-range-all-but-few",
+    "key": "slot-range-all-but-few",
+    "modality": "MAY",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "info",
+    "fromStep": 6,
+    "statement": "If a slot's range lists all but a few subclasses of a class A, consider whether A would be a more appropriate range.",
+    "plainLanguage": "Listing nearly every child is often a sign the parent is what you meant.",
+    "fix": "Consider using A as the range; if the excluded subclasses really can't be values, keep the list and record why."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-range-all-but-few",
+    "explanation": "Stated by the paper as something to consider, not a requirement."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-range-not-too-general",
+    "key": "slot-range-not-too-general",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "A slot's range should not be overly general (such as Thing): instances of every class in the range should be potential values.",
+    "plainLanguage": "'maker: Thing' says nothing. 'maker: Winery' says what fills it.",
+    "fix": "Narrow the range to the most general class that covers all real values."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-range-not-too-general",
+    "explanation": "An overly general range stops being informative and lets invalid values in. okb flags ranges named Thing/Entity/Object/Item and ranges that are the single root above every class."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-value-type-declared",
+    "key": "slot-value-type-declared",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 5,
+    "statement": "Every slot must declare a value type (String, Integer, Float, Number, Boolean, Enumerated or Instance).",
+    "plainLanguage": "okb needs to know what kind of value goes in a field before it can check your data.",
+    "fix": "`okb slot set <slot> --type <Type>`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-value-type-declared",
+    "explanation": "The paper describes value type as one facet a slot 'can' have; the toolkit requires it so that instance values can be checked mechanically. That makes this a toolkit rule, not the paper's."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-instance-needs-range",
+    "key": "slot-instance-needs-range",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "Slots with value type Instance must define a list of allowed classes (a range).",
+    "plainLanguage": "A field that points at other things has to say what kind of things.",
+    "fix": "`okb slot set <slot> --range <Class>`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-instance-needs-range",
+    "explanation": "Without a range, any individual could be a value and nothing can be checked."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-enum-needs-values",
+    "key": "slot-enum-needs-values",
+    "modality": "MUST",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "Enumerated slots must list their allowed values.",
+    "plainLanguage": "'One of a fixed list' needs the list.",
+    "fix": "`okb slot set <slot> --values a,b,c`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-enum-needs-values",
+    "explanation": "The paper defines enumerated slots as ones that specify a list of allowed values; an enumerated slot without the list isn't one."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-cardinality-declared",
+    "key": "slot-cardinality-declared",
+    "modality": "SHOULD",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "Every slot should declare its cardinality (single or multiple).",
+    "plainLanguage": "Decide whether this field holds one value or many. It's easy to forget and hard to fix later.",
+    "fix": "`okb slot set <slot> --card single` (or multiple)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-cardinality-declared",
+    "explanation": "The paper says slots 'can' have cardinality facets and that some systems only distinguish single from multiple; it never requires every slot to declare one. The toolkit asks for it explicitly (instead of silently defaulting) because single vs. multiple is easy to forget and hard to fix once instances exist. A toolkit rule, not the paper's."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-cardinality-coherent",
+    "key": "slot-cardinality-coherent",
+    "modality": "MUST",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "Cardinality facets must be coherent: minimum ≤ maximum, neither negative, and single cardinality means a maximum of 1.",
+    "plainLanguage": "'At least 3 and at most 1' can never be satisfied.",
+    "fix": "Fix the numbers with `okb slot set`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-cardinality-coherent",
+    "explanation": "Follows from the paper's definitions of minimum, maximum and single cardinality."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-values-respect-facets",
+    "key": "slot-values-respect-facets",
+    "modality": "MUST",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 7,
+    "statement": "Every slot value must satisfy the slot's facets: its value type, allowed values, range, and minimum and maximum cardinality (including overrides on the instance's classes).",
+    "plainLanguage": "The data has to follow the rules you set: body must be light, medium or full; a wine needs at least one grape; a maker has to be a Winery.",
+    "fix": "Correct the value, or loosen the facet if the data shows the rule was wrong (and record why)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-values-respect-facets",
+    "explanation": "Only minimum cardinality is worded as a 'must' in the paper ('a slot must have at least N values'). The other facets are definitions of what 'can fill in the slot' (value type, allowed values, allowed classes, 'at most M values'), and subclasses may 'override some facets'. The toolkit infers that values outside those definitions are errors, because a facet nothing enforces constrains nothing."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-value-slot-applies",
+    "key": "slot-value-slot-applies",
+    "modality": "MUST",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 7,
+    "statement": "An instance (or class) may only have values for slots attached to its class or inherited from an ancestor.",
+    "plainLanguage": "A Winery can't have a tanninLevel: that slot belongs to Red Wine and its subclasses.",
+    "fix": "Attach the slot to the right class, or remove the value."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-value-slot-applies",
+    "explanation": "The paper attaches each property to the class it describes, and subclasses inherit it. Treating any other value as an error is the toolkit's closed-world reading of that: the paper doesn't say values for unattached slots are forbidden, but a value no class declares can't be checked or queried reliably."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-default-allowed",
+    "key": "slot-default-allowed",
+    "modality": "MUST",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "A default value must be a value the slot's facets allow.",
+    "plainLanguage": "The default for body can't be 'sparkly' if the allowed values are light, medium and full.",
+    "fix": "Change the default or the allowed values."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-default-allowed",
+    "explanation": "Defaults can be changed to 'any other value that the facets will allow', so the default must itself be one of them."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-fixed-not-overridden",
+    "key": "slot-fixed-not-overridden",
+    "modality": "MUST_NOT",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "A fixed slot value set on a class must not be changed by any of its subclasses or instances.",
+    "plainLanguage": "If every Dessert Wine is sweet, no dessert wine may say sugar=dry.",
+    "fix": "Remove the conflicting value, or turn the fixed value into a default if it really can vary."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-fixed-not-overridden",
+    "explanation": "Unlike defaults, class-level slot values cannot be changed in subclasses or instances."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-inverse-consistent",
+    "key": "slot-inverse-consistent",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "heuristic",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "Inverse slots should mirror each other: the range of one should match the domain of the other.",
+    "plainLanguage": "If maker goes Wine → Winery, produces should go Winery → Wine.",
+    "fix": "Adjust the range or domain of one slot so they match (`okb slot set <slot> --range ...` / `--on ...`)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-inverse-consistent",
+    "explanation": "Inverse slots describe one relation from both ends (maker on Wine, produces on Winery). That the range of one should line up with the domain of the other is the toolkit's inference from 'one relation, two ends'; the paper doesn't state it. Values can't disagree in okb, because each fact is stored as a single edge that both slots read."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.slot-edge-properties",
+    "key": "slot-edge-properties",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 6,
+    "statement": "Properties on relationship edges must be declared on the relationship and must match their declared type, allowed values and required-ness; an edge's `rule` must point at a Rule node.",
+    "plainLanguage": "If PREFERRED_OVER edges carry a condition, declare `condition` once, and every edge's condition gets checked like any other value.",
+    "fix": "`okb relationship property <rel> <name> --type ...` to declare; `okb link <from> <rel> <to> name=value` to set."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.slot-edge-properties",
+    "explanation": "Ontology 101's frame model has no properties on relationships (a qualified relation would be reified as its own class). Labeled property graphs support them natively, so the toolkit allows them and gives them facets, so they get the same checking as slots. A toolkit rule, not the paper's. Undeclared properties are reported as warnings (usually a hand edit or a typo); wrong types, missing required values and broken rule references are errors."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.disjoint-no-shared-members",
+    "key": "disjoint-no-shared-members",
+    "modality": "MUST_NOT",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "No class or instance may fall under two classes declared disjoint, and a class must not be declared disjoint with its own ancestor.",
+    "plainLanguage": "If Red Wine and White Wine are disjoint, nothing can be under both, directly or through its parents.",
+    "fix": "Move the class/instance under the right parent, or remove the disjointness if it was wrong."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.disjoint-no-shared-members",
+    "explanation": "Disjoint classes cannot have any instances in common, and declaring disjointness lets the system report exactly this modeling error (the Riesling/Port example). The ancestor case is the toolkit's inference: a class disjoint with its own ancestor could never have members, which is consistent but almost certainly a mistake."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.disjoint-consider-siblings",
+    "key": "disjoint-consider-siblings",
+    "modality": "MAY",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "info",
+    "fromStep": 4,
+    "statement": "Consider declaring sibling classes disjoint when nothing can belong to more than one of them.",
+    "plainLanguage": "Can anything be both a Red Wine and a White Wine? No? Say so, and okb will catch mistakes for you.",
+    "fix": "`okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine and White Wine can)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.disjoint-consider-siblings",
+    "explanation": "Specifying disjointness enables the system to validate the ontology better."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-convention-defined",
+    "key": "naming-convention-defined",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "Define a naming convention for classes and slots (capitalization, delimiters, singular/plural, prefixes) before creating many names.",
+    "plainLanguage": "Pick how names look. okb starts you on its defaults so you can keep moving, but you need to confirm them (or choose your own) with `okb convention`.",
+    "fix": "`okb convention` (the defaults are PascalCase singular classes, camelCase slots)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-convention-defined",
+    "explanation": "The paper says 'we need to' define one; strictly adhering to it makes the ontology easier to understand and avoids common mistakes."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-follow-convention",
+    "key": "naming-follow-convention",
+    "modality": "MUST",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 4,
+    "statement": "Class and slot names must follow the declared naming convention.",
+    "plainLanguage": "Once you've chosen a style, every name uses it.",
+    "fix": "`okb rename <old> <new>`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-follow-convention",
+    "explanation": "A convention only helps if it is adhered to; the paper says to define one 'and adhere to it'."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-singular-plural-consistent",
+    "key": "naming-singular-plural-consistent",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Class names should consistently be singular or consistently plural, as declared in the convention.",
+    "plainLanguage": "All classes singular (Wine, Winery) or all plural (Wines, Wineries). Don't mix.",
+    "fix": "`okb rename`, or ignore a false positive (e.g. 'Glass', 'Series')."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-singular-plural-consistent",
+    "explanation": "Neither is better (singular is more common), but the choice should be consistent throughout, and this also prevents the Wine/Wines mistake. okb guesses plurals from English endings, so check its suggestions."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-no-type-words",
+    "key": "naming-no-type-words",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Do not add strings such as 'class', 'property' or 'slot' to concept names.",
+    "plainLanguage": "Call it Wine, not WineClass; maker, not makerProperty.",
+    "fix": "`okb rename`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-no-type-words",
+    "explanation": "Context and the naming convention already show whether a name is a class or a slot. The paper lists this among naming things 'to consider', hence SHOULD NOT rather than MUST NOT."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-no-abbreviations",
+    "key": "naming-no-abbreviations",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "info",
+    "severityReason": "Abbreviation detection is a guess; downgraded to info to avoid noisy warnings.",
+    "fromStep": 4,
+    "statement": "Avoid abbreviations in concept names.",
+    "plainLanguage": "CabernetSauvignon, not Cab.",
+    "fix": "`okb rename`, or add the short form as a synonym."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-no-abbreviations",
+    "explanation": "Stated as 'usually a good idea'. okb only flags all-caps words and names ending in '.', so it misses most abbreviations; the review skill looks for the rest."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-subclass-names-consistent",
+    "key": "naming-subclass-names-consistent",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Names of direct subclasses of a class should either all include or all omit the superclass name.",
+    "plainLanguage": "RedWine and WhiteWine, or Red and White, but not RedWine and White.",
+    "fix": "`okb rename` the odd one(s) out."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-subclass-names-consistent",
+    "explanation": "Inconsistent sibling names make the structure harder to read."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.naming-unique",
+    "key": "naming-unique",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 3,
+    "statement": "Names must be unique among classes, among slots and among instances (ignoring case and delimiters).",
+    "plainLanguage": "Two classes called RedWine and Red_Wine would be confusing and break lookups.",
+    "fix": "`okb rename` one of them, or merge them if they're the same concept."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.naming-unique",
+    "explanation": "The paper points out that systems differ in whether classes, slots and instances share a name space and whether names are case-sensitive. okb chooses one namespace per node type, case- and delimiter-insensitive, so names stay portable to whichever system you exchange them with."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.scope-defined",
+    "key": "scope-defined",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 1,
+    "statement": "Start by defining the domain and scope: the domain covered, what the ontology is for, and who will use and maintain it.",
+    "plainLanguage": "Write down what it's about, what it's for, and who it's for, before you build anything.",
+    "fix": "`okb scope --domain ... --purpose ... --users ...`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.scope-defined",
+    "explanation": "The answers may change later, but at any given time they help limit the scope of the model."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.scope-competency-questions",
+    "key": "scope-competency-questions",
+    "modality": "SHOULD",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 1,
+    "statement": "An ontology should have competency questions (the toolkit suggests at least three to start).",
+    "plainLanguage": "Write down a few questions your ontology must be able to answer. You'll use them to decide what to include and to test the result.",
+    "fix": "`okb cq add \"...\"`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.scope-competency-questions",
+    "explanation": "The paper offers competency questions as 'one of the ways' to scope an ontology and as the later litmus test. The toolkit makes them expected because every later check on scope depends on them. The number three is a toolkit suggestion; the paper says the list 'does not need to be exhaustive'."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.scope-cq-coverage",
+    "key": "scope-cq-coverage",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 8,
+    "statement": "Each competency question should be linked to the classes and slots needed to answer it.",
+    "plainLanguage": "For each question, point at the parts of the ontology that answer it. A question with nothing to point at isn't answerable yet.",
+    "fix": "`okb cq link <cq> <Class|slot>...`, or add what's missing."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.scope-cq-coverage",
+    "explanation": "Competency questions are the litmus test: does the ontology contain enough information to answer them? NEEDS links make that test explicit and checkable."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.scope-no-unneeded",
+    "key": "scope-no-unneeded",
+    "modality": "SHOULD_NOT",
+    "basis": "direct",
+    "check": "heuristic",
+    "severity": "info",
+    "severityReason": "Whether something is 'needed' depends on how completely questions were linked, so this is a prompt, not a warning.",
+    "fromStep": 8,
+    "statement": "The ontology should not contain all possible information, properties and distinctions: don't specialize or generalize more than the application needs (at most one extra level each way).",
+    "plainLanguage": "If no competency question needs a class or slot (or its parent or child), ask whether it belongs.",
+    "review": "For each flagged element: which question needs it? If none, remove it or add the question it serves.",
+    "fix": "Remove it, or link it to (or add) the question that needs it."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.scope-no-unneeded",
+    "explanation": "Extra detail costs maintenance and can actively hurt (the Experimenter example). okb reports classes and slots not reachable within one level from anything a competency question needs. It only does this once questions have been linked."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.doc-descriptions",
+    "key": "doc-descriptions",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Every class and slot should have a human-readable description of what it denotes.",
+    "plainLanguage": "One sentence per class and slot saying what it means. The name alone is ambiguous.",
+    "fix": "`okb class set <Class> --desc \"...\"` / `okb slot set <slot> --desc \"...\"`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.doc-descriptions",
+    "explanation": "Gruber describes ontology definitions as associating names with human-readable text as well as formal constraints; the Ontology 101 paper relies on class documentation for synonyms and design decisions. It is framed as what a definition contains, not as a 'must', hence SHOULD."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.doc-record-decisions",
+    "key": "doc-record-decisions",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 4,
+    "statement": "Record design decisions in the documentation, above all deliberate omissions made for your application, and (toolkit extension) other non-obvious modeling choices.",
+    "plainLanguage": "Every time you choose between two reasonable options, write a one-line design decision.",
+    "review": "Look for multiple inheritance, terminological classes, class-vs-value choices, things deliberately left out, and flagged findings you decided to keep. Does each have a DesignDecision?",
+    "fix": "`okb decision add --title ... --decision ... --why ... --about <node>`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.doc-record-decisions",
+    "explanation": "The paper's instruction is about scope-limiting choices: record that Experimenter was deliberately not made a Biological Organism, so reusers don't assume otherwise. The toolkit extends the same reasoning to any choice a reuser might not expect (multiple inheritance, terminological classes, kept warnings)."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.reuse-considered",
+    "key": "reuse-considered",
+    "modality": "SHOULD",
+    "basis": "direct",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 3,
+    "statement": "Consider reusing existing ontologies or vocabularies before building from scratch.",
+    "plainLanguage": "Spend a little time looking for an existing ontology, standard list or glossary you can borrow from.",
+    "review": "Did you look for an industry standard, internal glossary, spreadsheet or schema that already names these things? Is there a system you must interoperate with?",
+    "fix": "Look, then record what you found (see reuse-recorded)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.reuse-considered",
+    "explanation": "It is almost always worth considering, and reuse may be required if your system must interact with applications that already committed to a vocabulary."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.terms-dispositioned",
+    "key": "terms-dispositioned",
+    "modality": "SHOULD",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 6,
+    "statement": "Every term brainstormed in Step 3 should end up as a class, slot, instance, slot value or synonym, or be marked out of scope.",
+    "plainLanguage": "Go back to your term list and make sure nothing was forgotten.",
+    "fix": "`okb term set <term> --as class|slot|instance|value|synonym|out-of-scope`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.terms-dispositioned",
+    "explanation": "The paper derives classes (Step 4) and slots (Step 5) from the Step 3 list; tracking what became of each term is the toolkit's way of making sure the list was actually used."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.reuse-recorded",
+    "key": "reuse-recorded",
+    "modality": "SHOULD",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "warning",
+    "fromStep": 3,
+    "statement": "Record the outcome of Step 2: each existing ontology considered, or that none was found.",
+    "plainLanguage": "Even 'we looked and found nothing' is worth writing down.",
+    "fix": "`okb reuse add ...` for each candidate, or `okb reuse none --why ...`."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.reuse-recorded",
+    "explanation": "The paper asks you to consider reuse; recording the outcome is the toolkit's way of making that step visible to later readers and to `okb status`."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.struct-well-formed",
+    "key": "struct-well-formed",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 1,
+    "statement": "Files must be well-formed: unique node ids, known node and edge types, edges pointing at existing nodes of the allowed types, and required properties present.",
+    "plainLanguage": "The JSON has to hang together. If you only use okb commands, this never fails; it catches hand edits.",
+    "fix": "Fix the node/edge named in the finding (or undo the hand edit)."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.struct-well-formed",
+    "explanation": "Every other check assumes the graph is structurally sound."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.prov-verified",
+    "key": "prov-verified",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 1,
+    "statement": "A node extracted from a document must be verified against its quote, and anything not SUPPORTED (including corrected OVERREACH results, until a person approves them) must be resolved before the ontology is published.",
+    "plainLanguage": "If the independent check said a statement claims more than its quote supports, a human decides before it ships.",
+    "fix": "Edit the statement to match the quote, then set verification.status to SUPPORTED with a note, or delete the node."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.prov-verified",
+    "explanation": "The extraction pipeline's gate (docs/EXTRACTION-PIPELINE.md): drafting and verifying are separate passes, and only SUPPORTED claims merge without review."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.prov-cites-quote",
+    "key": "prov-cites-quote",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 1,
+    "statement": "Every domain Rule, and every node marked as extracted, must CITE at least one SourceLocation with a non-empty verbatim quote that is PART_OF a Source.",
+    "plainLanguage": "Anything taken from a document has to point at the exact words it came from.",
+    "fix": "Add the SourceLocation and CITES edge, or delete the unsupported node."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.prov-cites-quote",
+    "explanation": "Quote-first extraction: no quote, no claim."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.prov-quote-current",
+    "key": "prov-quote-current",
+    "modality": "MUST",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "error",
+    "fromStep": 1,
+    "statement": "Each SourceLocation quote must still appear verbatim in its source document (checked when the Source has a readable localPath).",
+    "plainLanguage": "If the source document changed and the quote is gone, the citation is stale.",
+    "fix": "Re-extract from the current document, or update localPath to the version you cited."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.prov-quote-current",
+    "explanation": "Catches citations that went stale after the source was edited, which the original pipeline listed as unsolved."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.prov-duplicate-quotes",
+    "key": "prov-duplicate-quotes",
+    "modality": "MAY",
+    "basis": "operational",
+    "check": "mechanical",
+    "severity": "info",
+    "fromStep": 1,
+    "statement": "Near-identical quotes attributed to different source documents may indicate copy-pasted documentation; check each is accurate for its own source.",
+    "plainLanguage": "The same paragraph appearing in two different docs is often a copy-paste that's only right in one of them.",
+    "fix": "Confirm each quote against its own document; fix the documentation if one copy is wrong."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.prov-duplicate-quotes",
+    "explanation": "A documentation-quality signal carried over from the original validator (it found a button size table pasted into unrelated component docs)."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.approach",
+    "name": "Top-down, bottom-up, or combination?",
+    "whenYouFaceIt": "At the start of Step 4, before you add classes.",
+    "tests": [
+      {
+        "ask": "Do you naturally think of this domain starting from its broadest categories?",
+        "ifYes": "Go top-down: create the most general classes first, then specialize.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Do you think in concrete examples first (specific products, cases, items)?",
+        "ifYes": "Go bottom-up: create the most specific classes, then group them.",
+        "ifNo": "Use combination: start with the most obvious concepts at any level and grow up and down from them."
+      }
+    ],
+    "note": "None of the three is better than the others. Combination is often the easiest for beginners, because the middle-level concepts tend to be the most descriptive.",
+    "wine": "Combination: start with Wine and Margaux, then add Médoc between them."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.is-a",
+    "name": "Is this really a subclass?",
+    "whenYouFaceIt": "Every time you add an IS_A (parent) link.",
+    "tests": [
+      {
+        "ask": "Is every single X, by definition, also a Y (not just usually)?",
+        "ifYes": "continue",
+        "ifNo": "Not a subclass. If X is part of Y, made by Y, or related to Y, use a slot."
+      },
+      {
+        "ask": "Is X a singular/plural or alternative name for Y?",
+        "ifYes": "Not a subclass. It's the same class; add the other name as a synonym.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is X one particular thing rather than a kind of thing?",
+        "ifYes": "It's an instance of Y, not a subclass.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is X already a subclass of Y through another parent?",
+        "ifYes": "Don't add the direct link; it's implied.",
+        "ifNo": "Yes, X IS_A Y."
+      }
+    ],
+    "wine": "Pinot Noir → Red Wine: every Pinot Noir is necessarily red. ✓. Wine → Wines: ✗ (plural). Château Morgon Beaujolais → Beaujolais: ✗, it's an instance."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.new-class",
+    "name": "Should I introduce a new subclass here?",
+    "whenYouFaceIt": "When you're tempted to split a class into more specific ones.",
+    "tests": [
+      {
+        "ask": "Will the subclass have slots the parent doesn't have?",
+        "ifYes": "Create it.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Will it have different restrictions (a fixed value, fewer allowed values, a different cardinality)?",
+        "ifYes": "Create it.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Will it take part in relationships the parent doesn't (e.g. 'goes well with seafood')?",
+        "ifYes": "Create it.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is this a reference hierarchy people browse to pick a level of detail, or a distinction experts always make?",
+        "ifYes": "Create it, mark it terminological, and record why.",
+        "ifNo": "Probably don't. Use a slot value on the parent instead."
+      }
+    ],
+    "note": "Aim for a balance: neither a deep hierarchy of near-identical classes nor a flat one that stuffs everything into slots.",
+    "wine": "Red Wine ✓ (adds tanninLevel). Dessert Wine ✓ (fixes sugar = sweet). 'Delicate Wine' ✗ (it's just flavor = delicate)."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.class-or-value",
+    "name": "New class, or just a slot value?",
+    "whenYouFaceIt": "When a term is a distinction among things (red/white, small/large, active/inactive).",
+    "tests": [
+      {
+        "ask": "Would things with different values change which values are allowed in OTHER classes' slots? (e.g. red vs white changes which dishes pair well)",
+        "ifYes": "Make classes.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Do people in the domain think of things with different values as different kinds of things?",
+        "ifYes": "Make classes.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Could one individual change its value over time (chilled/not chilled, active/inactive)?",
+        "ifYes": "Slot value. Class membership shouldn't change often.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is it a number, color, location or similar measurement?",
+        "ifYes": "Slot value (usually).",
+        "ifNo": "Slot value, unless one of the earlier tests applied."
+      }
+    ],
+    "note": "The same distinction can be a class in one ontology and a value in another. It depends on your scope. Record which you chose.",
+    "wine": "Wine color is a class split in the pairing ontology (red and white pair differently), but just a value in a label-printing ontology."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.instance-or-class",
+    "name": "Instance or class?",
+    "whenYouFaceIt": "When a term names something specific, or when you reach the bottom of the hierarchy.",
+    "tests": [
+      {
+        "ask": "Do the concepts form a natural hierarchy (one inside another, like regions)?",
+        "ifYes": "Classes (possibly abstract), even if they have no instances yet.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is it among the most specific things that appear in the answers to your competency questions?",
+        "ifYes": "Instance.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Will you need to record different facts about finer-grained versions of it (e.g. each vintage)?",
+        "ifYes": "Class, with the finer-grained things as its instances.",
+        "ifNo": "Instance."
+      }
+    ],
+    "wine": "For pairing, Sterling Vineyards Merlot is an instance. If you track each vintage, it becomes a class and the vintages become instances. Wine regions are all classes because they nest."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.disjoint",
+    "name": "Are these classes disjoint?",
+    "whenYouFaceIt": "After creating siblings.",
+    "tests": [
+      {
+        "ask": "Can any single thing be a member of both classes at once?",
+        "ifYes": "Not disjoint. Leave them.",
+        "ifNo": "Declare them disjoint (okb class disjoint A B)."
+      }
+    ],
+    "wine": "Red Wine / White Wine: disjoint. Dessert Wine / White Wine: not disjoint (sweet Riesling is both)."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.slot-placement",
+    "name": "Which class does this slot go on?",
+    "whenYouFaceIt": "Step 5, for each property.",
+    "tests": [
+      {
+        "ask": "Does every member of the parent class have this property?",
+        "ifYes": "Move up and ask again about the next parent.",
+        "ifNo": "Attach it to the current class, the highest one where every member has it."
+      },
+      {
+        "ask": "Are you about to attach it to every child of some class?",
+        "ifYes": "Attach it to that class instead.",
+        "ifNo": "continue"
+      }
+    ],
+    "wine": "body goes on Wine (all wines have a body). tanninLevel goes on Red Wine, not Wine."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.range",
+    "name": "What should this slot's range be?",
+    "whenYouFaceIt": "Step 6, for each Instance-type slot.",
+    "tests": [
+      {
+        "ask": "Is there one class that covers every valid value?",
+        "ifYes": "Use the most general such class that contains only valid values.",
+        "ifNo": "List several classes."
+      },
+      {
+        "ask": "Does your list include a class and its subclass?",
+        "ifYes": "Drop the subclass.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Does your list include all (or nearly all) children of one class?",
+        "ifYes": "Use the parent instead.",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Is the range something like Thing/Entity/Object?",
+        "ifYes": "Too general. Narrow it.",
+        "ifNo": "Done."
+      }
+    ],
+    "wine": "produces → Wine (not Red Wine + White Wine + Rosé Wine, and not Thing)."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.naming",
+    "name": "Choosing a naming convention",
+    "whenYouFaceIt": "Start of Step 4, before you create many names.",
+    "tests": [
+      {
+        "ask": "Will the names be used in code, a graph database, or URLs that don't handle spaces well?",
+        "ifYes": "Use PascalCase for classes and camelCase for slots (the toolkit default).",
+        "ifNo": "Title Case With Spaces is also fine for classes."
+      },
+      {
+        "ask": "Is there a reason to prefer plural class names (e.g. a system you integrate with uses them)?",
+        "ifYes": "Use plural everywhere.",
+        "ifNo": "Use singular (more common in practice) everywhere."
+      },
+      {
+        "ask": "Do you want slot names to show they're slots (hasMaker, makerOf)?",
+        "ifYes": "Set a has-/-of prefix/suffix convention and use it on every slot.",
+        "ifNo": "No prefix (the default)."
+      },
+      {
+        "ask": "Will the data go into a graph database?",
+        "ifYes": "Nothing extra to decide: okb stores each relationship under its name in UPPER_SNAKE case (maker → MAKER, goesWellWith → GOES_WELL_WITH), the usual openCypher style, and class names become node labels in `okb export`.",
+        "ifNo": "Nothing to decide."
+      }
+    ],
+    "note": "There's often no reason to prefer one option; what matters is sticking to it. Consider other systems your ontology will be exchanged with.",
+    "wine": "Classes: RedWine, Winery (PascalCase, singular). Slots: tanninLevel, maker (camelCase)."
+  },
+  {
+    "type": "Decision",
+    "id": "decision.edge-or-class",
+    "name": "Edge property, or make the relationship its own class?",
+    "whenYouFaceIt": "When a relationship needs extra information: a condition, a strength, a date, a source.",
+    "tests": [
+      {
+        "ask": "Is the extra information a simple value about this one link (a short condition, a number, a date)?",
+        "ifYes": "continue",
+        "ifNo": "Make the relationship a class (e.g. a Recommendation with slots from, to, condition, audience), so it can have its own relationships."
+      },
+      {
+        "ask": "Does the qualifier need relationships of its own (to people, sources, other components), or several values that vary independently?",
+        "ifYes": "Make it a class. Edges can only hold plain values (and a `rule` reference).",
+        "ifNo": "continue"
+      },
+      {
+        "ask": "Will you query or validate by it (e.g. 'all recommendations that apply to dense layouts')?",
+        "ifYes": "An Enumerated edge property works if the values are a fixed list; otherwise consider a class.",
+        "ifNo": "Use an edge property (okb relationship property ...)."
+      }
+    ],
+    "note": "Ontology 101's frame model has no properties on relationships: the standard move there is to turn the relationship into a class (reification). Graph databases support edge properties natively, so for simple qualifiers they're the lighter choice. Record which you chose.",
+    "wine": "A wine–food pairing with a strength (\"excellent\", \"acceptable\") fits an Enumerated edge property on goesWellWith. A pairing that records who recommended it, for which menu and from which source would be a Pairing class."
+  },
+  {
+    "type": "Step",
+    "id": "step.1-scope",
+    "order": 1,
+    "name": "Determine the domain and scope",
+    "goal": "Write down what the ontology is about, what it's for, who will use and maintain it, and which questions it must answer.",
+    "whyItMatters": "Scope is what lets you say 'no' to things later. Without it, every interesting fact looks like it belongs, and the ontology never finishes.",
+    "guidingQuestions": [
+      "What is the domain that the ontology will cover? (One sentence.)",
+      "What are we going to use the ontology for? What app, search, report or decision will it feed?",
+      "What types of questions should it be able to answer? (These become competency questions.)",
+      "Who will use it, and who will maintain it? Do they use the same words for things?",
+      "What is related but deliberately out of scope?"
+    ],
+    "outputs": [
+      "Ontology node: domain, purpose, users, maintainers, outOfScope",
+      "3 or more CompetencyQuestion nodes"
+    ],
+    "doneWhen": [
+      {
+        "text": "Domain and purpose are written down",
+        "check": "scope_domain_purpose"
+      },
+      {
+        "text": "Users (and ideally maintainers) are named",
+        "check": "scope_users"
+      },
+      {
+        "text": "At least three competency questions",
+        "check": "cq_min3"
+      },
+      {
+        "text": "At least one thing is explicitly out of scope",
+        "check": "scope_out"
+      }
+    ],
+    "tips": [
+      "Competency questions are a sketch, not a contract. You'll add and change them.",
+      "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'.",
+      "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
+    ],
+    "wine": "Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'",
+    "commands": [
+      "okb scope",
+      "okb cq add"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.2-reuse",
+    "order": 2,
+    "name": "Consider reusing existing ontologies",
+    "goal": "Check whether someone has already modeled part of your domain, and decide whether to borrow, adapt, just reference it, or skip it.",
+    "whyItMatters": "Reuse saves time and makes your ontology compatible with others. If you have to talk to systems that already use a vocabulary, reuse may not be optional.",
+    "guidingQuestions": [
+      "Is there an industry standard, taxonomy or controlled vocabulary for this domain?",
+      "Does any system you must integrate with already use a particular vocabulary?",
+      "Is there an internal list, spreadsheet, glossary or schema that already names these things?"
+    ],
+    "outputs": [
+      "ReusedOntology nodes (with a decision each), or a recorded 'none found'"
+    ],
+    "doneWhen": [
+      {
+        "text": "Reuse has been considered and recorded",
+        "check": "reuse_reviewed"
+      }
+    ],
+    "tips": [
+      "Even a glossary page or an existing database schema counts as a source of terms.",
+      "Don't let this step stall you. 30 minutes of looking is usually enough for a first version."
+    ],
+    "wine": "The paper notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes.",
+    "commands": [
+      "okb reuse add",
+      "okb reuse none"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.3-terms",
+    "order": 3,
+    "name": "Enumerate important terms",
+    "goal": "Brainstorm every term you'd want to make statements about or explain to a user, without worrying yet about what kind of thing each one is.",
+    "whyItMatters": "It separates what matters from how to model it. Trying to do both at once is the main reason beginners freeze.",
+    "guidingQuestions": [
+      "What are the things we'd like to talk about?",
+      "What properties do those things have?",
+      "What would we like to say about those things?",
+      "Read your competency questions: which nouns and verbs appear in them?"
+    ],
+    "outputs": [
+      "Term nodes (an unsorted list, ideally 15–40 for a first pass)"
+    ],
+    "doneWhen": [
+      {
+        "text": "At least 10 terms listed",
+        "check": "terms_min10"
+      }
+    ],
+    "tips": [
+      "Include nouns (wine, winery), adjectives and properties (color, body, sweet), and verbs (produces, goes well with).",
+      "Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5.",
+      "Mine your competency questions and any documents you collected in Step 2."
+    ],
+    "wine": "wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat, white wine, and so on.",
+    "commands": [
+      "okb term add"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.4-classes",
+    "order": 4,
+    "name": "Define the classes and the class hierarchy",
+    "goal": "Pick the terms that name things with independent existence, make them classes, and arrange them by 'is a kind of'.",
+    "whyItMatters": "The hierarchy is the backbone: slots are inherited down it and instances hang off it. Most modeling mistakes are hierarchy mistakes.",
+    "guidingQuestions": [
+      "Which terms name things that exist on their own (not descriptions of other things)?",
+      "Where does your head naturally start: general, specific, or somewhere in the middle?",
+      "For each pair: is every X necessarily (by definition) a Y?",
+      "Do any siblings overlap? Can something be both? If not, they're disjoint."
+    ],
+    "outputs": [
+      "Class nodes with IS_A edges",
+      "Naming convention on the Ontology node",
+      "DISJOINT_WITH declarations where appropriate"
+    ],
+    "doneWhen": [
+      {
+        "text": "A naming convention is set",
+        "check": "convention_set"
+      },
+      {
+        "text": "At least two classes, organized with at least one is-a link",
+        "check": "classes_min2_with_isa"
+      },
+      {
+        "text": "No errors in hierarchy checks",
+        "check": "no_errors_hierarchy"
+      },
+      {
+        "text": "You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a"
+      }
+    ],
+    "tips": [
+      "Steps 4 and 5 are intertwined. It's normal to add a few classes, then a few slots, then go back.",
+      "Say each is-a link out loud: 'Every Pinot Noir is a Red Wine.' If it sounds wrong, it is.",
+      "Use singular names consistently (Wine, not Wines).",
+      "Mark 'grouping only' classes as abstract."
+    ],
+    "wine": "Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.",
+    "commands": [
+      "okb convention",
+      "okb class add",
+      "okb class disjoint",
+      "okb tree",
+      "okb term set"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.5-slots",
+    "order": 5,
+    "name": "Define the properties of classes (slots)",
+    "goal": "Turn the remaining terms into slots and attach each one to the most general class whose members all have it.",
+    "whyItMatters": "Classes alone can't answer your questions. Slots hold the facts and relationships the answers are made of.",
+    "guidingQuestions": [
+      "Which remaining terms describe a class rather than being one?",
+      "For each: is it intrinsic (flavor), extrinsic (name, region), a part, or a relationship to another thing (maker)?",
+      "What is the most general class whose members all have this property?",
+      "Which competency question needs this slot?"
+    ],
+    "outputs": [
+      "Slot nodes attached with HAS_SLOT edges"
+    ],
+    "doneWhen": [
+      {
+        "text": "At least one slot",
+        "check": "slots_min1"
+      },
+      {
+        "text": "Every slot is attached to at least one class",
+        "check": "slots_attached"
+      }
+    ],
+    "tips": [
+      "Two kinds of slot: properties hold a value (name, year, one of a list); relationships point at another thing (maker → Winery).",
+      "Name relationships as verbs or roles read from the domain class: a Wine has a maker; a Winery produces wines.",
+      "If you're attaching the same slot to every child, attach it to the parent instead."
+    ],
+    "wine": "Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces. Red Wine gets tanninLevel, because white wines aren't described by tannin.",
+    "commands": [
+      "okb property add",
+      "okb relationship add",
+      "okb show",
+      "okb term set"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.6-facets",
+    "order": 6,
+    "name": "Define the facets of the slots",
+    "goal": "For every slot, decide its value type, allowed values or range, cardinality, and any defaults, fixed values or inverse.",
+    "whyItMatters": "Facets turn a list of fields into rules a machine can check. This is where most data-quality errors get caught later.",
+    "guidingQuestions": [
+      "Is the value text, a number, yes/no, one of a fixed list, or another thing (Instance)?",
+      "If it's a fixed list, what are all the allowed values?",
+      "If it's another thing, what is the most general class of things it can be (the range)? Not too general, not too narrow.",
+      "One value or many? Is it required (minimum 1)?",
+      "Is there a value most instances share (default), or one every instance of a class must have (fixed value)?",
+      "Is this relationship the reverse of another slot (maker ↔ produces)?",
+      "Does each link need extra information of its own, like a condition or a strength? (Edge properties; see decision.edge-or-class.)"
+    ],
+    "outputs": [
+      "Facets on every Slot node",
+      "RANGE edges for Instance slots",
+      "INVERSE_OF edges",
+      "Class-level fixed values/defaults/overrides"
+    ],
+    "doneWhen": [
+      {
+        "text": "Every slot has a value type and cardinality",
+        "check": "slots_faceted"
+      },
+      {
+        "text": "No errors in slot checks",
+        "check": "no_errors_slots"
+      }
+    ],
+    "tips": [
+      "When in doubt about range, pick the most general class that still only contains valid fillers.",
+      "Defaults are suggestions; fixed values are facts. Don't confuse them."
+    ],
+    "wine": "body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine, multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.",
+    "commands": [
+      "okb slot set",
+      "okb relationship inverse",
+      "okb relationship property",
+      "okb class fix",
+      "okb class default",
+      "okb class restrict"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.7-instances",
+    "order": 7,
+    "name": "Create instances",
+    "goal": "Add real individuals: choose a class, create the instance, and fill in its slot values.",
+    "whyItMatters": "Instances are the real test. Filling them in shows up missing slots, wrong facets and classes that don't fit.",
+    "guidingQuestions": [
+      "What are the most specific things that appear in answers to your competency questions? Those are your instances.",
+      "Which class does each belong to? (The most specific one that fits.)",
+      "Can you fill in every required slot? If not, is the data missing or is the facet wrong?"
+    ],
+    "outputs": [
+      "Instance nodes with INSTANCE_OF edges, property values, and relationship edges"
+    ],
+    "doneWhen": [
+      {
+        "text": "At least a few instances (enough to answer one competency question end to end)",
+        "check": "instances_min3"
+      },
+      {
+        "text": "No errors in instance checks",
+        "check": "no_errors_instances"
+      }
+    ],
+    "tips": [
+      "Start with instances that answer one competency question completely. It's the fastest way to find gaps.",
+      "An instance that won't fit anywhere usually means a class is missing or a facet is too strict."
+    ],
+    "wine": "Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate, tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.",
+    "commands": [
+      "okb instance add",
+      "okb instance set"
+    ]
+  },
+  {
+    "type": "Step",
+    "id": "step.8-review",
+    "order": 8,
+    "name": "Review against your questions, and iterate",
+    "goal": "Stand back: check each competency question can be answered, run the full validator, review the judgment-only rules, record decisions, and go around again.",
+    "whyItMatters": "The only real test of an ontology is whether it does the job it was built for. Expect to loop back to earlier steps.",
+    "guidingQuestions": [
+      "For each competency question: which classes, slots and instances answer it? Is anything missing?",
+      "Is there anything in the ontology no question needs?",
+      "Would a domain expert agree with the hierarchy? Show it to one.",
+      "Which choices would surprise someone reusing this ontology? Are they recorded as design decisions?"
+    ],
+    "outputs": [
+      "NEEDS links from every competency question",
+      "DesignDecision records",
+      "A clean `okb validate` (no errors; warnings resolved or explained)"
+    ],
+    "doneWhen": [
+      {
+        "text": "Every competency question is linked to what answers it",
+        "check": "cq_all_linked"
+      },
+      {
+        "text": "No errors from okb validate",
+        "check": "no_errors"
+      },
+      {
+        "text": "Every remaining warning is fixed or explained in a design decision",
+        "check": "warnings_explained"
+      },
+      {
+        "text": "Someone who knows the domain has looked at it"
+      }
+    ],
+    "tips": [
+      "Iteration is part of the method, not a sign you went wrong.",
+      "Use the ontology-review skill for the judgment rules a script can't check."
+    ],
+    "wine": "The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel.",
+    "commands": [
+      "okb cq link",
+      "okb validate --all",
+      "okb decision add",
+      "okb diagram"
+    ]
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Ontology",
+    "name": "Ontology",
+    "origin": "operational",
+    "required": [
+      "id",
+      "name"
+    ],
+    "description": "Exactly one per ontology (id 'ontology'). Holds scope (domain, purpose, users, maintainers, outOfScope), conventions, reuseReviewed, and kind ('application' or 'terminological')."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.CompetencyQuestion",
+    "name": "CompetencyQuestion",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "text"
+    ],
+    "description": "A question the ontology must answer. status: draft | answerable."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Term",
+    "name": "Term",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "text"
+    ],
+    "description": "A Step-3 brainstorm term. disposition: undecided | class | slot | instance | value | synonym | out-of-scope."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.ReusedOntology",
+    "name": "ReusedOntology",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "name",
+      "decision"
+    ],
+    "description": "An existing ontology/vocabulary considered in Step 2. decision: reuse | adapt | reference | rejected."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Class",
+    "name": "Class",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "name"
+    ],
+    "description": "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Slot",
+    "name": "Slot",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "name"
+    ],
+    "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as)."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Instance",
+    "name": "Instance",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "name"
+    ],
+    "description": "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.DesignDecision",
+    "name": "DesignDecision",
+    "origin": "ontology101",
+    "required": [
+      "id",
+      "title",
+      "decision"
+    ],
+    "description": "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Source",
+    "name": "Source",
+    "origin": "operational",
+    "required": [
+      "id",
+      "title"
+    ],
+    "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.SourceLocation",
+    "name": "SourceLocation",
+    "origin": "operational",
+    "required": [
+      "id",
+      "quote"
+    ],
+    "description": "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."
+  },
+  {
+    "type": "NodeType",
+    "id": "nodetype.Rule",
+    "name": "Rule",
+    "origin": "operational",
+    "required": [
+      "id",
+      "modality",
+      "statement"
+    ],
+    "description": "A domain rule extracted from documentation (`okb rule add`), e.g. 'Buttons meet a 24px minimum touch target'. extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.IS_A",
+    "name": "IS_A",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Class"
+    ],
+    "toTypes": [
+      "Class"
+    ],
+    "props": [],
+    "description": "Subclass → superclass. Transitive; no cycles."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.INSTANCE_OF",
+    "name": "INSTANCE_OF",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Instance"
+    ],
+    "toTypes": [
+      "Class"
+    ],
+    "props": [],
+    "description": "Instance → its class (most specific one that fits). An instance may have more than one."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.HAS_SLOT",
+    "name": "HAS_SLOT",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Class"
+    ],
+    "toTypes": [
+      "Slot"
+    ],
+    "props": [],
+    "description": "Class → slot attached to it. The set of these classes is the slot's domain."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.RANGE",
+    "name": "RANGE",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Slot"
+    ],
+    "toTypes": [
+      "Class"
+    ],
+    "props": [],
+    "description": "Instance-type slot → allowed class of its values."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.INVERSE_OF",
+    "name": "INVERSE_OF",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Slot"
+    ],
+    "toTypes": [
+      "Slot"
+    ],
+    "props": [],
+    "description": "Declares two relationship slots inverse. The `from` slot's relType is the stored direction; the `to` slot reads those edges backwards. Stored once."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.DISJOINT_WITH",
+    "name": "DISJOINT_WITH",
+    "origin": "ontology101",
+    "fromTypes": [
+      "Class"
+    ],
+    "toTypes": [
+      "Class"
+    ],
+    "props": [],
+    "description": "Declares two classes disjoint. Stored once; symmetric."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.NEEDS",
+    "name": "NEEDS",
+    "origin": "operational",
+    "fromTypes": [
+      "CompetencyQuestion"
+    ],
+    "toTypes": [
+      "Class",
+      "Slot",
+      "Instance"
+    ],
+    "props": [],
+    "description": "Competency question → an element needed to answer it."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.BECAME",
+    "name": "BECAME",
+    "origin": "operational",
+    "fromTypes": [
+      "Term"
+    ],
+    "toTypes": [
+      "Class",
+      "Slot",
+      "Instance"
+    ],
+    "props": [],
+    "description": "Step-3 term → what it turned into."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.ABOUT",
+    "name": "ABOUT",
+    "origin": "operational",
+    "fromTypes": [
+      "DesignDecision"
+    ],
+    "toTypes": [
+      "Class",
+      "Slot",
+      "Instance",
+      "CompetencyQuestion",
+      "Term",
+      "ReusedOntology",
+      "Ontology",
+      "Rule"
+    ],
+    "props": [],
+    "description": "Design decision → what it's about."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.CITES",
+    "name": "CITES",
+    "origin": "operational",
+    "fromTypes": [
+      "Class",
+      "Slot",
+      "Instance",
+      "Rule",
+      "DesignDecision"
+    ],
+    "toTypes": [
+      "SourceLocation"
+    ],
+    "props": [],
+    "description": "Provenance: element → the verbatim passage it came from."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.PART_OF",
+    "name": "PART_OF",
+    "origin": "operational",
+    "fromTypes": [
+      "SourceLocation"
+    ],
+    "toTypes": [
+      "Source"
+    ],
+    "props": [],
+    "description": "Provenance: passage → its document."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.GOVERNS",
+    "name": "GOVERNS",
+    "origin": "operational",
+    "fromTypes": [
+      "Rule"
+    ],
+    "toTypes": [
+      "Class",
+      "Slot",
+      "Instance"
+    ],
+    "props": [],
+    "description": "Domain rule → what it constrains."
+  }
+]
