@@ -1,8 +1,8 @@
 /** Human-readable output: findings, explanations, trees, node details, Mermaid diagrams. */
 import { MetaKB } from "./metakb.ts";
-import { edgeProps, type Ontology } from "./model.ts";
+import { edgeProps, nodeLabel, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
-import type { Finding, GraphNode } from "./types.ts";
+import type { Finding, GraphNode, OkbNode } from "./types.ts";
 
 // ------------------------------------------------------------------ styling
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
@@ -199,9 +199,9 @@ export function tree(ont: Ontology, withInstances = false): string {
   const out: string[] = [];
   const printed = new Set<string>();
   const walk = (id: string, depth: number, parent?: string) => {
-    const n = ont.get(id)!;
+    const n = ont.require(id);
     const others = ont.parents(id).filter((p) => p !== parent);
-    const tags = [n.abstract ? "abstract" : "", others.length ? `also under ${others.map((o) => ont.label(o)).join(", ")}` : ""].filter(Boolean);
+    const tags = [n.type === "Class" && n.abstract ? "abstract" : "", others.length ? `also under ${others.map((o) => ont.label(o)).join(", ")}` : ""].filter(Boolean);
     const pad = "  ".repeat(depth);
     if (printed.has(id)) {
       out.push(`${pad}${depth ? "└ " : ""}${ont.label(id)} ${c.dim("(see above)")}`);
@@ -224,7 +224,7 @@ export function tree(ont: Ontology, withInstances = false): string {
 
 // ------------------------------------------------------------------ show
 function fmtFacets(ont: Ontology, slotId: string, classes: Iterable<string> = []): string {
-  const s = ont.get(slotId)!;
+  const s = ont.require(slotId, "Slot");
   const f = ont.effectiveFacets(slotId, classes);
   const parts = [f.valueType ?? c.red("no type")];
   if (f.allowedValues) parts.push(`{${f.allowedValues.join(", ")}}`);
@@ -248,11 +248,11 @@ function fmtVal(ont: Ontology, ownerId: string, slotId: string, v: unknown): str
   return ont.label(String(v)) + (props ? c.dim(` {${props}}`) : "");
 }
 
-export function show(ont: Ontology, n: GraphNode): string {
+export function show(ont: Ontology, n: OkbNode): string {
   const out: string[] = [];
   const line = (k: string, v: string) => out.push(`  ${c.dim(k.padEnd(14))} ${v}`);
-  out.push(`${c.bold(n.name ?? n.text ?? n.title ?? n.id)}  ${c.dim(`${n.type} · ${n.id}`)}`);
-  if (n.description) out.push(indent(n.description, "  "));
+  out.push(`${c.bold(nodeLabel(n))}  ${c.dim(`${n.type} · ${n.id}`)}`);
+  if ("description" in n && n.description) out.push(indent(n.description, "  "));
   if (n.type === "Class") {
     line("parents", ont.parents(n.id).map((p) => ont.label(p)).join(", ") || "(top level)");
     line("subclasses", ont.children(n.id).map((p) => ont.label(p)).join(", ") || "—");
@@ -282,10 +282,11 @@ export function show(ont: Ontology, n: GraphNode): string {
   } else if (n.type === "Slot") {
     line("kind", n.valueType === "Instance" ? "relationship (links to other things)" : "property (holds a value)");
     line("facets", fmtFacets(ont, n.id));
-    const decls: any[] = ont.get(ont.primarySlot(n.id))?.edgeProperties ?? [];
+    const primary = ont.get(ont.primarySlot(n.id));
+    const decls = (primary?.type === "Slot" && primary.edgeProperties) || [];
     if (decls.length) line("edge props", decls.map((d) => `${d.name} (${d.valueType}${d.allowedValues ? ` {${d.allowedValues.join(", ")}}` : ""}${d.required ? ", required" : ""})`).join(", ") + c.dim(" + rule"));
     line("attached to", ont.domain(n.id).map((d) => ont.label(d)).join(", ") || c.yellow("(no class yet)"));
-    const users = ont.nodes.filter((x) => x.facetOverrides?.[n.id]);
+    const users = ont.ofType("Class").filter((x) => x.facetOverrides?.[n.id]);
     if (users.length) line("restricted by", users.map((u) => u.name).join(", "));
   } else if (n.type === "Instance") {
     line("instance of", ont.targets(n.id, "INSTANCE_OF").map((x) => ont.label(x)).join(", "));
@@ -305,7 +306,10 @@ export function show(ont: Ontology, n: GraphNode): string {
   const decisions = ont.sources(n.id, "ABOUT");
   if (decisions.length) {
     out.push("", c.bold("  Design decisions"));
-    for (const d of decisions) out.push(indent(`${d}: ${ont.get(d)!.title}. ${ont.get(d)!.decision}`, "    "));
+    for (const d of decisions) {
+      const dn = ont.require(d, "DesignDecision");
+      out.push(indent(`${d}: ${dn.title}. ${dn.decision}`, "    "));
+    }
   }
   return out.join("\n");
 }
@@ -316,9 +320,9 @@ export function mermaid(ont: Ontology): string {
   const out = ["```mermaid", "classDiagram"];
   for (const cl of ont.ofType("Class")) {
     const lines = ont.ownSlots(cl.id)
-      .filter((s) => ont.get(s)?.valueType !== "Instance")
-      .map((s) => {
-        const sn = ont.get(s)!;
+      .map((s) => ont.require(s, "Slot"))
+      .filter((sn) => sn.valueType !== "Instance")
+      .map((sn) => {
         const t = sn.valueType === "Enumerated" && sn.allowedValues ? `${sn.allowedValues.join("|")}` : sn.valueType ?? "?";
         return `    ${t.replace(/[{}]/g, "")} ${sn.name}${sn.cardinality === "multiple" ? "[]" : ""}`;
       });

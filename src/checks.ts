@@ -14,7 +14,7 @@ import * as naming from "./naming.ts";
 import { findQuote, loadPages, normalize } from "./quotes.ts";
 import { locate, parseMarkdown, type MdDoc } from "./markdown.ts";
 import { readFileSync } from "node:fs";
-import type { Facets, Finding, GraphNode, Severity } from "./types.ts";
+import { isOneOf, type ClassNode, type ExtractedFields, type Facets, type Finding, type OkbNode, type Severity, type SourceLocationNode } from "./types.ts";
 
 export interface Hit {
   message: string;
@@ -75,7 +75,10 @@ function inRange(ont: Ontology, target: string, range: string[], fromClass: bool
   return false;
 }
 
-function isTerminological(ont: Ontology, c: GraphNode): boolean {
+/** The extraction-pipeline fields of any node: a hand edit can put them on any type. */
+const pipeline = (n: OkbNode): ExtractedFields => n as ExtractedFields;
+
+function isTerminological(ont: Ontology, c: ClassNode): boolean {
   return Boolean(c.terminological) || ont.meta.kind === "terminological";
 }
 
@@ -98,7 +101,9 @@ export const CHECKS: Record<string, Check> = {
         hits.push({ message: `Node '${n.id}' has unknown type '${n.type}'. Allowed: ${[...nodeTypes.keys()].join(", ")}.`, nodes: [n.id] });
         continue;
       }
-      const missing = (nt.required as string[]).filter((p) => n[p] === undefined || n[p] === "");
+      // Read as a plain record: the point is to find what a hand edit left out.
+      const raw = n as unknown as Record<string, unknown>;
+      const missing = (nt.required as string[]).filter((p) => raw[p] === undefined || raw[p] === "");
       if (missing.length) hits.push({ message: `${n.type} '${n.id}' is missing ${missing.join(", ")}.`, nodes: [n.id] });
       if (n.type === "Slot" && n.cardinality !== undefined && !["single", "multiple"].includes(n.cardinality)) {
         hits.push({ message: `Slot ${L(ont, n.id)} has cardinality '${n.cardinality}'; use 'single' or 'multiple'.`, nodes: [n.id] });
@@ -279,7 +284,10 @@ export const CHECKS: Record<string, Check> = {
 
   "inst-not-of-abstract": (ont) =>
     ont.edgesOf("INSTANCE_OF")
-      .filter((e) => ont.get(e.to)?.abstract)
+      .filter((e) => {
+        const c = ont.get(e.to);
+        return c?.type === "Class" && c.abstract;
+      })
       .map((e) => ({ message: `${L(ont, e.from)} is a direct instance of ${L(ont, e.to)}, which is abstract.`, nodes: [e.from, e.to] })),
 
   // ---------------------------------------------------------------- slots
@@ -304,7 +312,7 @@ export const CHECKS: Record<string, Check> = {
 
   "slot-value-type-declared": (ont) =>
     slots(ont)
-      .filter((s) => !VALUE_TYPES.includes(s.valueType))
+      .filter((s) => !isOneOf(VALUE_TYPES, s.valueType))
       .map((s) => ({
         message: s.valueType
           ? `Slot ${L(ont, s.id)} has value type '${s.valueType}'. Use one of ${VALUE_TYPES.join(", ")}.`
@@ -340,13 +348,14 @@ export const CHECKS: Record<string, Check> = {
     };
     for (const s of slots(ont)) bad(`Slot ${L(ont, s.id)}`, s.id, s.minCardinality, s.maxCardinality, s.cardinality === "single");
     for (const c of classes(ont)) {
-      for (const [sid, ov] of Object.entries<any>(c.facetOverrides ?? {})) {
+      for (const [sid, ov] of Object.entries(c.facetOverrides ?? {})) {
         const s = ont.get(sid);
-        if (!s) continue;
+        if (s?.type !== "Slot") continue;
         const f = ont.effectiveFacets(sid, ont.up(c.id));
         bad(`${L(ont, c.id)}'s restriction on ${L(ont, sid)}`, c.id, f.min, f.max, s.cardinality === "single");
-        if (Array.isArray(ov.allowedValues) && Array.isArray(s.allowedValues)) {
-          const extra = ov.allowedValues.filter((v: string) => !s.allowedValues.includes(v));
+        const slotAllowed = s.allowedValues;
+        if (Array.isArray(ov.allowedValues) && Array.isArray(slotAllowed)) {
+          const extra = ov.allowedValues.filter((v) => !slotAllowed.includes(String(v)));
           if (extra.length) hits.push({ message: `${L(ont, c.id)} allows ${extra.join(", ")} for ${L(ont, sid)}, which the slot itself doesn't allow.`, nodes: [c.id, sid] });
         }
       }
@@ -405,7 +414,7 @@ export const CHECKS: Record<string, Check> = {
       for (const r of ont.range(s.id)) {
         const n = ont.get(r);
         const topOfEverything = roots.length === 1 && roots[0] === r && all.length >= 5;
-        if (n && (generic.has(naming.key(n.name ?? "")) || topOfEverything)) {
+        if (n && (generic.has(naming.key(("name" in n && n.name) || "")) || topOfEverything)) {
           hits.push({ message: `${L(ont, s.id)}'s range is ${L(ont, r)}, which covers almost everything. What kind of thing actually fills it?`, nodes: [s.id, r] });
         }
       }
@@ -421,7 +430,7 @@ export const CHECKS: Record<string, Check> = {
       const ctx = ont.classContext(n.id);
       const applicable = ont.applicableSlots(n.id);
       for (const sid of applicable) {
-        const s = ont.get(sid)!;
+        const s = ont.require(sid, "Slot");
         const f = ont.effectiveFacets(sid, ctx);
         let vals = ont.statedValues(n.id, sid);
         // Values inherited from a class's fixed value were checked on that class; only count them here.
@@ -455,9 +464,8 @@ export const CHECKS: Record<string, Check> = {
     for (const n of [...ont.ofType("Instance"), ...classes(ont)]) {
       const applicable = new Set(ont.applicableSlots(n.id));
       const used = new Set<string>();
-      for (const field of n.type === "Instance" ? ["values"] : ["fixedValues", "defaults", "facetOverrides"]) {
-        for (const sid of Object.keys(n[field] ?? {})) used.add(sid);
-      }
+      const fields = n.type === "Instance" ? [n.values] : [n.fixedValues, n.defaults, n.facetOverrides];
+      for (const field of fields) for (const sid of Object.keys(field ?? {})) used.add(sid);
       for (const sid of ont.linkedSlots(n.id)) used.add(sid);
       for (const sid of used) {
         if (!ont.get(sid)) hits.push({ message: `${L(ont, n.id)} has a value for '${sid}', which isn't a slot.`, nodes: [n.id] });
@@ -493,12 +501,12 @@ export const CHECKS: Record<string, Check> = {
       for (const sid of fixedSlots) {
         const fixed = ont.statedValues(c.id, sid);
         for (const d of ont.descendants(c.id)) {
-          const dn = ont.get(d)!;
+          const dn = ont.get(d);
           const theirs = ont.statedValues(d, sid);
           if (theirs.length && !same(theirs, fixed)) {
             hits.push({ message: `${L(ont, c.id)} fixes ${ont.label(sid)} = ${fixed.map((v) => ont.label(String(v))).join(", ")}, but its subclass ${L(ont, d)} says ${theirs.map((v) => ont.label(String(v))).join(", ")}.`, nodes: [d, c.id, sid] });
           }
-          const dd = dn.defaults?.[sid];
+          const dd = dn?.type === "Class" ? dn.defaults?.[sid] : undefined;
           if (dd !== undefined && !same([dd], fixed)) {
             hits.push({ message: `${L(ont, d)} sets a default for ${ont.label(sid)}, but ${L(ont, c.id)} already fixes it to ${fixed.join(", ")}.`, nodes: [d, c.id, sid] });
           }
@@ -536,8 +544,8 @@ export const CHECKS: Record<string, Check> = {
     for (const e of ont.edges) {
       const sid = rel.get(e.type);
       if (!sid) continue;
-      const s = ont.get(sid)!;
-      const decls: any[] = s.edgeProperties ?? [];
+      const s = ont.require(sid, "Slot");
+      const decls = s.edgeProperties ?? [];
       const tag = `(${ont.label(e.from)})-[:${e.type}]->(${ont.label(e.to)})`;
       for (const [k, v] of Object.entries(e)) {
         if (["from", "to", "type"].includes(k)) continue;
@@ -550,7 +558,7 @@ export const CHECKS: Record<string, Check> = {
           hits.push({ message: `${tag} has an undeclared edge property '${k}'. Declare it: okb relationship property ${s.name} ${k} --type ...`, nodes: [e.from, sid], severity: "warning" });
           continue;
         }
-        const f = { valueType: d.valueType, allowedValues: d.allowedValues ?? null, min: 0, max: null, range: [], overriddenBy: [] } as Facets;
+        const f: Facets = { valueType: d.valueType, allowedValues: d.allowedValues ?? null, min: 0, max: null, range: [], overriddenBy: [] };
         const p = literalProblem(v, f);
         if (p) hits.push({ message: `${tag}.${k} = ${JSON.stringify(v)} ${p}.`, nodes: [e.from, sid] });
       }
@@ -686,7 +694,7 @@ export const CHECKS: Record<string, Check> = {
 
   "naming-unique": (ont) => {
     const hits: Hit[] = [];
-    for (const t of ["Class", "Slot", "Instance"]) {
+    for (const t of ["Class", "Slot", "Instance"] as const) {
       const seen = new Map<string, string>();
       for (const n of ont.ofType(t)) {
         const k = naming.key(n.name ?? "");
@@ -701,7 +709,7 @@ export const CHECKS: Record<string, Check> = {
   // ---------------------------------------------------------------- scope & docs
   "scope-defined": (ont) => {
     const m = ont.meta;
-    const missing = ["domain", "purpose"].filter((k) => !m[k]);
+    const missing: string[] = (["domain", "purpose"] as const).filter((k) => !m[k]);
     if (!(m.users ?? []).length) missing.push("users");
     return missing.length ? [{ message: `Scope is missing: ${missing.join(", ")}. Run \`okb scope\`.`, nodes: ["ontology"] }] : [];
   },
@@ -762,24 +770,33 @@ export const CHECKS: Record<string, Check> = {
   },
 
   // ---------------------------------------------------------------- provenance
-  "prov-verified": (ont) =>
-    ont.nodes
-      .filter((n) => (n.type === "Rule" || n.extracted) && !n.verification)
-      .map((n): Hit => ({ message: `${n.type} ${L(ont, n.id)} was extracted from a document but hasn't been verified against its quote yet (Step 3 of the extraction pipeline): okb verify ${n.id} --status ...`, nodes: [n.id] }))
-      .concat(ont.nodes
-      .filter((n) => n.verification && n.verification.status !== "SUPPORTED")
-      .map((n) => ({
-        message: n.verification.status === "OVERREACH"
+  "prov-verified": (ont) => {
+    const hits: Hit[] = [];
+    for (const n of ont.nodes) {
+      const { extracted, verification } = pipeline(n);
+      if ((n.type === "Rule" || extracted) && !verification) {
+        hits.push({ message: `${n.type} ${L(ont, n.id)} was extracted from a document but hasn't been verified against its quote yet (Step 3 of the extraction pipeline): okb verify ${n.id} --status ...`, nodes: [n.id] });
+      }
+    }
+    for (const n of ont.nodes) {
+      const { verification } = pipeline(n);
+      if (!verification || verification.status === "SUPPORTED") continue;
+      hits.push({
+        message: verification.status === "OVERREACH"
           ? `${n.type} ${L(ont, n.id)} was corrected after claiming more than its quote supports. A person must check it: okb verify ${n.id} --approve`
-          : `${n.type} ${L(ont, n.id)} has verification status ${n.verification.status ?? "(none)"}. A person must resolve it.`,
+          : `${n.type} ${L(ont, n.id)} has verification status ${verification.status ?? "(none)"}. A person must resolve it.`,
         nodes: [n.id],
-      }))),
+      });
+    }
+    return hits;
+  },
 
   "prov-cites-quote": (ont) => {
     const hits: Hit[] = [];
     for (const n of ont.nodes) {
-      if (!(n.type === "Rule" || n.extracted || n.verification)) continue;
-      const locs = ont.targets(n.id, "CITES").map((i) => ont.get(i)).filter((l): l is GraphNode => Boolean(l));
+      const { extracted, verification } = pipeline(n);
+      if (!(n.type === "Rule" || extracted || verification)) continue;
+      const locs = ont.targets(n.id, "CITES").map((i) => ont.get(i)).filter((l) => l?.type === "SourceLocation");
       const good = locs.filter((l) => l.quote && ont.targets(l.id, "PART_OF").some((s) => ont.get(s)?.type === "Source"));
       if (good.length === 0) hits.push({ message: `${n.type} ${L(ont, n.id)} doesn't cite a verbatim quote from a Source.`, nodes: [n.id] });
     }
@@ -796,8 +813,8 @@ export const CHECKS: Record<string, Check> = {
         hits.push({ message: `Can't read ${src.localPath} for Source ${L(ont, src.id)}: ${pages.message}`, nodes: [src.id], severity: "warning" });
         continue;
       }
-      for (const loc of ont.sources(src.id, "PART_OF").map((i) => ont.get(i)!)) {
-        if (!loc?.quote) continue;
+      for (const loc of ont.sources(src.id, "PART_OF").map((i) => ont.get(i))) {
+        if (loc?.type !== "SourceLocation" || !loc.quote) continue;
         if (Array.isArray(pages)) {
           if (!findQuote(loc.quote, pages).found) hits.push({ message: `Quote ${loc.id} no longer appears in ${src.localPath}: "${String(loc.quote).slice(0, 70)}…"`, nodes: [loc.id] });
           continue;
@@ -820,8 +837,8 @@ export const CHECKS: Record<string, Check> = {
 export function duplicateQuotes(ont: Ontology): Hit[] {
   const hits: Hit[] = [];
   const locs = ont.ofType("SourceLocation").filter((l) => l.quote);
-  const src = (l: GraphNode) => ont.targets(l.id, "PART_OF")[0];
-  const buckets = new Map<string, GraphNode[]>();
+  const src = (l: SourceLocationNode) => ont.targets(l.id, "PART_OF")[0];
+  const buckets = new Map<string, SourceLocationNode[]>();
   for (const l of locs) {
     const k = String(l.quote).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).slice(0, 6).join(" ");
     if (!buckets.has(k)) buckets.set(k, []);

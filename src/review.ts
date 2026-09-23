@@ -61,9 +61,10 @@ export function buildReview(ont: Ontology, all = false): ReviewItem[] {
         for (const c of classes) {
           if (!ont.parents(c.id).length) continue;
           const own = ont.ownSlots(c.id).length + Object.keys(c.facetOverrides ?? {}).length + ont.linkedSlots(c.id).length;
-          const fixed = Object.keys(c.fixedValues ?? {});
+          const fixed = Object.entries(c.fixedValues ?? {});
           if (own === 0 && fixed.length === 1 && r.key === "hier-no-subclass-per-restriction") {
-            prompts.push(`${c.name} differs from its parent only by ${L(fixed[0])} = ${JSON.stringify(c.fixedValues[fixed[0]])}. Is it a real kind of thing experts distinguish, or just that value?`);
+            const [[slot, value]] = fixed;
+            prompts.push(`${c.name} differs from its parent only by ${L(slot)} = ${JSON.stringify(value)}. Is it a real kind of thing experts distinguish, or just that value?`);
           }
         }
         if (r.key === "hier-class-or-value" && !flags.length) prompts.push("Walk decision.class-or-value on any class that feels like 'just a value', and on any enumerated value that feels like 'a different kind of thing'.");

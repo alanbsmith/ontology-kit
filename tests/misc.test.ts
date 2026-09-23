@@ -12,6 +12,7 @@ import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
 import { computeStatus } from "../src/status.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
+import type { OkbNode } from "../src/types.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -71,7 +72,7 @@ describe("meta-KB", () => {
 
 describe("indexes", () => {
   it("stay equal to a full rebuild through adds, links, inverses, renames and removals", () => {
-    const ont = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" }], []);
+    const ont = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" } as OkbNode], []);
     ops.setConventions(ont, {});
     ops.addClass(ont, "Wine", { description: "d" });
     ops.addClass(ont, "RedWine", { parents: ["Wine"], description: "d" });

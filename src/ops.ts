@@ -5,9 +5,13 @@
  */
 import { runChecks } from "./checks.ts";
 import { MetaKB } from "./metakb.ts";
-import { DISPOSITIONS, OkbError, Ontology, VALUE_TYPES, edgeProps } from "./model.ts";
+import { OkbError, Ontology, edgeProps, isRelationship, literalValues, nameOrText } from "./model.ts";
 import * as naming from "./naming.ts";
-import type { Conventions, GraphNode } from "./types.ts";
+import {
+  CARDINALITIES, DISPOSITIONS, VALUE_TYPES, isOneOf,
+  type ClassNode, type Conventions, type Disposition, type EdgePropertyDecl, type Literal, type LiteralType, type NodeType,
+  type ReusedOntologyNode, type SlotNode,
+} from "./types.ts";
 
 export type Notes = string[];
 /** "a Winery" / "an Author" */
@@ -28,7 +32,7 @@ export function setScope(ont: Ontology, o: { name?: string; domain?: string; pur
   if (o.maintainers?.length) m.maintainers = list(o.maintainers);
   if (o.outOfScope?.length) m.outOfScope = [...new Set([...(m.outOfScope ?? []), ...o.outOfScope])];
   if (o.kind) {
-    if (!["application", "terminological"].includes(o.kind)) throw new OkbError("--kind must be 'application' or 'terminological'.");
+    if (!isOneOf(["application", "terminological"], o.kind)) throw new OkbError("--kind must be 'application' or 'terminological'.");
     m.kind = o.kind;
   }
   return [];
@@ -132,12 +136,12 @@ export function addTerms(ont: Ontology, terms: string[], note?: string): Notes {
 
 export function setTerm(ont: Ontology, ref: string, as: string, nodeRef?: string, note?: string): Notes {
   const t = ont.find(ref, "Term");
-  if (!DISPOSITIONS.includes(as)) throw new OkbError(`--as must be one of: ${DISPOSITIONS.join(", ")}.`);
+  if (!isOneOf(DISPOSITIONS, as)) throw new OkbError(`--as must be one of: ${DISPOSITIONS.join(", ")}.`);
   t.disposition = as;
   if (note) t.note = note;
   ont.removeEdges((e) => e.from === t.id && e.type === "BECAME");
   const notes: Notes = [`'${t.text}' → ${as}.`];
-  const typeFor: Record<string, string[]> = { class: ["Class"], slot: ["Slot"], instance: ["Instance"], value: ["Slot"], synonym: ["Class"] };
+  const typeFor: Partial<Record<Disposition, ("Class" | "Slot" | "Instance")[]>> = { class: ["Class"], slot: ["Slot"], instance: ["Instance"], value: ["Slot"], synonym: ["Class"] };
   if (nodeRef) {
     const n = ont.find(nodeRef, typeFor[as] ?? ["Class", "Slot", "Instance"]);
     ont.addEdge(t.id, "BECAME", n.id);
@@ -153,8 +157,8 @@ export function setTerm(ont: Ontology, ref: string, as: string, nodeRef?: string
 }
 
 export function addReuse(ont: Ontology, o: { name: string; url?: string; decision: string; notes?: string }): Notes {
-  const decisions = ["reuse", "adapt", "reference", "rejected"];
-  if (!decisions.includes(o.decision)) throw new OkbError(`--decision must be one of: ${decisions.join(", ")}.`);
+  const decisions: ReusedOntologyNode["decision"][] = ["reuse", "adapt", "reference", "rejected"];
+  if (!isOneOf(decisions, o.decision)) throw new OkbError(`--decision must be one of: ${decisions.join(", ")}.`);
   ont.addNode({ type: "ReusedOntology", id: ont.newId("ReusedOntology", o.name), name: o.name, url: o.url, decision: o.decision, notes: o.notes });
   ont.meta.reuseReviewed = true;
   return [`Recorded '${o.name}' (${o.decision}).`];
@@ -178,7 +182,7 @@ export function addClass(ont: Ontology, name: string, o: { parents?: string[]; d
   }
   checkParents(ont, parents.map((p) => p.id), name);
   const id = ont.newId("Class", name);
-  const node: GraphNode = { type: "Class", id, name };
+  const node: ClassNode = { type: "Class", id, name };
   if (o.description) node.description = o.description;
   if (o.synonyms?.length) node.synonyms = list(o.synonyms);
   if (o.abstract) node.abstract = true;
@@ -215,7 +219,7 @@ function checkParents(ont: Ontology, parents: string[], name: string, notes?: No
   }
 }
 
-function linkTermIfAny(ont: Ontology, name: string, nodeId: string, as: string) {
+function linkTermIfAny(ont: Ontology, name: string, nodeId: string, as: Disposition) {
   const t = ont.ofType("Term").find((x) => naming.key(naming.withHead(x.text, naming.singularize)) === naming.key(naming.withHead(name, naming.singularize)));
   if (t && (!t.disposition || t.disposition === "undecided")) {
     t.disposition = as;
@@ -270,7 +274,7 @@ export function parseAssignments(args: string[]): { slot: string; op: "=" | "+="
   });
 }
 
-function findSlotFor(ont: Ontology, ownerId: string, ref: string): GraphNode {
+function findSlotFor(ont: Ontology, ownerId: string, ref: string): SlotNode {
   const s = ont.find(ref, "Slot");
   if (!ont.applicableSlots(ownerId).includes(s.id)) {
     throw new OkbError(`'${s.name}' isn't a slot of ${ont.label(ownerId)} (attached to: ${ont.domain(s.id).map((d) => ont.label(d)).join(", ") || "nothing"}).`);
@@ -278,7 +282,8 @@ function findSlotFor(ont: Ontology, ownerId: string, ref: string): GraphNode {
   return s;
 }
 
-export function coerce(ont: Ontology, slot: GraphNode, raw: string, allowClass = false): unknown {
+/** Parse a command-line value for a slot. A relationship's value is the id of the node it names. */
+export function coerce(ont: Ontology, slot: SlotNode, raw: string, allowClass = false): Literal {
   switch (slot.valueType) {
     case "Integer": {
       if (!/^-?\d+$/.test(raw)) throw new OkbError(`${slot.name} needs a whole number; got '${raw}'.`);
@@ -308,14 +313,14 @@ export function coerce(ont: Ontology, slot: GraphNode, raw: string, allowClass =
   }
 }
 
-function splitValues(slot: GraphNode, raw: string): string[] {
+function splitValues(slot: SlotNode, raw: string): string[] {
   return slot.cardinality === "multiple" && slot.valueType !== "String" ? list(raw) : [raw];
 }
 
 /** Set values on an Instance (literal values / relationship edges) or a Class (fixed values). */
 export function assign(ont: Ontology, ownerId: string, assignments: string[], mode: "value" | "fixed" = "value"): Notes {
-  const owner = ont.get(ownerId)!;
-  const field = owner.type === "Instance" ? "values" : "fixedValues";
+  const owner = ont.require(ownerId);
+  if (owner.type !== "Instance" && owner.type !== "Class") throw new OkbError(`Only instances and classes have values; ${ont.label(ownerId)} is ${an(owner.type)}.`);
   const notes: Notes = [];
   const firstFixed = mode === "fixed" && !ont.ofType("Class").some((c) => Object.keys(c.fixedValues ?? {}).length || ont.linkedSlots(c.id).length);
   for (const a of parseAssignments(assignments)) {
@@ -327,11 +332,11 @@ export function assign(ont: Ontology, ownerId: string, assignments: string[], mo
       const f = ont.effectiveFacets(slot.id, ont.classContext(ownerId));
       for (const v of next) {
         if (!current.includes(v) && f.range.length) {
-          const t = ont.get(v)!;
+          const t = ont.require(v);
           const ok = t.type === "Instance"
             ? f.range.some((r) => ont.instanceClasses(v).has(r))
             : owner.type === "Class" && f.range.some((r) => ont.isSub(v, r));
-          if (!ok) throw new OkbError(`${owner.name}.${slot.name} must point at ${f.range.map((r) => an(ont.label(r))).join(" or ")}; ${t.name} is ${an(t.type === "Instance" ? ont.targets(v, "INSTANCE_OF").map((c) => ont.label(c)).join("/") || "instance with no class" : "class outside that range")}.`);
+          if (!ok) throw new OkbError(`${owner.name}.${slot.name} must point at ${f.range.map((r) => an(ont.label(r))).join(" or ")}; ${nameOrText(t)} is ${an(t.type === "Instance" ? ont.targets(v, "INSTANCE_OF").map((c) => ont.label(c)).join("/") || "instance with no class" : "class outside that range")}.`);
         }
       }
       for (const gone of current.filter((x) => !next.includes(x))) ont.removeLink(ownerId, slot.id, gone);
@@ -343,13 +348,13 @@ export function assign(ont: Ontology, ownerId: string, assignments: string[], mo
         notes.push(`  (stored once as ${next.map((x) => `(${ont.label(x)})-[:${spec.type}]->(${owner.name})`).join(", ")}; ${slot.name} reads it backwards)`);
       }
     } else {
-      owner[field] ??= {};
-      const cur = owner[field][slot.id];
+      const stored = literalValues(owner);
+      const cur = stored[slot.id];
       const curList = cur === undefined ? [] : Array.isArray(cur) ? cur : [cur];
-      const next = a.op === "=" ? vals : a.op === "+=" ? [...curList, ...vals] : curList.filter((x: unknown) => !vals.includes(x));
+      const next = a.op === "=" ? vals : a.op === "+=" ? [...curList, ...vals] : curList.filter((x) => !vals.includes(x));
       if (slot.cardinality !== "multiple" && next.length > 1) throw new OkbError(`${slot.name} holds a single value; got ${next.length}.`);
-      if (next.length === 0) delete owner[field][slot.id];
-      else owner[field][slot.id] = slot.cardinality === "multiple" ? next : next[0];
+      if (next.length === 0) delete stored[slot.id];
+      else stored[slot.id] = slot.cardinality === "multiple" ? next : next[0];
       notes.push(`${owner.name}.${slot.name} ${mode === "fixed" ? "fixed to" : "="} ${next.map((v) => JSON.stringify(v)).join(", ") || "(nothing)"}`);
     }
   }
@@ -416,7 +421,7 @@ export function addSlot(ont: Ontology, name: string, o: SlotOpts): Notes {
     ont.removeNode(id);
     throw e;
   }
-  const added = ont.get(id)!;
+  const added = ont.require(id, "Slot");
   notes.unshift(added.valueType === "Instance"
     ? `Added relationship ${name}: (${o.on?.join("|") || "?"})-[:${added.relType}]->(${ont.range(id).map((r) => ont.label(r)).join("|") || "?"}).`
     : `Added property ${name}${o.on?.length ? ` on ${o.on.join(", ")}` : ""} (${added.valueType}).`);
@@ -431,7 +436,8 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
   const s = ont.find(ref, "Slot");
   const notes: Notes = [];
   if (o.type) {
-    const t = VALUE_TYPES.find((v) => v.toLowerCase() === o.type!.toLowerCase());
+    const wanted = o.type.toLowerCase();
+    const t = VALUE_TYPES.find((v) => v.toLowerCase() === wanted);
     if (!t) throw new OkbError(`--type must be one of ${VALUE_TYPES.join(", ")}.`);
     const wasRel = s.valueType === "Instance";
     s.valueType = t;
@@ -439,10 +445,11 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
     if (t !== "Instance") {
       ont.removeEdges((e) => e.from === s.id && e.type === "RANGE");
       if (wasRel) {
-        const n = ont.edgesOf(s.relType).length;
-        if (ont.primarySlot(s.id) === s.id) ont.removeEdges((e) => e.type === s.relType);
+        const rt = s.relType;
+        const n = rt ? ont.edgesOf(rt).length : 0;
+        if (rt && ont.primarySlot(s.id) === s.id) ont.removeEdges((e) => e.type === rt);
         ont.removeEdges((e) => e.type === "INVERSE_OF" && (e.from === s.id || e.to === s.id));
-        if (n) notes.push(`Removed ${n} ${s.relType} link(s): ${s.name} no longer links to other things.`);
+        if (n) notes.push(`Removed ${n} ${rt} link(s): ${s.name} no longer links to other things.`);
       }
       delete s.relType;
     } else if (!s.relType) {
@@ -465,7 +472,7 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
     ont.removeEdges((e) => e.from === s.id && e.type === "RANGE" && e.to === rc.id);
   }
   if (o.card) {
-    if (!["single", "multiple"].includes(o.card)) throw new OkbError("--card must be single or multiple.");
+    if (!isOneOf(CARDINALITIES, o.card)) throw new OkbError("--card must be single or multiple.");
     s.cardinality = o.card;
   }
   if (o.min !== undefined) s.minCardinality = o.min;
@@ -503,7 +510,7 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
 export function inverse(ont: Ontology, a: string, b: string): Notes {
   const sa = ont.find(a, "Slot");
   const sb = ont.find(b, "Slot");
-  if (sa.valueType !== "Instance" || sb.valueType !== "Instance") throw new OkbError("Only relationships (Instance slots) can be inverses.");
+  if (!isRelationship(sa) || !isRelationship(sb)) throw new OkbError("Only relationships (Instance slots) can be inverses.");
   if (sa.id === sb.id) throw new OkbError("A relationship can't be its own inverse here; for symmetric relationships just use one.");
   for (const x of [sa, sb]) {
     if (ont.inverses(x.id).length) throw new OkbError(`${x.name} already has an inverse (${ont.inverses(x.id).map((i) => ont.label(i)).join(", ")}).`);
@@ -517,7 +524,7 @@ export function inverse(ont: Ontology, a: string, b: string): Notes {
     else ont.addEdge(e.to, sa.relType, e.from, edgeProps(e));
   }
   // Edge-property declarations follow the stored side.
-  if (sb.edgeProperties?.length) sa.edgeProperties = [...(sa.edgeProperties ?? []), ...sb.edgeProperties.filter((p: any) => !(sa.edgeProperties ?? []).some((q: any) => q.name === p.name))];
+  if (sb.edgeProperties?.length) sa.edgeProperties = [...(sa.edgeProperties ?? []), ...sb.edgeProperties.filter((p) => !(sa.edgeProperties ?? []).some((q) => q.name === p.name))];
   ont.addEdge(sa.id, "INVERSE_OF", sb.id);
   return [
     `${sa.name} and ${sb.name} are now inverses: one relationship read from both ends.`,
@@ -530,13 +537,13 @@ export function inverse(ont: Ontology, a: string, b: string): Notes {
 // condition, a weight, a date) plus a reserved `rule` reference to the Rule node
 // that justifies it. Declaring them gives them facets, just like slots.
 
-export const EDGE_VALUE_TYPES = ["String", "Integer", "Float", "Number", "Boolean", "Enumerated"];
+export const EDGE_VALUE_TYPES: LiteralType[] = ["String", "Integer", "Float", "Number", "Boolean", "Enumerated"];
 const RESERVED_EDGE_KEYS = new Set(["from", "to", "type", "rule"]);
 
 export function declareEdgeProperty(ont: Ontology, relRef: string, name: string, o: { type?: string; values?: string[]; required?: boolean; description?: string; remove?: boolean }): Notes {
-  const rel = ont.get(ont.primarySlot(ont.find(relRef, "Slot").id))!;
+  const rel = ont.require(ont.primarySlot(ont.find(relRef, "Slot").id), "Slot");
   if (rel.valueType !== "Instance") throw new OkbError(`${rel.name} is a property, not a relationship; only relationships have edge properties.`);
-  const decls: any[] = (rel.edgeProperties ??= []);
+  const decls = (rel.edgeProperties ??= []);
   if (o.remove) {
     rel.edgeProperties = decls.filter((d) => d.name !== name);
     return [`Removed edge property ${name} from ${rel.name}. Existing values stay on the edges until you remove them.`];
@@ -547,14 +554,14 @@ export function declareEdgeProperty(ont: Ontology, relRef: string, name: string,
   const t = EDGE_VALUE_TYPES.find((v) => v.toLowerCase() === (o.type ?? "String").toLowerCase());
   if (!t) throw new OkbError(`--type must be one of ${EDGE_VALUE_TYPES.join(", ")} (edges can't link to other things; use --rule to reference a Rule).`);
   if (t === "Enumerated" && !o.values?.length) throw new OkbError("Enumerated edge properties need --values a,b,c.");
-  const decl = { name, valueType: t, ...(t === "Enumerated" ? { allowedValues: list(o.values) } : {}), ...(o.required ? { required: true } : {}), ...(o.description ? { description: o.description } : {}) };
+  const decl: EdgePropertyDecl = { name, valueType: t, ...(t === "Enumerated" ? { allowedValues: list(o.values) } : {}), ...(o.required ? { required: true } : {}), ...(o.description ? { description: o.description } : {}) };
   const i = decls.findIndex((d) => d.name === name);
   if (i >= 0) decls[i] = decl;
   else decls.push(decl);
   return [`${rel.name} edges can now carry ${name} (${t}${decl.required ? ", required" : ""}): (…)-[:${rel.relType} {${name}: …}]->(…)`];
 }
 
-function coerceEdgeValue(decl: any, raw: string, relName: string): unknown {
+function coerceEdgeValue(decl: EdgePropertyDecl, raw: string, relName: string): Literal {
   switch (decl.valueType) {
     case "Integer":
       if (!/^-?\d+$/.test(raw)) throw new OkbError(`${relName}.${decl.name} needs a whole number; got '${raw}'.`);
@@ -570,7 +577,7 @@ function coerceEdgeValue(decl: any, raw: string, relName: string): unknown {
       if (/^(false|no|0)$/i.test(raw)) return false;
       throw new OkbError(`${relName}.${decl.name} needs true or false; got '${raw}'.`);
     case "Enumerated": {
-      const hit = (decl.allowedValues ?? []).find((v: string) => naming.key(v) === naming.key(raw));
+      const hit = (decl.allowedValues ?? []).find((v) => naming.key(v) === naming.key(raw));
       if (!hit) throw new OkbError(`${relName}.${decl.name} must be one of ${(decl.allowedValues ?? []).join(", ")}; got '${raw}'.`);
       return hit;
     }
@@ -585,8 +592,8 @@ export function link(ont: Ontology, fromRef: string, relRef: string, toRef: stri
   const slot = findSlotFor(ont, owner.id, relRef);
   if (slot.valueType !== "Instance") throw new OkbError(`${slot.name} is a property, not a relationship. Use okb instance set / class fix for values.`);
   const target = ont.find(toRef, owner.type === "Class" ? ["Class", "Instance"] : ["Instance"]);
-  const primary = ont.get(ont.primarySlot(slot.id))!;
-  const decls: any[] = primary.edgeProperties ?? [];
+  const primary = ont.require(ont.primarySlot(slot.id), "Slot");
+  const decls = primary.edgeProperties ?? [];
   const props: Record<string, unknown> = {};
   for (const a of parseAssignments(o.props ?? [])) {
     const decl = decls.find((d) => naming.key(d.name) === naming.key(a.slot));
@@ -639,7 +646,7 @@ export function addInstance(ont: Ontology, name: string, o: { of: string[]; desc
     if (ont.children(cl.id).length) notes.push(`Tip: ${cl.name} has subclasses (${ont.children(cl.id).map((k) => ont.label(k)).join(", ")}). Use the most specific class that fits.`);
   }
   const id = ont.newId("Instance", name);
-  ont.addNode({ type: "Instance", id, name, ...(o.description ? { description: o.description } : {}), values: {} });
+  const inst = ont.addNode({ type: "Instance", id, name, ...(o.description ? { description: o.description } : {}), values: {} });
   for (const cl of classes) ont.addEdge(id, "INSTANCE_OF", cl.id);
   notes.unshift(`Added ${name} (${classes.map((x) => an(x.name)).join(" and ")}).`);
   if (o.assignments?.length) notes.push(...assign(ont, id, o.assignments));
@@ -647,12 +654,12 @@ export function addInstance(ont: Ontology, name: string, o: { of: string[]; desc
   const ctx = [...classes.map((x) => x.id), ...classes.flatMap((x) => [...ont.ancestors(x.id)])];
   for (const sid of ont.applicableSlots(id)) {
     if (ont.statedValues(id, sid).length || ont.inheritedFixed(sid, ctx)) continue;
-    const s = ont.get(sid)!;
-    const fromClass = ctx.map((c) => ont.get(c)!.defaults?.[sid]).find((v) => v !== undefined);
+    const s = ont.require(sid, "Slot");
+    const fromClass = ctx.map((c) => ont.require(c, "Class").defaults?.[sid]).find((v) => v !== undefined);
     const dv = fromClass ?? s.default;
     if (dv === undefined) continue;
-    if (s.valueType === "Instance") ont.addLink(id, sid, dv);
-    else ont.get(id)!.values[sid] = s.cardinality === "multiple" ? [dv] : dv;
+    if (s.valueType === "Instance") ont.addLink(id, sid, String(dv));
+    else literalValues(inst)[sid] = s.cardinality === "multiple" ? [dv].flat() : dv;
     notes.push(`Filled in default ${s.name} = ${JSON.stringify(dv)}.`);
   }
   const missing = ont.applicableSlots(id).filter((sid) => {
@@ -714,7 +721,7 @@ export function rename(ont: Ontology, ref: string, next: string, force = false):
   return notes;
 }
 
-export function remove(ont: Ontology, ref: string, types?: string[]): Notes {
+export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
   const n = ont.find(ref, types);
   if (n.id === "ontology") throw new OkbError("You can't remove the Ontology node.");
   const notes: Notes = [];
@@ -732,12 +739,14 @@ export function remove(ont: Ontology, ref: string, types?: string[]): Notes {
       throw new OkbError(`${n.name} has instances (${inst.map((i) => ont.label(i)).join(", ")}) and no parent to move them to. Move them first: okb instance set "<name>" --of <OtherClass>`);
     }
   }
-  if (n.type === "Slot" && n.valueType === "Instance" && ont.primarySlot(n.id) === n.id) {
+  if (isRelationship(n) && ont.primarySlot(n.id) === n.id) {
     const inv = ont.targets(n.id, "INVERSE_OF")[0];
     if (inv) {
-      const invNode = ont.get(inv)!;
-      const moved = ont.edgesOf(n.relType);
-      ont.removeEdges((e) => e.type === n.relType || (e.type === "INVERSE_OF" && e.from === n.id));
+      const invNode = ont.require(inv, "Slot");
+      if (!isRelationship(invNode)) throw new OkbError(`${n.name}'s inverse ${invNode.name} isn't a relationship. Fix it (okb slot set ${invNode.name} --type Instance) or remove the inverse first.`);
+      const relType = n.relType;
+      const moved = ont.edgesOf(relType);
+      ont.removeEdges((e) => e.type === relType || (e.type === "INVERSE_OF" && e.from === n.id));
       for (const e of moved) ont.addEdge(e.to, invNode.relType, e.from, edgeProps(e));
       if (n.edgeProperties?.length && !invNode.edgeProperties?.length) invNode.edgeProperties = n.edgeProperties;
       notes.push(`Its ${moved.length} link(s) are kept, now stored from the other end as ${invNode.relType} (${invNode.name}).`);
@@ -753,9 +762,9 @@ export function remove(ont: Ontology, ref: string, types?: string[]): Notes {
   for (const [sid, before] of slotsBefore) {
     if (sid === n.id) continue;
     if (before.domain > 0 && ont.domain(sid).length === 0) notes.push(`Warning: slot ${ont.label(sid)} is no longer attached to any class. Attach it (okb slot set ${ont.label(sid)} --on <Class>) or remove it.`);
-    if (before.range > 0 && ont.range(sid).length < before.range) notes.push(`Warning: slot ${ont.label(sid)}'s range lost ${n.name}${ont.range(sid).length ? "" : ", and is now empty"}.`);
+    if (before.range > 0 && ont.range(sid).length < before.range) notes.push(`Warning: slot ${ont.label(sid)}'s range lost ${nameOrText(n)}${ont.range(sid).length ? "" : ", and is now empty"}.`);
   }
-  notes.unshift(`Removed ${n.type} '${n.name ?? n.text ?? n.id}'.`);
+  notes.unshift(`Removed ${n.type} '${nameOrText(n) ?? n.id}'.`);
   return notes;
 }
 

@@ -6,24 +6,26 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
-import { OkbError, type Ontology } from "./model.ts";
+import { OkbError, nameOrText, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { findQuote, loadPages } from "./quotes.ts";
-import type { GraphNode } from "./types.ts";
-
-const MODALITIES = ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"];
-const STATUSES = ["SUPPORTED", "OVERREACH", "UNSUPPORTED"];
+import {
+  MODALITIES, VERIFICATION_STATUSES as STATUSES, isOneOf,
+  type SourceLocationNode, type SourceNode,
+} from "./types.ts";
 /** Suggest the closest block for a failed quote only if it shares at least this share of the quote's words. */
 const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 
 export const isMarkdown = (p: string) => /\.(md|markdown)$/i.test(p);
 
-export function sourcePath(ont: Ontology, src: GraphNode): string {
-  return isAbsolute(src.localPath) ? src.localPath : join(ont.root, src.localPath);
+export function sourcePath(ont: Ontology, src: SourceNode): string {
+  // TODO(next commit): a Source without localPath crashes here (outline, refresh).
+  const p = src.localPath!;
+  return isAbsolute(p) ? p : join(ont.root, p);
 }
 
-export function readMarkdownSource(ont: Ontology, src: GraphNode): MdDoc {
+export function readMarkdownSource(ont: Ontology, src: SourceNode): MdDoc {
   const p = sourcePath(ont, src);
   if (!existsSync(p)) throw new OkbError(`Source file not found: ${p}`);
   return parseMarkdown(readFileSync(p, "utf8"));
@@ -37,7 +39,7 @@ export function addSource(ont: Ontology, file: string, o: { title?: string; url?
   const existing = ont.ofType("Source").find((s) => s.localPath && resolve(sourcePath(ont, s)) === abs);
   if (existing) throw new OkbError(`That file is already registered as ${existing.id} (${existing.title}).`);
   const notes: Notes = [];
-  const node: GraphNode = { type: "Source", id: "", title: o.title ?? "", localPath, url: o.url, repoUrl: o.repoUrl };
+  const node: SourceNode = { type: "Source", id: "", title: o.title ?? "", localPath, url: o.url, repoUrl: o.repoUrl };
   if (isMarkdown(abs)) {
     const doc = parseMarkdown(readFileSync(abs, "utf8"));
     node.format = "markdown";
@@ -51,7 +53,7 @@ export function addSource(ont: Ontology, file: string, o: { title?: string; url?
     node.title ||= file;
   }
   node.id = o.id ?? ont.newId("Source", node.title);
-  ont.addNode(Object.fromEntries(Object.entries(node).filter(([, v]) => v !== undefined)) as GraphNode);
+  ont.addNode(Object.fromEntries(Object.entries(node).filter(([, v]) => v !== undefined)) as SourceNode);
   notes.unshift(`Registered source ${node.id}: ${node.title}`);
   if (node.format === "markdown" && !o.repoUrl) notes.push("Tip: add --repo-url <GitHub URL of this file> so quotes get links to the exact lines.");
   notes.push(`Next: okb source outline ${node.id}   (the list of quotable blocks to work through)`);
@@ -69,7 +71,7 @@ export async function addQuote(ont: Ontology, sourceRef: string, quote: string, 
   const src = ont.find(sourceRef, "Source");
   if (!src.localPath) throw new OkbError(`Source ${src.id} has no localPath, so the quote can't be checked. Register the file with okb source add.`);
   const notes: Notes = [];
-  const loc: GraphNode = { type: "SourceLocation", id: nextLocId(ont, src), quote };
+  const loc: SourceLocationNode = { type: "SourceLocation", id: nextLocId(ont, src), quote };
 
   if (src.format === "markdown") {
     const doc = readMarkdownSource(ont, src);
@@ -108,12 +110,12 @@ export async function addQuote(ont: Ontology, sourceRef: string, quote: string, 
     const n = ont.find(c, ["Class", "Slot", "Instance", "Rule", "DesignDecision"]);
     ont.addEdge(n.id, "CITES", loc.id);
     n.extracted = true;
-    notes.push(`${n.type} ${n.name ?? n.id} now cites it.`);
+    notes.push(`${n.type} ${nameOrText(n) ?? n.id} now cites it.`);
   }
   return notes;
 }
 
-function locFields(hit: QuoteHit, src: GraphNode) {
+function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
   const links = deepLinks(hit, src.repoUrl, src.url);
   return Object.fromEntries(Object.entries({
     locator: hit.locator,
@@ -127,7 +129,7 @@ function locFields(hit: QuoteHit, src: GraphNode) {
   }).filter(([, v]) => v !== undefined));
 }
 
-function nextLocId(ont: Ontology, src: GraphNode): string {
+function nextLocId(ont: Ontology, src: SourceNode): string {
   const base = `loc.${naming.slug(src.title ?? src.id).slice(0, 30)}`;
   let i = 1;
   while (ont.get(`${base}.${i}`)) i++;
@@ -158,7 +160,7 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
   let moved = 0;
   let missing = 0;
   for (const id of ont.sources(src.id, "PART_OF")) {
-    const loc = ont.get(id)!;
+    const loc = ont.require(id, "SourceLocation");
     const hits = locate(doc, loc.quote);
     if (!hits.length) {
       missing++;
@@ -179,7 +181,7 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
 // ------------------------------------------------------------------ domain rules & verification
 export function addRule(ont: Ontology, o: { statement: string; modality: string; governs?: string[]; cites?: string[]; name?: string }): Notes {
   const modality = o.modality.toUpperCase().replace(/ /g, "_");
-  if (!MODALITIES.includes(modality)) throw new OkbError(`--modality must be one of ${MODALITIES.join(", ")}.`);
+  if (!isOneOf(MODALITIES, modality)) throw new OkbError(`--modality must be one of ${MODALITIES.join(", ")}.`);
   if (!o.cites?.length) throw new OkbError("Quote first: a rule needs --cites <quote id> (add the quote with okb quote add).");
   const name = o.name ?? o.statement.split(/\s+/).slice(0, 6).join(" ");
   const id = ont.newId("Rule", name);
@@ -212,17 +214,22 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     return [`${n.id}: approved by a person (was ${n.verification.approvedAfter}).`];
   }
   const status = (o.status ?? "").toUpperCase();
-  if (!STATUSES.includes(status)) throw new OkbError(`--status must be one of ${STATUSES.join(", ")} (or use --approve after a human review).`);
+  if (!isOneOf(STATUSES, status)) throw new OkbError(`--status must be one of ${STATUSES.join(", ")} (or use --approve after a human review).`);
   const notes: Notes = [];
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
-    n._originalDraft = n[field];
-    n[field] = o.corrected;
+    if (n.type === "Rule") {
+      n._originalDraft = n.statement;
+      n.statement = o.corrected;
+    } else {
+      n._originalDraft = n.description;
+      n.description = o.corrected;
+    }
     n.extractionConfidence = "corrected";
     notes.push(`Corrected ${field}: "${o.corrected}" (original kept in _originalDraft).`);
     notes.push(`It stays blocked (prov-verified) until a person checks the correction: okb verify ${n.id} --approve`);
   } else if (o.confidence) {
-    if (!["verbatim", "paraphrased"].includes(o.confidence)) throw new OkbError("--confidence must be verbatim or paraphrased.");
+    if (!isOneOf(["verbatim", "paraphrased"], o.confidence)) throw new OkbError("--confidence must be verbatim or paraphrased.");
     n.extractionConfidence = o.confidence;
   } else n.extractionConfidence ??= "paraphrased";
   n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}) };

@@ -11,13 +11,13 @@ import { CHECKS, loadSourcePages, runChecks } from "../src/checks.ts";
 import { Ontology } from "../src/model.ts";
 import * as ops from "../src/ops.ts";
 import { DEFAULT_CONVENTIONS } from "../src/naming.ts";
-import type { GraphEdge, GraphNode } from "../src/types.ts";
+import type { GraphEdge, GraphNode, OkbNode } from "../src/types.ts";
 
 const covered = new Set<string>();
 
 /** A minimal, valid starting point: scope, 3 questions, conventions, reuse reviewed. */
 function base(): Ontology {
-  const nodes: GraphNode[] = [{
+  const nodes: OkbNode[] = [{
     type: "Ontology", id: "ontology", name: "T", domain: "d", purpose: "p", users: ["u"], maintainers: [],
     outOfScope: ["x"], kind: "application", reuseReviewed: true, conventions: { ...DEFAULT_CONVENTIONS, source: "chosen" },
   }];
@@ -42,9 +42,10 @@ function quiet(ont: Ontology, rule: string) {
   const f = runChecks(ont, { all: true, only: [rule] });
   assert.deepEqual(f.map((x) => x.message), [], `expected ${rule} to be quiet`);
 }
+/** An ontology with extra nodes and edges as a hand edit might leave them: unchecked, possibly malformed. */
 const raw = (nodes: GraphNode[], edges: GraphEdge[] = []) => {
   const o = base();
-  o.nodes.push(...nodes);
+  o.nodes.push(...(nodes as unknown as OkbNode[]));
   o.edges.push(...edges);
   o.reindex();
   return o;
@@ -237,7 +238,7 @@ describe("slots and facets", () => {
     assert.match(msgs, /at least 1 required/);
     o.addNode({ type: "Instance", id: "i.x", name: "X" });
     o.addEdge("i.x", "INSTANCE_OF", o.find("Wine", "Class").id);
-    o.addEdge("i.w", o.find("maker", "Slot").relType, "i.x"); // as if hand-edited
+    o.addEdge("i.w", o.find("maker", "Slot").relType!, "i.x"); // as if hand-edited
     assert.match(fires(o, "slot-values-respect-facets").map((f) => f.message).join("\n"), /isn't a Winery/);
   });
   it("ops.coerce rejects bad values up front", () => {
@@ -247,7 +248,7 @@ describe("slots and facets", () => {
     o.addEdge("i.w", "INSTANCE_OF", o.find("Wine", "Class").id);
     assert.throws(() => ops.assign(o, "i.w", ["body=sparkly"]), /must be one of light, full/);
     ops.assign(o, "i.w", ["body=LIGHT"]);
-    assert.equal(o.get("i.w")!.values[o.find("body", "Slot").id], "light");
+    assert.equal(o.require("i.w", "Instance").values?.[o.find("body", "Slot").id], "light");
   });
   it("slot-value-slot-applies", () => {
     const o = wineOnt();
@@ -365,7 +366,7 @@ describe("naming", () => {
 
 describe("scope, docs, terms, reuse", () => {
   it("scope-defined, scope-competency-questions, reuse-recorded", () => {
-    const o = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" }], []);
+    const o = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" } as OkbNode], []);
     fires(o, "scope-defined");
     fires(o, "scope-competency-questions");
     fires(o, "reuse-recorded");

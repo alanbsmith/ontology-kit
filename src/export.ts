@@ -65,7 +65,7 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
     if (inst.description) properties.description = inst.description;
     const ctx = ont.instanceClasses(inst.id);
     for (const sid of ont.applicableSlots(inst.id)) {
-      const s = ont.get(sid)!;
+      const s = ont.require(sid, "Slot");
       if (s.valueType === "Instance") {
         // A class-level link to an instance (e.g. every Merlot has grape = Merlot grape) is inherited by each member.
         if (inherited && ont.linked(inst.id, sid).length === 0) {
@@ -80,7 +80,7 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
         }
         continue;
       }
-      let v = inst.values?.[sid];
+      let v: unknown = inst.values?.[sid];
       if (v === undefined && inherited) {
         const fixed = ont.inheritedFixed(sid, ctx);
         if (fixed) v = s.cardinality === "multiple" ? fixed.values : fixed.values[0];
@@ -116,7 +116,10 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
   } else if (classLevel) {
     notes.push(`${classLevel} class-level relationship value(s) point at classes (e.g. RedWine GOES_WELL_WITH RedMeat), not instances, so they're only exported with --with-schema.`);
   }
-  const inverses = ont.edgesOf("INVERSE_OF").map((e) => `${ont.label(e.to)} = ${ont.get(e.from)?.relType} followed backwards`);
+  const inverses = ont.edgesOf("INVERSE_OF").map((e) => {
+    const from = ont.get(e.from);
+    return `${ont.label(e.to)} = ${from?.type === "Slot" ? from.relType : undefined} followed backwards`;
+  });
   if (inverses.length) notes.push(`Inverse relationships are stored once: ${inverses.join("; ")}.`);
 
   return { format: "okb-export/1", ontology: ont.meta.name, metaKbVersion: MetaKB.get().version, nodes, relationships: rels, notes };

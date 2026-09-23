@@ -101,11 +101,11 @@ describe("extraction commands", () => {
     const blocking = () => runChecks(ont, { all: true, only: ["prov-verified"] }).map((f) => f.message).join("\n");
     assert.match(blocking(), /hasn't been verified/);
     prov.verify(ont, rule, { status: "OVERREACH", corrected: "All buttons meet the minimum 24px by 24px touch target size requirement." });
-    assert.equal(ont.get(rule)!._originalDraft, "Buttons MUST have a 44px touch target (WCAG 2.5.5).");
+    assert.equal(ont.require(rule, "Rule")._originalDraft, "Buttons MUST have a 44px touch target (WCAG 2.5.5).");
     assert.match(blocking(), /--approve/);
     prov.verify(ont, rule, { approve: true });
     assert.equal(blocking(), "");
-    assert.equal(ont.get(rule)!.extractionConfidence, "corrected");
+    assert.equal(ont.require(rule, "Rule").extractionConfidence, "corrected");
   });
 
   it("notices when the document changes, and refresh re-links moved quotes", async () => {
