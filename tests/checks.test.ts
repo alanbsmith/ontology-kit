@@ -34,12 +34,12 @@ function slot(ont: Ontology, name: string, o: ops.SlotOpts) {
 }
 function fires(ont: Ontology, rule: string, pages?: Map<string, any>) {
   covered.add(rule);
-  const f = runChecks(ont, { all: true, only: [rule] }, { pages: pages ?? new Map() });
+  const f = runChecks(ont, { all: true, only: [rule] }, { pages: pages ?? new Map() }).findings;
   assert.ok(f.length > 0, `expected ${rule} to fire`);
   return f;
 }
 function quiet(ont: Ontology, rule: string) {
-  const f = runChecks(ont, { all: true, only: [rule] });
+  const f = runChecks(ont, { all: true, only: [rule] }).findings;
   assert.deepEqual(f.map((x) => x.message), [], `expected ${rule} to be quiet`);
 }
 /** An ontology with extra nodes and edges as a hand edit might leave them: unchecked, possibly malformed. */
@@ -65,7 +65,7 @@ describe("structure", () => {
     assert.match(msgs, /LIKES.*unknown type/);
   });
   it("a fresh base ontology has no errors at all", () => {
-    assert.equal(runChecks(base(), { all: true }).filter((f) => f.severity === "error").length, 0);
+    assert.equal(runChecks(base(), { all: true }).findings.filter((f) => f.severity === "error").length, 0);
   });
 });
 
@@ -168,7 +168,7 @@ describe("disjointness", () => {
     cls(o, "DessertWine", ["Wine"]);
     cls(o, "Port", ["RedWine", "DessertWine"]);
     cls(o, "Sauternes", ["WhiteWine", "DessertWine"]);
-    const f = runChecks(o, { all: true, only: ["disjoint-consider-siblings"] });
+    const f = runChecks(o, { all: true, only: ["disjoint-consider-siblings"] }).findings;
     assert.ok(!f.some((x) => x.message.includes("'DessertWine'")), "Port/Sauternes are already disjoint via Red/White");
   });
 });
@@ -388,7 +388,7 @@ describe("scope, docs, terms, reuse", () => {
     ops.addTerms(o, ["red wine", "vintage"]);
     fires(o, "terms-dispositioned");
     cls(o, "RedWine");
-    const f = runChecks(o, { all: true, only: ["terms-dispositioned"] });
+    const f = runChecks(o, { all: true, only: ["terms-dispositioned"] }).findings;
     assert.match(f[0].message, /1 term/);
   });
 });
@@ -399,7 +399,7 @@ describe("waivers", () => {
     cls(o, "Burgundy");
     cls(o, "CotesDor", ["Burgundy"]);
     ops.addDecision(o, { title: "t", decision: "d", about: ["Burgundy"], waives: ["hier-single-child"] });
-    const f = runChecks(o, { all: true, only: ["hier-single-child"] });
+    const f = runChecks(o, { all: true, only: ["hier-single-child"] }).findings;
     assert.equal(f[0].explainedBy, "d.1");
     assert.throws(() => ops.addDecision(o, { title: "t", decision: "d", waives: ["hier-no-cycles"] }), /can't waive an error/);
   });
@@ -408,9 +408,9 @@ describe("waivers", () => {
     o.manifest.currentStep = 1;
     o.addNode({ type: "Slot", id: "s.a", name: "a", valueType: "Instance" });
     const early = runChecks(o, { only: ["slot-cardinality-declared", "slot-instance-needs-range"] });
-    assert.deepEqual(early.map((f) => f.rule), ["slot-instance-needs-range"]);
-    assert.equal((early as any).hiddenLater, 1);
-    assert.equal(runChecks(o, { all: true, only: ["slot-cardinality-declared"] }).length, 1);
+    assert.deepEqual(early.findings.map((f) => f.rule), ["slot-instance-needs-range"]);
+    assert.equal(early.hiddenLater, 1);
+    assert.equal(runChecks(o, { all: true, only: ["slot-cardinality-declared"] }).findings.length, 1);
   });
   it("a waiver about a class also covers its subclasses, and reports what it matched", () => {
     const o = base();
@@ -420,7 +420,7 @@ describe("waivers", () => {
     cls(o, "Poetry", ["Genre"]);
     const notes = ops.addDecision(o, { title: "t", decision: "d", about: ["Genre"], waives: ["hier-subclass-adds-something"] });
     assert.match(notes.join(" "), /explains 3 current finding/);
-    assert.ok(runChecks(o, { all: true, only: ["hier-subclass-adds-something"] }).every((f) => f.explainedBy));
+    assert.ok(runChecks(o, { all: true, only: ["hier-subclass-adds-something"] }).findings.every((f) => f.explainedBy));
   });
 });
 

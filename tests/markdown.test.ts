@@ -98,7 +98,7 @@ describe("extraction commands", () => {
     const loc = ont.ofType("SourceLocation")[0].id;
     prov.addRule(ont, { statement: "Buttons MUST have a 44px touch target (WCAG 2.5.5).", modality: "MUST", governs: ["Button"], cites: [loc] });
     const rule = ont.ofType("Rule")[0].id;
-    const blocking = () => runChecks(ont, { all: true, only: ["prov-verified"] }).map((f) => f.message).join("\n");
+    const blocking = () => runChecks(ont, { all: true, only: ["prov-verified"] }).findings.map((f) => f.message).join("\n");
     assert.match(blocking(), /hasn't been verified/);
     prov.verify(ont, rule, { status: "OVERREACH", corrected: "All buttons meet the minimum 24px by 24px touch target size requirement." });
     assert.equal(ont.require(rule, "Rule")._originalDraft, "Buttons MUST have a 44px touch target (WCAG 2.5.5).");
@@ -126,7 +126,7 @@ describe("extraction commands", () => {
       .replace("## Anatomy", "## Overview\n\nA new intro paragraph.\n\n## Anatomy")
       .replace("- Button padding ensures adequate spacing between interactive elements to prevent accidental\n  activation.\n", "");
     writeFileSync(file, edited);
-    const f = runChecks(ont, { all: true, only: ["prov-quote-current"] }, { pages: await loadSourcePages(ont) });
+    const f = runChecks(ont, { all: true, only: ["prov-quote-current"] }, { pages: await loadSourcePages(ont) }).findings;
     assert.ok(f.some((x) => x.severity === "error" && /no longer appears/.test(x.message)));
     assert.ok(f.some((x) => x.severity === "info" && /moved \(was line 643, now line 647\)/.test(x.message)));
     const notes = prov.refreshSource(ont, src.id);

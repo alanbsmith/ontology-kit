@@ -50,7 +50,7 @@ export interface StepStatus {
 
 export function computeStatus(ont: Ontology, all?: Finding[]): { steps: StepStatus[]; suggested: number } {
   const meta = MetaKB.get();
-  const findings = all ?? runChecks(ont, { all: true });
+  const findings = all ?? runChecks(ont, { all: true }).findings;
   const steps = meta.steps.map((s) => {
     const items = (s.doneWhen as { text: string; check?: string }[]).map((d) => ({
       text: d.text,

@@ -4,7 +4,8 @@
  *
  * A check returns raw hits ({message, nodes, severity?}). runChecks() attaches the
  * rule's severity (from its modality), hides rules not yet relevant at the current
- * step, and marks warnings/info as "explained" when a DesignDecision waives them.
+ * step (counting them in hiddenLater), and marks warnings/info as "explained" when
+ * a DesignDecision waives them.
  */
 import { existsSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
@@ -897,7 +898,14 @@ export async function loadSourcePages(ont: Ontology): Promise<Map<string, string
   return pages;
 }
 
-export function runChecks(ont: Ontology, opts: RunOptions = {}, ctx: CheckContext = { pages: new Map() }): Finding[] {
+export interface CheckReport {
+  /** Errors first, then warnings, then hints. */
+  findings: Finding[];
+  /** Warnings and hints from rules for steps the user hasn't reached yet (not in `findings`). */
+  hiddenLater: number;
+}
+
+export function runChecks(ont: Ontology, opts: RunOptions = {}, ctx: CheckContext = { pages: new Map() }): CheckReport {
   const meta = MetaKB.get();
   // A decision about a class also covers that class's subclasses.
   const waivers = ont.ofType("DesignDecision").flatMap((d) =>
@@ -938,7 +946,5 @@ export function runChecks(ont: Ontology, opts: RunOptions = {}, ctx: CheckContex
     }
   }
   const order = { error: 0, warning: 1, info: 2 };
-  const sorted = findings.sort((a, b) => order[a.severity] - order[b.severity]);
-  // Non-enumerable so it doesn't leak into comparisons or JSON (see docs/CODE-REVIEW.md: should become a result object).
-  return Object.defineProperty(sorted, "hiddenLater", { value: hidden, enumerable: false });
+  return { findings: findings.sort((a, b) => order[a.severity] - order[b.severity]), hiddenLater: hidden };
 }

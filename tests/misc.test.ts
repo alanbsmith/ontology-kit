@@ -103,7 +103,7 @@ describe("worked example", () => {
   it("builds the wine ontology with no errors and all steps complete", () => {
     execFileSync(process.execPath, [join(ROOT, "examples/build-wine.ts")], { stdio: "ignore" });
     const ont = Ontology.load(join(ROOT, "examples/wine"));
-    const findings = runChecks(ont, { all: true });
+    const findings = runChecks(ont, { all: true }).findings;
     assert.equal(findings.filter((f) => f.severity === "error").length, 0);
     assert.equal(findings.filter((f) => f.severity === "warning" && !f.explainedBy).length, 0);
     const st = computeStatus(ont, findings);

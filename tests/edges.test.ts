@@ -36,7 +36,7 @@ async function setup() {
   prov.verify(ont, rule, { status: "SUPPORTED" });
   return { ont, rule };
 }
-const only = (ont: Ontology, rule: string) => runChecks(ont, { all: true, only: [rule] });
+const only = (ont: Ontology, rule: string) => runChecks(ont, { all: true, only: [rule] }).findings;
 
 describe("edge properties", () => {
   it("stores the condition and rule on the one edge, and shows them", async () => {

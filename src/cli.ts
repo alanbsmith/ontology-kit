@@ -408,8 +408,7 @@ async function main(argvIn: string[]) {
     case "validate": {
       const { v } = parse(rest, { all: bool, why: bool, rule: strs, strict: bool });
       const ont = load(v);
-      const findings = runChecks(ont, { all: v.all, only: v.rule }, { pages: await loadSourcePages(ont) });
-      const hiddenLater = (findings as any).hiddenLater ?? 0;
+      const { findings, hiddenLater } = runChecks(ont, { all: v.all, only: v.rule }, { pages: await loadSourcePages(ont) });
       output(v, () => ({ step: ont.step, metaKbVersion: MetaKB.get().version, hiddenLater, findings }), () => {
         console.log(formatFindings(findings, ont, { all: v.all, verbose: v.why }));
         if (hiddenLater) console.log(c.dim(`(${hiddenLater} warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)`));
@@ -423,7 +422,7 @@ async function main(argvIn: string[]) {
     case "status": {
       const { v } = parse(rest);
       const ont = load(v);
-      const findings = runChecks(ont, { all: true }, { pages: await loadSourcePages(ont) });
+      const { findings } = runChecks(ont, { all: true }, { pages: await loadSourcePages(ont) });
       const st = computeStatus(ont, findings);
       return output(v, () => ({ currentStep: ont.step, ...st }), () => {
         const meta = MetaKB.get();

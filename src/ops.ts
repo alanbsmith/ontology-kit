@@ -687,7 +687,7 @@ export function addDecision(ont: Ontology, o: { title: string; decision: string;
   for (const a of o.about ?? []) ont.addEdge(id, "ABOUT", a === "ontology" ? "ontology" : ont.find(a).id);
   const notes = [`Recorded design decision ${id}: ${o.title}.`];
   if (o.waives?.length) {
-    const explained = runChecks(ont, { all: true, only: o.waives }).filter((f) => f.explainedBy === id).length;
+    const explained = runChecks(ont, { all: true, only: o.waives }).findings.filter((f) => f.explainedBy === id).length;
     notes.push(explained
       ? `It explains ${explained} current finding(s) from ${o.waives.join(", ")} (they'll show as 'explained' in okb validate).`
       : `Note: it doesn't match any current finding from ${o.waives.join(", ")}. Check the --about target (a decision about a class also covers its subclasses).`);
