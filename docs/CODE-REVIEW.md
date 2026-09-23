@@ -74,6 +74,7 @@ Worked through on the `refactor/code-review-worklist` branch, one commit per ite
 | Performance: incremental indexes | Done, plus memoized `naming.key()`, which was the larger cost. 4,000 instances build in 0.7 s (was 11.2 s). Name lookups are still linear scans, so a name index is the next step if the icon graph needs it. | `9ecd23f` |
 | Typed node model (Effective TS, Design #2) | Done: `OkbNode` union, `ont.require()`, typed meta-KB. `any` 41 → 33, `!` 54 → 30. | `c2e8a99`, `1a89887` |
 | Bugs found by typing | A markdown Source without `localPath` crashed `okb source outline` and `refresh` | `0abbf58` |
+| Regressions found by `/code-review` | The typed-model commit made show, diagram, export, instance add and one check fail on a hand-edited HAS_SLOT to a non-slot. Fixed forward, with tests for malformed files. | `6e78219` |
 | `readonly` nodes/edges | Done | `6d4b287` |
 | Branded ids | Skipped. `find()` accepts names and ids on purpose, and ids arrive from JSON and edges, so a brand would need casts at every boundary for little gain. | — |
 | Output argument: `hiddenLater` | Done: `runChecks()` returns `{ findings, hiddenLater }` | `652aef5` |
@@ -88,4 +89,4 @@ Worked through on the `refactor/code-review-worklist` branch, one commit per ite
 
 New observations from this pass:
 - `ops.coerce()` (slot values) and `coerceEdgeValue()` (edge properties) parse the same value types separately, and they disagree: slot Booleans accept `y`/`n`, edge-property Booleans don't. Unifying them is a small behavior change.
-- `an()` is still defined in three places (`checks.ts`, `model.ts`, `ops/common.ts`).
+- `an()` was defined in three places. Now it's defined once, in `naming.ts` (`0d2a446`).
