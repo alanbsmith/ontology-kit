@@ -60,3 +60,5 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 ## Skills in this repo
 
 `skills/` contains SKILL.md files that ship with the toolkit: `ontology-coach`, `ontology-review`, and `build-domain-kb-from-docs`. They drive the `okb` CLI, so a change to command names, flags, or output that they rely on must be reflected there too.
+
+`.claude/skills/okb-docs-drift` is a development skill (not shipped) that checks the hand-written docs and these skills against the CLI and meta-KB. After changing commands, flags, file layout or rules, run `node .claude/skills/okb-docs-drift/scripts/check-docs.ts`.
