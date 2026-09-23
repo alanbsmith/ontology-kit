@@ -268,8 +268,7 @@ export class Ontology {
         const extra = other.type === "Instance" && ts.includes("Class")
           ? " Instances can't have subclasses or be used as a class (rule inst-are-leaves); if you need that, make it a class."
           : "";
-        const an = (w: string) => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
-        throw new OkbError(`'${ref}' is ${an(other.type)}, not ${an(what)}.${extra}`);
+        throw new OkbError(`'${ref}' is ${naming.an(other.type)}, not ${naming.an(what)}.${extra}`);
       }
     }
     const sugg = this.suggest(ref, ts);

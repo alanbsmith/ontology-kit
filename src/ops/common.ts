@@ -3,8 +3,7 @@
 /** Human-readable notes about what an operation did, including gentle warnings, so beginners learn as they go. */
 export type Notes = string[];
 
-/** "a Winery" / "an Author" */
-export const an = (w: string) => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
+export { an } from "../naming.ts";
 
 /** Command-line list values: repeated flags and/or comma-separated ("a,b" "c" -> [a, b, c]). */
 export const splitList = (s: string | string[] | undefined) =>

@@ -58,6 +58,9 @@ export function slug(name: string): string {
   return ts.length ? ts.join("-") : "x";
 }
 
+/** "a Winery" / "an Author" */
+export const an = (w: string) => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
+
 const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
 
 export function convert(name: string, style: string): string {

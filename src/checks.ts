@@ -36,7 +36,7 @@ export const MIN_COMPETENCY_QUESTIONS = 3;
 const DUPLICATE_QUOTE_SIMILARITY = 0.9;
 
 const L = (ont: Ontology, id: string) => `'${ont.label(id)}'`;
-const an = (w: string) => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
+const { an } = naming;
 const list = (ont: Ontology, ids: Iterable<string>) => [...ids].map((i) => L(ont, i)).join(", ");
 const classes = (ont: Ontology) => ont.ofType("Class");
 const slots = (ont: Ontology) => ont.ofType("Slot");
