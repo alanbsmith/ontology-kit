@@ -9,11 +9,13 @@ import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./m
 import { OkbError, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
-import { findQuote, loadPages, normalize } from "./quotes.ts";
+import { findQuote, loadPages } from "./quotes.ts";
 import type { GraphNode } from "./types.ts";
 
 const MODALITIES = ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"];
 const STATUSES = ["SUPPORTED", "OVERREACH", "UNSUPPORTED"];
+/** Suggest the closest block for a failed quote only if it shares at least this share of the quote's words. */
+const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 
 export const isMarkdown = (p: string) => /\.(md|markdown)$/i.test(p);
 
@@ -142,7 +144,7 @@ function closest(doc: MdDoc, quote: string): string {
     const score = ws.filter((w) => words.has(w)).length / Math.max(words.size, 1);
     if (!best || score > best.score) best = { score, b };
   }
-  if (!best || best.score < 0.4) return "";
+  if (!best || best.score < MIN_CLOSEST_WORD_OVERLAP) return "";
   return `\nClosest text (line ${best.b.startLine}, ${best.b.headingPath.join(" > ")}):\n  "${best.b.text.slice(0, 200)}"`;
 }
 const normalizeWords = (s: string) => s.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);

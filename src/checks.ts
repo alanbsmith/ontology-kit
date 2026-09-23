@@ -27,6 +27,13 @@ export interface CheckContext {
   pages: Map<string, string[] | MdDoc | Error>;
 }
 
+/** Ontology 101 §4.2: "more than a dozen subclasses" suggests missing intermediate categories. */
+const MAX_DIRECT_SUBCLASSES = 12;
+/** Step 1 asks for at least this many competency questions (also a step 1 doneWhen item). */
+export const MIN_COMPETENCY_QUESTIONS = 3;
+/** Quotes from different sources at least this similar (bigram Dice) are reported as possible copy-paste. */
+const DUPLICATE_QUOTE_SIMILARITY = 0.9;
+
 const L = (ont: Ontology, id: string) => `'${ont.label(id)}'`;
 const an = (w: string) => (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
 const list = (ont: Ontology, ids: Iterable<string>) => [...ids].map((i) => L(ont, i)).join(", ");
@@ -227,7 +234,7 @@ export const CHECKS: Record<string, Check> = {
 
   "hier-too-many-children": (ont) =>
     classes(ont)
-      .filter((c) => ont.children(c.id).length > 12)
+      .filter((c) => ont.children(c.id).length > MAX_DIRECT_SUBCLASSES)
       .map((c) => ({
         message: `${L(ont, c.id)} has ${ont.children(c.id).length} direct subclasses. Are there natural groups among them?`,
         nodes: [c.id],
@@ -701,7 +708,7 @@ export const CHECKS: Record<string, Check> = {
 
   "scope-competency-questions": (ont) => {
     const n = ont.ofType("CompetencyQuestion").length;
-    return n >= 3 ? [] : [{ message: `There ${n === 1 ? "is 1 competency question" : `are ${n} competency questions`}; write at least three (\`okb cq add\`).`, nodes: ["ontology"] }];
+    return n >= MIN_COMPETENCY_QUESTIONS ? [] : [{ message: `There ${n === 1 ? "is 1 competency question" : `are ${n} competency questions`}; write at least three (\`okb cq add\`).`, nodes: ["ontology"] }];
   },
 
   "scope-cq-coverage": (ont) => {
@@ -810,7 +817,7 @@ export const CHECKS: Record<string, Check> = {
 };
 
 /** Near-identical quotes attributed to different sources (also used by `okb drift`). */
-export function duplicateQuotes(ont: Ontology, threshold = 0.9): Hit[] {
+export function duplicateQuotes(ont: Ontology, threshold = DUPLICATE_QUOTE_SIMILARITY): Hit[] {
   const hits: Hit[] = [];
   const locs = ont.ofType("SourceLocation").filter((l) => l.quote);
   const src = (l: GraphNode) => ont.targets(l.id, "PART_OF")[0];

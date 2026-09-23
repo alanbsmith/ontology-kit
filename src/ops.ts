@@ -389,9 +389,6 @@ export function restrict(ont: Ontology, ref: string, slotRef: string, o: { value
 }
 
 // ------------------------------------------------------------------ slots
-/** The kind of slot in everyday words: relationships link things, properties hold values. */
-export const slotKind = (s: GraphNode) => (s.valueType === "Instance" ? "relationship" : "property");
-
 /** Relationship edge type for a slot, checked against structural edge types and other slots. */
 function claimRelType(ont: Ontology, name: string, slotId: string): string {
   const t = naming.relType(name);

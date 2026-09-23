@@ -263,7 +263,7 @@ export function locate(doc: MdDoc, quote: string): QuoteHit[] {
     const hits: QuoteHit[] = [];
     let from = 0;
     for (;;) {
-      let pos = joined.indexOf(pieces[0], from);
+      const pos = joined.indexOf(pieces[0], from);
       if (pos < 0) break;
       const start = pos;
       let ok = true;
@@ -280,7 +280,6 @@ export function locate(doc: MdDoc, quote: string): QuoteHit[] {
       const covered = spans.filter((s) => s.end > start && s.start < end).map((s) => s.block);
       hits.push(toHit(doc, covered, quote, field));
       from = start + 1;
-      pos = -1;
     }
     if (hits.length) return dedupe(hits);
   }

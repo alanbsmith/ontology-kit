@@ -12,13 +12,12 @@
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { stripAccents } from "./naming.ts";
 
 const ELLIPSIS = /\.\.\.|…/;
 
 export function normalize(text: string): string {
-  return text
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, "")
+  return stripAccents(text)
     .toLowerCase()
     .replace(/[^0-9a-z]/g, "");
 }

@@ -81,10 +81,18 @@ const num = (x: string | undefined, flag: string) => {
   return Number(x);
 };
 const tri = (x: string | undefined) => (x === undefined ? undefined : ["true", "yes", "1"].includes(x.toLowerCase()));
+/** `okb review` lists this many prompts per rule in the terminal; --json has them all. */
+const REVIEW_PROMPTS_SHOWN = 12;
 const TIP = /^(Tip|Add a|Attach|Decide|Say which|List the)/;
 
 function say(notes: string[]) {
   for (const n of notes) console.log(TIP.test(n) ? c.dim("  " + n) : n);
+}
+
+/** Print `data` as JSON under --json; otherwise run the human-readable printer. */
+function output(v: Record<string, any>, data: unknown, human: () => void): void {
+  if (v.json) console.log(JSON.stringify(data, null, 2));
+  else human();
 }
 
 function load(v: Record<string, any>): Ontology {
@@ -152,16 +160,16 @@ async function main(argvIn: string[]) {
         ont.save();
       }
       const m = ont.meta;
-      if (v.json) return void console.log(JSON.stringify(m, null, 2));
       const row = (k: string, val: unknown) => console.log(`  ${c.dim(k.padEnd(13))} ${Array.isArray(val) ? val.join(", ") || c.yellow("—") : val || c.yellow("—")}`);
-      console.log(c.bold(m.name));
-      row("domain", m.domain);
-      row("purpose", m.purpose);
-      row("users", m.users);
-      row("maintainers", m.maintainers);
-      row("out of scope", m.outOfScope);
-      row("kind", m.kind);
-      return;
+      return output(v, m, () => {
+        console.log(c.bold(m.name));
+        row("domain", m.domain);
+        row("purpose", m.purpose);
+        row("users", m.users);
+        row("maintainers", m.maintainers);
+        row("out of scope", m.outOfScope);
+        row("kind", m.kind);
+      });
     }
 
     case "convention": {
@@ -204,14 +212,14 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const qs = ont.ofType("CompetencyQuestion");
-      if (v.json) return void console.log(JSON.stringify(qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), null, 2));
-      if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
-      for (const q of qs) {
-        const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
-        console.log(`${c.bold(q.id.padEnd(6))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
-        console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + q.id.split(".")[1] + " <Class|slot>...)"}`));
-      }
-      return;
+      return output(v, qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), () => {
+        if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
+        for (const q of qs) {
+          const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
+          console.log(`${c.bold(q.id.padEnd(6))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
+          console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + q.id.split(".")[1] + " <Class|slot>...)"}`));
+        }
+      });
     }
 
     case "term": {
@@ -228,16 +236,16 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const ts = ont.ofType("Term");
-      if (v.json) return void console.log(JSON.stringify(ts, null, 2));
-      const groups = new Map<string, string[]>();
-      for (const t of ts) {
-        const d = t.disposition ?? "undecided";
-        const became = ont.targets(t.id, "BECAME").map((x) => ont.label(x));
-        groups.set(d, [...(groups.get(d) ?? []), t.text + (became.length ? c.dim(` → ${became.join(", ")}`) : "")]);
-      }
-      for (const [d, items] of groups) console.log(`${c.bold(d.padEnd(13))} ${items.join(" · ")}`);
-      if (!ts.length) console.log(c.dim("No terms yet. okb term add wine grape winery ..."));
-      return;
+      return output(v, ts, () => {
+        const groups = new Map<string, string[]>();
+        for (const t of ts) {
+          const d = t.disposition ?? "undecided";
+          const became = ont.targets(t.id, "BECAME").map((x) => ont.label(x));
+          groups.set(d, [...(groups.get(d) ?? []), t.text + (became.length ? c.dim(` → ${became.join(", ")}`) : "")]);
+        }
+        for (const [d, items] of groups) console.log(`${c.bold(d.padEnd(13))} ${items.join(" · ")}`);
+        if (!ts.length) console.log(c.dim("No terms yet. okb term add wine grape winery ..."));
+      });
     }
 
     case "reuse": {
@@ -351,15 +359,15 @@ async function main(argvIn: string[]) {
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const ds = ont.ofType("DesignDecision");
-      if (v.json) return void console.log(JSON.stringify(ds, null, 2));
-      for (const d of ds) {
-        console.log(`${c.bold(d.id)} ${d.title}`);
-        console.log(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
-        const about = ont.targets(d.id, "ABOUT").map((x) => ont.label(x));
-        if (about.length || d.metaRules) console.log(c.dim(`   about: ${about.join(", ") || "—"}${d.metaRules ? " · explains: " + d.metaRules.join(", ") : ""}`));
-      }
-      if (!ds.length) console.log(c.dim("No design decisions recorded yet."));
-      return;
+      return output(v, ds, () => {
+        for (const d of ds) {
+          console.log(`${c.bold(d.id)} ${d.title}`);
+          console.log(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
+          const about = ont.targets(d.id, "ABOUT").map((x) => ont.label(x));
+          if (about.length || d.metaRules) console.log(c.dim(`   about: ${about.join(", ") || "—"}${d.metaRules ? " · explains: " + d.metaRules.join(", ") : ""}`));
+        }
+        if (!ds.length) console.log(c.dim("No design decisions recorded yet."));
+      });
     }
 
     case "rename": {
@@ -378,9 +386,7 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(rest);
       const ont = load(v);
       const n = ont.find(p[0] ?? "ontology");
-      if (v.json) return void console.log(JSON.stringify({ node: n, out: ont.edges.filter((e) => e.from === n.id), in: ont.edges.filter((e) => e.to === n.id) }, null, 2));
-      console.log(show(ont, n));
-      return;
+      return output(v, { node: n, out: ont.edges.filter((e) => e.from === n.id), in: ont.edges.filter((e) => e.to === n.id) }, () => console.log(show(ont, n)));
     }
 
     case "tree": {
@@ -404,11 +410,10 @@ async function main(argvIn: string[]) {
       const ont = load(v);
       const findings = runChecks(ont, { all: v.all, only: v.rule }, { pages: await loadSourcePages(ont) });
       const hiddenLater = (findings as any).hiddenLater ?? 0;
-      if (v.json) console.log(JSON.stringify({ step: ont.step, metaKbVersion: MetaKB.get().version, hiddenLater, findings }, null, 2));
-      else {
+      output(v, { step: ont.step, metaKbVersion: MetaKB.get().version, hiddenLater, findings }, () => {
         console.log(formatFindings(findings, ont, { all: v.all, verbose: v.why }));
         if (hiddenLater) console.log(c.dim(`(${hiddenLater} warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)`));
-      }
+      });
       const open = findings.filter((f) => !f.explainedBy);
       const fail = open.some((f) => f.severity === "error") || (v.strict && open.some((f) => f.severity === "warning"));
       process.exitCode = fail ? 1 : 0;
@@ -420,27 +425,27 @@ async function main(argvIn: string[]) {
       const ont = load(v);
       const findings = runChecks(ont, { all: true }, { pages: await loadSourcePages(ont) });
       const st = computeStatus(ont, findings);
-      if (v.json) return void console.log(JSON.stringify({ currentStep: ont.step, ...st }, null, 2));
-      const meta = MetaKB.get();
-      const shown = findings.filter((f) => !f.explainedBy && (f.severity === "error" || (meta.rule(f.rule).fromStep ?? 1) <= ont.step));
-      const count = (sev: string) => shown.filter((f) => f.severity === sev).length;
-      console.log(c.bold(ont.meta.name) + c.dim(`  · ${ont.ofType("Class").length} classes · ${ont.ofType("Slot").length} slots · ${ont.ofType("Instance").length} instances · ${ont.ofType("CompetencyQuestion").length} questions`));
-      console.log("");
-      for (const s of st.steps) {
-        const here = s.order === ont.step ? c.cyan(" ◀ you are here") : "";
-        const mark = s.complete ? SYMBOL.ok : s.order === ont.step ? c.cyan("▶") : SYMBOL.todo;
-        console.log(`${mark} ${c.bold(`${s.order}. ${s.name}`)}${here}`);
-        if (s.order === ont.step || (!s.complete && s.order < ont.step)) {
-          for (const it of s.items) console.log(`     ${it.done === null ? SYMBOL.ask : it.done ? SYMBOL.ok : SYMBOL.todo} ${it.text}`);
+      return output(v, { currentStep: ont.step, ...st }, () => {
+        const meta = MetaKB.get();
+        const shown = findings.filter((f) => !f.explainedBy && (f.severity === "error" || (meta.rule(f.rule).fromStep ?? 1) <= ont.step));
+        const count = (sev: string) => shown.filter((f) => f.severity === sev).length;
+        console.log(c.bold(ont.meta.name) + c.dim(`  · ${ont.ofType("Class").length} classes · ${ont.ofType("Slot").length} slots · ${ont.ofType("Instance").length} instances · ${ont.ofType("CompetencyQuestion").length} questions`));
+        console.log("");
+        for (const s of st.steps) {
+          const here = s.order === ont.step ? c.cyan(" ◀ you are here") : "";
+          const mark = s.complete ? SYMBOL.ok : s.order === ont.step ? c.cyan("▶") : SYMBOL.todo;
+          console.log(`${mark} ${c.bold(`${s.order}. ${s.name}`)}${here}`);
+          if (s.order === ont.step || (!s.complete && s.order < ont.step)) {
+            for (const it of s.items) console.log(`     ${it.done === null ? SYMBOL.ask : it.done ? SYMBOL.ok : SYMBOL.todo} ${it.text}`);
+          }
         }
-      }
-      console.log("");
-      console.log(`Validator (steps 1–${ont.step}): ${SYMBOL.error} ${count("error")}  ${SYMBOL.warning} ${count("warning")}  ${SYMBOL.info} ${count("info")}   ${c.dim("okb validate for details")}`);
-      const cur = st.steps.find((s) => s.order === ont.step)!;
-      if (cur.complete && ont.step < st.steps.length) console.log(c.green(`\nStep ${ont.step} looks done. When you're happy with it: okb step next`));
-      else if (st.suggested < ont.step) console.log(c.yellow(`\nStep ${st.suggested} still has open items. It's fine to go back: okb step ${st.suggested}`));
-      else console.log(c.dim(`\nSee the guide for this step: okb step`));
-      return;
+        console.log("");
+        console.log(`Validator (steps 1–${ont.step}): ${SYMBOL.error} ${count("error")}  ${SYMBOL.warning} ${count("warning")}  ${SYMBOL.info} ${count("info")}   ${c.dim("okb validate for details")}`);
+        const cur = st.steps.find((s) => s.order === ont.step)!;
+        if (cur.complete && ont.step < st.steps.length) console.log(c.green(`\nStep ${ont.step} looks done. When you're happy with it: okb step next`));
+        else if (st.suggested < ont.step) console.log(c.yellow(`\nStep ${st.suggested} still has open items. It's fine to go back: okb step ${st.suggested}`));
+        else console.log(c.dim(`\nSee the guide for this step: okb step`));
+      });
     }
 
     case "step": {
@@ -483,11 +488,11 @@ async function main(argvIn: string[]) {
       if (!p.length) return void console.log(listExplainable());
       const q = p.join(" ");
       const hits = meta.resolve(q);
-      if (v.json) return void console.log(JSON.stringify(hits.map((h) => ({ ...h, citations: meta.citations(h.id), rationale: h.type === "Rule" ? meta.rationale(h) : undefined })), null, 2));
-      if (!hits.length) return void console.log(`Nothing called '${q}'. Try: okb explain --search ${q}`);
-      console.log(explain(hits[0]));
-      if (hits.length > 1) console.log(c.dim(`\nAlso matches: ${hits.slice(1, 6).map((h) => h.key ?? h.name).join(", ")}`));
-      return;
+      return output(v, hits.map((h) => ({ ...h, citations: meta.citations(h.id), rationale: h.type === "Rule" ? meta.rationale(h) : undefined })), () => {
+        if (!hits.length) return void console.log(`Nothing called '${q}'. Try: okb explain --search ${q}`);
+        console.log(explain(hits[0]));
+        if (hits.length > 1) console.log(c.dim(`\nAlso matches: ${hits.slice(1, 6).map((h) => h.key ?? h.name).join(", ")}`));
+      });
     }
 
     case "review": {
@@ -496,25 +501,23 @@ async function main(argvIn: string[]) {
       const { v } = parse(rest, { all: bool });
       const ont = load(v);
       const items = buildReview(ont, v.all);
-      if (v.json) {
-        const classes = ont.ofType("Class").map((cl) => ({
-          id: cl.id, name: cl.name, description: cl.description, parents: ont.parents(cl.id).map((x) => ont.label(x)),
-          children: ont.children(cl.id).map((x) => ont.label(x)), ownSlots: ont.ownSlots(cl.id).map((s) => ont.label(s)),
-          abstract: cl.abstract, terminological: cl.terminological, instances: ont.sources(cl.id, "INSTANCE_OF").length,
-        }));
-        return void console.log(JSON.stringify({ step: ont.step, scope: ont.meta, judgmentRules: items, classes, decisions: ont.ofType("DesignDecision") }, null, 2));
-      }
-      console.log(c.bold(v.all ? "Review: what only a person can judge (all rules)" : `Review: what only a person can judge (step ${ont.step} and anything already visible)`) + "\n");
-      for (const it of items) {
-        console.log(`${SYMBOL.ask} ${c.bold(it.rule)} ${c.dim(`(${it.modality.replace("_", " ")})`)}  ${it.question}`);
-        for (const f of it.flags) console.log(`   ${SYMBOL.warning} ${f}`);
-        for (const x of it.prompts.slice(0, 12)) console.log(`   · ${x}`);
-        if (it.prompts.length > 12) console.log(c.dim(`   · ...and ${it.prompts.length - 12} more (okb review --json)`));
-        if (it.source) console.log(c.dim(`   ${it.source}`));
-        console.log("");
-      }
-      console.log(c.dim("Record answers that needed thought (or that someone might question later): okb decision add ..."));
-      return;
+      const classes = ont.ofType("Class").map((cl) => ({
+        id: cl.id, name: cl.name, description: cl.description, parents: ont.parents(cl.id).map((x) => ont.label(x)),
+        children: ont.children(cl.id).map((x) => ont.label(x)), ownSlots: ont.ownSlots(cl.id).map((s) => ont.label(s)),
+        abstract: cl.abstract, terminological: cl.terminological, instances: ont.sources(cl.id, "INSTANCE_OF").length,
+      }));
+      return output(v, { step: ont.step, scope: ont.meta, judgmentRules: items, classes, decisions: ont.ofType("DesignDecision") }, () => {
+        console.log(c.bold(v.all ? "Review: what only a person can judge (all rules)" : `Review: what only a person can judge (step ${ont.step} and anything already visible)`) + "\n");
+        for (const it of items) {
+          console.log(`${SYMBOL.ask} ${c.bold(it.rule)} ${c.dim(`(${it.modality.replace("_", " ")})`)}  ${it.question}`);
+          for (const f of it.flags) console.log(`   ${SYMBOL.warning} ${f}`);
+          for (const x of it.prompts.slice(0, REVIEW_PROMPTS_SHOWN)) console.log(`   · ${x}`);
+          if (it.prompts.length > REVIEW_PROMPTS_SHOWN) console.log(c.dim(`   · ...and ${it.prompts.length - REVIEW_PROMPTS_SHOWN} more (okb review --json)`));
+          if (it.source) console.log(c.dim(`   ${it.source}`));
+          console.log("");
+        }
+        console.log(c.dim("Record answers that needed thought (or that someone might question later): okb decision add ..."));
+      });
     }
 
     case "edgeprop": {
@@ -573,32 +576,31 @@ async function main(argvIn: string[]) {
           for (let n = l.startLine; n <= (l.endLine ?? l.startLine); n++) quoted.set(n, [...(quoted.get(n) ?? []), id]);
         }
         const blocks = doc.blocks.filter((b) => !v.quotable || b.quotable);
-        if (v.json) {
-          return void console.log(JSON.stringify({
-            source: src.id, title: doc.title, frontmatter: doc.frontmatter, problems: doc.problems,
-            blocks: blocks.map((b) => ({ index: b.index, kind: b.kind, headingPath: b.headingPath, lines: [b.startLine, b.endLine], quotable: b.quotable, note: b.note, calloutType: b.calloutType, row: b.row, text: b.kind === "code" ? undefined : b.text, alreadyQuoted: [...new Set(Array.from({ length: b.endLine - b.startLine + 1 }, (_, k) => quoted.get(b.startLine + k) ?? []).flat())] })),
-          }, null, 2));
-        }
-        console.log(c.bold(`${doc.title ?? src.id}`) + c.dim(`  ${src.localPath} · ${doc.blocks.length} blocks, ${doc.blocks.filter((b) => b.quotable).length} quotable`));
-        if (doc.problems.length) {
-          console.log(c.yellow(`\n${doc.problems.length} problem(s) in the document:`));
-          for (const pr of doc.problems) console.log(c.yellow(`  line ${pr.line}: ${pr.message}`));
-        }
-        if (v.problems) return;
-        let lastPath = "";
-        for (const b of blocks) {
-          const pth = b.headingPath.join(" > ");
-          if (pth !== lastPath) {
-            console.log("\n" + c.bold(pth || "(top)"));
-            lastPath = pth;
+        const outline = {
+          source: src.id, title: doc.title, frontmatter: doc.frontmatter, problems: doc.problems,
+          blocks: blocks.map((b) => ({ index: b.index, kind: b.kind, headingPath: b.headingPath, lines: [b.startLine, b.endLine], quotable: b.quotable, note: b.note, calloutType: b.calloutType, row: b.row, text: b.kind === "code" ? undefined : b.text, alreadyQuoted: [...new Set(Array.from({ length: b.endLine - b.startLine + 1 }, (_, k) => quoted.get(b.startLine + k) ?? []).flat())] })),
+        };
+        return output(v, outline, () => {
+          console.log(c.bold(`${doc.title ?? src.id}`) + c.dim(`  ${src.localPath} · ${doc.blocks.length} blocks, ${doc.blocks.filter((b) => b.quotable).length} quotable`));
+          if (doc.problems.length) {
+            console.log(c.yellow(`\n${doc.problems.length} problem(s) in the document:`));
+            for (const pr of doc.problems) console.log(c.yellow(`  line ${pr.line}: ${pr.message}`));
           }
-          const mark = !b.quotable ? c.dim("·") : quoted.has(b.startLine) ? SYMBOL.ok : SYMBOL.todo;
-          const where = `L${b.startLine}${b.endLine > b.startLine ? `-${b.endLine}` : ""}`.padEnd(9);
-          const label = b.kind === "code" ? c.dim(`code (${b.lang || "text"}), not quotable`) : b.kind === "comment" ? c.dim("comment") : b.kind === "frontmatter" ? c.dim("frontmatter") : (b.calloutType ? c.cyan(`[${b.calloutType}] `) : "") + b.text.slice(0, 110) + (b.text.length > 110 ? "…" : "");
-          console.log(`  ${mark} ${c.dim(where)} ${c.dim(b.kind.padEnd(10))} ${label}${b.note?.startsWith("malformed") ? c.yellow("  ⚠ " + b.note) : ""}`);
-        }
-        console.log(c.dim(`\n${SYMBOL.ok} quoted   ${SYMBOL.todo} not quoted yet   · not quotable   ·   okb quote add ${src.id} "..."`));
-        return;
+          if (v.problems) return;
+          let lastPath = "";
+          for (const b of blocks) {
+            const pth = b.headingPath.join(" > ");
+            if (pth !== lastPath) {
+              console.log("\n" + c.bold(pth || "(top)"));
+              lastPath = pth;
+            }
+            const mark = !b.quotable ? c.dim("·") : quoted.has(b.startLine) ? SYMBOL.ok : SYMBOL.todo;
+            const where = `L${b.startLine}${b.endLine > b.startLine ? `-${b.endLine}` : ""}`.padEnd(9);
+            const label = b.kind === "code" ? c.dim(`code (${b.lang || "text"}), not quotable`) : b.kind === "comment" ? c.dim("comment") : b.kind === "frontmatter" ? c.dim("frontmatter") : (b.calloutType ? c.cyan(`[${b.calloutType}] `) : "") + b.text.slice(0, 110) + (b.text.length > 110 ? "…" : "");
+            console.log(`  ${mark} ${c.dim(where)} ${c.dim(b.kind.padEnd(10))} ${label}${b.note?.startsWith("malformed") ? c.yellow("  ⚠ " + b.note) : ""}`);
+          }
+          console.log(c.dim(`\n${SYMBOL.ok} quoted   ${SYMBOL.todo} not quoted yet   · not quotable   ·   okb quote add ${src.id} "..."`));
+        });
       }
       const { v } = parse(sub === "list" ? rest2 : rest);
       const ont = load(v);
@@ -621,12 +623,12 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       const locs = ont.ofType("SourceLocation").filter((l) => !p[0] || ont.targets(l.id, "PART_OF").includes(ont.find(p[0], "Source").id));
-      if (v.json) return void console.log(JSON.stringify(locs.map((l) => ({ ...l, citedBy: ont.sources(l.id, "CITES") })), null, 2));
-      for (const l of locs) {
-        const by = ont.sources(l.id, "CITES").map((x) => ont.label(x));
-        console.log(`${c.bold(l.id)} ${c.dim(`${l.locator}${l.lines ? `, line ${l.lines}` : ""}`)}\n   "${l.quote}"${by.length ? c.dim(`\n   cited by: ${by.join(", ")}`) : ""}`);
-      }
-      return;
+      return output(v, locs.map((l) => ({ ...l, citedBy: ont.sources(l.id, "CITES") })), () => {
+        for (const l of locs) {
+          const by = ont.sources(l.id, "CITES").map((x) => ont.label(x));
+          console.log(`${c.bold(l.id)} ${c.dim(`${l.locator}${l.lines ? `, line ${l.lines}` : ""}`)}\n   "${l.quote}"${by.length ? c.dim(`\n   cited by: ${by.join(", ")}`) : ""}`);
+        }
+      });
     }
 
     case "rule": {
@@ -655,10 +657,10 @@ async function main(argvIn: string[]) {
       const onts = (p.length ? p : ["."]).map((d) => Ontology.load(d));
       const merged = Ontology.fromData(onts.flatMap((o) => o.nodes.filter((n) => n.type !== "Ontology")), onts.flatMap((o) => o.edges));
       const hits = duplicateQuotes(merged);
-      if (v.json) return void console.log(JSON.stringify(hits, null, 2));
-      if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
-      for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
-      return;
+      return output(v, hits, () => {
+        if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
+        for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
+      });
     }
 
     default:

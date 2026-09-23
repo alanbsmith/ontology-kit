@@ -12,6 +12,11 @@ export const DEFAULT_CONVENTIONS: Conventions = {
   slotAffix: "none",
 };
 
+/** 'Rosé' -> 'Rose': decompose, then drop the combining marks. */
+export function stripAccents(s: string): string {
+  return s.normalize("NFKD").replace(/\p{M}/gu, "");
+}
+
 function splitWords(name: string, keepDots = false): string[] {
   const s = name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2");
   return s.split(keepDots ? /[^A-Za-z0-9.]+/ : /[^A-Za-z0-9]+/).filter(Boolean);
@@ -29,15 +34,13 @@ export function rawTokens(name: string): string[] {
 
 /** Case- and delimiter-insensitive identity for uniqueness checks. */
 export function key(name: string): string {
-  return name
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, "")
+  return stripAccents(name)
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
 }
 
 export function slug(name: string): string {
-  const ts = tokens(name.normalize("NFKD").replace(/\p{M}/gu, ""));
+  const ts = tokens(stripAccents(name));
   return ts.length ? ts.join("-") : "x";
 }
 
@@ -96,7 +99,7 @@ const IRREGULAR_PL: Record<string, string> = {
 };
 const IRREGULAR_SG: Record<string, string> = Object.fromEntries(Object.entries(IRREGULAR_PL).map(([p, s]) => [s, p]));
 
-const plain = (w: string) => w.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase();
+const plain = (w: string) => stripAccents(w).toLowerCase();
 
 export function isPlural(word: string): boolean {
   const w = plain(word);
@@ -165,5 +168,5 @@ export function conventionalName(name: string, kind: "Class" | "Slot", conv: Con
 
 /** Relationship (edge) type for a slot name: 'goesWellWith' -> 'GOES_WELL_WITH' (the openCypher convention). */
 export function relType(slotName: string): string {
-  return tokens(slotName.normalize("NFKD").replace(/\p{M}/gu, "")).join("_").toUpperCase();
+  return tokens(stripAccents(slotName)).join("_").toUpperCase();
 }
