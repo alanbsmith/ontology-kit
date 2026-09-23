@@ -1,0 +1,23 @@
+{
+  "skill_name": "okb-docs-drift",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just renamed `okb relationship property` to `okb edge declare` in src/cli.ts (same flags). Can you make sure nothing in the README or the skills still tells people to use the old command?",
+      "expected_output": "Finds every mention of `okb relationship property` in README.md, docs/FORMAT.md and skills/*/SKILL.md, rewrites them to `okb edge declare`, and re-runs the drift check until it's clean.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "before I cut a release: are the docs still accurate? especially the build-domain-kb-from-docs skill, I changed a bunch of the provenance code last week",
+      "expected_output": "Runs the script, then walks the build-domain-kb-from-docs workflow against the CLI (source add, outline, quote add, rule add, verify), checks JSON fields and behavior claims against src/provenance.ts, and reports drift with evidence before fixing.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I added a new rule `slot-no-orphans` to rules.yaml with a check and a fixture. Anything else I need to update?",
+      "expected_output": "Points to npm run build:meta && npm run docs for the generated docs, runs the drift check (rule counts in README.md change), and fixes the README count rather than hand-editing RULES.md.",
+      "files": []
+    }
+  ]
+}
