@@ -2,7 +2,7 @@
 import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
 import { edgeProps, nodeLabel, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
-import type { Finding, OkbNode } from "./types.ts";
+import type { Finding, OkbNode, SlotNode } from "./types.ts";
 
 // ------------------------------------------------------------------ styling
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
@@ -224,7 +224,8 @@ export function tree(ont: Ontology, withInstances = false): string {
 
 // ------------------------------------------------------------------ show
 function fmtFacets(ont: Ontology, slotId: string, classes: Iterable<string> = []): string {
-  const s = ont.require(slotId, "Slot");
+  const n = ont.get(slotId);
+  const s: Partial<SlotNode> = n?.type === "Slot" ? n : {};
   const f = ont.effectiveFacets(slotId, classes);
   const parts = [f.valueType ?? c.red("no type")];
   if (f.allowedValues) parts.push(`{${f.allowedValues.join(", ")}}`);
@@ -307,8 +308,8 @@ export function show(ont: Ontology, n: OkbNode): string {
   if (decisions.length) {
     out.push("", c.bold("  Design decisions"));
     for (const d of decisions) {
-      const dn = ont.require(d, "DesignDecision");
-      out.push(indent(`${d}: ${dn.title}. ${dn.decision}`, "    "));
+      const dn = ont.get(d);
+      out.push(indent(`${d}: ${dn?.type === "DesignDecision" ? `${dn.title}. ${dn.decision}` : ont.label(d)}`, "    "));
     }
   }
   return out.join("\n");
@@ -320,8 +321,8 @@ export function mermaid(ont: Ontology): string {
   const out = ["```mermaid", "classDiagram"];
   for (const cl of ont.ofType("Class")) {
     const lines = ont.ownSlots(cl.id)
-      .map((s) => ont.require(s, "Slot"))
-      .filter((sn) => sn.valueType !== "Instance")
+      .map((s) => ont.get(s))
+      .filter((sn): sn is SlotNode => sn?.type === "Slot" && sn.valueType !== "Instance")
       .map((sn) => {
         const t = sn.valueType === "Enumerated" && sn.allowedValues ? `${sn.allowedValues.join("|")}` : sn.valueType ?? "?";
         return `    ${t.replace(/[{}]/g, "")} ${sn.name}${sn.cardinality === "multiple" ? "[]" : ""}`;

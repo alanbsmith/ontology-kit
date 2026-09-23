@@ -24,11 +24,13 @@ export function addInstance(ont: Ontology, name: string, o: { of: string[]; desc
   const ctx = [...classes.map((x) => x.id), ...classes.flatMap((x) => [...ont.ancestors(x.id)])];
   for (const sid of ont.applicableSlots(id)) {
     if (ont.statedValues(id, sid).length || ont.inheritedFixed(sid, ctx)) continue;
-    const s = ont.require(sid, "Slot");
-    const fromClass = ctx.map((c) => ont.require(c, "Class").defaults?.[sid]).find((v) => v !== undefined);
+    const s = ont.get(sid);
+    if (s?.type !== "Slot") continue; // a HAS_SLOT to a non-slot: struct-well-formed reports it
+    const fromClass = ctx.map((c) => ont.get(c)).map((c) => (c?.type === "Class" ? c.defaults?.[sid] : undefined)).find((v) => v !== undefined);
     const dv = fromClass ?? s.default;
     if (dv === undefined) continue;
     if (s.valueType === "Instance") ont.rel.link(id, sid, String(dv));
+    // A multiple slot stores a list; a default that's already a list becomes that list, not a list inside a list.
     else literalValues(inst)[sid] = s.cardinality === "multiple" ? [dv].flat() : dv;
     notes.push(`Filled in default ${s.name} = ${JSON.stringify(dv)}.`);
   }

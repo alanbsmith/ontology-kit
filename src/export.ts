@@ -65,7 +65,8 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
     if (inst.description) properties.description = inst.description;
     const ctx = ont.instanceClasses(inst.id);
     for (const sid of ont.applicableSlots(inst.id)) {
-      const s = ont.require(sid, "Slot");
+      const s = ont.get(sid);
+      if (s?.type !== "Slot") continue; // a HAS_SLOT to a non-slot: struct-well-formed reports it
       if (s.valueType === "Instance") {
         // A class-level link to an instance (e.g. every Merlot has grape = Merlot grape) is inherited by each member.
         if (inherited && ont.rel.values(inst.id, sid).length === 0) {

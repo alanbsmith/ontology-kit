@@ -11,6 +11,8 @@ import { CHECKS, loadSourcePages, runChecks } from "../src/checks.ts";
 import { Ontology } from "../src/model.ts";
 import * as ops from "../src/ops.ts";
 import { DEFAULT_CONVENTIONS } from "../src/naming.ts";
+import { exportGraph } from "../src/export.ts";
+import { mermaid, show } from "../src/render.ts";
 import type { GraphEdge, GraphNode, OkbNode } from "../src/types.ts";
 
 const covered = new Set<string>();
@@ -498,6 +500,47 @@ describe("ops regressions", () => {
     cls(o, "Book");
     ops.addInstance(o, "Dune", { of: ["Book"] });
     assert.throws(() => ops.addClass(o, "DuneMessiah", { parents: ["Dune"] }), /is an Instance, not a Class. Instances can't have subclasses/);
+  });
+});
+
+describe("hand-edited files", () => {
+  // A HAS_SLOT edge to a class, as a hand edit might leave it. struct-well-formed
+  // reports it; everything else should carry on around it, not fail.
+  const withBadSlot = () => {
+    const o = raw(
+      [
+        { type: "Class", id: "c.a", name: "A", description: "d" },
+        { type: "Class", id: "c.b", name: "B", description: "d" },
+        { type: "Slot", id: "s.n", name: "n", valueType: "Integer", cardinality: "single", description: "d" },
+        { type: "Instance", id: "i.x", name: "X", values: { "s.n": "many" } },
+      ],
+      [
+        { from: "c.a", type: "HAS_SLOT", to: "s.n" }, { from: "c.a", type: "HAS_SLOT", to: "c.b" },
+        { from: "i.x", type: "INSTANCE_OF", to: "c.a" },
+      ],
+    );
+    return o;
+  };
+  it("still validates the real slots around a HAS_SLOT to a non-slot", () => {
+    const f = runChecks(withBadSlot(), { all: true }).findings;
+    assert.ok(f.some((x) => x.rule === "struct-well-formed" && /HAS_SLOT/.test(x.message)));
+    assert.ok(f.some((x) => x.rule === "slot-values-respect-facets" && /whole number/.test(x.message)));
+    assert.ok(!f.some((x) => /check crashed/.test(x.message)), f.filter((x) => /crashed/.test(x.message)).map((x) => x.message).join("\n"));
+  });
+  it("still shows, diagrams, exports and adds instances", () => {
+    const o = withBadSlot();
+    assert.match(show(o, o.require("c.a")), /n\s+Integer/);
+    assert.match(mermaid(o), /Integer n/);
+    assert.equal(exportGraph(o).nodes.find((n) => n.id === "i.x")?.properties.n, "many");
+    ops.addInstance(o, "Y", { of: ["A"] });
+  });
+  it("a list-valued default for a multiple slot is stored as that list", () => {
+    const o = base();
+    cls(o, "Wine");
+    slot(o, "grapes", { on: ["Wine"], type: "String", card: "multiple" });
+    o.require(o.find("Wine", "Class").id, "Class").defaults = { [o.find("grapes", "Slot").id]: ["Gamay", "Pinot"] };
+    ops.addInstance(o, "W", { of: ["Wine"] });
+    assert.deepEqual(o.require(o.find("W", "Instance").id, "Instance").values?.[o.find("grapes", "Slot").id], ["Gamay", "Pinot"]);
   });
 });
 

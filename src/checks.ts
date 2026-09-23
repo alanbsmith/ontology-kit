@@ -431,7 +431,8 @@ export const CHECKS: Record<string, Check> = {
       const ctx = ont.classContext(n.id);
       const applicable = ont.applicableSlots(n.id);
       for (const sid of applicable) {
-        const s = ont.require(sid, "Slot");
+        const s = ont.get(sid);
+        if (s?.type !== "Slot") continue; // a HAS_SLOT to a non-slot: struct-well-formed reports it
         const f = ont.effectiveFacets(sid, ctx);
         let vals = ont.statedValues(n.id, sid);
         // Values inherited from a class's fixed value were checked on that class; only count them here.

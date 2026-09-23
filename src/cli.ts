@@ -571,8 +571,9 @@ async function main(argvIn: string[]) {
         const doc = prov.readMarkdownSource(ont, src);
         const quoted = new Map<number, string[]>();
         for (const id of ont.sources(src.id, "PART_OF")) {
-          const { startLine, endLine } = ont.require(id, "SourceLocation");
-          if (startLine === undefined) continue;
+          const l = ont.get(id);
+          if (l?.type !== "SourceLocation" || l.startLine === undefined) continue;
+          const { startLine, endLine } = l;
           for (let n = startLine; n <= (endLine ?? startLine); n++) quoted.set(n, [...(quoted.get(n) ?? []), id]);
         }
         const blocks = doc.blocks.filter((b) => !v.quotable || b.quotable);

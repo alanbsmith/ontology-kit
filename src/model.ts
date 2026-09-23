@@ -7,7 +7,7 @@ import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
 import {
   DISPOSITIONS, VALUE_TYPES,
   type ClassNode, type Conventions, type Facets, type GraphEdge, type InstanceNode, type Manifest, type NodeOf, type NodeType,
-  type OkbNode, type OntologyNode, type StoredValue,
+  type OkbNode, type OntologyNode, type SlotNode, type StoredValue,
 } from "./types.ts";
 
 export { DISPOSITIONS, VALUE_TYPES };
@@ -441,7 +441,9 @@ export class Ontology {
 
   /** Slot facets with overrides from any of `classes` applied (most restrictive wins). */
   effectiveFacets(slotId: string, classes: Iterable<string>): Facets {
-    const s = this.require(slotId, "Slot");
+    // A HAS_SLOT edge to something that isn't a slot (a hand edit) gets no facets; struct-well-formed reports it.
+    const n = this.byId.get(slotId);
+    const s: Partial<SlotNode> = n?.type === "Slot" ? n : {};
     const single = s.cardinality === "single";
     let max: number | null = s.maxCardinality ?? (single ? 1 : null);
     if (single && max !== null) max = Math.min(max, 1);
