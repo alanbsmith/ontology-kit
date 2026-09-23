@@ -2567,7 +2567,17 @@
   {
     "from": "step.4-classes",
     "type": "APPLIES",
+    "to": "rule.naming-no-abbreviations"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
     "to": "rule.naming-subclass-names-consistent"
+  },
+  {
+    "from": "step.4-classes",
+    "type": "APPLIES",
+    "to": "rule.naming-unique"
   },
   {
     "from": "step.4-classes",
