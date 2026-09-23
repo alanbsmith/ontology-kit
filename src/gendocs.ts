@@ -35,11 +35,11 @@ for (const s of meta.steps) {
     for (const t of s.tips) method.push(`- ${t}`);
   }
   if (s.wine) method.push("", `**Wine example:** ${s.wine}`);
-  const decisions = meta.targets(s.id, "USES").map((d) => meta.byId.get(d)!);
+  const decisions = meta.targets(s.id, "USES").map((d) => meta.node(d, "Decision"));
   if (decisions.length) method.push("", `**Decision guides:** ${decisions.map((d) => `[${d.name}](DECISIONS.md#${d.id.replace(".", "")})`).join(" · ")}`);
-  const rules = meta.targets(s.id, "APPLIES").map((r) => meta.byId.get(r)!.key);
+  const rules = meta.targets(s.id, "APPLIES").map((r) => meta.node(r, "Rule").key);
   if (rules.length) method.push("", `**Rules checked from this step:** ${rules.map((r) => `[\`${r}\`](RULES.md#${r})`).join(", ")}`);
-  if (s.commands?.length) method.push("", `**Commands:** ${s.commands.map((x: string) => `\`${x}\``).join(", ")}`);
+  if (s.commands?.length) method.push("", `**Commands:** ${s.commands.map((x) => `\`${x}\``).join(", ")}`);
   method.push("", "<details><summary>Source passages</summary>", "", ...sources(s.id).flatMap((x) => [x, ""]), "</details>", "");
 }
 

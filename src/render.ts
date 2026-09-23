@@ -1,8 +1,8 @@
 /** Human-readable output: findings, explanations, trees, node details, Mermaid diagrams. */
-import { MetaKB } from "./metakb.ts";
+import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
 import { edgeProps, nodeLabel, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
-import type { Finding, GraphNode, OkbNode } from "./types.ts";
+import type { Finding, OkbNode } from "./types.ts";
 
 // ------------------------------------------------------------------ styling
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
@@ -63,7 +63,7 @@ function quotes(meta: MetaKB, id: string): string[] {
   return meta.citations(id).map((loc) => `  “${loc.quote}”\n  ${c.dim("— " + meta.citeLine(loc))}`);
 }
 
-export function explain(node: GraphNode): string {
+export function explain(node: Explainable): string {
   const meta = MetaKB.get();
   const out: string[] = [];
   const h = (s: string) => out.push("", c.bold(s));
@@ -105,7 +105,7 @@ export function explain(node: GraphNode): string {
         h("In okb");
         out.push(indent(node.inThisToolkit, "  "));
       }
-      const rules = meta.sources(node.id, "GOVERNS").map((r) => meta.byId.get(r)!.key);
+      const rules = meta.sources(node.id, "GOVERNS").map((r) => meta.node(r, "Rule").key);
       if (rules.length) {
         h("Related rules");
         out.push(indent(rules.join(", "), "  "));
@@ -129,7 +129,7 @@ export function explain(node: GraphNode): string {
     case "Decision": {
       out.push(c.bold(`Decision guide: ${node.name}`));
       out.push(c.dim(`  When: ${node.whenYouFaceIt}`), "");
-      (node.tests as any[]).forEach((t, i) => {
+      node.tests.forEach((t, i) => {
         out.push(`  ${i + 1}. ${t.ask}`);
         if (t.ifYes && t.ifYes !== "continue") out.push(`       yes → ${t.ifYes}`);
         else if (t.ifYes === "continue") out.push(c.dim("       yes → next question"));
@@ -154,7 +154,7 @@ export function explain(node: GraphNode): string {
   return out.join("\n");
 }
 
-export function stepGuide(step: GraphNode): string {
+export function stepGuide(step: MetaStep): string {
   const meta = MetaKB.get();
   const out: string[] = [];
   out.push(c.bold(`Step ${step.order} of ${meta.steps.length}: ${step.name}`));
@@ -169,7 +169,7 @@ export function stepGuide(step: GraphNode): string {
     for (const t of step.tips) out.push(indent(`• ${t}`, "  "));
   }
   if (step.wine) out.push("", c.bold("In the paper's wine example"), indent(step.wine, "  "));
-  const decisions = meta.targets(step.id, "USES").map((d) => meta.byId.get(d)!);
+  const decisions = meta.targets(step.id, "USES").map((d) => meta.node(d, "Decision"));
   if (decisions.length) {
     out.push("", c.bold("Decision guides for this step") + c.dim("  (okb explain <id>)"));
     for (const d of decisions) out.push(`  ${d.id.padEnd(28)} ${d.name}`);

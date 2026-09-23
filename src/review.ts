@@ -118,7 +118,7 @@ export function buildReview(ont: Ontology, all = false): ReviewItem[] {
     // Rules for later steps are shown early only when there's something concrete to look at.
     if (!all && r.fromStep > ont.step && !flags.length && !prompts.some((p) => !p.startsWith("For each") && !p.startsWith("Are any") && !p.startsWith("What would") && !p.startsWith("Walk ") && !p.startsWith("Instances currently"))) continue;
     items.push({
-      rule: r.key, modality: r.modality, question: r.review,
+      rule: r.key, modality: r.modality, question: r.review ?? "",
       source: meta.citations(r.id).map((l) => meta.citeLine(l))[0], prompts, flags,
     });
   }

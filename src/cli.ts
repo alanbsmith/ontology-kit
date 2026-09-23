@@ -4,7 +4,7 @@ import { parseArgs, type ParseArgsConfig } from "node:util";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
-import { MetaKB } from "./metakb.ts";
+import { MetaKB, explainName } from "./metakb.ts";
 import { OkbError, Ontology } from "./model.ts";
 import * as ops from "./ops.ts";
 import { c, explain, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
@@ -482,7 +482,7 @@ async function main(argvIn: string[]) {
       if (v.search) {
         const hits = meta.search(v.search.replace(/[-_]/g, " "));
         if (!hits.length) return void console.log(`Nothing mentions '${v.search}'.`);
-        for (const h of hits) console.log(`${(h.key ?? h.id).padEnd(40)} ${c.dim(h.type)}  ${h.name ?? h.statement?.slice(0, 60) ?? ""}`);
+        for (const h of hits) console.log(`${(h.type === "Rule" ? h.key : h.id).padEnd(40)} ${c.dim(h.type)}  ${h.type === "Rule" ? h.statement.slice(0, 60) : h.name}`);
         return;
       }
       if (!p.length) return void console.log(listExplainable());
@@ -491,7 +491,7 @@ async function main(argvIn: string[]) {
       return output(v, () => hits.map((h) => ({ ...h, citations: meta.citations(h.id), rationale: h.type === "Rule" ? meta.rationale(h) : undefined })), () => {
         if (!hits.length) return void console.log(`Nothing called '${q}'. Try: okb explain --search ${q}`);
         console.log(explain(hits[0]));
-        if (hits.length > 1) console.log(c.dim(`\nAlso matches: ${hits.slice(1, 6).map((h) => h.key ?? h.name).join(", ")}`));
+        if (hits.length > 1) console.log(c.dim(`\nAlso matches: ${hits.slice(1, 6).map(explainName).join(", ")}`));
       });
     }
 

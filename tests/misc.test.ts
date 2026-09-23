@@ -63,7 +63,7 @@ describe("meta-KB", () => {
     assert.equal(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"), before);
   });
   it("explain resolves rules, concepts, aliases and step numbers", () => {
-    assert.equal(meta.resolve("hier-no-cycles")[0].key, "hier-no-cycles");
+    assert.equal(meta.resolve("hier-no-cycles")[0].id, "rule.hier-no-cycles");
     assert.equal(meta.resolve("range")[0].id, "concept.range");
     assert.equal(meta.resolve("is-a")[0].id, "concept.subclass");
     assert.equal(meta.resolve("4")[0].id, "step.4-classes");

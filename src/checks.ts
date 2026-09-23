@@ -103,7 +103,7 @@ export const CHECKS: Record<string, Check> = {
       }
       // Read as a plain record: the point is to find what a hand edit left out.
       const raw = n as unknown as Record<string, unknown>;
-      const missing = (nt.required as string[]).filter((p) => raw[p] === undefined || raw[p] === "");
+      const missing = nt.required.filter((p) => raw[p] === undefined || raw[p] === "");
       if (missing.length) hits.push({ message: `${n.type} '${n.id}' is missing ${missing.join(", ")}.`, nodes: [n.id] });
       if (n.type === "Slot" && n.cardinality !== undefined && !["single", "multiple"].includes(n.cardinality)) {
         hits.push({ message: `Slot ${L(ont, n.id)} has cardinality '${n.cardinality}'; use 'single' or 'multiple'.`, nodes: [n.id] });
@@ -146,7 +146,7 @@ export const CHECKS: Record<string, Check> = {
       if (!instanceMisuse && (!et.fromTypes.includes(a.type) || !et.toTypes.includes(b.type))) {
         hits.push({ message: `Edge ${tag} connects ${a.type} → ${b.type}; ${e.type} must go ${et.fromTypes.join("/")} → ${et.toTypes.join("/")}.`, nodes: [e.from, e.to] });
       }
-      for (const p of et.props as string[]) {
+      for (const p of et.props) {
         if (e[p] === undefined) hits.push({ message: `Edge ${tag} is missing property '${p}'.`, nodes: [e.from] });
       }
     }
