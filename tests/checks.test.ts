@@ -45,10 +45,7 @@ function quiet(ont: Ontology, rule: string) {
 /** An ontology with extra nodes and edges as a hand edit might leave them: unchecked, possibly malformed. */
 const raw = (nodes: GraphNode[], edges: GraphEdge[] = []) => {
   const o = base();
-  o.nodes.push(...(nodes as unknown as OkbNode[]));
-  o.edges.push(...edges);
-  o.reindex();
-  return o;
+  return Ontology.fromData([...o.nodes, ...(nodes as unknown as OkbNode[])], [...o.edges, ...edges]);
 };
 
 describe("structure", () => {

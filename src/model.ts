@@ -56,18 +56,27 @@ function readJson<T>(path: string, fallback: T): T {
 export class Ontology {
   root: string;
   manifest: Manifest;
-  nodes: OkbNode[];
-  edges: GraphEdge[];
-  byId = new Map<string, OkbNode>();
+  // Changed only through addNode/addEdge/remove*, which keep the indexes current.
+  private _nodes: OkbNode[];
+  private _edges: GraphEdge[];
+  private byId = new Map<string, OkbNode>();
   private outIdx = new Map<string, GraphEdge[]>();
   private incIdx = new Map<string, GraphEdge[]>();
 
-  constructor(root: string, manifest: Manifest, nodes: OkbNode[], edges: GraphEdge[]) {
+  constructor(root: string, manifest: Manifest, nodes: readonly OkbNode[], edges: readonly GraphEdge[]) {
     this.root = root;
     this.manifest = manifest;
-    this.nodes = nodes;
-    this.edges = edges;
+    this._nodes = [...nodes];
+    this._edges = [...edges];
     this.reindex();
+  }
+
+  get nodes(): readonly OkbNode[] {
+    return this._nodes;
+  }
+
+  get edges(): readonly GraphEdge[] {
+    return this._edges;
   }
 
   // ------------------------------------------------------------------ io
@@ -109,13 +118,13 @@ export class Ontology {
     }
     this.reindex();
     const old = this.edges.filter((e) => e.type === "HAS_VALUE");
-    this.edges = this.edges.filter((e) => e.type !== "HAS_VALUE");
+    this._edges = this._edges.filter((e) => e.type !== "HAS_VALUE");
     this.reindex();
     for (const e of old) if (typeof e.slot === "string") this.addLink(e.from, e.slot, e.to);
     this.manifest.format = FORMAT;
   }
 
-  static fromData(nodes: OkbNode[], edges: GraphEdge[], manifest?: Partial<Manifest>): Ontology {
+  static fromData(nodes: readonly OkbNode[], edges: readonly GraphEdge[], manifest?: Partial<Manifest>): Ontology {
     return new Ontology(".", { format: FORMAT, currentStep: 8, ...manifest }, nodes, edges);
   }
 
@@ -292,7 +301,7 @@ export class Ontology {
 
   addNode<T extends OkbNode>(node: T): T {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
-    this.nodes.push(node);
+    this._nodes.push(node);
     this.byId.set(node.id, node);
     return node;
   }
@@ -303,14 +312,14 @@ export class Ontology {
     );
     if (existing) return existing;
     const e: GraphEdge = { from, type, to, ...props };
-    this.edges.push(e);
+    this._edges.push(e);
     this.indexEdge(e);
     return e;
   }
 
   removeEdges(pred: (e: GraphEdge) => boolean): number {
     const before = this.edges.length;
-    this.edges = this.edges.filter((e) => !pred(e));
+    this._edges = this._edges.filter((e) => !pred(e));
     this.reindex();
     return before - this.edges.length;
   }
@@ -319,8 +328,8 @@ export class Ontology {
     const n = this.byId.get(id);
     // A removed relationship slot takes its stored edges with it (ops.remove promotes an inverse first).
     const relType = n?.type === "Slot" && this.primarySlot(id) === id ? n.relType : undefined;
-    this.nodes = this.nodes.filter((x) => x.id !== id);
-    this.edges = this.edges.filter((e) => e.from !== id && e.to !== id && (!relType || e.type !== relType));
+    this._nodes = this._nodes.filter((x) => x.id !== id);
+    this._edges = this._edges.filter((e) => e.from !== id && e.to !== id && (!relType || e.type !== relType));
     for (const x of this.nodes) {
       if (x.type === "Instance") delete x.values?.[id];
       else if (x.type === "Class") {
