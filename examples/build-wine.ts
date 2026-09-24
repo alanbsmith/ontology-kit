@@ -71,7 +71,7 @@ step("Step 1: Scope and competency questions", [
 ], { showOutput: true });
 
 step("Step 2: Consider reuse", [
-  { note: "The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly." },
+  { note: "The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly. For your own ontology, the step guide (`okb step 2`, or [docs/METHOD.md](../../docs/METHOD.md#step-2-consider-reusing-existing-ontologies)) lists where to look: Linked Open Vocabularies, schema.org, W3C vocabularies such as SKOS and Dublin Core, and for design systems WAI-ARIA roles, the Design Tokens format and DSDS." },
   ["reuse", "none", "--why", "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project."],
   ["step", "next"],
 ], { showOutput: false });

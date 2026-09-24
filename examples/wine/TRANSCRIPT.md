@@ -96,6 +96,19 @@ You're done when
 Tips
   • Even a glossary page or an existing database schema counts as a source of terms.
   • Don't let this step stall you. 30 minutes of looking is usually enough for a first version.
+  • Where to look: Linked Open Vocabularies (https://lov.linkeddata.es) searches hundreds of
+  reusable vocabularies by term. schema.org (https://schema.org) covers everyday things: people,
+  organizations, products, places, events and creative works.
+  • W3C vocabularies cover common needs: SKOS for taxonomies and thesauri, Dublin Core for
+  document metadata, PROV-O for provenance, ORG for organizations and OWL-Time for dates and
+  times.
+  • For design systems: WAI-ARIA roles (https://www.w3.org/TR/wai-aria/) are a standard taxonomy
+  of UI components (button, checkbox, switch, tab...). The W3C Design Tokens format
+  (https://www.designtokens.org) is the standard for tokens. DSDS, the Design System
+  Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting
+  components, tokens and themes.
+  • You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually
+  enough: okb reuse add --name ... --url ... --decision reference.
 
 In the paper's wine example
   The paper notes a French-wine knowledge base or a wine retailer's list of wine properties
@@ -107,7 +120,7 @@ Commands
 
 ## Step 2: Consider reuse
 
-The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly.
+The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly. For your own ontology, the step guide (`okb step 2`, or [docs/METHOD.md](../../docs/METHOD.md#step-2-consider-reusing-existing-ontologies)) lists where to look: Linked Open Vocabularies, schema.org, W3C vocabularies such as SKOS and Dublin Core, and for design systems WAI-ARIA roles, the Design Tokens format and DSDS.
 
 ```console
 $ okb reuse none --why "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project."
