@@ -10,7 +10,7 @@ A toolkit that walks a beginner through building their first ontology, following
 | **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                       |
 | **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate). |
 
-## Getting Started
+## Getting started
 
 1. Read the 2-minute version: an ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base.
 2. Skim the worked example: **[examples/wine/TRANSCRIPT.md](examples/wine/TRANSCRIPT.md)** builds the paper's wine ontology command by command, with real output.
@@ -38,7 +38,7 @@ npm test             # the test suite, including building the wine example end t
 
 `pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
 
-## The Method
+## The method
 
 | Step         | You'll produce                                                                            | Key commands                                                                                         |
 | ------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -65,7 +65,7 @@ Full guide: [docs/METHOD.md](docs/METHOD.md) · Terms: [docs/GLOSSARY.md](docs/G
 - Warnings and hints appear once you reach the step they belong to. Errors always appear. `okb validate --all` shows everything.
 - The **ontology-review** skill covers what a script can't judge, such as whether siblings are equally general or whether something should be a class or a value. It works through the `judgment` rules with you.
 
-## Repository Layout
+## Repository layout
 
 ```text
 bin/okb.js              launcher (npm link target)
@@ -89,7 +89,7 @@ sources/                the source PDFs (gitignored; see sources/README.md)
 tests/                  node:test suites
 ```
 
-## Changing Rules
+## Changing rules
 
 Edit `meta-kb/src/*.yaml`, then:
 

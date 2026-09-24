@@ -1,5 +1,6 @@
 okb
 ontology-kit
+Ontology Kit
 [Oo]ntologies
 meta-KB
 KBs
