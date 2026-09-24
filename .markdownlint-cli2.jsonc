@@ -1,0 +1,18 @@
+{
+  // Hand-written docs only; the generated ones come from src/gendocs.ts and examples/build-wine.ts.
+  "globs": ["**/*.md"],
+  "ignores": [
+    "node_modules/**",
+    "docs/METHOD.md", "docs/GLOSSARY.md", "docs/RULES.md", "docs/DECISIONS.md",
+    "examples/wine/**", "tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
+  ],
+  "config": {
+    "default": true,
+    // Long lines are fine: tables and one-sentence-per-line prose would fight a length limit.
+    "MD013": false,
+    // Inline HTML is used on purpose (<details>, anchors).
+    "MD033": false,
+    // Prettier owns list and emphasis style; don't second-guess it.
+    "MD004": false, "MD049": false, "MD050": false, "MD060": false
+  }
+}
