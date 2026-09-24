@@ -24,7 +24,7 @@ It reports, with file and line:
 - **path**: a repo path (`src/...`, `docs/...`, `meta-kb/...`) that doesn't exist. Paths given as arguments to okb commands are skipped, because they're the user's own files.
 - **rule**: a backticked rule id that isn't in the meta-KB.
 - **format-type**: a node or edge type in docs/FORMAT.md's tables that isn't in `meta-kb/src/format.yaml`, or a registered type the doc leaves out.
-- **count / version**: a meta-KB count ("55 rules") or version ("meta-KB 2.2.0") that no longer matches `meta-kb/data/manifest.json`.
+- **count / version**: a meta-KB count ("55 rules") or version ("meta-KB 2.2.0") that no longer matches `meta-kb/data/manifest.json`, or a shipped skill whose `**Version X.Y.Z.**` line is missing or doesn't match it.
 
 Treat each report as real until you've looked. If one is a false positive (for example prose the parser mistook for a command), improve the script rather than ignoring it, so the next run is quiet.
 

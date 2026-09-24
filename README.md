@@ -28,7 +28,7 @@ npm test             # the test suite, including building the wine example end t
 Check which version you have:
 
 ```bash
-okb version          # okb 1.0.0 · meta-KB 2.3.0
+okb version          # okb 1.0.0 · meta-KB 2.3.1
 ```
 
 The meta-KB version tracks changes to the method and rules; [`meta-kb/README.md`](meta-kb/README.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).

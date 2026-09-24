@@ -2,7 +2,7 @@
   {
     "type": "MetaKB",
     "id": "metakb",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "formatVersion": "okb-lpg/2",
     "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
   },

@@ -46,7 +46,7 @@ Each rule states its **basis**:
 2. `npm run verify:quotes`: compiles `data/`, re-checks every quote against `sources/*.pdf`, and fails on any inconsistency (see the header of `build.ts` for the full list).
 3. If you added a mechanical/heuristic rule, add a check with the same id to `src/checks.ts` and a fixture to `tests/checks.test.ts`. The build and the test suite both fail until you do.
 4. `npm run docs && npm test`.
-5. Bump `VERSION` in `build.ts` when rules change meaning. Ontologies record the meta-KB version they were created with (`okb.json`).
+5. Bump `VERSION` in `build.ts` when rules change meaning or a shipped skill's instructions change (a patch version for skill-only changes), and update the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. Ontologies record the meta-KB version they were created with (`okb.json`).
 
 ## Changes from the first draft (v1)
 
@@ -73,3 +73,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 
 - **Question families.** A competency question stands for a type of question (the paper: "just a sketch" and "do not need to be exhaustive"). The new judgment rule `scope-cq-families` asks, once a question is answered, whether the ontology should also answer its family: the same question about similar things, and related questions about the same thing. Anything not wanted is recorded as out of scope. `okb cq link` and `okb cq set --status answerable` suggest the family from what's already built, and `okb review` lists every family. Step 1 now says not to list every question up front, and Step 8 asks about families.
 - `scope-no-unneeded` now suggests adding the question an element serves before removing the element.
+
+## v2.3.1
+
+- **Skills state their version.** Each shipped skill starts with `**Version X.Y.Z.**`, matching the meta-KB, and checks it against `okb version` when it starts; if they differ, it says which is out of date. Changing a skill's instructions now bumps the version (a patch for skill-only changes), and the docs drift check fails if a skill's version lags.

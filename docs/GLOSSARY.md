@@ -1,6 +1,6 @@
 # Glossary
 
-> Generated from the meta-KB (v2.3.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.3.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.
 

@@ -149,6 +149,12 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
       if (cell && section === "## Edge types" && !fmt.edges.has(cell)) problems.push({ file, line, kind: "format-type", message: `Edge type '${cell}' isn't in meta-kb/src/format.yaml.` });
     }
   });
+  // Shipped skills state the version they were written for, so an agent can check it against okb version.
+  if (/^skills\/[^/]+\/SKILL\.md$/.test(file)) {
+    const stated = read(file).match(/\*\*Version (\d+\.\d+\.\d+)\.\*\*/)?.[1];
+    if (!stated) problems.push({ file, line: 0, kind: "version", message: `No "**Version X.Y.Z.**" line; add one matching meta-KB ${META_VERSION}.` });
+    else if (stated !== META_VERSION) problems.push({ file, line: 0, kind: "version", message: `Skill says version ${stated}; the meta-KB is ${META_VERSION}. Update the skill's version line.` });
+  }
   if (file === "docs/FORMAT.md") {
     const doc = read(file);
     for (const t of fmt.nodes) if (!doc.includes("`" + t + "`")) problems.push({ file, line: 0, kind: "format-type", message: `Registered node type '${t}' isn't documented.` });

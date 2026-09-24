@@ -1,4 +1,4 @@
-// Wine and Food: exported by okb (meta-KB 2.3.0)
+// Wine and Food: exported by okb (meta-KB 2.3.1)
 // Every node carries okbId. To re-import, first run: MATCH (n) WHERE n.okbId IS NOT NULL DETACH DELETE n;
 // 2 class-level relationship value(s) point at classes (e.g. RedWine GOES_WELL_WITH RedMeat), not instances, so they're only exported with --with-schema.
 // Inverse relationships are stored once: produces = MAKER followed backwards.

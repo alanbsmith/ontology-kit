@@ -1,6 +1,6 @@
 # Rules
 
-> Generated from the meta-KB (v2.3.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.3.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 What `okb validate` checks, and what the ontology-review skill asks about. Each rule's **modality** comes from the wording of the passage it cites (see *Modality* in the [glossary](GLOSSARY.md)):
 
