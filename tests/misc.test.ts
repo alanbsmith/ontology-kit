@@ -13,6 +13,7 @@ import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
 import { STEP_CHECKS, computeStatus } from "../src/status.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
+import { buildReview } from "../src/review.ts";
 import type { OkbNode } from "../src/types.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -99,6 +100,43 @@ describe("step progress", () => {
     for (const check of ["no_errors_hierarchy", "no_errors_slots", "no_errors_instances"]) {
       assert.equal(STEP_CHECKS[check](ont, [finding("struct-well-formed")]), false, check);
     }
+  });
+});
+
+describe("question families", () => {
+  const wine = () => {
+    const ont = Ontology.fromData([{ type: "Ontology", id: "ontology", name: "T" } as OkbNode], []);
+    ops.setConventions(ont, {});
+    ops.addClass(ont, "Wine", { description: "d" });
+    for (const c of ["RedWine", "WhiteWine", "RoseWine"]) ops.addClass(ont, c, { parents: ["Wine"], description: "d" });
+    ops.addSlot(ont, "body", { on: ["Wine"], type: "String", card: "single", description: "d" });
+    ops.addSlot(ont, "sugar", { on: ["Wine"], type: "String", card: "single", description: "d" });
+    ops.addCQ(ont, "What body does a red wine have?");
+    ops.addCQ(ont, "Is a rose wine sweet?");
+    return ont;
+  };
+  it("suggests the same question about siblings, and more about the subject, after linking", () => {
+    const ont = wine();
+    const notes = ops.linkCQ(ont, "1", ["RedWine", "body"]);
+    const tip = notes[notes.length - 1];
+    assert.match(tip, /^Tip: cq\.1 is one example of a family/);
+    assert.match(tip, /same question about WhiteWine, RoseWine/);
+    assert.match(tip, /more about RedWine \(sugar\)/, "body is already used by the question, so it isn't suggested");
+    assert.match(tip, /okb scope --out-of-scope/);
+    assert.deepEqual(ops.linkCQ(ont, "1", ["body"], true).length, 1, "unlinking doesn't suggest anything");
+  });
+  it("leaves out what another question already covers", () => {
+    const ont = wine();
+    ops.linkCQ(ont, "2", ["RoseWine", "sugar"]);
+    const tip = ops.linkCQ(ont, "1", ["RedWine"]).at(-1)!;
+    assert.match(tip, /same question about WhiteWine\b/);
+    assert.doesNotMatch(tip, /RoseWine|sugar/);
+  });
+  it("okb review lists every family under scope-cq-families", () => {
+    const ont = wine();
+    ops.linkCQ(ont, "1", ["RedWine", "body"]);
+    const item = buildReview(ont, true).find((i) => i.rule === "scope-cq-families")!;
+    assert.ok(item.prompts.some((p) => p.startsWith('cq.1 "What body does a red wine have?": would you also ask the same question about WhiteWine, RoseWine')), item.prompts.join("\n"));
   });
 });
 

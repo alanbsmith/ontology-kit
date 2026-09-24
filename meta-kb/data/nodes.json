@@ -2,7 +2,7 @@
   {
     "type": "MetaKB",
     "id": "metakb",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "formatVersion": "okb-lpg/2",
     "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
   },
@@ -2301,13 +2301,32 @@
     "fromStep": 8,
     "statement": "The ontology should not contain all possible information, properties and distinctions: don't specialize or generalize more than the application needs (at most one extra level each way).",
     "plainLanguage": "If no competency question needs a class or slot (or its parent or child), ask whether it belongs.",
-    "review": "For each flagged element: which question needs it? If none, remove it or add the question it serves.",
-    "fix": "Remove it, or link it to (or add) the question that needs it."
+    "review": "For each flagged element: which question needs it? If none, add the question it serves, or remove it.",
+    "fix": "Link it to (or add) the question that needs it, or remove it."
   },
   {
     "type": "Rationale",
     "id": "rat.scope-no-unneeded",
     "explanation": "Extra detail costs maintenance and can actively hurt (the Experimenter example). okb reports classes and slots not reachable within one level from anything a competency question needs. It only does this once questions have been linked."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.scope-cq-families",
+    "key": "scope-cq-families",
+    "modality": "SHOULD",
+    "basis": "interpretive",
+    "check": "judgment",
+    "severity": "warning",
+    "fromStep": 8,
+    "statement": "Treat each competency question as one example of a type of question: once it's answered, check whether the ontology should also answer its family (the same question about similar things, and related questions about the same thing), and record the ones that are out of scope.",
+    "plainLanguage": "If 'Which wines go with grilled meat?' is a question, 'Which wines go with seafood?' probably is too. Answering only the exact questions you wrote down passes the test but misses the point. You don't need to list them all at the start: look at each family once the question it came from is answered.",
+    "review": "For each answered competency question: what's its family (the same question about sibling classes or other instances, and the questions next to it about the same subject)? Would the ontology answer them? Is each one you don't want recorded as out of scope?",
+    "fix": "Add the questions you want (okb cq add, then okb cq link), and record the rest as out of scope (okb scope --out-of-scope) or in a design decision."
+  },
+  {
+    "type": "Rationale",
+    "id": "rat.scope-cq-families",
+    "explanation": "The paper calls competency questions 'just a sketch' that 'do not need to be exhaustive', and uses them as a litmus test for 'these types of questions'. So each one stands for a type of question, not a checklist item. Asking about the family once a question is answered, rather than up front, is the toolkit's reading. The paper also warns against including everything (scope-no-unneeded), so 'out of scope' is a fine answer, as long as it's recorded."
   },
   {
     "type": "Rule",
@@ -2779,6 +2798,7 @@
     ],
     "tips": [
       "Competency questions are a sketch, not a contract. You'll add and change them.",
+      "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and okb will suggest the rest of the family once a question is answered (okb cq link).",
       "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'.",
       "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
     ],
@@ -3034,6 +3054,7 @@
     "whyItMatters": "The only real test of an ontology is whether it does the job it was built for. Expect to loop back to earlier steps.",
     "guidingQuestions": [
       "For each competency question: which classes, slots and instances answer it? Is anything missing?",
+      "For each answered question: would the ontology also answer the rest of its family, the same question about similar things and the questions next to it? Which of those are out of scope?",
       "Is there anything in the ontology no question needs?",
       "Would a domain expert agree with the hierarchy? Show it to one.",
       "Which choices would surprise someone reusing this ontology? Are they recorded as design decisions?"
@@ -3047,6 +3068,9 @@
       {
         "text": "Every competency question is linked to what answers it",
         "check": "cq_all_linked"
+      },
+      {
+        "text": "Each question's family has been considered: wanted questions added, the rest recorded as out of scope"
       },
       {
         "text": "No errors from okb validate",

@@ -1,6 +1,6 @@
 # Decision guides
 
-> Generated from the meta-KB (v2.2.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.3.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 The recurring "which way do I model this?" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.
 

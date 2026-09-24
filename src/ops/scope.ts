@@ -1,5 +1,6 @@
 /** Step 1 to 3: scope, competency questions, reuse, and the brainstormed term list. */
 import * as naming from "../naming.ts";
+import { questionFamilies } from "../families.ts";
 import { OkbError, type Ontology } from "../model.ts";
 import { DISPOSITIONS, isOneOf, type Disposition, type ReusedOntologyNode } from "../types.ts";
 import { splitList as list, type Notes } from "./common.ts";
@@ -40,7 +41,24 @@ export function linkCQ(ont: Ontology, cqRef: string, refs: string[], unlink = fa
     else ont.addEdge(q.id, "NEEDS", n.id);
     notes.push(`${unlink ? "Unlinked" : "Linked"} ${q.id} ${unlink ? "from" : "→"} ${n.name} (${n.type}).`);
   }
+  if (!unlink) notes.push(familyTip(ont, q.id));
   return notes;
+}
+
+/**
+ * Once a question is answered, suggest its family (rule scope-cq-families): the same
+ * question about similar things, and more about the same subject. One line, and
+ * only after something is built, so nobody has to list every question up front.
+ */
+export function familyTip(ont: Ontology, cqId: string): string {
+  // Two subjects at most keeps it to one readable line; okb review lists them all.
+  const parts = questionFamilies(ont, cqId).slice(0, 2).map((f) => {
+    const same = f.sameQuestionAbout.length ? `the same question about ${f.sameQuestionAbout.join(", ")}` : "";
+    const more = f.moreAbout.length ? `more about ${f.subject} (${f.moreAbout.join(", ")})` : "";
+    return [same, more].filter(Boolean).join(", or ");
+  });
+  const ideas = parts.length ? ` Would you also ask ${parts.join("; ")}?` : "";
+  return `Tip: ${cqId} is one example of a family of questions.${ideas} Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.`;
 }
 
 export function addTerms(ont: Ontology, terms: string[], note?: string): Notes {

@@ -23,6 +23,7 @@ steps:
       - {text: "At least one thing is explicitly out of scope", check: scope_out}
     tips:
       - "Competency questions are a sketch, not a contract. You'll add and change them."
+      - "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and okb will suggest the rest of the family once a question is answered (okb cq link)."
       - "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'."
       - "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
     wine: "Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'"
@@ -189,12 +190,14 @@ steps:
     whyItMatters: "The only real test of an ontology is whether it does the job it was built for. Expect to loop back to earlier steps."
     guidingQuestions:
       - "For each competency question: which classes, slots and instances answer it? Is anything missing?"
+      - "For each answered question: would the ontology also answer the rest of its family, the same question about similar things and the questions next to it? Which of those are out of scope?"
       - "Is there anything in the ontology no question needs?"
       - "Would a domain expert agree with the hierarchy? Show it to one."
       - "Which choices would surprise someone reusing this ontology? Are they recorded as design decisions?"
     outputs: ["NEEDS links from every competency question", "DesignDecision records", "A clean `okb validate` (no errors; warnings resolved or explained)"]
     doneWhen:
       - {text: "Every competency question is linked to what answers it", check: cq_all_linked}
+      - {text: "Each question's family has been considered: wanted questions added, the rest recorded as out of scope"}
       - {text: "No errors from okb validate", check: no_errors}
       - {text: "Every remaining warning is fixed or explained in a design decision", check: warnings_explained}
       - {text: "Someone who knows the domain has looked at it"}
@@ -203,6 +206,6 @@ steps:
       - "Use the ontology-review skill for the judgment rules a script can't check."
     wine: "The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel."
     commands: ["okb cq link", "okb validate --all", "okb decision add", "okb diagram"]
-    rules: [scope-cq-coverage, scope-no-unneeded, doc-record-decisions]
+    rules: [scope-cq-coverage, scope-cq-families, scope-no-unneeded, doc-record-decisions]
     concepts: [concept.design-decision, concept.competency-question]
     cites: [src.o101/stand-back, src.o101/evaluate, src.o101/cq-litmus, src.o101/pudding, src.o101/rule-iterative, src.o101/evolution, src.o101/diagnostics]

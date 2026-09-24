@@ -821,6 +821,8 @@ Step 8 of 8: Review against your questions, and iterate
 Questions to answer
   • For each competency question: which classes, slots and instances answer it? Is anything
   missing?
+  • For each answered question: would the ontology also answer the rest of its family, the same
+  question about similar things and the questions next to it? Which of those are out of scope?
   • Is there anything in the ontology no question needs?
   • Would a domain expert agree with the hierarchy? Show it to one.
   • Which choices would surprise someone reusing this ontology? Are they recorded as design
@@ -828,6 +830,7 @@ Questions to answer
 
 You're done when
   ○ Every competency question is linked to what answers it
+  ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
   ○ No errors from okb validate
   ○ Every remaining warning is fixed or explained in a design decision
   ? Someone who knows the domain has looked at it
@@ -855,6 +858,7 @@ Linked cq.1 → body (Slot).
 Linked cq.1 → flavor (Slot).
 Linked cq.1 → sugar (Slot).
 Linked cq.1 → tanninLevel (Slot).
+  Tip: cq.1 is one example of a family of questions. Would you also ask more about Wine (maker, grape, region, goesWellWith)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
@@ -862,6 +866,7 @@ $ okb cq link 2 Bordeaux RedWine WhiteWine
 Linked cq.2 → Bordeaux (Class).
 Linked cq.2 → RedWine (Class).
 Linked cq.2 → WhiteWine (Class).
+  Tip: cq.2 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (maker, grape, region, goesWellWith); the same question about RoseWine, DessertWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
@@ -869,12 +874,14 @@ $ okb cq link 3 goesWellWith grape Seafood
 Linked cq.3 → goesWellWith (Slot).
 Linked cq.3 → grape (Slot).
 Linked cq.3 → Seafood (Class).
+  Tip: cq.3 is one example of a family of questions. Would you also ask more about Wine (maker, region); the same question about RedMeat? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
 $ okb cq link 4 RedMeat goesWellWith
 Linked cq.4 → RedMeat (Class).
 Linked cq.4 → goesWellWith (Slot).
+  Tip: cq.4 is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
@@ -882,12 +889,14 @@ $ okb cq link 5 goesWellWith body flavor
 Linked cq.5 → goesWellWith (Slot).
 Linked cq.5 → body (Slot).
 Linked cq.5 → flavor (Slot).
+  Tip: cq.5 is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
 $ okb cq link 6 produces Winery
 Linked cq.6 → produces (Slot).
 Linked cq.6 → Winery (Class).
+  Tip: cq.6 is one example of a family of questions. Would you also ask more about Winery (location)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
@@ -918,9 +927,9 @@ HINTS: worth a look
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
   i No competency question needs these classes (or their parent/child): 'WineRegion'. [scope-no-unneeded]
-      Fix: Remove it, or link it to (or add) the question that needs it.
+      Fix: Link it to (or add) the question that needs it, or remove it.
   i No competency question needs these slots: 'region', 'location'. [scope-no-unneeded]
-      Fix: Remove it, or link it to (or add) the question that needs it.
+      Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (2)
   · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
@@ -944,6 +953,7 @@ Wine and Food  · 21 classes · 11 slots · 9 instances · 6 questions
 ✓ 7. Create instances
 ✓ 8. Review against your questions, and iterate ◀ you are here
      ✓ Every competency question is linked to what answers it
+     ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
      ✓ No errors from okb validate
      ✓ Every remaining warning is fixed or explained in a design decision
      ? Someone who knows the domain has looked at it

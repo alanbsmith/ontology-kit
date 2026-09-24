@@ -68,3 +68,8 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ## v2.2
 
 - **Edge properties.** Relationships can declare properties for their edges (`condition`, `strength`...), with facets checked by the new `slot-edge-properties` rule, plus a reserved `rule` reference to the Rule that justifies the link. New glossary entry `concept.edge-property` and decision guide `decision.edge-or-class` (edge property vs. making the relationship its own class). Both are marked as toolkit concepts: Ontology 101's frame model has no relationship properties.
+
+## v2.3
+
+- **Question families.** A competency question stands for a type of question (the paper: "just a sketch" and "do not need to be exhaustive"). The new judgment rule `scope-cq-families` asks, once a question is answered, whether the ontology should also answer its family: the same question about similar things, and related questions about the same thing. Anything not wanted is recorded as out of scope. `okb cq link` and `okb cq set --status answerable` suggest the family from what's already built, and `okb review` lists every family. Step 1 now says not to list every question up front, and Step 8 asks about families.
+- `scope-no-unneeded` now suggests adding the question an element serves before removing the element.

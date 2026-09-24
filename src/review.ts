@@ -6,6 +6,7 @@
  */
 import { MetaKB } from "./metakb.ts";
 import type { Ontology } from "./model.ts";
+import { questionFamilies } from "./families.ts";
 import * as naming from "./naming.ts";
 
 export interface ReviewItem {
@@ -101,6 +102,19 @@ export function buildReview(ont: Ontology, all = false): ReviewItem[] {
           if (covered.size > 1) prompts.push(`${s.name} applies to ${[...covered].map(L).join(", ")}. Does every one of these really have it?`);
         }
         break;
+      case "scope-cq-families": {
+        const recorded = ont.meta.outOfScope ?? [];
+        const outOfScope = recorded.length ? ` (out of scope so far: ${recorded.join(", ")})` : "";
+        for (const q of ont.ofType("CompetencyQuestion")) {
+          for (const f of questionFamilies(ont, q.id)) {
+            const same = f.sameQuestionAbout.length ? `the same question about ${f.sameQuestionAbout.join(", ")}` : "";
+            const more = f.moreAbout.length ? `more about ${f.subject}: ${f.moreAbout.join(", ")}` : "";
+            prompts.push(`${q.id} "${q.text}": would you also ask ${[same, more].filter(Boolean).join(", or ")}?`);
+          }
+        }
+        prompts.push(`For each family you don't want: record it as out of scope${outOfScope}.`);
+        break;
+      }
       case "doc-record-decisions": {
         const decided = new Set(ont.edgesOf("ABOUT").map((e) => e.to));
         const multi = classes.filter((c) => ont.parents(c.id).length > 1 && !decided.has(c.id));

@@ -202,7 +202,7 @@ async function main(argvIn: string[]) {
             if (!["draft", "answerable"].includes(v.status)) throw new OkbError("--status must be draft or answerable.");
             q.status = v.status;
           }
-          return [`Updated ${q.id}.`];
+          return v.status === "answerable" ? [`Updated ${q.id}.`, ops.familyTip(ont, q.id)] : [`Updated ${q.id}.`];
         });
       }
       if (sub === "remove") {

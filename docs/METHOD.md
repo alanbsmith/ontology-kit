@@ -1,6 +1,6 @@
 # The method: eight steps
 
-> Generated from the meta-KB (v2.2.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.3.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an eighth, **Review and iterate**, which makes explicit the paper's instruction to stand back, test the ontology against its competency questions, and revise it.
 
@@ -38,6 +38,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 **Tips**
 
 - Competency questions are a sketch, not a contract. You'll add and change them.
+- Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and okb will suggest the rest of the family once a question is answered (okb cq link).
 - Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'.
 - Include a few questions that need relationships (X goes with Y), not only lookups (what color is X).
 
@@ -351,6 +352,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 **Questions to answer**
 
 - For each competency question: which classes, slots and instances answer it? Is anything missing?
+- For each answered question: would the ontology also answer the rest of its family, the same question about similar things and the questions next to it? Which of those are out of scope?
 - Is there anything in the ontology no question needs?
 - Would a domain expert agree with the hierarchy? Show it to one.
 - Which choices would surprise someone reusing this ontology? Are they recorded as design decisions?
@@ -358,6 +360,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 **You're done when**
 
 - [ ] Every competency question is linked to what answers it
+- [ ] Each question's family has been considered: wanted questions added, the rest recorded as out of scope *(your judgment)*
 - [ ] No errors from okb validate
 - [ ] Every remaining warning is fixed or explained in a design decision
 - [ ] Someone who knows the domain has looked at it *(your judgment)*
@@ -369,7 +372,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel.
 
-**Rules checked from this step:** [`scope-cq-coverage`](RULES.md#scope-cq-coverage), [`scope-no-unneeded`](RULES.md#scope-no-unneeded), [`doc-record-decisions`](RULES.md#doc-record-decisions)
+**Rules checked from this step:** [`scope-cq-coverage`](RULES.md#scope-cq-coverage), [`scope-cq-families`](RULES.md#scope-cq-families), [`scope-no-unneeded`](RULES.md#scope-no-unneeded), [`doc-record-decisions`](RULES.md#doc-record-decisions)
 
 **Commands:** `okb cq link`, `okb validate --all`, `okb decision add`, `okb diagram`
 

@@ -1,6 +1,6 @@
 # Rules
 
-> Generated from the meta-KB (v2.2.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.3.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 What `okb validate` checks, and what the ontology-review skill asks about. Each rule's **modality** comes from the wording of the passage it cites (see *Modality* in the [glossary](GLOSSARY.md)):
 
@@ -61,6 +61,7 @@ What `okb validate` checks, and what the ontology-review skill asks about. Each 
 | [`scope-competency-questions`](#scope-competency-questions) | SHOULD | warning | mechanical | operational | 1 |
 | [`scope-cq-coverage`](#scope-cq-coverage) | SHOULD | warning | mechanical | interpretive | 8 |
 | [`scope-no-unneeded`](#scope-no-unneeded) | SHOULD NOT | info | heuristic | direct | 8 |
+| [`scope-cq-families`](#scope-cq-families) | SHOULD | warning | judgment | interpretive | 8 |
 | [`doc-descriptions`](#doc-descriptions) | SHOULD | warning | mechanical | interpretive | 4 |
 | [`doc-record-decisions`](#doc-record-decisions) | SHOULD | warning | judgment | interpretive | 4 |
 | [`reuse-considered`](#reuse-considered) | SHOULD | warning | judgment | direct | 3 |
@@ -928,15 +929,35 @@ The ontology should not contain all possible information, properties and distinc
 
 *Severity note:* Whether something is 'needed' depends on how completely questions were linked, so this is a prompt, not a warning.
 
-*Ask yourself:* For each flagged element: which question needs it? If none, remove it or add the question it serves.
+*Ask yourself:* For each flagged element: which question needs it? If none, add the question it serves, or remove it.
 
-*Fix:* Remove it, or link it to (or add) the question that needs it.
+*Fix:* Link it to (or add) the question that needs it, or remove it.
 
 > “The ontology should not contain all the possible information about the domain: you do not need to specialize (or generalize) more than you need for your application (at most one extra level each way).”  
 > — Ontology 101 §4.7 Limiting the scope, p.19
 
 > “The ontology should not contain all the possible properties of and distinctions among classes in the hierarchy.”  
 > — Ontology 101 §4.7 Limiting the scope, p.19
+
+## scope-cq-families
+
+**SHOULD** · warning · judgment · basis: interpretive · from step 8
+
+Treat each competency question as one example of a type of question: once it's answered, check whether the ontology should also answer its family (the same question about similar things, and related questions about the same thing), and record the ones that are out of scope.
+
+*In plain words:* If 'Which wines go with grilled meat?' is a question, 'Which wines go with seafood?' probably is too. Answering only the exact questions you wrote down passes the test but misses the point. You don't need to list them all at the start: look at each family once the question it came from is answered.
+
+*Why:* The paper calls competency questions 'just a sketch' that 'do not need to be exhaustive', and uses them as a litmus test for 'these types of questions'. So each one stands for a type of question, not a checklist item. Asking about the family once a question is answered, rather than up front, is the toolkit's reading. The paper also warns against including everything (scope-no-unneeded), so 'out of scope' is a fine answer, as long as it's recorded.
+
+*Ask yourself:* For each answered competency question: what's its family (the same question about sibling classes or other instances, and the questions next to it about the same subject)? Would the ontology answer them? Is each one you don't want recorded as out of scope?
+
+*Fix:* Add the questions you want (okb cq add, then okb cq link), and record the rest as out of scope (okb scope --out-of-scope) or in a design decision.
+
+> “These competency questions are just a sketch and do not need to be exhaustive.”  
+> — Ontology 101 §3 Step 1, Competency questions, p.5
+
+> “These questions will serve as the litmus test later: Does the ontology contain enough information to answer these types of questions?”  
+> — Ontology 101 §3 Step 1, Competency questions, p.5
 
 ## doc-descriptions
 

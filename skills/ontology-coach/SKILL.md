@@ -26,6 +26,7 @@ The toolkit's meta-KB is the authority on method, vocabulary and rules. **Don't 
 - **Record choices as you go.** Whenever the user picks between two reasonable options, or keeps something the validator warns about, run `okb decision add --title ... --decision ... --why ... --about <node> [--waives <rule-id>]`. Warnings can be explained this way; errors can't.
 - **No single right answer.** When they worry about getting it "right", point to `okb explain principle.no-single-correct-model` and bring them back to their competency questions: "Which of these helps answer your questions?"
 - **Engineers:** watch for object-oriented habits (grouping classes by shared behavior or code, "has-a" treated as "is-a"). Point to `okb explain principle.structure-not-behavior`.
+- **Widen each question once it's answered.** A competency question is one example of a family. When one gets answered, offer its family once (see [Widening a question](#widening-a-question)). Never ask for the whole list up front.
 - **Keep momentum.** Aim for a rough version that works end to end before polishing. Iterating is part of the method (`okb explain principle.iterate`).
 
 ## The steps
@@ -34,7 +35,7 @@ At the start of each step, run `okb step` and use its goal, questions, tips and 
 
 ### Step 1: Scope
 
-Ask, one at a time: what's the domain (one sentence)? What will it be used for? Who will use and maintain it? What's related but out of scope? Then help them write **at least three competency questions**: specific questions the finished ontology must answer. Push for questions that involve relationships ("Which X go with Y?"), not only lookups.
+Ask, one at a time: what's the domain (one sentence)? What will it be used for? Who will use and maintain it? What's related but out of scope? Then help them write **at least three competency questions**: specific questions the finished ontology must answer. Push for questions that involve relationships ("Which X go with Y?"), not only lookups. Three to five is plenty: tell them each question stands for a family of similar ones, and you'll help find the rest once there's something built to answer them.
 `okb scope --domain ... --purpose ... --users ... --maintainers ... --out-of-scope ...` · `okb cq add "..."`
 
 ### Step 2: Reuse
@@ -66,21 +67,31 @@ Go slot by slot, using the Step 6 questions: value type; allowed values or range
 
 ### Step 7: Instances
 
-Pick one competency question and add just enough instances to answer it end to end. Use the most specific class. When an instance doesn't fit, treat it as a finding about the model, not the data.
+Pick one competency question and add just enough instances to answer it end to end. Use the most specific class. When an instance doesn't fit, treat it as a finding about the model, not the data. Once it's answered, widen it (see below) before moving to the next question.
 `okb instance add "<Name>" --of <Class> slot=value ...` · `okb instance set ...` (also `--of` to move it to another class)
 
 ### Step 8: Review and iterate
 
-1. For each competency question, ask what answers it and link it: `okb cq link <n> <Class|slot>...`. A question with nothing to link means something is missing, so go back and add it.
+1. For each competency question, ask what answers it and link it: `okb cq link <n> <Class|slot>...`. A question with nothing to link means something is missing, so go back and add it. okb then suggests the question's family; widen it with the user (see below).
 2. `okb validate --all`: fix errors; fix or explain warnings.
 3. Run the **ontology-review** skill (or `okb review` yourself) for the judgment rules a script can't check.
 4. Suggest showing the tree (`okb diagram --out diagram.md`) to someone who knows the domain.
 5. If the data is headed for a graph database, show them `okb export --format cypher --out <name>.cypher` (instances become nodes labeled with their class chain).
 6. Summarize what they built, what's deliberately left out, and what a v2 might add.
 
+## Widening a question
+
+A question like "When should I use a PrimaryButton?" is one example of a type. Answering only that one passes the competency test without being very useful. So once a question is answered (Step 7, or linked in Step 8), take a moment to widen it. Do this once per question, never all at once, and never before the model exists.
+
+1. **Read the family from okb.** The `okb cq link` tip (or `okb review`, rule `scope-cq-families`) names what the ontology already has: sibling classes and other instances (the same question about similar things), and the subject's slots no question uses yet (more about the same thing).
+2. **Offer three directions, briefly, in their words:** the same question about similar things ("…and SecondaryButton, TertiaryButton?"), more about the same subject ("its accessibility requirements? what it's preferred over?"), and follow-ups the answer raised. Use a multiple-choice question when AskUserQuestion is available, with "just this question" as a real option.
+3. **Record every answer.** Wanted: `okb cq add "..."`, then build what it needs and `okb cq link`. Not wanted: `okb scope --out-of-scope "..."`. Staying narrow is a fine choice; it just shouldn't be an accident.
+4. **Watch the size.** Adding questions adds work. If the list is growing faster than the model, say so and suggest parking questions for a v2 (out of scope for now) rather than stalling. The paper warns against trying to include everything (`okb explain scope-no-unneeded`).
+
 ## Don'ts
 
 - Don't skip scope or competency questions. Every later decision leans on them.
+- Don't make them list every possible question up front. A few examples are enough; widen each one once it's answered.
 - Don't edit nodes.json/edges.json by hand. Use okb, which enforces naming, stores each relationship once, fills in defaults, and keeps ids stable.
 - Don't add classes, slots or instances the user didn't agree to. Suggest them and let the user decide.
 - Don't dump the glossary. Explain one idea at the moment it's needed.

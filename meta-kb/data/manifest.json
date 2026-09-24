@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "formatVersion": "okb-lpg/2",
   "nodeCounts": {
     "MetaKB": 1,
@@ -7,13 +7,13 @@
     "SourceLocation": 127,
     "Principle": 7,
     "Concept": 35,
-    "Rule": 56,
-    "Rationale": 56,
+    "Rule": 57,
+    "Rationale": 57,
     "Decision": 10,
     "Step": 8,
     "NodeType": 11,
     "EdgeType": 12
   },
-  "edgeCount": 626,
+  "edgeCount": 632,
   "quotesVerified": true
 }
