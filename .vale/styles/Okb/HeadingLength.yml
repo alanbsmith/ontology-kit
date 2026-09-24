@@ -1,0 +1,7 @@
+# House style: short headings, three words at most.
+extends: occurrence
+message: "Keep headings to three words or fewer."
+level: warning
+scope: heading
+max: 3
+token: '[^\s]+'

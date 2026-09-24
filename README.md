@@ -1,5 +1,7 @@
 # Ontology Kit
 
+## Overview
+
 A toolkit that walks a beginner through building their first ontology, following the method in **Ontology Development 101** (Noy & McGuinness, 2001). It has three parts:
 
 | Part                     | What it is                                                                                                                                                                                                                                                                                   |
@@ -8,7 +10,7 @@ A toolkit that walks a beginner through building their first ontology, following
 | **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                       |
 | **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate). |
 
-## Never built an ontology? Start here
+## Getting Started
 
 1. Read the 2-minute version: an ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base.
 2. Skim the worked example: **[examples/wine/TRANSCRIPT.md](examples/wine/TRANSCRIPT.md)** builds the paper's wine ontology command by command, with real output.
@@ -23,7 +25,7 @@ okb explain range   # plain-language explanation of any term, rule or step
 okb validate        # check your work (only rules relevant to your current step)
 ```
 
-## Install
+## Installation
 
 Needs **Node.js 24+** (okb runs its TypeScript source directly; there's no build step).
 
@@ -36,7 +38,7 @@ npm test             # the test suite, including building the wine example end t
 
 `pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
 
-## The method at a glance
+## The Method
 
 | Step         | You'll produce                                                                            | Key commands                                                                                         |
 | ------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -55,7 +57,7 @@ Building from existing documentation? `okb source add docs/button.md` reads mark
 
 Full guide: [docs/METHOD.md](docs/METHOD.md) · Terms: [docs/GLOSSARY.md](docs/GLOSSARY.md) · Every rule and its source: [docs/RULES.md](docs/RULES.md) · Modeling choices: [docs/DECISIONS.md](docs/DECISIONS.md) · File format: [docs/FORMAT.md](docs/FORMAT.md)
 
-## How findings work
+## Findings
 
 - **Errors** (MUST rules): fix them.
 - **Warnings** (SHOULD rules): fix them, _or_ record a design decision that explains why not. For example, `okb decision add --title "..." --decision "..." --why "..." --about Sauternes --waives naming-singular-plural-consistent`. Explained warnings stop counting against you but stay visible.
@@ -63,7 +65,7 @@ Full guide: [docs/METHOD.md](docs/METHOD.md) · Terms: [docs/GLOSSARY.md](docs/G
 - Warnings and hints appear once you reach the step they belong to. Errors always appear. `okb validate --all` shows everything.
 - The **ontology-review** skill covers what a script can't judge, such as whether siblings are equally general or whether something should be a class or a value. It works through the `judgment` rules with you.
 
-## Repository layout
+## Repository Layout
 
 ```text
 bin/okb.js              launcher (npm link target)
@@ -87,7 +89,7 @@ sources/                the source PDFs (gitignored; see sources/README.md)
 tests/                  node:test suites
 ```
 
-## Changing the rules
+## Changing Rules
 
 Edit `meta-kb/src/*.yaml`, then:
 
