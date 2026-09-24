@@ -23,6 +23,31 @@ npm test             # the test suite, including building the wine example end t
 
 `pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
 
+## Updating
+
+Check which version you have:
+
+```bash
+okb version          # okb 1.0.0 · meta-KB 2.3.0
+```
+
+The meta-KB version tracks changes to the method and rules; [`meta-kb/README.md`](meta-kb/README.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).
+
+To update:
+
+```bash
+cd ontology-kit
+git pull
+npm install          # dependencies can change between versions
+okb version
+```
+
+You don't need to run `npm link` again. It points at this folder, so `okb` runs the new code right away. Link again only if you switch Node versions or move the folder.
+
+Skills you linked into `~/.claude/skills/` update with the repo. If you copied or uploaded them instead, replace the old copies with the new ones from `skills/`. Either way, start a new Claude session so it loads the new version.
+
+Existing ontologies keep working: okb converts older file formats when it loads them, and new rules only add findings.
+
 ## Getting started
 
 1. Read the 2-minute version: an ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base.
