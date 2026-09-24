@@ -10,7 +10,8 @@
  *   - repo paths (src/..., docs/..., meta-kb/..., tests/..., examples/..., skills/...)
  *   - rule ids (hier-*, slot-*, naming-*, ...), checked against the compiled meta-KB
  *   - node and edge types in docs/FORMAT.md tables, checked against meta-kb/src/format.yaml
- *   - meta-KB counts ("55 rules", "34 glossary concepts"), checked against meta-kb/data/manifest.json
+ *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
+ *     checked against meta-kb/data/manifest.json
  * Exit code 1 if anything is found. It can't judge prose; the skill covers that.
  */
 import { existsSync, readFileSync } from "node:fs";
@@ -28,7 +29,7 @@ const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 interface Problem {
   file: string;
   line: number;
-  kind: "command" | "flag" | "npm-script" | "path" | "rule" | "format-type" | "count";
+  kind: "command" | "flag" | "npm-script" | "path" | "rule" | "format-type" | "count" | "version";
   message: string;
 }
 
@@ -79,6 +80,7 @@ function metaCounts(): Map<string, number> {
   ]);
 }
 const COUNTS = metaCounts();
+const META_VERSION = (JSON.parse(read("meta-kb/data/manifest.json")) as { version: string }).version;
 
 const RULE_ID = /`((?:struct|hier|inst|slot|disjoint|naming|scope|doc|reuse|terms|prov)-[a-z0-9-]+)`/g;
 const REPO_PATH = /(?<![\w./-])((?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
@@ -119,6 +121,9 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
         const actual = COUNTS.get(m[2]);
         if (actual !== undefined && Number(m[1]) !== actual) problems.push({ file, line, kind: "count", message: `Says ${m[1]} ${m[2]}; the meta-KB has ${actual}.` });
       }
+    }
+    for (const m of text.matchAll(/meta-KB (\d+\.\d+\.\d+)/g)) {
+      if (m[1] !== META_VERSION) problems.push({ file, line, kind: "version", message: `Says meta-KB ${m[1]}; it's ${META_VERSION}.` });
     }
     for (const m of text.matchAll(/npm run ([\w:-]+)/g)) {
       if (!scripts.has(m[1])) problems.push({ file, line, kind: "npm-script", message: `package.json has no '${m[1]}' script.` });
