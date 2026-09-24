@@ -28,7 +28,7 @@
     "typescript": "^5.9.0"
   },
   "optionalDependencies": {
-    "pdfjs-dist": "^5.4.0"
+    "pdfjs-dist": "^6.3.289"
   },
   "dependencies": {
     "yaml": "^2.8.0"
