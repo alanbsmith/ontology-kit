@@ -18,6 +18,7 @@ node .claude/skills/okb-docs-drift/scripts/check-docs.ts README.md skills/ontolo
 ```
 
 It reports, with file and line:
+
 - **command / flag**: an `okb ...` in code (inline backticks or a fenced block) naming a command, subcommand or `--flag` that `src/cli.ts` doesn't accept. It knows the `property` / `relationship` aliases and their `--from` / `--to` flags.
 - **npm-script**: `npm run x` with no `x` in package.json.
 - **path**: a repo path (`src/...`, `docs/...`, `meta-kb/...`) that doesn't exist. Paths given as arguments to okb commands are skipped, because they're the user's own files.

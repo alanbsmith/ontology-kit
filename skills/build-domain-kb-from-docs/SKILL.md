@@ -30,6 +30,7 @@ The point of this skill is to be deterministic where possible and to stop for hu
 ## Step 2: Draft (one claim per quote)
 
 From each quote draft exactly one node, claiming no more than the quote supports, and link it with `--cites`:
+
 - A kind of thing → `okb class add ...`, then `okb quote add ... --cites <Class>` (or add `--cites` when quoting).
 - A property/prop/option → `okb property add` with facets; options become `--values`.
 - A link between things (a component composes another, a token is used by a component) → `okb relationship add <name> --from <Class> --to <Class>`. Its values are stored as edges named after it (`composes` → `:COMPOSES`).
@@ -51,6 +52,7 @@ This step must not be skipped or merged into Step 2; `okb validate` blocks every
 For Class and Slot nodes the "statement" is the node's `description` plus its facets (allowed values, cardinality, parent).
 
 Record each result:
+
 - `okb verify <node> --status SUPPORTED [--confidence verbatim|paraphrased]`
 - `okb verify <node> --status OVERREACH --corrected "<narrower statement>"`: the original is kept in `_originalDraft`, and the node stays blocked until a person runs `okb verify <node> --approve`.
 - `okb verify <node> --status UNSUPPORTED`, then `okb remove <node>`. It never ships.

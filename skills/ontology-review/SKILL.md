@@ -23,18 +23,18 @@ If this review is high-stakes (going into a shared repo or production), do steps
 
 Work through each judgment rule from `okb review` against the actual ontology. Use the rule's `question`, and for anything non-obvious read the full rule and its source quote with `okb explain <rule-id>`. For each rule, either name specific nodes that violate it, with your reasoning, or say plainly that nothing does.
 
-| Rule | What to look at |
-|---|---|
-| `hier-is-a-means-kind-of` | Every IS_A edge: "Every <child> is, by definition, a <parent>." Watch for part-of, made-by, role, "usually". |
-| `hier-siblings-same-generality` | Each parent with 2+ children: is one child a kind of another? Would an expert put them on the same level? Is the parent mixing classification axes (region vs. grape variety)? |
-| `hier-no-subclass-per-restriction` | Classes that only fix one slot value. Could they just be that value? |
-| `hier-class-or-value` | Walk `okb explain decision.class-or-value` on suspicious classes *and* on enumerated values that might deserve to be classes. |
-| `hier-stable-membership` | Classes that instances would move in and out of (status, state, location). |
-| `inst-natural-hierarchy-as-classes` | Instances that contain other instances in the domain. |
-| `inst-granularity` | Are instances at the level of the things the competency questions ask about? |
-| `slot-domain-fits-all` | For each slot, every class that inherits it: does each really have this property? |
-| `reuse-considered` | Did they actually look for an existing vocabulary, standard or internal glossary? |
-| `doc-record-decisions` | Multiple inheritance, terminological classes, --force'd names, deliberate omissions: is each recorded? |
+| Rule                                | What to look at                                                                                                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `hier-is-a-means-kind-of`           | Every IS_A edge: "Every <child> is, by definition, a <parent>." Watch for part-of, made-by, role, "usually".                                                                   |
+| `hier-siblings-same-generality`     | Each parent with 2+ children: is one child a kind of another? Would an expert put them on the same level? Is the parent mixing classification axes (region vs. grape variety)? |
+| `hier-no-subclass-per-restriction`  | Classes that only fix one slot value. Could they just be that value?                                                                                                           |
+| `hier-class-or-value`               | Walk `okb explain decision.class-or-value` on suspicious classes _and_ on enumerated values that might deserve to be classes.                                                  |
+| `hier-stable-membership`            | Classes that instances would move in and out of (status, state, location).                                                                                                     |
+| `inst-natural-hierarchy-as-classes` | Instances that contain other instances in the domain.                                                                                                                          |
+| `inst-granularity`                  | Are instances at the level of the things the competency questions ask about?                                                                                                   |
+| `slot-domain-fits-all`              | For each slot, every class that inherits it: does each really have this property?                                                                                              |
+| `reuse-considered`                  | Did they actually look for an existing vocabulary, standard or internal glossary?                                                                                              |
+| `doc-record-decisions`              | Multiple inheritance, terminological classes, --force'd names, deliberate omissions: is each recorded?                                                                         |
 
 Then double-check every **heuristic** finding from `okb validate`. Say whether it's a real problem or a false positive (e.g. "Sauternes" isn't a plural). A false positive should be recorded with `okb decision add ... --waives <rule-id>`.
 
@@ -52,6 +52,7 @@ Then group findings:
 4. **Looks good**: what's well done, briefly and specifically.
 
 Each finding has:
+
 - **What** is wrong, naming the classes/slots involved, in plain words;
 - **Why** it matters, in one sentence, with the rule id and source (e.g. `hier-siblings-same-generality`, Ontology 101 §4.2, p.14);
 - **Fix**: the exact okb command(s), or the `okb decision add ...` that records why it's fine as is.

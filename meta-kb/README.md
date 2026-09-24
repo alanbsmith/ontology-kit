@@ -14,10 +14,11 @@ It is itself an LPG (`data/nodes.json`, `data/edges.json`), so you can load it i
 
 Every non-toolkit claim is tied to a `SourceLocation`: a **verbatim** quote with section and PDF page number, checked word-for-word against the PDF by `npm run verify:quotes`.
 
-- **Ontology 101**: Noy, N.F. & McGuinness, D.L. (2001). *Ontology Development 101: A Guide to Creating Your First Ontology.* Stanford. The method, rules and wine examples.
-- **Gruber 1993**: Gruber, T.R. *A Translation Approach to Portable Ontology Specifications.* Knowledge Acquisition 5(2). The definition of an ontology, the "knowledge level" principle, and documentation strings. Page numbers are PDF pages (the PDF has a cover page, so they're one more than the printed numbers).
+- **Ontology 101**: Noy, N.F. & McGuinness, D.L. (2001). _Ontology Development 101: A Guide to Creating Your First Ontology._ Stanford. The method, rules and wine examples.
+- **Gruber 1993**: Gruber, T.R. _A Translation Approach to Portable Ontology Specifications._ Knowledge Acquisition 5(2). The definition of an ontology, the "knowledge level" principle, and documentation strings. Page numbers are PDF pages (the PDF has a cover page, so they're one more than the printed numbers).
 
 Each rule states its **basis**:
+
 - `direct`: the cited passage states the rule.
 - `interpretive`: it follows from a cited definition; `rationale` explains the step.
 - `operational`: a toolkit convention with no source. Says so plainly and cites nothing.
@@ -26,18 +27,18 @@ Each rule states its **basis**:
 
 ## Schema
 
-| Node | Key properties | Edges |
-|---|---|---|
-| `MetaKB` | version, formatVersion | |
-| `Source` | title, authors, year, url | |
-| `SourceLocation` | section, page, quote, deepLink | `PART_OF` → Source |
-| `Principle` | name, statement, plainLanguage | `CITES` → SourceLocation |
-| `Concept` | name, aliases, definition, plainLanguage, example, inThisToolkit, origin | `DEFINED_IN` → SourceLocation |
-| `Rule` | key, modality, basis, check, severity, severityReason, fromStep, statement, plainLanguage, review, fix | `JUSTIFIED_BY` → Rationale, `GOVERNS` → Concept |
-| `Rationale` | explanation | `CITES` → SourceLocation |
-| `Step` | order, name, goal, whyItMatters, guidingQuestions, outputs, doneWhen, tips, wine, commands | `PRECEDES` → Step, `APPLIES` → Rule, `INTRODUCES` → Concept, `USES` → Decision, `CITES` → SourceLocation |
-| `Decision` | name, whenYouFaceIt, tests[{ask, ifYes, ifNo}], note, wine | `CITES` → SourceLocation |
-| `NodeType`, `EdgeType` | the okb file-format registry; origin `ontology101` \| `operational` | `MODELS` → Concept |
+| Node                   | Key properties                                                                                         | Edges                                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `MetaKB`               | version, formatVersion                                                                                 |                                                                                                          |
+| `Source`               | title, authors, year, url                                                                              |                                                                                                          |
+| `SourceLocation`       | section, page, quote, deepLink                                                                         | `PART_OF` → Source                                                                                       |
+| `Principle`            | name, statement, plainLanguage                                                                         | `CITES` → SourceLocation                                                                                 |
+| `Concept`              | name, aliases, definition, plainLanguage, example, inThisToolkit, origin                               | `DEFINED_IN` → SourceLocation                                                                            |
+| `Rule`                 | key, modality, basis, check, severity, severityReason, fromStep, statement, plainLanguage, review, fix | `JUSTIFIED_BY` → Rationale, `GOVERNS` → Concept                                                          |
+| `Rationale`            | explanation                                                                                            | `CITES` → SourceLocation                                                                                 |
+| `Step`                 | order, name, goal, whyItMatters, guidingQuestions, outputs, doneWhen, tips, wine, commands             | `PRECEDES` → Step, `APPLIES` → Rule, `INTRODUCES` → Concept, `USES` → Decision, `CITES` → SourceLocation |
+| `Decision`             | name, whenYouFaceIt, tests[{ask, ifYes, ifNo}], note, wine                                             | `CITES` → SourceLocation                                                                                 |
+| `NodeType`, `EdgeType` | the okb file-format registry; origin `ontology101` \| `operational`                                    | `MODELS` → Concept                                                                                       |
 
 ## Editing
 

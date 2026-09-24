@@ -17,14 +17,14 @@ Both are mechanical errors (a wrong number and a strengthened modality). A separ
 
 Most sources will be plain markdown, like component docs converted from MDX. okb reads them itself (`src/markdown.ts`):
 
-| In the file | How okb treats it |
-|---|---|
-| YAML frontmatter | parsed and stored on the Source as `meta`; quotable, with locator `frontmatter` |
-| headings | give every block a **heading path**: `Accessibility > Touch Target Size` |
-| paragraphs, list items (one block each), `>` callouts | quotable; `> **Caution:** …` gets the locator `… > Caution callout` |
-| table rows | one block per row, with the column names: `PrimaryButton > Props > row: size` |
-| links and images | the link or alt text is kept and the URL dropped, so quotes match what readers see |
-| fenced code, HTML comments | **not quotable.** Examples show usage; they don't state rules. Cite the prose or the component's source instead (`--allow-code` overrides this). |
+| In the file                                           | How okb treats it                                                                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| YAML frontmatter                                      | parsed and stored on the Source as `meta`; quotable, with locator `frontmatter`                                                                  |
+| headings                                              | give every block a **heading path**: `Accessibility > Touch Target Size`                                                                         |
+| paragraphs, list items (one block each), `>` callouts | quotable; `> **Caution:** …` gets the locator `… > Caution callout`                                                                              |
+| table rows                                            | one block per row, with the column names: `PrimaryButton > Props > row: size`                                                                    |
+| links and images                                      | the link or alt text is kept and the URL dropped, so quotes match what readers see                                                               |
+| fenced code, HTML comments                            | **not quotable.** Examples show usage; they don't state rules. Cite the prose or the component's source instead (`--allow-code` overrides this). |
 
 Matching ignores markdown syntax, line wrapping and punctuation, but not words, so "24px" never matches "44px". Every quote records its **line range**, and with `--repo-url` gets a GitHub link to those exact lines (`…/button.md?plain=1#L655`).
 
@@ -44,15 +44,16 @@ Work through the outline block by block, in the sections your competency questio
 
 ### 2. Draft: one claim per quote, no stronger than the quote
 
-| The quote describes... | Command |
-|---|---|
-| a kind of thing | `okb class add ...`, then `okb quote add ... --cites <Class>` |
-| a property, option or prop | `okb property add ...` with facets; options become `--values` |
-| a link between things | `okb relationship add <name> --from <Class> --to <Class>` |
-| a styling-only variant | use the [class-or-value decision guide](DECISIONS.md#decisionclass-or-value). Usually an enumerated value, not a class. |
-| a requirement or recommendation | `okb rule add --statement "..." --modality SHOULD --governs <Class> --cites <quote id>` |
+| The quote describes...          | Command                                                                                                                 |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| a kind of thing                 | `okb class add ...`, then `okb quote add ... --cites <Class>`                                                           |
+| a property, option or prop      | `okb property add ...` with facets; options become `--values`                                                           |
+| a link between things           | `okb relationship add <name> --from <Class> --to <Class>`                                                               |
+| a styling-only variant          | use the [class-or-value decision guide](DECISIONS.md#decisionclass-or-value). Usually an enumerated value, not a class. |
+| a requirement or recommendation | `okb rule add --statement "..." --modality SHOULD --governs <Class> --cites <quote id>`                                 |
 
 Rules for the draft:
+
 - "consider", "can", "may", "should" in the quote → **SHOULD / MAY** in the draft, never MUST. `okb rule add` warns when MUST is drafted from a quote with no "must/required/always/never".
 - Every number, enum value or named entity in the draft must appear in the quote. No filling gaps from general knowledge.
 - One quote → one claim.
@@ -84,12 +85,12 @@ okb validate --all
 okb source refresh src.button     # after the doc changes: re-locates every quote, updates lines and links
 ```
 
-| Rule | What it catches |
-|---|---|
-| `prov-verified` (error) | extracted nodes that were never verified, UNSUPPORTED results, and corrections not yet approved |
-| `prov-cites-quote` (error) | a Rule, or a node marked `extracted`, with no verbatim quote from a Source |
-| `prov-quote-current` (error / hint) | a quote no longer in the file (error), or one that moved to different lines (hint: run `okb source refresh`) |
-| `prov-duplicate-quotes` (hint) | near-identical quotes from different documents, often copy-pasted docs. `okb drift <folder>...` compares across ontologies. |
+| Rule                                | What it catches                                                                                                             |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `prov-verified` (error)             | extracted nodes that were never verified, UNSUPPORTED results, and corrections not yet approved                             |
+| `prov-cites-quote` (error)          | a Rule, or a node marked `extracted`, with no verbatim quote from a Source                                                  |
+| `prov-quote-current` (error / hint) | a quote no longer in the file (error), or one that moved to different lines (hint: run `okb source refresh`)                |
+| `prov-duplicate-quotes` (hint)      | near-identical quotes from different documents, often copy-pasted docs. `okb drift <folder>...` compares across ontologies. |
 
 Where a value is mechanically checkable against code (a prop's allowed values, a default, a size), compare it to the implementation (types, Storybook args, tests) rather than trusting the prose. Docs drift from code.
 
