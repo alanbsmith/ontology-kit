@@ -10,13 +10,26 @@ A toolkit that walks a beginner through building their first ontology, following
 | **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                       |
 | **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate). |
 
+## Installation
+
+Needs **Node.js 24+** (okb runs its TypeScript source directly; there's no build step).
+
+```bash
+cd ontology-kit
+npm install          # one runtime dependency (yaml, for markdown frontmatter); the rest are dev tools
+npm link             # puts `okb` on your PATH (or use: node src/cli.ts ...)
+npm test             # the test suite, including building the wine example end to end
+```
+
+`pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
+
 ## Getting started
 
 1. Read the 2-minute version: an ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base.
 2. Skim the worked example: **[examples/wine/TRANSCRIPT.md](examples/wine/TRANSCRIPT.md)** builds the paper's wine ontology command by command, with real output.
 3. Start your own.
 
-   Either ask Claude to `coach me through building an ontology` (uses the ontology-coach skill). To add the skill, [install okb](#installation), then link the skill from this folder:
+   Either ask Claude to `coach me through building an ontology` (uses the ontology-coach skill). To add the skill, link it from this folder:
 
    ```bash
    mkdir -p ~/.claude/skills
@@ -35,19 +48,6 @@ A toolkit that walks a beginner through building their first ontology, following
    okb explain range   # plain-language explanation of any term, rule or step
    okb validate        # check your work (only rules relevant to your current step)
    ```
-
-## Installation
-
-Needs **Node.js 24+** (okb runs its TypeScript source directly; there's no build step).
-
-```bash
-cd ontology-kit
-npm install          # one runtime dependency (yaml, for markdown frontmatter); the rest are dev tools
-npm link             # puts `okb` on your PATH (or use: node src/cli.ts ...)
-npm test             # the test suite, including building the wine example end to end
-```
-
-`pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
 
 ## The method
 
