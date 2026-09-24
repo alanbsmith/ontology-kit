@@ -81,7 +81,7 @@ Pick one competency question and add just enough instances to answer it end to e
 
 ## Widening a question
 
-A question like "When should I use a PrimaryButton?" is one example of a type. Answering only that one passes the competency test without being very useful. So once a question is answered (Step 7, or linked in Step 8), take a moment to widen it. Do this once per question, never all at once, and never before the model exists.
+A question like "When should I use a PrimaryButton?" is one example of a type. Answering only that one passes the competency test without being very useful. Once a question is answered (Step 7, or linked in Step 8), take a moment to widen it. Do this once per question, never all at once, and never before the model exists.
 
 1. **Read the family from okb.** The `okb cq link` tip (or `okb review`, rule `scope-cq-families`) names what the ontology already has: sibling classes and other instances (the same question about similar things), and the subject's slots no question uses yet (more about the same thing).
 2. **Offer three directions, briefly, in their words:** the same question about similar things ("…and SecondaryButton, TertiaryButton?"), more about the same subject ("its accessibility requirements? what it's preferred over?"), and follow-ups the answer raised. Use a multiple-choice question when AskUserQuestion is available, with "just this question" as a real option.
