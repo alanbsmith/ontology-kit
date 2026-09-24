@@ -14,16 +14,27 @@ A toolkit that walks a beginner through building their first ontology, following
 
 1. Read the 2-minute version: an ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base.
 2. Skim the worked example: **[examples/wine/TRANSCRIPT.md](examples/wine/TRANSCRIPT.md)** builds the paper's wine ontology command by command, with real output.
-3. Start your own. Either ask Claude to `coach me through building an ontology` (uses the ontology-coach skill), or run it yourself:
+3. Start your own.
 
-```bash
-okb init my-ontology --name "My Ontology"
-cd my-ontology
-okb status          # where you are and what's next, at any time
-okb step            # the guide for the current step
-okb explain range   # plain-language explanation of any term, rule or step
-okb validate        # check your work (only rules relevant to your current step)
-```
+   Either ask Claude to `coach me through building an ontology` (uses the ontology-coach skill). To add the skill, [install okb](#installation), then link the skill from this folder:
+
+   ```bash
+   mkdir -p ~/.claude/skills
+   ln -s "$PWD/skills/ontology-coach" ~/.claude/skills/ontology-coach
+   ```
+
+   Claude Code and Cursor both load skills from `~/.claude/skills/`, and the link keeps the skill current when you update this repo. Start it by asking, or with `/ontology-coach`. The other skills in `skills/` install the same way.
+
+   Or run it yourself:
+
+   ```bash
+   okb init my-ontology --name "My Ontology"
+   cd my-ontology
+   okb status          # where you are and what's next, at any time
+   okb step            # the guide for the current step
+   okb explain range   # plain-language explanation of any term, rule or step
+   okb validate        # check your work (only rules relevant to your current step)
+   ```
 
 ## Installation
 
