@@ -16,13 +16,13 @@ The point of this skill is to be deterministic where possible and to stop for hu
 3. Load the modeling rules: `okb explain` (list), and `okb explain <rule-id>` for any you're unsure of. Don't invent structural rules beyond the meta-KB. If a modeling question isn't answered by a meta-KB rule or decision guide, raise it as an open question in the output rather than deciding silently.
 4. Register the document, from a local copy (the markdown source, not the rendered website):
    `okb source add <path/to/doc.md> --repo-url <GitHub URL of the file> [--url <rendered page URL>]`
-   Report any document problems it prints (e.g. malformed table rows) in your output. They're documentation bugs worth fixing at the source.
+   Report any document problems it prints (for example malformed table rows) in your output. They're documentation bugs worth fixing at the source.
 
 ## Step 1: Extract (quote first, nothing else)
 
 1. `okb source outline <source> --quotable --json` gives the worklist: every quotable block with its heading path, lines, kind (paragraph, list item, callout, table row, frontmatter) and whether it's already quoted. Code examples and HTML comments are excluded on purpose: examples show usage but don't state rules.
 2. Work through the blocks in the sections your competency questions care about. For each candidate class, property, relationship, allowed value or rule, quote the **literal** text: `okb quote add <source> "<verbatim text>" [--line N]`.
-   - okb refuses text that isn't in the file (showing the closest real text) and asks for `--line` when the text appears in several places. Pick the occurrence in the section that's actually about the thing you're extracting (e.g. `DeleteButton > Props`, not `PrimaryButton > Props`).
+   - okb refuses text that isn't in the file (showing the closest real text) and asks for `--line` when the text appears in several places. Pick the occurrence in the section that's actually about the thing you're extracting (for example `DeleteButton > Props`, not `PrimaryButton > Props`).
    - Quote from the prose. For a prop table, quote the row's description (the row's locator is `… > Props > row: <prop>`).
    - Facts that exist only in code or generated output (types, defaults computed by code) must come from the component source, not from a code example in the doc.
 3. If no single passage supports a candidate, create nothing for it. Dropping an unsupported candidate counts as success.

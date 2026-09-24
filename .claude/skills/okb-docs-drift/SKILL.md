@@ -1,6 +1,6 @@
 ---
 name: okb-docs-drift
-description: Check ontology-kit's hand-written docs (README.md, CLAUDE.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, meta-kb/README.md and the SKILL.md files under skills/) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches src/cli.ts, src/ops/, meta-kb/src/*.yaml or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
+description: Check ontology-kit's hand-written docs (README.md, CLAUDE.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, the meta-KB README and the SKILL.md files under skills/) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches src/cli.ts, src/ops/, the meta-KB YAML or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
 ---
 
 # okb docs drift check
@@ -36,7 +36,7 @@ The script knows that names exist, not that the docs say true things about them.
 - **Architecture descriptions.** The layout in README.md and the architecture in CLAUDE.md should match `src/` (for example `ops/` split by reason to change, `relationships.ts` owning edge storage, `types.ts` typing the file format). A module that was split, renamed or merged is the most common drift.
 - **The skills.** `skills/*/SKILL.md` drive the CLI step by step. Walk each workflow against `okb help` and the command's usage message: do the commands run in that order, and do the JSON fields the skill reads (`okb review --json`, `okb validate --json`) still exist with those names?
 - **The file format.** docs/FORMAT.md's property lists should match the interfaces in `src/types.ts` (`ClassNode`, `SlotNode`, ...), because those are what okb actually reads and writes.
-- **Versions.** meta-kb/README.md's changelog should cover `VERSION` in `meta-kb/build.ts`.
+- **Versions.** `meta-kb/README.md`'s changelog should cover `VERSION` in `meta-kb/build.ts`.
 
 Leave generated docs alone (METHOD, GLOSSARY, RULES, DECISIONS say "Generated from the meta-KB" at the top). If one of them is wrong, the fix is in `meta-kb/src/*.yaml` followed by `npm run build:meta && npm run docs`.
 

@@ -97,4 +97,4 @@ npm run docs            # regenerate docs/
 npm test
 ```
 
-The build fails if a rule cites a quote that doesn't exist, if a mechanical rule has no check in `src/checks.ts` (or a check has no rule), or if a step's checklist refers to a status check that isn't implemented. See [meta-kb/README.md](meta-kb/README.md).
+The build fails if a rule cites a quote that doesn't exist, if a mechanical rule has no check in `src/checks.ts` (or a check has no rule), or if a step's checklist refers to a status check that isn't implemented. See [`meta-kb/README.md`](meta-kb/README.md).

@@ -23,22 +23,22 @@ Each rule states its **basis**:
 - `interpretive`: it follows from a cited definition; `rationale` explains the step.
 - `operational`: a toolkit convention with no source. Says so plainly and cites nothing.
 
-…and its **modality**, taken from the passage's own wording ("must"/"should always"/"wrong" → MUST; "should" or an imperative guideline → SHOULD; "consider"/"may"/"can" → MAY). Where the toolkit treats a rule more strictly or leniently than its modality suggests, `severity` is overridden **with a written `severityReason`** (e.g. `hier-no-cycles` is SHOULD NOT in the paper but an error here, because okb has no way to declare intended equivalence).
+…and its **modality**, taken from the passage's own wording ("must"/"should always"/"wrong" → MUST; "should" or an imperative guideline → SHOULD; "consider"/"may"/"can" → MAY). Where the toolkit treats a rule more strictly or leniently than its modality suggests, `severity` is overridden **with a written `severityReason`** (for example `hier-no-cycles` is SHOULD NOT in the paper but an error here, because okb has no way to declare intended equivalence).
 
 ## Schema
 
-| Node                   | Key properties                                                                                         | Edges                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `MetaKB`               | version, formatVersion                                                                                 |                                                                                                          |
-| `Source`               | title, authors, year, url                                                                              |                                                                                                          |
-| `SourceLocation`       | section, page, quote, deepLink                                                                         | `PART_OF` → Source                                                                                       |
-| `Principle`            | name, statement, plainLanguage                                                                         | `CITES` → SourceLocation                                                                                 |
-| `Concept`              | name, aliases, definition, plainLanguage, example, inThisToolkit, origin                               | `DEFINED_IN` → SourceLocation                                                                            |
-| `Rule`                 | key, modality, basis, check, severity, severityReason, fromStep, statement, plainLanguage, review, fix | `JUSTIFIED_BY` → Rationale, `GOVERNS` → Concept                                                          |
-| `Rationale`            | explanation                                                                                            | `CITES` → SourceLocation                                                                                 |
-| `Step`                 | order, name, goal, whyItMatters, guidingQuestions, outputs, doneWhen, tips, wine, commands             | `PRECEDES` → Step, `APPLIES` → Rule, `INTRODUCES` → Concept, `USES` → Decision, `CITES` → SourceLocation |
-| `Decision`             | name, whenYouFaceIt, tests[{ask, ifYes, ifNo}], note, wine                                             | `CITES` → SourceLocation                                                                                 |
-| `NodeType`, `EdgeType` | the okb file-format registry; origin `ontology101` \| `operational`                                    | `MODELS` → Concept                                                                                       |
+| Node                   | Key properties                                                                                                               | Edges                                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `MetaKB`               | `version`, `formatVersion`                                                                                                   |                                                                                                          |
+| `Source`               | `title`, `authors`, `year`, `url`                                                                                            |                                                                                                          |
+| `SourceLocation`       | `section`, `page`, `quote`, `deepLink`                                                                                       | `PART_OF` → Source                                                                                       |
+| `Principle`            | `name`, `statement`, `plainLanguage`                                                                                         | `CITES` → SourceLocation                                                                                 |
+| `Concept`              | `name`, `aliases`, `definition`, `plainLanguage`, `example`, `inThisToolkit`, `origin`                                       | `DEFINED_IN` → SourceLocation                                                                            |
+| `Rule`                 | `key`, `modality`, `basis`, `check`, `severity`, `severityReason`, `fromStep`, `statement`, `plainLanguage`, `review`, `fix` | `JUSTIFIED_BY` → Rationale, `GOVERNS` → Concept                                                          |
+| `Rationale`            | `explanation`                                                                                                                | `CITES` → SourceLocation                                                                                 |
+| `Step`                 | `order`, `name`, `goal`, `whyItMatters`, `guidingQuestions`, `outputs`, `doneWhen`, `tips`, `wine`, `commands`               | `PRECEDES` → Step, `APPLIES` → Rule, `INTRODUCES` → Concept, `USES` → Decision, `CITES` → SourceLocation |
+| `Decision`             | `name`, `whenYouFaceIt`, `tests[{ask, ifYes, ifNo}]`, `note`, `wine`                                                         | `CITES` → SourceLocation                                                                                 |
+| `NodeType`, `EdgeType` | the okb file-format registry; `origin` is `ontology101` or `operational`                                                     | `MODELS` → Concept                                                                                       |
 
 ## Editing
 
@@ -52,7 +52,7 @@ Each rule states its **basis**:
 
 The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differences:
 
-- **Every rule now cites a quote that actually supports it.** In v1 several rules cited the nearest section's headline quote rather than the sentence that states the rule (e.g. the no-cycles, synonym and one-child/twelve-children rules all cited unrelated sentences). The v1 inverse-slot rule also overstated the paper, which calls storing both directions redundant (just convenient for data entry) rather than something you should do.
+- **Every rule now cites a quote that actually supports it.** In v1 several rules cited the nearest section's headline quote rather than the sentence that states the rule (for example the no-cycles, synonym and one-child/twelve-children rules all cited unrelated sentences). The v1 inverse-slot rule also overstated the paper, which calls storing both directions redundant (just convenient for data entry) rather than something you should do.
 - **Modalities were re-derived from the wording.** For example, "Do not add strings such as 'class'…" sits in a list of things "to consider", so it's SHOULD NOT (warning), not MUST NOT.
 - **Quotes are checked mechanically** against the PDFs, with page numbers.
 - **Domain-neutral.** Examples come from the paper's wine ontology rather than Canvas Kit, and the `DomainKB` registry was dropped: which KBs follow the rules is recorded in each KB (`okb.json` → `metaKbVersion`), not in the meta-KB.

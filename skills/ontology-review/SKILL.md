@@ -36,7 +36,7 @@ Work through each judgment rule from `okb review` against the actual ontology. U
 | `reuse-considered`                  | Did they actually look for an existing vocabulary, standard or internal glossary?                                                                                              |
 | `doc-record-decisions`              | Multiple inheritance, terminological classes, --force'd names, deliberate omissions: is each recorded?                                                                         |
 
-Then double-check every **heuristic** finding from `okb validate`. Say whether it's a real problem or a false positive (e.g. "Sauternes" isn't a plural). A false positive should be recorded with `okb decision add ... --waives <rule-id>`.
+Then double-check every **heuristic** finding from `okb validate`. Say whether it's a real problem or a false positive (for example "Sauternes" isn't a plural). A false positive should be recorded with `okb decision add ... --waives <rule-id>`.
 
 Also check scope: does each competency question have what it needs (`scope-cq-coverage`)? Is there content no question needs (`scope-no-unneeded`)?
 
@@ -54,8 +54,8 @@ Then group findings:
 Each finding has:
 
 - **What** is wrong, naming the classes/slots involved, in plain words;
-- **Why** it matters, in one sentence, with the rule id and source (e.g. `hier-siblings-same-generality`, Ontology 101 §4.2, p.14);
-- **Fix**: the exact okb command(s), or the `okb decision add ...` that records why it's fine as is.
+- **Why** it matters, in one sentence, with the rule id and source (for example `hier-siblings-same-generality`, Ontology 101 §4.2, p.14);
+- **Fix**: the exact okb commands, or the `okb decision add ...` that records why it's fine as is.
 
 Keep the number of findings proportionate: consolidate repeats ("these 6 classes add nothing to their parents") rather than listing each. Where the right answer depends on the user's intent, say so and ask; don't pick for them (`principle.no-single-correct-model`).
 

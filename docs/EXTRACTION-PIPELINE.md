@@ -62,7 +62,7 @@ Rules for the draft:
 
 In a fresh context (a separate subagent, or at least a turn that doesn't carry the drafting reasoning), evaluate only `{quote, statement}` with this prompt:
 
-> You will be shown a QUOTE and a STATEMENT that claims to be derived from it. Do not use any outside knowledge of the subject matter. Judge only whether the STATEMENT follows from the QUOTE. Check specifically: (a) every number, enum value, or named entity in the STATEMENT appears in the QUOTE; (b) the modality (MUST/SHOULD/MAY/MUST NOT/SHOULD NOT) matches the QUOTE's actual strength of language — a "consider" or "can" in the quote never becomes a MUST or MUST NOT in the statement; (c) the STATEMENT doesn't combine this quote with an assumption from elsewhere. Return SUPPORTED, OVERREACH (with a corrected statement), or UNSUPPORTED.
+> You will be shown a QUOTE and a STATEMENT that claims to be derived from it. Do not use any outside knowledge of the subject matter. Judge only whether the STATEMENT follows from the QUOTE. Check specifically: (a) every number, enum value, or named entity in the STATEMENT appears in the QUOTE; (b) the modality (MUST/SHOULD/MAY/MUST NOT/SHOULD NOT) matches the QUOTE's actual strength of language: a "consider" or "can" in the quote never becomes a MUST or MUST NOT in the statement; (c) the STATEMENT doesn't combine this quote with an assumption from elsewhere. Return SUPPORTED, OVERREACH (with a corrected statement), or UNSUPPORTED.
 
 Record the result:
 

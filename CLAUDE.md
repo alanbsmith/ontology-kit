@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Requires **Node 24+** (see `.nvmrc`). There is no build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
+Requires **Node 24+** (see `.nvmrc`). No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
 
 ```bash
 npm test                                   # all suites (node:test)
@@ -15,9 +15,11 @@ node src/cli.ts <command>                  # run okb without npm link
 npm run build:meta                         # compile meta-kb/src/*.yaml -> meta-kb/data/*.json
 npm run docs                               # regenerate docs/METHOD|GLOSSARY|RULES|DECISIONS.md
 npm run example                            # rebuild examples/wine/ (also run by npm test)
+npm run format:docs                        # Prettier on the hand-written docs
+npm run lint:docs                          # Prettier check + markdownlint + Vale (brew install vale; vale sync once)
 ```
 
-There is no linter or formatter configured. Run `npx tsc` and `npm test` after every change.
+Run `npx tsc` and `npm test` after every change. There's no code linter. `npm run lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
 
 **Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/`. A diff in `examples/wine/TRANSCRIPT.md` after a refactor means CLI output changed, so treat it as a behavior change and check it. `okb.json` records today's date, so it differs on a new day; that part is expected.
 
