@@ -65,7 +65,7 @@ Full guide: [docs/METHOD.md](docs/METHOD.md) · Terms: [docs/GLOSSARY.md](docs/G
 
 ## Repository layout
 
-```
+```text
 bin/okb.js              launcher (npm link target)
 src/                    okb source (TypeScript, Node 24 type stripping)
   cli.ts ops.ts ops/    commands and the operations behind them (ops/ split by reason to change)
