@@ -38,7 +38,6 @@ export class Relationships {
     this.ont = ont;
   }
 
-  // ------------------------------------------------------------------ reading
   /** The slot that stores a relationship's edges: the slot itself, or the one it's the inverse of. */
   primary(slotId: string): string {
     return this.ont.sources(slotId, "INVERSE_OF")[0] ?? slotId;
@@ -90,7 +89,6 @@ export class Relationships {
     return (p?.type === "Slot" && p.edgeProperties) || [];
   }
 
-  // ------------------------------------------------------------------ values
   /**
    * Link `id` to `target` through a relationship slot. There's at most one edge per
    * (from, relationship, to); `props` (edge properties, or `rule`) are merged into it.
@@ -116,7 +114,6 @@ export class Relationships {
     this.ont.removeEdges((e) => e.type === spec.type && e.from === from && e.to === to);
   }
 
-  // ------------------------------------------------------------------ schema changes
   /** The edge type a relationship called `name` would be stored as; refuses structural and taken types. */
   typeFor(name: string, slotId: string): string {
     const t = naming.relType(name);

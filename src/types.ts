@@ -45,7 +45,6 @@ export function isOneOf<T extends string>(values: readonly T[], v: string | unde
   return (values as readonly string[]).includes(v as string);
 }
 
-// ------------------------------------------------------------------ values
 export const VALUE_TYPES = ["String", "Integer", "Float", "Number", "Boolean", "Enumerated", "Instance"] as const;
 export type ValueType = (typeof VALUE_TYPES)[number];
 /** Value types an edge property can have: everything except links to other things. */
@@ -61,7 +60,6 @@ export type Disposition = (typeof DISPOSITIONS)[number];
 export const CARDINALITIES = ["single", "multiple"] as const;
 export type Cardinality = (typeof CARDINALITIES)[number];
 
-// ------------------------------------------------------------------ provenance (extraction pipeline)
 export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
 
 export interface Verification {
@@ -80,7 +78,6 @@ export interface ExtractedFields {
   _originalDraft?: string;
 }
 
-// ------------------------------------------------------------------ nodes
 export interface OntologyNode {
   type: "Ontology";
   id: string;
@@ -249,7 +246,6 @@ export type OkbNode =
 export type NodeType = OkbNode["type"];
 export type NodeOf<T extends NodeType> = Extract<OkbNode, { type: T }>;
 
-// ------------------------------------------------------------------ findings
 export type Severity = "error" | "warning" | "info";
 
 export interface Finding {

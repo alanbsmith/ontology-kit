@@ -41,7 +41,6 @@ const list = (ont: Ontology, ids: Iterable<string>) => [...ids].map((i) => L(ont
 const classes = (ont: Ontology) => ont.ofType("Class");
 const slots = (ont: Ontology) => ont.ofType("Slot");
 
-// ------------------------------------------------------------------ value helpers
 function literalProblem(v: unknown, f: Facets): string | null {
   switch (f.valueType) {
     case "String":
@@ -83,9 +82,8 @@ function isTerminological(ont: Ontology, c: ClassNode): boolean {
   return Boolean(c.terminological) || ont.meta.kind === "terminological";
 }
 
-// ================================================================== CHECKS
 export const CHECKS: Record<string, Check> = {
-  // ---------------------------------------------------------------- structure
+  // Structure
   "struct-well-formed": (ont) => {
     const hits: Hit[] = [];
     const { nodeTypes, edgeTypes } = MetaKB.get().formatRegistry();
@@ -154,7 +152,7 @@ export const CHECKS: Record<string, Check> = {
     return hits;
   },
 
-  // ---------------------------------------------------------------- hierarchy
+  // Hierarchy
   "hier-no-cycles": (ont) => {
     const hits: Hit[] = [];
     const reported = new Set<string>();
@@ -266,7 +264,7 @@ export const CHECKS: Record<string, Check> = {
     return hits;
   },
 
-  // ---------------------------------------------------------------- instances
+  // Instances
   "inst-are-leaves": (ont) => {
     const hits: Hit[] = [];
     for (const e of ont.edges) {
@@ -291,7 +289,7 @@ export const CHECKS: Record<string, Check> = {
       })
       .map((e) => ({ message: `${L(ont, e.from)} is a direct instance of ${L(ont, e.to)}, which is abstract.`, nodes: [e.from, e.to] })),
 
-  // ---------------------------------------------------------------- slots
+  // Slots
   "slot-attach-most-general": (ont) => {
     const hits: Hit[] = [];
     for (const s of slots(ont)) {
@@ -571,7 +569,7 @@ export const CHECKS: Record<string, Check> = {
     return hits;
   },
 
-  // ---------------------------------------------------------------- disjointness
+  // Disjointness
   "disjoint-no-shared-members": (ont) => {
     const hits: Hit[] = [];
     const pairs = ont.edgesOf("DISJOINT_WITH").map((e) => [e.from, e.to] as const);
@@ -611,7 +609,7 @@ export const CHECKS: Record<string, Check> = {
     return hits;
   },
 
-  // ---------------------------------------------------------------- naming
+  // Naming
   "naming-convention-defined": (ont) => {
     if (ont.conventions?.source !== "default" && ont.conventions) return [];
     if (!ont.ofType("Class").length && !ont.ofType("Slot").length) return [];
@@ -708,7 +706,7 @@ export const CHECKS: Record<string, Check> = {
     return hits;
   },
 
-  // ---------------------------------------------------------------- scope & docs
+  // Scope & docs
   "scope-defined": (ont) => {
     const m = ont.meta;
     const missing: string[] = (["domain", "purpose"] as const).filter((k) => !m[k]);
@@ -771,7 +769,7 @@ export const CHECKS: Record<string, Check> = {
     return open.length ? [{ message: `${open.length} term(s) from Step 3 haven't been sorted yet: ${list(ont, open)}.`, nodes: open }] : [];
   },
 
-  // ---------------------------------------------------------------- provenance
+  // Provenance
   "prov-verified": (ont) => {
     const hits: Hit[] = [];
     for (const n of ont.nodes) {
@@ -875,7 +873,6 @@ function similarity(a: string, b: string): number {
   return (2 * inter) / Math.max(1, a.length - 1 + b.length - 1);
 }
 
-// ================================================================== runner
 export interface RunOptions {
   /** Ignore the current step and run every rule. */
   all?: boolean;

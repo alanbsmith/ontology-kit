@@ -102,7 +102,6 @@ export function matches(name: string, style: string | null | undefined): boolean
   return re ? re.test(name) : true;
 }
 
-// ------------------------------------------------------------------ plurals
 const INVARIANT = new Set([
   "series", "species", "sheep", "fish", "deer", "news", "means", "glass", "class", "status", "analysis",
   "basis", "axis", "gas", "bus", "chaos", "canvas", "lens", "corps", "cross", "business", "process",

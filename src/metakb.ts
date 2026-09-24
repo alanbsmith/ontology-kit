@@ -7,7 +7,7 @@ import type { GraphEdge, Modality, Severity } from "./types.ts";
 
 export const META_DIR = join(dirname(dirname(fileURLToPath(import.meta.url))), "meta-kb", "data");
 
-// ------------------------------------------------------------------ node types (see meta-kb/README.md "Schema")
+// Node types (see meta-kb/README.md "Schema")
 export interface MetaInfo {
   type: "MetaKB";
   id: string;

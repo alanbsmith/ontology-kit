@@ -62,7 +62,7 @@ async function main() {
     description: "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993).",
   });
 
-  // ---------------------------------------------------------- sources & locations
+  // Sources & locations
   const sources = new Map<string, any>(src.sources.map((s: any) => [s.id, s]));
   for (const s of src.sources) node({ type: "Source", ...s });
   const locIds = new Map<string, string>();
@@ -90,7 +90,7 @@ async function main() {
     }
   };
 
-  // ---------------------------------------------------------- quote verification
+  // Quote verification
   let quotesVerified = false;
   if (args.pdf?.length) {
     const pdfs = new Map(args.pdf.map((p) => p.split("=", 2) as [string, string]));
@@ -112,7 +112,7 @@ async function main() {
     quotesVerified = Object.keys(src.locations).every((s) => pdfs.has(s));
   }
 
-  // ---------------------------------------------------------- principles & concepts
+  // Principles & concepts
   for (const p of principles) {
     node({ type: "Principle", id: p.id, name: p.name, statement: p.statement, plainLanguage: p.plainLanguage });
     cite(p.id, p.cites);
@@ -128,7 +128,7 @@ async function main() {
     cite(c.id, c.cites, "DEFINED_IN");
   }
 
-  // ---------------------------------------------------------- rules
+  // Rules
   const ruleKeys = new Set<string>();
   for (const r of rules) {
     const rid = `rule.${r.id}`;
@@ -157,7 +157,7 @@ async function main() {
     }
   }
 
-  // ---------------------------------------------------------- decisions
+  // Decisions
   const decisionIds = new Set<string>();
   for (const d of decisions) {
     decisionIds.add(d.id);
@@ -165,7 +165,7 @@ async function main() {
     cite(d.id, d.cites);
   }
 
-  // ---------------------------------------------------------- steps
+  // Steps
   let prev: string | undefined;
   for (const s of [...steps].sort((a: any, b: any) => a.order - b.order)) {
     node({
@@ -193,7 +193,7 @@ async function main() {
     }
   }
 
-  // ---------------------------------------------------------- format registry
+  // Format registry
   for (const nt of fmt.nodeTypes) {
     const id = `nodetype.${nt.name}`;
     node({ type: "NodeType", id, name: nt.name, origin: nt.origin, required: nt.required, description: nt.description });
@@ -205,12 +205,12 @@ async function main() {
     edge(id, "MODELS", et.models);
   }
 
-  // ---------------------------------------------------------- validator <-> rules
+  // Validator <-> rules
   const automated = new Set(rules.filter((r: any) => r.check !== "judgment").map((r: any) => r.id));
   for (const k of automated as Set<string>) if (!(k in CHECKS)) errors.push(`rule ${k} is mechanical/heuristic but src/checks.ts has no check for it`);
   for (const k of Object.keys(CHECKS)) if (!automated.has(k)) errors.push(`src/checks.ts implements '${k}' but no mechanical/heuristic rule has that id`);
 
-  // ---------------------------------------------------------- referential integrity
+  // Referential integrity
   const ids = nodes.map((n) => n.id);
   const dup = ids.filter((id, i) => ids.indexOf(id) !== i);
   if (dup.length) errors.push(`duplicate node ids: ${[...new Set(dup)].join(", ")}`);

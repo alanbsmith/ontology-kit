@@ -4,7 +4,6 @@ import { edgeProps, nodeLabel, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
 import type { Finding, OkbNode, SlotNode } from "./types.ts";
 
-// ------------------------------------------------------------------ styling
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const wrap = (code: number) => (s: string) => (useColor ? `\x1b[${code}m${s}\x1b[0m` : s);
 export const c = { bold: wrap(1), dim: wrap(2), red: wrap(31), green: wrap(32), yellow: wrap(33), blue: wrap(34), cyan: wrap(36) };
@@ -24,7 +23,6 @@ function indent(text: string, pad: string, width = 96): string {
   return lines.map((l) => pad + l).join("\n");
 }
 
-// ------------------------------------------------------------------ findings
 export function formatFindings(findings: Finding[], ont: Ontology, opts: { all?: boolean; verbose?: boolean }): string {
   const meta = MetaKB.get();
   const open = findings.filter((f) => !f.explainedBy);
@@ -58,7 +56,6 @@ export function formatFindings(findings: Finding[], ont: Ontology, opts: { all?:
   return out.join("\n");
 }
 
-// ------------------------------------------------------------------ explain
 function quotes(meta: MetaKB, id: string): string[] {
   return meta.citations(id).map((loc) => `  “${loc.quote}”\n  ${c.dim("— " + meta.citeLine(loc))}`);
 }
@@ -194,7 +191,6 @@ export function listExplainable(): string {
   return out.join("\n");
 }
 
-// ------------------------------------------------------------------ tree
 export function tree(ont: Ontology, withInstances = false): string {
   const out: string[] = [];
   const printed = new Set<string>();
@@ -222,7 +218,6 @@ export function tree(ont: Ontology, withInstances = false): string {
   return out.join("\n");
 }
 
-// ------------------------------------------------------------------ show
 function fmtFacets(ont: Ontology, slotId: string, classes: Iterable<string> = []): string {
   const n = ont.get(slotId);
   const s: Partial<SlotNode> = n?.type === "Slot" ? n : {};
@@ -315,7 +310,6 @@ export function show(ont: Ontology, n: OkbNode): string {
   return out.join("\n");
 }
 
-// ------------------------------------------------------------------ mermaid
 export function mermaid(ont: Ontology): string {
   const id = (x: string) => naming.convert(ont.label(x), "PascalCase").replace(/[^A-Za-z0-9]/g, "") || x.replace(/[^A-Za-z0-9]/g, "_");
   const out = ["```mermaid", "classDiagram"];

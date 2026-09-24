@@ -32,7 +32,6 @@ interface Problem {
   message: string;
 }
 
-// ------------------------------------------------------------------ what exists
 /** okb command -> its subcommands and flags, from the `case "x":` blocks in src/cli.ts. */
 function cliSurface(): Map<string, { subs: Set<string>; flags: Set<string> }> {
   const src = read("src/cli.ts");
@@ -81,7 +80,6 @@ function metaCounts(): Map<string, number> {
 }
 const COUNTS = metaCounts();
 
-// ------------------------------------------------------------------ checks
 const RULE_ID = /`((?:struct|hier|inst|slot|disjoint|naming|scope|doc|reuse|terms|prov)-[a-z0-9-]+)`/g;
 const REPO_PATH = /(?<![\w./-])((?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
 
@@ -159,7 +157,7 @@ function isGenerated(p: string): boolean {
   return /^sources\/.*\.pdf$/.test(p) || /^examples\/wine\//.test(p);
 }
 
-// ------------------------------------------------------------------ main
+// Main
 const args = process.argv.slice(2);
 const json = args.includes("--json");
 const files = args.filter((a) => !a.startsWith("--")).map((f) => relative(ROOT, resolve(f)));

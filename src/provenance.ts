@@ -31,7 +31,6 @@ export function readMarkdownSource(ont: Ontology, src: SourceNode): MdDoc {
   return parseMarkdown(readFileSync(p, "utf8"));
 }
 
-// ------------------------------------------------------------------ sources
 export function addSource(ont: Ontology, file: string, o: { title?: string; url?: string; repoUrl?: string; id?: string }): Notes {
   const abs = resolve(file);
   if (!existsSync(abs)) throw new OkbError(`File not found: ${file}`);
@@ -60,7 +59,6 @@ export function addSource(ont: Ontology, file: string, o: { title?: string; url?
   return notes;
 }
 
-// ------------------------------------------------------------------ quotes
 export interface AddQuoteOpts {
   line?: number;
   cites?: string[];
@@ -178,7 +176,6 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
   return notes;
 }
 
-// ------------------------------------------------------------------ domain rules & verification
 export function addRule(ont: Ontology, o: { statement: string; modality: string; governs?: string[]; cites?: string[]; name?: string }): Notes {
   const modality = o.modality.toUpperCase().replace(/ /g, "_");
   if (!isOneOf(MODALITIES, modality)) throw new OkbError(`--modality must be one of ${MODALITIES.join(", ")}.`);

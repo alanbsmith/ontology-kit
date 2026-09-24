@@ -15,7 +15,7 @@ function sources(id: string): string[] {
   return meta.citations(id).map((l) => `> “${l.quote}”  \n> — ${meta.citeLine(l)}`);
 }
 
-// ------------------------------------------------------------------ METHOD
+// METHOD.md
 const method = HEADER("The method: eight steps");
 method.push(
   "Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an eighth, **Review and iterate**, which makes explicit the paper's instruction to stand back, test the ontology against its competency questions, and revise it.",
@@ -43,7 +43,7 @@ for (const s of meta.steps) {
   method.push("", "<details><summary>Source passages</summary>", "", ...sources(s.id).flatMap((x) => [x, ""]), "</details>", "");
 }
 
-// ------------------------------------------------------------------ GLOSSARY
+// GLOSSARY.md
 const glossary = HEADER("Glossary");
 glossary.push("Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.", "");
 const concepts = [...meta.ofType("Concept")].sort((a, b) => a.name.localeCompare(b.name));
@@ -58,7 +58,7 @@ for (const c of concepts) {
   glossary.push(...sources(c.id).flatMap((x) => [x, ""]));
 }
 
-// ------------------------------------------------------------------ RULES
+// RULES.md
 const rules = HEADER("Rules");
 rules.push(
   "What `okb validate` checks, and what the ontology-review skill asks about. Each rule's **modality** comes from the wording of the passage it cites (see *Modality* in the [glossary](GLOSSARY.md)):",
@@ -86,7 +86,7 @@ for (const r of allRules) {
   rules.push(...sources(r.id).flatMap((x) => [x, ""]));
 }
 
-// ------------------------------------------------------------------ DECISIONS
+// DECISIONS.md
 const decisions = HEADER("Decision guides");
 decisions.push("The recurring \"which way do I model this?\" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.", "");
 for (const d of meta.ofType("Decision")) {

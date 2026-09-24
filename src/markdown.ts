@@ -44,7 +44,6 @@ export interface MdDoc {
   problems: { line: number; message: string }[];
 }
 
-// ------------------------------------------------------------------ inline → plain text
 export function inlineToText(s: string): string {
   const codes: string[] = [];
   let t = s.replace(/`+([^`]*?)`+/g, (_m, c) => {
@@ -103,7 +102,6 @@ export function slugHeading(text: string): string {
   return inlineToText(text).toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, "").trim().replace(/\s/g, "-");
 }
 
-// ------------------------------------------------------------------ block parser
 export function parseMarkdown(src: string): MdDoc {
   const lines = src.replace(/\r\n?/g, "\n").split("\n");
   const blocks: MdBlock[] = [];
@@ -231,7 +229,6 @@ export function parseMarkdown(src: string): MdDoc {
   return { frontmatter, title, headings, blocks, lines, problems };
 }
 
-// ------------------------------------------------------------------ locating quotes
 export interface QuoteHit {
   blocks: MdBlock[];
   headingPath: string[];

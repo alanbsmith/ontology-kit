@@ -126,7 +126,7 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
   return { format: "okb-export/1", ontology: ont.meta.name, metaKbVersion: MetaKB.get().version, nodes, relationships: rels, notes };
 }
 
-// ------------------------------------------------------------------ Cypher
+// Cypher
 const ident = (s: string) => (/^[A-Za-z_][A-Za-z0-9_]*$/.test(s) ? s : "`" + s.replace(/`/g, "``") + "`");
 
 function literal(v: unknown): string {

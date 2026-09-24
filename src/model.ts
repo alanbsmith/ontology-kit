@@ -81,7 +81,6 @@ export class Ontology {
     return this._edges;
   }
 
-  // ------------------------------------------------------------------ io
   static create(root: string, name: string): Ontology {
     mkdirSync(root, { recursive: true });
     if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
@@ -139,7 +138,6 @@ export class Ontology {
     }
   }
 
-  // ------------------------------------------------------------------ indexes
   // addNode/addEdge update the indexes in place; everything else that changes
   // nodes or edges (load, removal, retyping edges) calls reindex().
 
@@ -226,7 +224,6 @@ export class Ontology {
     return n ? nodeLabel(n) : id;
   }
 
-  // ------------------------------------------------------------------ lookup
   /** Find a node by id, or by name/text (case- and delimiter-insensitive) among `types`. */
   find<T extends NodeType>(ref: string, types: T | readonly T[]): NodeOf<T>;
   find(ref: string, types?: NodeType | readonly NodeType[]): OkbNode;
@@ -286,7 +283,6 @@ export class Ontology {
     return scored.slice(0, limit).map((x) => x.name);
   }
 
-  // ------------------------------------------------------------------ mutation
   newId(type: NodeType, name?: string): string {
     if (type === "CompetencyQuestion" || type === "DesignDecision") {
       const p = type === "CompetencyQuestion" ? "cq" : "d";
@@ -346,7 +342,6 @@ export class Ontology {
     this.reindex();
   }
 
-  // ------------------------------------------------------------------ hierarchy
   parents(id: string): string[] {
     return this.targets(id, "IS_A");
   }
@@ -409,7 +404,6 @@ export class Ontology {
     return [...(n?.type === "Instance" ? this.instanceClasses(id) : this.up(id))];
   }
 
-  // ------------------------------------------------------------------ slots
   ownSlots(id: string): string[] {
     return this.targets(id, "HAS_SLOT");
   }
