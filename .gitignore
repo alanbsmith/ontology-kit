@@ -2,3 +2,7 @@ node_modules/
 sources/*.pdf
 *.tmp
 .DS_Store
+
+# Vale style packages (downloaded by `vale sync`)
+.vale/styles/*
+!.vale/styles/config/
