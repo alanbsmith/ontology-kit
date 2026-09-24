@@ -55,9 +55,9 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 
 `src/relationships.ts` is the one module that knows this, and it's reached as `ont.rel`. Read and write relationship values through `ont.rel.values`, `link`, `unlink` and `edge` (or `ont.statedValues`, which combines literal and relationship values), never by building edges directly. Schema changes go through its intents: `becomeRelationship`, `becomeProperty`, `declareInverse`, `rename` and `drop` (call `drop` before `removeNode` on a slot). Property values are stored on nodes instead (`Instance.values[slotId]`, `Class.fixedValues[slotId]`). `okb-lpg/1` files (`HAS_VALUE` edges) are migrated on load.
 
-## Refactoring in progress
+## Refactoring
 
-`docs/CODE-REVIEW.md` is a worklist of quality issues with a suggested order and a status for each item. When working through it, make each item its own commit, don't mix a refactor with a behavior change, and run `npx tsc` and `npm test` after every step.
+Make each change its own commit, don't mix a refactor with a behavior change, and run `npx tsc` and `npm test` after every step.
 
 ## Skills in this repo
 

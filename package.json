@@ -19,7 +19,7 @@
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
     "format:docs": "prettier --write \"**/*.md\"",
-    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && vale --glob=\"*.md\" README.md CLAUDE.md docs/FORMAT.md docs/EXTRACTION-PIPELINE.md docs/CODE-REVIEW.md meta-kb/README.md sources/README.md skills .claude/skills"
+    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && vale --glob=\"*.md\" README.md CLAUDE.md docs/FORMAT.md docs/EXTRACTION-PIPELINE.md meta-kb/README.md sources/README.md skills .claude/skills"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
