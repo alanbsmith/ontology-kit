@@ -11,6 +11,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const CLI = join(ROOT, "src", "cli.ts");
+// Every date okb records in the example (created, decision dates) is this day, so
+// rebuilding it gives identical files on any day and in any time zone.
+const EXAMPLE_DATE = "2026-09-23";
+const ENV = { ...process.env, NO_COLOR: "1", SOURCE_DATE_EPOCH: String(Date.parse(`${EXAMPLE_DATE}T00:00:00Z`) / 1000) };
 const DIR = join(ROOT, "examples", "wine");
 
 type Cmd = string[] | { note: string };
@@ -24,7 +28,7 @@ const md: string[] = [
 
 function run(args: string[], allowFail = false): string {
   try {
-    return execFileSync(process.execPath, [CLI, ...args], { cwd: DIR, encoding: "utf8", env: { ...process.env, NO_COLOR: "1" } });
+    return execFileSync(process.execPath, [CLI, ...args], { cwd: DIR, encoding: "utf8", env: ENV });
   } catch (e: any) {
     if (!allowFail) throw new Error(`okb ${args.join(" ")} failed:\n${e.stdout}${e.stderr}`);
     return (e.stdout ?? "") + (e.stderr ?? "");
@@ -49,7 +53,7 @@ function step(title: string, cmds: Cmd[], opts: { showOutput?: boolean; allowFai
 
 rmSync(DIR, { recursive: true, force: true });
 mkdirSync(dirname(DIR), { recursive: true });
-execFileSync(process.execPath, [CLI, "init", DIR, "--name", "Wine and Food"], { encoding: "utf8", env: { ...process.env, NO_COLOR: "1" } });
+execFileSync(process.execPath, [CLI, "init", DIR, "--name", "Wine and Food"], { encoding: "utf8", env: ENV });
 md.push("```console", '$ okb init wine --name "Wine and Food"', "```", "");
 
 step("Step 1: Scope and competency questions", [

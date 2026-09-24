@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
+import { today } from "../src/clock.ts";
 import { MetaKB } from "../src/metakb.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
@@ -67,6 +68,23 @@ describe("meta-KB", () => {
     assert.equal(meta.resolve("range")[0].id, "concept.range");
     assert.equal(meta.resolve("is-a")[0].id, "concept.subclass");
     assert.equal(meta.resolve("4")[0].id, "step.4-classes");
+  });
+});
+
+describe("dates", () => {
+  it("SOURCE_DATE_EPOCH pins today(), and a bad value is refused", () => {
+    const saved = process.env.SOURCE_DATE_EPOCH;
+    try {
+      process.env.SOURCE_DATE_EPOCH = String(Date.parse("2026-09-23T23:59:59Z") / 1000);
+      assert.equal(today(), "2026-09-23");
+      process.env.SOURCE_DATE_EPOCH = "yesterday";
+      assert.throws(() => today(), /whole seconds/);
+      delete process.env.SOURCE_DATE_EPOCH;
+      assert.match(today(), /^\d{4}-\d{2}-\d{2}$/);
+    } finally {
+      if (saved === undefined) delete process.env.SOURCE_DATE_EPOCH;
+      else process.env.SOURCE_DATE_EPOCH = saved;
+    }
   });
 });
 

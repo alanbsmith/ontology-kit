@@ -1,6 +1,7 @@
 /** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). */
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { today } from "./clock.ts";
 import { OkbError } from "./errors.ts";
 import * as naming from "./naming.ts";
 import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
@@ -84,7 +85,7 @@ export class Ontology {
   static create(root: string, name: string): Ontology {
     mkdirSync(root, { recursive: true });
     if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
-    const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: new Date().toISOString().slice(0, 10) };
+    const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: today() };
     const nodes: OkbNode[] = [{
       type: "Ontology", id: "ontology", name, domain: "", purpose: "", users: [], maintainers: [],
       outOfScope: [], kind: "application", reuseReviewed: false,

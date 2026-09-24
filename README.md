@@ -1,4 +1,4 @@
-# ontology-kit
+# Ontology Kit
 
 A toolkit that walks a beginner through building their first ontology, following the method in **Ontology Development 101** (Noy & McGuinness, 2001). It has three parts:
 

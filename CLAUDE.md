@@ -21,7 +21,7 @@ npm run lint:docs                          # Prettier check + markdownlint + Val
 
 Run `npx tsc` and `npm test` after every change. There's no code linter. `npm run lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
 
-**Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/`. A diff in `examples/wine/TRANSCRIPT.md` after a refactor means CLI output changed, so treat it as a behavior change and check it. `okb.json` records today's date, so it differs on a new day; that part is expected.
+**Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/`. A diff in `examples/wine/` after a refactor means CLI output changed, so treat it as a behavior change and check it. The example pins its dates with `SOURCE_DATE_EPOCH` (see `src/clock.ts`), so it rebuilds identically on any day.
 
 ## Architecture
 

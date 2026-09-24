@@ -1,6 +1,7 @@
 /** Design decisions, renaming and removing. */
 import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
+import { today } from "../clock.ts";
 import { MetaKB } from "../metakb.ts";
 import { OkbError, type Ontology, nameOrText } from "../model.ts";
 import type { NodeType } from "../types.ts";
@@ -18,7 +19,7 @@ export function addDecision(ont: Ontology, o: { title: string; decision: string;
   ont.addNode({
     type: "DesignDecision", id, title: o.title, decision: o.decision, question: o.question, rationale: o.rationale,
     alternatives: o.alternatives?.length ? o.alternatives : undefined, metaRules: o.waives?.length ? o.waives : undefined,
-    date: new Date().toISOString().slice(0, 10),
+    date: today(),
   });
   for (const a of o.about ?? []) ont.addEdge(id, "ABOUT", a === "ontology" ? "ontology" : ont.find(a).id);
   const notes = [`Recorded design decision ${id}: ${o.title}.`];
