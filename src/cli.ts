@@ -51,7 +51,7 @@ Step 7: instances      okb instance add "Chateau Morgon Beaujolais" --of Beaujol
 Step 8: review         okb cq link 1 Wine Food goesWellWith   ·   okb validate --all   ·   okb review
                        okb decision add --title "..." --decision "..." --why "..." [--about X] [--waives rule-id]
                        okb diagram [--out diagram.md]
-Export                 okb export [--format json|cypher] [--with-schema] [--no-inherited] [--out file]
+Export                 okb export [--format json|cypher] [--with-schema] [--no-inherited] [--no-rules] [--include-unverified] [--out file]
                        (instances as nodes labeled with their classes, ready for Neo4j / Neptune / Memgraph)
 
 Documents              okb source add docs/button.md [--repo-url https://github.com/.../button.md] [--url https://site/button]
@@ -538,11 +538,11 @@ async function main(argvIn: string[]) {
     }
 
     case "export": {
-      const { v } = parse(rest, { format: str, out: str, "with-schema": bool, "no-inherited": bool });
+      const { v } = parse(rest, { format: str, out: str, "with-schema": bool, "no-inherited": bool, "no-rules": bool, "include-unverified": bool });
       const ont = load(v);
       const fmt = v.format ?? (v.out?.endsWith(".cypher") || v.out?.endsWith(".cql") ? "cypher" : "json");
       if (!["json", "cypher"].includes(fmt)) throw new OkbError("--format must be json or cypher.");
-      const g = exportGraph(ont, { inherited: !v["no-inherited"], schema: v["with-schema"] });
+      const g = exportGraph(ont, { inherited: !v["no-inherited"], schema: v["with-schema"], rules: !v["no-rules"], unverified: v["include-unverified"] });
       const text = fmt === "cypher" ? toCypher(g) : JSON.stringify(g, null, 2) + "\n";
       if (v.out) {
         writeFileSync(resolve(v.out), text);

@@ -102,3 +102,78 @@ describe("edge properties", () => {
     assert.deepEqual(r.properties, { position: "start", inheritedFrom: "Button" });
   });
 });
+
+describe("export: rules", () => {
+  /** A second rule, from another quote, left unverified. */
+  async function withUnverified() {
+    const ctx = await setup();
+    const { ont } = ctx;
+    await prov.addQuote(ont, "src.button", "Use Hyperlinks within a paragraph to navigate to another page.");
+    const loc = ont.ofType("SourceLocation").find((l) => l.quote.startsWith("Use Hyperlinks"))!.id;
+    prov.addRule(ont, { statement: "Use a Hyperlink instead of Button to navigate within a paragraph.", modality: "SHOULD", governs: ["Button"], cites: [loc] });
+    const draft = ont.ofType("Rule").find((r) => r.id !== ctx.rule)!.id;
+    ops.addClass(ont, "Hyperlink", { parents: ["Component"], description: "Hyperlink" });
+    ops.link(ont, "Hyperlink", "preferredOver", "Button", { props: ["condition=navigating within a paragraph"], rule: draft });
+    ops.link(ont, "Checkbox", "preferredOver", "Button", { props: ["condition=capture 2 togglable states"], rule: ctx.rule });
+    return { ...ctx, draft };
+  }
+  const byLabel = (g: ReturnType<typeof exportGraph>, label: string) => g.nodes.filter((n) => n.labels.includes(label));
+
+  it("exports verified rules with their quote and source, and what they govern", async () => {
+    const { ont, rule } = await setup();
+    ops.addInstance(ont, "Save button", { of: ["Button"] });
+    ops.link(ont, "Checkbox", "preferredOver", "Button", { props: ["condition=capture 2 togglable states"], rule });
+    const g = exportGraph(ont, { schema: true });
+    const [r] = byLabel(g, "OkbRule");
+    assert.equal(r.id, rule);
+    assert.equal(r.properties.modality, "MAY");
+    assert.equal(r.properties.verification, "SUPPORTED");
+    assert.deepEqual(r.properties.governsClasses, ["Button"], "matchable against instance labels without the schema");
+    const [loc] = byLabel(g, "OkbSourceLocation");
+    assert.match(String(loc.properties.quote), /^Consider using checkbox/);
+    assert.match(String(loc.properties.locator), /When to Use Something Else/);
+    const [src] = byLabel(g, "OkbSource");
+    const has = (type: string, from: string, to: string) => g.relationships.some((x) => x.type === type && x.from === from && x.to === to);
+    assert.ok(has("CITES", rule, loc.id) && has("PART_OF", loc.id, src.id));
+    assert.ok(has("GOVERNS", rule, "c.button"), "to the OkbClass node, with --with-schema");
+    assert.match(toCypher(g), /CREATE \(:OkbRule \{okbId: "rule\./);
+    assert.ok(!exportGraph(ont).relationships.some((x) => x.type === "GOVERNS"), "no class nodes to point at without the schema");
+  });
+
+  it("leaves every rule property pointing at an exported rule", async () => {
+    const { ont } = await withUnverified();
+    for (const opts of [{ schema: true }, { schema: true, unverified: true }, { schema: true, rules: false }]) {
+      const g = exportGraph(ont, opts);
+      const ids = new Set(g.nodes.map((n) => n.id));
+      for (const r of g.relationships) {
+        if (r.properties.rule !== undefined) assert.ok(ids.has(String(r.properties.rule)), `${JSON.stringify(opts)}: ${r.type} cites ${r.properties.rule}`);
+      }
+    }
+  });
+
+  it("holds back unverified rules, and the links that cite them, unless asked", async () => {
+    const { ont, rule, draft } = await withUnverified();
+    const g = exportGraph(ont, { schema: true });
+    assert.deepEqual(byLabel(g, "OkbRule").map((n) => n.id), [rule]);
+    const pref = g.relationships.filter((x) => x.type === "PREFERRED_OVER");
+    assert.deepEqual(pref.map((x) => x.from), ["c.checkbox"], "the Hyperlink link rests on the unverified rule");
+    assert.match(g.notes.join("\n"), /1 rule\(s\) haven't passed verification/);
+    assert.match(g.notes.join("\n"), /1 link\(s\) cite a rule that hasn't passed verification/);
+
+    const all = exportGraph(ont, { schema: true, unverified: true });
+    const d = all.nodes.find((n) => n.id === draft)!;
+    assert.equal(d.properties.verification, "UNVERIFIED");
+    assert.equal(all.relationships.filter((x) => x.type === "PREFERRED_OVER").length, 2);
+    assert.equal(byLabel(all, "OkbSource").length, 1, "two quotes from one document share its node");
+    assert.equal(all.relationships.filter((x) => x.type === "PART_OF").length, 2);
+  });
+
+  it("--no-rules exports no provenance and strips rule references", async () => {
+    const { ont } = await withUnverified();
+    const g = exportGraph(ont, { schema: true, rules: false });
+    assert.ok(!g.nodes.some((n) => n.labels.some((l) => l.startsWith("OkbRule") || l.startsWith("OkbSource"))));
+    assert.ok(!g.relationships.some((x) => "rule" in x.properties));
+    assert.equal(g.relationships.filter((x) => x.type === "PREFERRED_OVER").length, 1, "unverified-rule links stay out either way");
+    assert.match(g.notes.join("\n"), /--no-rules/);
+  });
+});

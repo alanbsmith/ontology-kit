@@ -10,12 +10,22 @@
  *   (:Beaujolais:RedWine:Wine {name: "Chateau Morgon Beaujolais", body: "light", color: "red"})
  *     -[:MAKER]->(:Winery {name: "Chateau Morgon"})
  *
+ * Domain rules come along by default, so whatever reads the export gets the guidance
+ * with the data: (:OkbRule) nodes that GOVERN what they're about, and CITE the quote
+ * (:OkbSourceLocation) that's PART_OF its document (:OkbSource). Only verified rules
+ * are exported: a rule nobody has checked against its quote shouldn't reach an app
+ * as if it were fact. Links whose `rule` property points at a held-back rule are held
+ * back too, since that rule is their only justification.
+ *
  * Options:
- *   inherited  (default true) copy fixed property values from classes onto their instances
- *   schema     also export the class graph: (:OkbClass) nodes, IS_A, and INSTANCE_OF from each instance
+ *   inherited   (default true) copy fixed property values from classes onto their instances
+ *   schema      also export the class graph: (:OkbClass) nodes, IS_A, and INSTANCE_OF from each instance
+ *   rules       (default true) export verified domain rules with their quotes and sources
+ *   unverified  also export rules that aren't verified yet, each with its verification status
  */
 import { edgeProps, type Ontology } from "./model.ts";
 import { MetaKB } from "./metakb.ts";
+import type { RuleNode } from "./types.ts";
 
 export interface ExportNode {
   id: string;
@@ -29,7 +39,7 @@ export interface ExportRel {
   properties: Record<string, unknown>;
 }
 export interface ExportGraph {
-  format: "okb-export/1";
+  format: "okb-export/2";
   ontology: string;
   metaKbVersion: string;
   nodes: ExportNode[];
@@ -37,8 +47,16 @@ export interface ExportGraph {
   notes: string[];
 }
 
-export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?: boolean } = {}): ExportGraph {
+export interface ExportOptions {
+  inherited?: boolean;
+  schema?: boolean;
+  rules?: boolean;
+  unverified?: boolean;
+}
+
+export function exportGraph(ont: Ontology, opts: ExportOptions = {}): ExportGraph {
   const inherited = opts.inherited ?? true;
+  const withRules = opts.rules ?? true;
   const nodes: ExportNode[] = [];
   const rels: ExportRel[] = [];
   const notes: string[] = [];
@@ -117,13 +135,118 @@ export function exportGraph(ont: Ontology, opts: { inherited?: boolean; schema?:
   } else if (classLevel) {
     notes.push(`${classLevel} class-level relationship value(s) point at classes (e.g. RedWine GOES_WELL_WITH RedMeat), not instances, so they're only exported with --with-schema.`);
   }
+  if (withRules) exportRules(ont, { schema: !!opts.schema, unverified: !!opts.unverified }, nodes, rels, notes);
+  const kept = settleRuleReferences(ont, rels, new Set(nodes.filter((n) => n.labels.includes("OkbRule")).map((n) => n.id)), { withRules, unverified: !!opts.unverified }, notes);
+
   const inverses = ont.edgesOf("INVERSE_OF").map((e) => {
     const from = ont.get(e.from);
     return `${ont.label(e.to)} = ${from?.type === "Slot" ? from.relType : undefined} followed backwards`;
   });
   if (inverses.length) notes.push(`Inverse relationships are stored once: ${inverses.join("; ")}.`);
 
-  return { format: "okb-export/1", ontology: ont.meta.name, metaKbVersion: MetaKB.get().version, nodes, relationships: rels, notes };
+  return { format: "okb-export/2", ontology: ont.meta.name, metaKbVersion: MetaKB.get().version, nodes, relationships: kept, notes };
+}
+
+// Rules
+
+const isVerified = (r: RuleNode) => r.verification?.status === "SUPPORTED";
+
+/** (:OkbRule)-[:CITES]->(:OkbSourceLocation)-[:PART_OF]->(:OkbSource), plus GOVERNS. */
+function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean }, nodes: ExportNode[], rels: ExportRel[], notes: string[]) {
+  // Rules can share a quote, and quotes share a source: add each node and PART_OF edge once.
+  const seen = new Set<string>();
+  const push = (n: ExportNode) => {
+    if (seen.has(n.id)) return false;
+    seen.add(n.id);
+    nodes.push(n);
+    return true;
+  };
+  let held = 0;
+  for (const r of ont.ofType("Rule")) {
+    if (!isVerified(r) && !o.unverified) {
+      held++;
+      continue;
+    }
+    // Names, so an app can match a rule to the labels on instance nodes even without --with-schema.
+    const governs: Record<"governsClasses" | "governsSlots" | "governsInstances", string[]> = { governsClasses: [], governsSlots: [], governsInstances: [] };
+    for (const t of ont.targets(r.id, "GOVERNS")) {
+      const n = ont.get(t);
+      if (n?.type === "Class") {
+        governs.governsClasses.push(n.name);
+        if (o.schema) rels.push({ type: "GOVERNS", from: r.id, to: n.id, properties: {} });
+      } else if (n?.type === "Slot") governs.governsSlots.push(n.name);
+      else if (n?.type === "Instance") {
+        governs.governsInstances.push(n.name);
+        rels.push({ type: "GOVERNS", from: r.id, to: n.id, properties: {} });
+      }
+    }
+    push({
+      id: r.id,
+      labels: ["OkbRule"],
+      properties: compact({
+        okbId: r.id, name: r.name, statement: r.statement, modality: r.modality,
+        verification: r.verification?.status ?? "UNVERIFIED",
+        approvedAfter: r.verification?.approvedAfter,
+        extractionConfidence: r.extractionConfidence,
+        ...governs,
+      }),
+    });
+    for (const lid of ont.targets(r.id, "CITES")) {
+      const loc = ont.get(lid);
+      if (loc?.type !== "SourceLocation") continue;
+      rels.push({ type: "CITES", from: r.id, to: loc.id, properties: {} });
+      const added = push({
+        id: loc.id,
+        labels: ["OkbSourceLocation"],
+        properties: compact({ okbId: loc.id, quote: loc.quote, locator: loc.locator, lines: loc.lines, page: loc.page, sourceLink: loc.sourceLink, pageLink: loc.pageLink }),
+      });
+      if (!added) continue;
+      for (const sid of ont.targets(loc.id, "PART_OF")) {
+        const src = ont.get(sid);
+        if (src?.type !== "Source") continue;
+        push({ id: src.id, labels: ["OkbSource"], properties: compact({ okbId: src.id, title: src.title, format: src.format, url: src.url, repoUrl: src.repoUrl }) });
+        rels.push({ type: "PART_OF", from: loc.id, to: src.id, properties: {} });
+      }
+    }
+  }
+  if (held) notes.push(`${held} rule(s) haven't passed verification, so they're left out (okb validate lists them). --include-unverified exports them with their status.`);
+}
+
+/**
+ * Every exported `rule` property must point at an exported OkbRule node. A link that
+ * cites a held-back (unverified) rule is dropped with it; with --no-rules the property is
+ * removed, since the id would point at nothing.
+ */
+function settleRuleReferences(ont: Ontology, rels: ExportRel[], exportedRules: Set<string>, o: { withRules: boolean; unverified: boolean }, notes: string[]): ExportRel[] {
+  let dropped = 0;
+  let stripped = 0;
+  const out: ExportRel[] = [];
+  for (const r of rels) {
+    const ref = r.properties.rule;
+    if (ref === undefined || (typeof ref === "string" && exportedRules.has(ref))) {
+      out.push(r);
+      continue;
+    }
+    const rule = typeof ref === "string" ? ont.get(ref) : undefined;
+    if (rule?.type === "Rule" && !isVerified(rule) && !o.unverified) {
+      dropped++;
+      continue;
+    }
+    const { rule: _r, ...rest } = r.properties;
+    out.push({ ...r, properties: rest });
+    stripped++;
+  }
+  if (dropped) notes.push(`${dropped} link(s) cite a rule that hasn't passed verification, so they're left out too.`);
+  if (stripped) {
+    notes.push(o.withRules
+      ? `${stripped} link(s) had a rule property that doesn't point at a Rule node (okb validate reports it as slot-edge-properties), so the property was removed.`
+      : `Rules weren't exported (--no-rules), so the rule property was removed from ${stripped} link(s).`);
+  }
+  return out;
+}
+
+function compact(o: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined && !(Array.isArray(v) && v.length === 0)));
 }
 
 // Cypher

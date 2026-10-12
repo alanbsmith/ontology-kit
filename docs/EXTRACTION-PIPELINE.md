@@ -74,6 +74,8 @@ okb verify <node> --status UNSUPPORTED                                     # the
 
 Anything extracted but not yet verified, and every OVERREACH correction, **blocks** `okb validate` until it's resolved. A person checks each correction and signs it off with `okb verify <node> --approve`.
 
+`okb export` follows the same line: only SUPPORTED rules (including approved corrections) leave the toolkit, along with the quotes they cite. Unverified rules, and links whose `rule` points at one, stay out unless you pass `--include-unverified` (see [FORMAT.md](FORMAT.md#exporting-to-a-graph-database)).
+
 ### 4. Tag confidence
 
 `extractionConfidence`: `verbatim`, `paraphrased` (the default for SUPPORTED) or `corrected` (set automatically for OVERREACH). Reviewers should give `corrected` items a second look.

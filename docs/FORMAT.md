@@ -75,11 +75,18 @@ okb export --format cypher --out wine.cypher        # openCypher CREATE script (
 okb export --out wine.json                          # {nodes: [{id, labels, properties}], relationships: [{type, from, to, properties}]}
 okb export --with-schema --out wine-full.json       # also the class graph: (:OkbClass) nodes, IS_A, INSTANCE_OF, class-level values
 okb export --no-inherited ...                       # don't copy fixed class values onto instances
+okb export --no-rules ...                           # data only: leave out rules, quotes and sources
+okb export --include-unverified ...                 # also rules that haven't passed verification yet
 ```
 
 - Each **instance** becomes a node labeled with its class and every ancestor, most specific first: `(:Beaujolais:RedWine:Wine)`. Labels are flat, so multiple labels are how a graph database expresses is-a.
 - **Property values**, including fixed values inherited from classes (`color: "red"` from RedWine), become node properties. Every node gets `okbId` and `name`.
 - **Relationships** between instances are exported as-is. Class-level links to an instance (every Merlot's grape is _Merlot grape_) are copied onto each member with an `inheritedFrom` property. Class-level links to a class (RedWine goes well with RedMeat) exist only in the schema, so they're exported with `--with-schema`.
+- **Rules** come along by default, so an app reading the export gets the guidance with the data. Each verified domain rule becomes an `(:OkbRule {statement, modality, verification, governsClasses, governsSlots, governsInstances})` node that `CITES` its quote, `(:OkbSourceLocation {quote, locator, sourceLink, ...})`, which is `PART_OF` its document, `(:OkbSource)`. `governsClasses` holds class names, so `MATCH (r:OkbRule) WHERE "Button" IN r.governsClasses` works against instance labels without the schema. A rule also gets `GOVERNS` edges to the instances it's about, and to `(:OkbClass)` nodes with `--with-schema`.
+- **Only verified rules are exported.** A rule that's unverified, OVERREACH but not yet approved, or UNSUPPORTED is left out, and so is any link whose `rule` property points at it, because that rule is the link's only justification. The export's `notes` say how many were held back. `--include-unverified` exports them with their `verification` status (`UNVERIFIED` when there's none yet), for review tools rather than apps.
+- **Every `rule` property points at an exported `OkbRule` node.** With `--no-rules` the property is removed from links, since the id would point at nothing.
+
+The export format is `okb-export/2`. Version 1 had no rules, so every node in it was an instance.
 
 Files from the previous format (`okb-lpg/1`, which used `HAS_VALUE` edges) are converted automatically the next time okb loads them.
 

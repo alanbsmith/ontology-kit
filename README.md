@@ -87,7 +87,7 @@ Existing ontologies keep working: okb converts older file formats when it loads 
 | 7. Instances | real examples, which test the steps before                                                | `okb instance add`                                                                                   |
 | 8. Review    | questions linked to what answers them, decisions recorded                                 | `okb cq link`, `okb validate --all`, `okb decision add`                                              |
 
-When it's built, `okb export --format cypher --out my.cypher` writes the data for a graph database: instances as nodes labeled with their class chain, properties on the nodes, relationships as typed edges.
+When it's built, `okb export --format cypher --out my.cypher` writes the data for a graph database: instances as nodes labeled with their class chain, properties on the nodes, relationships as typed edges, and the verified domain rules with the quotes they cite.
 
 Building from existing documentation? `okb source add docs/button.md` reads markdown (frontmatter, headings, lists, callouts, prop tables) and `okb quote add` finds your quote in it by heading and line. The full quote-first pipeline is in [docs/EXTRACTION-PIPELINE.md](docs/EXTRACTION-PIPELINE.md).
 
