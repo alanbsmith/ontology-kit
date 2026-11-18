@@ -4,10 +4,23 @@
 
 The recurring "which way do I model this?" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.
 
-<a id="decisionapproach"></a>
+<a id="decision-approach"></a><a id="decisionapproach"></a>
 ## Top-down, bottom-up, or combination?
 
 *When:* At the start of Step 4, before you add classes.
+
+```mermaid
+flowchart TD
+  Q1("Do you naturally think of this domain starting from its broadest categories?")
+  Q1Y["Go top-down: create the most general classes first, then specialize."]
+  Q1 -->|Yes| Q1Y
+  Q1 -->|No| Q2
+  Q2("Do you think in concrete examples first #40;specific products, cases, items#41;?")
+  Q2Y["Go bottom-up: create the most specific classes, then group them."]
+  Q2 -->|Yes| Q2Y
+  Q2N["Use combination: start with the most obvious concepts at any level and grow up and down from them."]
+  Q2 -->|No| Q2N
+```
 
 1. **Do you naturally think of this domain starting from its broadest categories?**  
    Yes → Go top-down: create the most general classes first, then specialize.  
@@ -27,10 +40,31 @@ None of the three is better than the others. Combination is often the easiest fo
 > “The combination approach is often the easiest for many ontology developers, since the concepts “in the middle” tend to be the more descriptive concepts in the domain”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.7
 
-<a id="decisionis-a"></a>
+<a id="decision-is-a"></a><a id="decisionis-a"></a>
 ## Is this really a subclass?
 
 *When:* Every time you add an IS_A (parent) link.
+
+```mermaid
+flowchart TD
+  Q1("Is every single X, by definition, also a Y #40;not just usually#41;?")
+  Q1 -->|Yes| Q2
+  Q1N["Not a subclass. If X is part of Y, made by Y, or related to Y, use a slot."]
+  Q1 -->|No| Q1N
+  Q2("Is X a singular/plural or alternative name for Y?")
+  Q2Y["Not a subclass. It's the same class#59; add the other name as a synonym."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Is X one particular thing rather than a kind of thing?")
+  Q3Y["It's an instance of Y, not a subclass."]
+  Q3 -->|Yes| Q3Y
+  Q3 -->|No| Q4
+  Q4("Is X already a subclass of Y through another parent?")
+  Q4Y["Don't add the direct link#59; it's implied."]
+  Q4 -->|Yes| Q4Y
+  Q4N["Yes, X IS_A Y."]
+  Q4 -->|No| Q4N
+```
 
 1. **Is every single X, by definition, also a Y (not just usually)?**  
    Yes → go to the next question  
@@ -62,10 +96,31 @@ None of the three is better than the others. Combination is often the easiest fo
 > “A subclass relationship is transitive: If B is a subclass of A and C is a subclass of B, then C is a subclass of A”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
-<a id="decisionnew-class"></a>
+<a id="decision-new-class"></a><a id="decisionnew-class"></a>
 ## Should I introduce a new subclass here?
 
 *When:* When you're tempted to split a class into more specific ones.
+
+```mermaid
+flowchart TD
+  Q1("Will the subclass have slots the parent doesn't have?")
+  Q1Y["Create it."]
+  Q1 -->|Yes| Q1Y
+  Q1 -->|No| Q2
+  Q2("Will it have different restrictions #40;a fixed value, fewer allowed values, a different cardinality#41;?")
+  Q2Y["Create it."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Will it take part in relationships the parent doesn't #40;e.g. 'goes well with seafood'#41;?")
+  Q3Y["Create it."]
+  Q3 -->|Yes| Q3Y
+  Q3 -->|No| Q4
+  Q4("Is this a reference hierarchy people browse to pick a level of detail, or a distinction experts always make?")
+  Q4Y["Create it, mark it terminological, and record why."]
+  Q4 -->|Yes| Q4Y
+  Q4N["Probably don't. Use a slot value on the parent instead."]
+  Q4 -->|No| Q4N
+```
 
 1. **Will the subclass have slots the parent doesn't have?**  
    Yes → Create it.  
@@ -105,10 +160,31 @@ Aim for a balance: neither a deep hierarchy of near-identical classes nor a flat
 > “When defining a class hierarchy, our goal is to strike a balance between creating new classes useful for class organization and creating too many classes.”  
 > — Ontology 101 §4.4 When to introduce a new class (or not), p.17
 
-<a id="decisionclass-or-value"></a>
+<a id="decision-class-or-value"></a><a id="decisionclass-or-value"></a>
 ## New class, or just a slot value?
 
 *When:* When a term is a distinction among things (red/white, small/large, active/inactive).
+
+```mermaid
+flowchart TD
+  Q1("Would things with different values change which values are allowed in OTHER classes' slots? #40;e.g. red vs white changes which dishes pair well#41;")
+  Q1Y["Make classes."]
+  Q1 -->|Yes| Q1Y
+  Q1 -->|No| Q2
+  Q2("Do people in the domain think of things with different values as different kinds of things?")
+  Q2Y["Make classes."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Could one individual change its value over time #40;chilled/not chilled, active/inactive#41;?")
+  Q3Y["Slot value. Class membership shouldn't change often."]
+  Q3 -->|Yes| Q3Y
+  Q3 -->|No| Q4
+  Q4("Is it a number, color, location or similar measurement?")
+  Q4Y["Slot value #40;usually#41;."]
+  Q4 -->|Yes| Q4Y
+  Q4N["Slot value, unless one of the earlier tests applied."]
+  Q4 -->|No| Q4N
+```
 
 1. **Would things with different values change which values are allowed in OTHER classes' slots? (e.g. red vs white changes which dishes pair well)**  
    Yes → Make classes.  
@@ -142,10 +218,27 @@ The same distinction can be a class in one ontology and a value in another. It d
 > “Usually numbers, colors, locations are slot values and do not cause the creation of new classes.”  
 > — Ontology 101 §4.5 A new class or a property value?, p.17
 
-<a id="decisioninstance-or-class"></a>
+<a id="decision-instance-or-class"></a><a id="decisioninstance-or-class"></a>
 ## Instance or class?
 
 *When:* When a term names something specific, or when you reach the bottom of the hierarchy.
+
+```mermaid
+flowchart TD
+  Q1("Do the concepts form a natural hierarchy #40;one inside another, like regions#41;?")
+  Q1Y["Classes #40;possibly abstract#41;, even if they have no instances yet."]
+  Q1 -->|Yes| Q1Y
+  Q1 -->|No| Q2
+  Q2("Is it among the most specific things that appear in the answers to your competency questions?")
+  Q2Y["Instance."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Will you need to record different facts about finer-grained versions of it #40;e.g. each vintage#41;?")
+  Q3Y["Class, with the finer-grained things as its instances."]
+  Q3 -->|Yes| Q3Y
+  Q3N["Instance."]
+  Q3 -->|No| Q3N
+```
 
 1. **Do the concepts form a natural hierarchy (one inside another, like regions)?**  
    Yes → Classes (possibly abstract), even if they have no instances yet.  
@@ -170,10 +263,19 @@ The same distinction can be a class in one ontology and a value in another. It d
 > “If concepts form a natural hierarchy, then we should represent them as classes”  
 > — Ontology 101 §4.6 An instance or a class?, p.18
 
-<a id="decisiondisjoint"></a>
+<a id="decision-disjoint"></a><a id="decisiondisjoint"></a>
 ## Are these classes disjoint?
 
 *When:* After creating siblings.
+
+```mermaid
+flowchart TD
+  Q1("Can any single thing be a member of both classes at once?")
+  Q1Y["Not disjoint. Leave them."]
+  Q1 -->|Yes| Q1Y
+  Q1N["Declare them disjoint #40;okb class disjoint A B#41;."]
+  Q1 -->|No| Q1N
+```
 
 1. **Can any single thing be a member of both classes at once?**  
    Yes → Not disjoint. Leave them.  
@@ -187,10 +289,24 @@ The same distinction can be a class in one ontology and a value in another. It d
 > “Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error.”  
 > — Ontology 101 §4.8 Disjoint subclasses, p.20
 
-<a id="decisionslot-placement"></a>
+<a id="decision-slot-placement"></a><a id="decisionslot-placement"></a>
 ## Which class does this slot go on?
 
 *When:* Step 5, for each property.
+
+```mermaid
+flowchart TD
+  Q1("Does every member of the parent class have this property?")
+  Q1Y["Move up and ask again about the next parent."]
+  Q1 -->|Yes| Q1Y
+  Q1N["Attach it to the current class, the highest one where every member has it."]
+  Q1 -->|No| Q1N
+  Q2("Are you about to attach it to every child of some class?")
+  Q2Y["Attach it to that class instead."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Done
+  Done(["Done"])
+```
 
 1. **Does every member of the parent class have this property?**  
    Yes → Move up and ask again about the next parent.  
@@ -211,10 +327,32 @@ The same distinction can be a class in one ontology and a value in another. It d
 > “If a list of classes defining a range or a domain of a slot contains all subclasses of a class A, but not the class A itself, the range should contain only the class A and not the subclasses.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
-<a id="decisionrange"></a>
+<a id="decision-range"></a><a id="decisionrange"></a>
 ## What should this slot's range be?
 
 *When:* Step 6, for each Instance-type slot.
+
+```mermaid
+flowchart TD
+  Q1("Is there one class that covers every valid value?")
+  Q1Y["Use the most general such class that contains only valid values."]
+  Q1 -->|Yes| Q1Y
+  Q1N["List several classes."]
+  Q1 -->|No| Q1N
+  Q2("Does your list include a class and its subclass?")
+  Q2Y["Drop the subclass."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Does your list include all #40;or nearly all#41; children of one class?")
+  Q3Y["Use the parent instead."]
+  Q3 -->|Yes| Q3Y
+  Q3 -->|No| Q4
+  Q4("Is the range something like Thing/Entity/Object?")
+  Q4Y["Too general. Narrow it."]
+  Q4 -->|Yes| Q4Y
+  Q4N["Done."]
+  Q4 -->|No| Q4N
+```
 
 1. **Is there one class that covers every valid value?**  
    Yes → Use the most general such class that contains only valid values.  
@@ -249,10 +387,34 @@ The same distinction can be a class in one ontology and a value in another. It d
 > “If a list of classes defining a range or a domain of a slot contains all but a few subclasses of a class A, consider if the class A would make a more appropriate range definition.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
-<a id="decisionnaming"></a>
+<a id="decision-naming"></a><a id="decisionnaming"></a>
 ## Choosing a naming convention
 
 *When:* Start of Step 4, before you create many names.
+
+```mermaid
+flowchart TD
+  Q1("Will the names be used in code, a graph database, or URLs that don't handle spaces well?")
+  Q1Y["Use PascalCase for classes and camelCase for slots #40;the toolkit default#41;."]
+  Q1 -->|Yes| Q1Y
+  Q1N["Title Case With Spaces is also fine for classes."]
+  Q1 -->|No| Q1N
+  Q2("Is there a reason to prefer plural class names #40;e.g. a system you integrate with uses them#41;?")
+  Q2Y["Use plural everywhere."]
+  Q2 -->|Yes| Q2Y
+  Q2N["Use singular #40;more common in practice#41; everywhere."]
+  Q2 -->|No| Q2N
+  Q3("Do you want slot names to show they're slots #40;hasMaker, makerOf#41;?")
+  Q3Y["Set a has-/-of prefix/suffix convention and use it on every slot."]
+  Q3 -->|Yes| Q3Y
+  Q3N["No prefix #40;the default#41;."]
+  Q3 -->|No| Q3N
+  Q4("Will the data go into a graph database?")
+  Q4Y["Nothing extra to decide: okb stores each relationship under its name in UPPER_SNAKE case #40;maker → MAKER, goesWellWith → GOES_WELL_WITH#41;, the usual openCypher style, and class names become node labels in #96;okb export#96;."]
+  Q4 -->|Yes| Q4Y
+  Q4N["Nothing to decide."]
+  Q4 -->|No| Q4N
+```
 
 1. **Will the names be used in code, a graph database, or URLs that don't handle spaces well?**  
    Yes → Use PascalCase for classes and camelCase for slots (the toolkit default).  
@@ -289,10 +451,27 @@ There's often no reason to prefer one option; what matters is sticking to it. Co
 > “It is however, important to consider other systems with which your system may interact.”  
 > — Ontology 101 §6.1 Capitalization and delimiters, p.22
 
-<a id="decisionedge-or-class"></a>
+<a id="decision-edge-or-class"></a><a id="decisionedge-or-class"></a>
 ## Edge property, or make the relationship its own class?
 
 *When:* When a relationship needs extra information: a condition, a strength, a date, a source.
+
+```mermaid
+flowchart TD
+  Q1("Is the extra information a simple value about this one link #40;a short condition, a number, a date#41;?")
+  Q1 -->|Yes| Q2
+  Q1N["Make the relationship a class #40;e.g. a Recommendation with slots from, to, condition, audience#41;, so it can have its own relationships."]
+  Q1 -->|No| Q1N
+  Q2("Does the qualifier need relationships of its own #40;to people, sources, other components#41;, or several values that vary independently?")
+  Q2Y["Make it a class. Edges can only hold plain values #40;and a #96;rule#96; reference#41;."]
+  Q2 -->|Yes| Q2Y
+  Q2 -->|No| Q3
+  Q3("Will you query or validate by it #40;e.g. 'all recommendations that apply to dense layouts'#41;?")
+  Q3Y["An Enumerated edge property works if the values are a fixed list#59; otherwise consider a class."]
+  Q3 -->|Yes| Q3Y
+  Q3N["Use an edge property #40;okb relationship property ...#41;."]
+  Q3 -->|No| Q3N
+```
 
 1. **Is the extra information a simple value about this one link (a short condition, a number, a date)?**  
    Yes → go to the next question  

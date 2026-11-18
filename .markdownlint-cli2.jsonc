@@ -2,7 +2,7 @@
   // Hand-written docs only; the generated ones come from src/gendocs.ts and examples/build-wine.ts.
   "globs": ["**/*.md"],
   "ignores": [
-    "node_modules/**",
+    "node_modules/**", "site/node_modules/**", "site/dist/**", "site/.astro/**",
     "docs/METHOD.md", "docs/GLOSSARY.md", "docs/RULES.md", "docs/DECISIONS.md",
     "examples/wine/**", "tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
   ],

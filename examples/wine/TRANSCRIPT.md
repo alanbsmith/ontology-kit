@@ -120,7 +120,7 @@ Commands
 
 ## Step 2: Consider reuse
 
-The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly. For your own ontology, the step guide (`okb step 2`, or [docs/METHOD.md](../../docs/METHOD.md#step-2-consider-reusing-existing-ontologies)) lists where to look: Linked Open Vocabularies, schema.org, W3C vocabularies such as SKOS and Dublin Core, and for design systems WAI-ARIA roles, the Design Tokens format and DSDS.
+The paper mentions existing wine vocabularies but deliberately builds from scratch to teach the method. We record that honestly. For your own ontology, the step guide (`okb step 2`, or [docs/METHOD.md](../../docs/METHOD.md#step-2-reuse)) lists where to look: Linked Open Vocabularies, schema.org, W3C vocabularies such as SKOS and Dublin Core, and for design systems WAI-ARIA roles, the Design Tokens format and DSDS.
 
 ```console
 $ okb reuse none --why "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project."

@@ -120,10 +120,22 @@ meta-kb/data/*.json     the compiled meta-KB (npm run build:meta)
 meta-kb/build.ts        compiler + integrity checks + quote verification
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (npm run docs)
 examples/               build-wine.ts → examples/wine/ (npm run example)
+site/                   the docs site (Astro; its own npm package, reads the markdown in place)
 skills/                 SKILL.md files for Claude
 sources/                the source PDFs (gitignored; see sources/README.md)
 tests/                  node:test suites
 ```
+
+## Docs site
+
+The docs in this repo are also published as a website at [ontology-kit.dev](https://ontology-kit.dev), with search, a side-panel menu, light and dark themes and reading settings. It's an [Astro](https://astro.build) site in `site/` that reads these markdown files in place, so there's nothing to copy or keep in sync. To build it, or to work on it with live reload:
+
+```bash
+npm run site       # regenerate docs/, then build the site into site/dist (with the search index)
+npm run site:dev   # the same, served at http://localhost:4321 while you edit
+```
+
+Run `npm ci --prefix site` once first. Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`npm --prefix site run preview`). Netlify builds and hosts it from `netlify.toml`.
 
 ## Changing rules
 

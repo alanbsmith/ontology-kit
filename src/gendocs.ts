@@ -9,6 +9,9 @@ import { MetaKB } from "./metakb.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const meta = MetaKB.get();
+/** A stable anchor id from a meta-KB id: `concept.class` → `concept-class`. Links use these, never heading slugs. */
+const anchorId = (id: string) => id.replace(/\./g, "-");
+const anchorTag = (id: string) => `<a id="${anchorId(id)}"></a>`;
 const HEADER = (title: string) => [`# ${title}`, "", `> Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate.`, ""];
 
 function sources(id: string): string[] {
@@ -26,7 +29,7 @@ method.push(
 for (const p of meta.ofType("Principle")) method.push(`- **${p.name}.** ${p.plainLanguage}`);
 method.push("");
 for (const s of meta.steps) {
-  method.push(`## Step ${s.order}: ${s.name}`, "", `**Goal:** ${s.goal}`, "", `**Why it matters:** ${s.whyItMatters}`, "", "**Questions to answer**", "");
+  method.push(anchorTag(s.id), `## Step ${s.order}: ${s.name}`, "", `**Goal:** ${s.goal}`, "", `**Why it matters:** ${s.whyItMatters}`, "", "**Questions to answer**", "");
   for (const q of s.guidingQuestions) method.push(`- ${q}`);
   method.push("", "**You're done when**", "");
   for (const d of s.doneWhen) method.push(`- [ ] ${d.text}${d.check ? "" : " *(your judgment)*"}`);
@@ -36,9 +39,9 @@ for (const s of meta.steps) {
   }
   if (s.wine) method.push("", `**Wine example:** ${s.wine}`);
   const decisions = meta.targets(s.id, "USES").map((d) => meta.node(d, "Decision"));
-  if (decisions.length) method.push("", `**Decision guides:** ${decisions.map((d) => `[${d.name}](DECISIONS.md#${d.id.replace(".", "")})`).join(" · ")}`);
-  const rules = meta.targets(s.id, "APPLIES").map((r) => meta.node(r, "Rule").key);
-  if (rules.length) method.push("", `**Rules checked from this step:** ${rules.map((r) => `[\`${r}\`](RULES.md#${r})`).join(", ")}`);
+  if (decisions.length) method.push("", `**Decision guides:** ${decisions.map((d) => `[${d.name}](DECISIONS.md#${anchorId(d.id)})`).join(" · ")}`);
+  const rules = meta.targets(s.id, "APPLIES").map((r) => meta.node(r, "Rule"));
+  if (rules.length) method.push("", `**Rules checked from this step:** ${rules.map((r) => `[\`${r.key}\`](RULES.md#${anchorId(r.id)})`).join(", ")}`);
   if (s.commands?.length) method.push("", `**Commands:** ${s.commands.map((x) => `\`${x}\``).join(", ")}`);
   method.push("", "<details><summary>Source passages</summary>", "", ...sources(s.id).flatMap((x) => [x, ""]), "</details>", "");
 }
@@ -47,9 +50,9 @@ for (const s of meta.steps) {
 const glossary = HEADER("Glossary");
 glossary.push("Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.", "");
 const concepts = [...meta.ofType("Concept")].sort((a, b) => a.name.localeCompare(b.name));
-glossary.push(concepts.map((c) => `[${c.name}](#${anchor(c.name)})`).join(" · "), "");
+glossary.push(concepts.map((c) => `[${c.name}](#${anchorId(c.id)})`).join(" · "), "");
 for (const c of concepts) {
-  glossary.push(`## ${c.name}`, "");
+  glossary.push(anchorTag(c.id), `## ${c.name}`, "");
   if (c.aliases?.length) glossary.push(`*Also called:* ${c.aliases.join(", ")}`, "");
   glossary.push(c.plainLanguage, "", `**Definition.** ${c.definition}`, "");
   if (c.example) glossary.push(`**Example.** ${c.example}`, "");
@@ -76,10 +79,10 @@ rules.push(
   "|---|---|---|---|---|---|",
 );
 const allRules = meta.ofType("Rule");
-for (const r of allRules) rules.push(`| [\`${r.key}\`](#${r.key}) | ${r.modality.replace("_", " ")} | ${r.severity} | ${r.check} | ${r.basis} | ${r.fromStep} |`);
+for (const r of allRules) rules.push(`| [\`${r.key}\`](#${anchorId(r.id)}) | ${r.modality.replace("_", " ")} | ${r.severity} | ${r.check} | ${r.basis} | ${r.fromStep} |`);
 rules.push("");
 for (const r of allRules) {
-  rules.push(`## ${r.key}`, "", `**${r.modality.replace("_", " ")}** · ${r.severity} · ${r.check} · basis: ${r.basis} · from step ${r.fromStep}`, "", r.statement, "", `*In plain words:* ${r.plainLanguage}`, "", `*Why:* ${meta.rationale(r)}`, "");
+  rules.push(anchorTag(r.id), `## ${r.key}`, "", `**${r.modality.replace("_", " ")}** · ${r.severity} · ${r.check} · basis: ${r.basis} · from step ${r.fromStep}`, "", r.statement, "", `*In plain words:* ${r.plainLanguage}`, "", `*Why:* ${meta.rationale(r)}`, "");
   if (r.severityReason) rules.push(`*Severity note:* ${r.severityReason}`, "");
   if (r.review) rules.push(`*Ask yourself:* ${r.review}`, "");
   if (r.fix) rules.push(`*Fix:* ${r.fix}`, "");
@@ -90,7 +93,8 @@ for (const r of allRules) {
 const decisions = HEADER("Decision guides");
 decisions.push("The recurring \"which way do I model this?\" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.", "");
 for (const d of meta.ofType("Decision")) {
-  decisions.push(`<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "");
+  // The second anchor is the old dot-less id (`decisionclass-or-value`), kept so existing links still land.
+  decisions.push(`${anchorTag(d.id)}<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "", ...flowchart(d.tests as DecisionTest[]), "");
   (d.tests as any[]).forEach((t, i) => {
     const yes = t.ifYes === "continue" ? "go to the next question" : t.ifYes;
     const no = t.ifNo === "continue" ? "go to the next question" : t.ifNo;
@@ -101,8 +105,45 @@ for (const d of meta.ofType("Decision")) {
   decisions.push(...sources(d.id).flatMap((x) => [x, ""]));
 }
 
-function anchor(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9 -]/g, "").trim().replace(/ /g, "-");
+interface DecisionTest {
+  ask: string;
+  ifYes: string;
+  ifNo: string;
+}
+
+/**
+ * A Mermaid flowchart of a decision guide's questions. "continue" leads to the next question
+ * (or to "Done" after the last one). The numbered list under it stays as the accessible text.
+ */
+function flowchart(tests: DecisionTest[]): string[] {
+  const lines = ["```mermaid", "flowchart TD"];
+  let done = false;
+  tests.forEach((t, i) => {
+    const q = `Q${i + 1}`;
+    // Questions are rounded boxes, not diamonds: a sentence in a diamond makes a huge shape.
+    lines.push(`  ${q}("${mermaidText(t.ask)}")`);
+    for (const [label, answer] of [["Yes", t.ifYes], ["No", t.ifNo]] as const) {
+      let target: string;
+      if (answer !== "continue") {
+        target = `${q}${label[0]}`;
+        lines.push(`  ${target}["${mermaidText(answer)}"]`);
+      } else if (i + 1 < tests.length) {
+        target = `Q${i + 2}`;
+      } else {
+        target = "Done";
+        done = true;
+      }
+      lines.push(`  ${q} -->|${label}| ${target}`);
+    }
+  });
+  if (done) lines.push(`  Done(["Done"])`);
+  lines.push("```");
+  return lines;
+}
+
+/** Escapes the characters Mermaid treats specially inside a quoted label, as Mermaid entity codes. */
+function mermaidText(s: string): string {
+  return s.replace(/[#"()[\]{}<>|`;]/g, (c) => `#${c.charCodeAt(0)};`);
 }
 
 const out: [string, string[]][] = [["METHOD.md", method], ["GLOSSARY.md", glossary], ["RULES.md", rules], ["DECISIONS.md", decisions]];

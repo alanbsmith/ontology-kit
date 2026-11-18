@@ -39,3 +39,7 @@ fn
 PDFs
 Booleans
 Don'ts
+Astro
+Pagefind
+Netlify
+Mermaid

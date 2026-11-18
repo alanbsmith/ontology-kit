@@ -1,0 +1,61 @@
+---
+// Adapted from the owner's blog (~/Projects/writing/src/layouts/Base.astro): the same head,
+// fonts and before-first-paint reading-settings script. Social cards and the card-reveal script
+// are blog-only and left out.
+import { Font } from 'astro:assets';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import type { Heading } from '../lib/outline';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	/** The page's headings, for the nav's contents button. */
+	outline?: Heading[];
+}
+
+const SITE_TITLE = 'Ontology Kit';
+const DEFAULT_DESCRIPTION = 'A beginner-friendly toolkit for building ontologies the Ontology 101 way: a guided method, a meta-knowledge base of rules, and the okb CLI.';
+
+const { title, description = DEFAULT_DESCRIPTION, outline } = Astro.props;
+const pageTitle = title && title !== SITE_TITLE ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<Font cssVariable="--font-inter" preload={[{ weight: 400, style: "normal" }, { weight: 700, style: "normal" }]} />
+		<Font cssVariable="--font-monaspace" />
+		<Font cssVariable="--font-literata" />
+		<Font cssVariable="--font-opendyslexic" />
+		<!-- Apply saved reading settings before first paint, so there is no flash. -->
+		<script is:inline>
+			try {
+				var p = JSON.parse(localStorage.getItem('reading-prefs') || '{}');
+				var r = document.documentElement;
+				r.dataset.js = '';
+				if (p.theme === 'light' || p.theme === 'dark') r.dataset.theme = p.theme;
+				if (p.font === 'serif' || p.font === 'dyslexic') r.dataset.font = p.font;
+				if (p.size === 'large' || p.size === 'larger') r.dataset.size = p.size;
+				if (p.vision === 'redgreen' || p.vision === 'blueyellow') r.dataset.vision = p.vision;
+				// High contrast: an explicit choice wins, otherwise follow the system.
+				if (p.contrast === 'more' || (p.contrast !== 'off' && matchMedia('(prefers-contrast: more)').matches)) r.dataset.contrast = 'more';
+			} catch (e) {}
+		</script>
+	</head>
+	<body id="top">
+		<a href="#main" class="visually-hidden">Skip to content</a>
+		<Nav outline={outline} />
+		<slot />
+		<Footer />
+	</body>
+</html>

@@ -4,8 +4,9 @@
 
 Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.
 
-[Abstract class](#abstract-class) · [Authored rule](#authored-rule) · [Cardinality](#cardinality) · [Class](#class) · [Class hierarchy (taxonomy)](#class-hierarchy-taxonomy) · [Competency question](#competency-question) · [Conceptualization](#conceptualization) · [Default value](#default-value) · [Design decision (record)](#design-decision-record) · [Direct subclass](#direct-subclass) · [Disjoint classes](#disjoint-classes) · [Domain (of a slot)](#domain-of-a-slot) · [Edge property (relationship property)](#edge-property-relationship-property) · [Facet](#facet) · [Facet override (restriction on a subclass)](#facet-override-restriction-on-a-subclass) · [Fixed (class-level) slot value](#fixed-class-level-slot-value) · [Fulfills (fact to Rule)](#fulfills-fact-to-rule) · [Instance](#instance) · [Intrinsic vs. extrinsic property](#intrinsic-vs-extrinsic-property) · [Inverse slots](#inverse-slots) · [Knowledge base](#knowledge-base) · [Labeled property graph (LPG)](#labeled-property-graph-lpg) · [Modality (MUST / SHOULD / MAY)](#modality-must--should--may) · [Multiple inheritance](#multiple-inheritance) · [Naming convention](#naming-convention) · [Ontology](#ontology) · [Prescriptive vs descriptive statements (Rule vs fact)](#prescriptive-vs-descriptive-statements-rule-vs-fact) · [Qualifier values on a Rule](#qualifier-values-on-a-rule) · [Range (of a slot)](#range-of-a-slot) · [Refines (Rule to Rule)](#refines-rule-to-rule) · [Scope](#scope) · [Siblings](#siblings) · [Slot](#slot) · [Slot inheritance](#slot-inheritance) · [Subclass / superclass (is-a)](#subclass--superclass-is-a) · [Synonym](#synonym) · [Terminological hierarchy](#terminological-hierarchy) · [Top-down / bottom-up / combination](#top-down--bottom-up--combination) · [Transitivity (of is-a)](#transitivity-of-is-a) · [Value type](#value-type)
+[Abstract class](#concept-abstract-class) · [Authored rule](#concept-authored-rule) · [Cardinality](#concept-cardinality) · [Class](#concept-class) · [Class hierarchy (taxonomy)](#concept-class-hierarchy) · [Competency question](#concept-competency-question) · [Conceptualization](#concept-conceptualization) · [Default value](#concept-default-value) · [Design decision (record)](#concept-design-decision) · [Direct subclass](#concept-direct-subclass) · [Disjoint classes](#concept-disjoint) · [Domain (of a slot)](#concept-domain) · [Edge property (relationship property)](#concept-edge-property) · [Facet](#concept-facet) · [Facet override (restriction on a subclass)](#concept-facet-override) · [Fixed (class-level) slot value](#concept-fixed-value) · [Fulfills (fact to Rule)](#concept-rule-fulfills) · [Instance](#concept-instance) · [Intrinsic vs. extrinsic property](#concept-intrinsic-extrinsic) · [Inverse slots](#concept-inverse-slots) · [Knowledge base](#concept-knowledge-base) · [Labeled property graph (LPG)](#concept-lpg) · [Modality (MUST / SHOULD / MAY)](#concept-modality) · [Multiple inheritance](#concept-multiple-inheritance) · [Naming convention](#concept-naming-convention) · [Ontology](#concept-ontology) · [Prescriptive vs descriptive statements (Rule vs fact)](#concept-prescriptive-vs-descriptive) · [Qualifier values on a Rule](#concept-rule-qualifier) · [Range (of a slot)](#concept-range) · [Refines (Rule to Rule)](#concept-rule-refines) · [Scope](#concept-scope) · [Siblings](#concept-sibling) · [Slot](#concept-slot) · [Slot inheritance](#concept-inheritance) · [Subclass / superclass (is-a)](#concept-subclass) · [Synonym](#concept-synonym) · [Terminological hierarchy](#concept-terminological-hierarchy) · [Top-down / bottom-up / combination](#concept-development-approach) · [Transitivity (of is-a)](#concept-transitivity) · [Value type](#concept-value-type)
 
+<a id="concept-abstract-class"></a>
 ## Abstract class
 
 A grouping class that exists to organize other classes. Nothing is ever 'just' one of these without also belonging to a more specific subclass.
@@ -19,6 +20,7 @@ A grouping class that exists to organize other classes. Nothing is ever 'just' o
 > “Protégé-2000 allows users to specify some classes as Abstract, signifying that the class cannot have any direct instances.”  
 > — Ontology 101 §4.6 An instance or a class?, p.18
 
+<a id="concept-authored-rule"></a>
 ## Authored rule
 
 *Also called:* owner-written rule
@@ -33,6 +35,7 @@ Sometimes the owner knows a principle the documentation never states in one plac
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-cardinality"></a>
 ## Cardinality
 
 'Exactly one', 'zero or one', 'at least one', or 'any number'. Minimum 1 means the field is required. Maximum 0 on a subclass means 'this subclass never has this field'.
@@ -55,6 +58,7 @@ Sometimes the owner knows a principle the documentation never states in one plac
 > “Sometimes it may be useful to set the maximum cardinality to 0. This setting would indicate that the slot cannot have any values for a particular subclass.”  
 > — Ontology 101 §3 Step 6, Slot cardinality, p.9
 
+<a id="concept-class"></a>
 ## Class
 
 *Also called:* concept, type, category
@@ -73,6 +77,7 @@ A kind of thing, like 'Wine' or 'Winery'. It's the category, not any particular 
 > “From the list created in Step 3, we select the terms that describe objects having independent existence rather than terms that describe these objects.”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.7
 
+<a id="concept-class-hierarchy"></a>
 ## Class hierarchy (taxonomy)
 
 The family tree of your classes, from general at the top to specific at the bottom.
@@ -89,6 +94,7 @@ The family tree of your classes, from general at the top to specific at the bott
 > “We organize the classes into a hierarchical taxonomy by asking if by being an instance of one class, the object will necessarily (i.e., by definition) be an instance of some other class.”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.8
 
+<a id="concept-competency-question"></a>
 ## Competency question
 
 Before building anything, write down the actual questions you want answered. They tell you what to include, what to leave out, and when you're done.
@@ -108,6 +114,7 @@ Before building anything, write down the actual questions you want answered. The
 > “These competency questions are just a sketch and do not need to be exhaustive.”  
 > — Ontology 101 §3 Step 1, Competency questions, p.5
 
+<a id="concept-conceptualization"></a>
 ## Conceptualization
 
 The picture of the domain in your head: which things you think matter and how you think they fit together. The ontology is you writing that picture down explicitly.
@@ -121,6 +128,7 @@ The picture of the domain in your head: which things you think matter and how yo
 > “A conceptualization is an abstract, simplified view of the world that we wish to represent for some purpose.”  
 > — Gruber 1993 §1 Introduction, p.2
 
+<a id="concept-default-value"></a>
 ## Default value
 
 A starting suggestion that you can override.
@@ -137,6 +145,7 @@ A starting suggestion that you can override.
 > “We can then change the value to any other value that the facets will allow. That is, default values are there for convenience: they do not enforce any new restrictions on the model or change the model in any way.”  
 > — Ontology 101 §5.2 Default values, p.21
 
+<a id="concept-design-decision"></a>
 ## Design decision (record)
 
 When you deliberately leave something out, or pick between two reasonable options, write one sentence on what you chose and why. Future readers, including you in six months, will need it. (The paper asks for this for scope decisions; the toolkit suggests it for any choice a reader wouldn't expect.)
@@ -150,6 +159,7 @@ When you deliberately leave something out, or pick between two reasonable option
 > “However, we should record such design decision in the documentation for the benefit of the users who will be looking at this ontology and who may not be aware of the application we had in mind.”  
 > — Ontology 101 §4.7 Limiting the scope, p.20
 
+<a id="concept-direct-subclass"></a>
 ## Direct subclass
 
 Its immediate child, as opposed to a grandchild.
@@ -163,6 +173,7 @@ Its immediate child, as opposed to a grandchild.
 > “A direct subclass is the “closest” subclass of the class: there are no classes between a class and its direct subclass in a hierarchy.”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="concept-disjoint"></a>
 ## Disjoint classes
 
 'Nothing can be both.' Declaring it lets okb catch mistakes like a wine that is both red and white.
@@ -179,6 +190,7 @@ Its immediate child, as opposed to a grandchild.
 > “Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error.”  
 > — Ontology 101 §4.8 Disjoint subclasses, p.20
 
+<a id="concept-domain"></a>
 ## Domain (of a slot)
 
 Which kinds of things have this field.
@@ -192,6 +204,7 @@ Which kinds of things have this field.
 > “The classes to which a slot is attached or a classes which property a slot describes, are called the domain of the slot.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.10
 
+<a id="concept-edge-property"></a>
 ## Edge property (relationship property)
 
 *Also called:* relationship property, link property, qualifier
@@ -206,6 +219,7 @@ Some facts belong to the connection, not to either thing it connects. 'Use Radio
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-facet"></a>
 ## Facet
 
 *Also called:* role restriction, slot constraint
@@ -224,6 +238,7 @@ The rules for filling in a field: what kind of value goes in it, which values ar
 > “an ontology is a formal explicit description of concepts in a domain of discourse (classes (sometimes called concepts)), properties of each concept describing various features and attributes of the concept (slots (sometimes called roles or properties)), and restrictions on slots (facets (sometimes called role restrictions)).”  
 > — Ontology 101 §2 What is in an ontology?, p.3
 
+<a id="concept-facet-override"></a>
 ## Facet override (restriction on a subclass)
 
 The subclass inherits the field but tightens its rules.
@@ -240,6 +255,7 @@ The subclass inherits the field but tightens its rules.
 > “Sometimes it may be useful to set the maximum cardinality to 0. This setting would indicate that the slot cannot have any values for a particular subclass.”  
 > — Ontology 101 §3 Step 6, Slot cardinality, p.9
 
+<a id="concept-fixed-value"></a>
 ## Fixed (class-level) slot value
 
 A fact about the whole class, not a starting suggestion. Every Dessert Wine is sweet, full stop.
@@ -253,6 +269,7 @@ A fact about the whole class, not a starting suggestion. Every Dessert Wine is s
 > “Slot values cannot be changed. For example, we can say that the slot sugar has value SWEET for the Dessert wine class. Then all the subclasses and instances of the Dessert wine class will have the SWEET value for the slot sugar. This value cannot be changed in any of the subclasses or instances of the class.”  
 > — Ontology 101 §5.2 Default values, p.21
 
+<a id="concept-rule-fulfills"></a>
 ## Fulfills (fact to Rule)
 
 *Also called:* FULFILLS, meets, satisfies
@@ -267,6 +284,7 @@ A rule says what's needed; a fact says what one implementation does. FULFILLS co
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-instance"></a>
 ## Instance
 
 *Also called:* individual
@@ -285,6 +303,7 @@ One specific, real thing, like this particular wine. An instance belongs to a cl
 > “Only classes can be arranged in a hierarchy—knowledge-representation systems do not have a notion of sub-instance.”  
 > — Ontology 101 §4.6 An instance or a class?, p.19
 
+<a id="concept-intrinsic-extrinsic"></a>
 ## Intrinsic vs. extrinsic property
 
 A rough test (the toolkit's, not the paper's): would the property stay the same if nobody was looking? Flavor would, so it's intrinsic. A name, a location, or whether it's currently chilled is extrinsic. Extrinsic properties make poor classes because things move in and out of them.
@@ -301,6 +320,7 @@ A rough test (the toolkit's, not the paper's): would the property stay the same 
 > “A class to which an individual instance belongs should not change often. Usually when we use extrinsic rather than intrinsic properties of concepts to differentiate among classes, instances of those classes will have to migrate often from one class to another.”  
 > — Ontology 101 §4.5 A new class or a property value?, p.17
 
+<a id="concept-inverse-slots"></a>
 ## Inverse slots
 
 'Wine → maker → Winery' and 'Winery → produces → Wine' are the same fact seen from each end. Declare them as inverses and okb keeps the two sides in sync.
@@ -317,6 +337,7 @@ A rough test (the toolkit's, not the paper's): would the property stay the same 
 > “The knowledge-acquisition system could then automatically fill in the value for the inverse relation insuring consistency of the knowledge base.”  
 > — Ontology 101 §5.1 Inverse slots, p.20
 
+<a id="concept-knowledge-base"></a>
 ## Knowledge base
 
 The ontology is the empty form: which fields exist and what's allowed in them. The knowledge base is the form filled in with real things.
@@ -330,6 +351,7 @@ The ontology is the empty form: which fields exist and what's allowed in them. T
 > “An ontology together with a set of individual instances of classes constitutes a knowledge base. In reality, there is a fine line where the ontology ends and the knowledge base begins.”  
 > — Ontology 101 §2 What is in an ontology?, p.3
 
+<a id="concept-lpg"></a>
 ## Labeled property graph (LPG)
 
 Your ontology is saved as two JSON lists, nodes and edges, which is how graph databases like Neo4j and Neptune think. Classes, slots and instances are nodes. Structural links (IS_A, HAS_SLOT...) and relationship values ((wine)-[:MAKER]->(winery)) are edges. `okb export` writes the data the way a graph database expects it: instances as nodes labeled with their classes. It's still just the storage format, so model the meaning first (see principle.knowledge-level).
@@ -342,6 +364,7 @@ Your ontology is saved as two JSON lists, nodes and edges, which is how graph da
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-modality"></a>
 ## Modality (MUST / SHOULD / MAY)
 
 MUST findings are errors to fix. SHOULD findings are warnings: fix them or record why not. MAY findings are hints worth a look.
@@ -354,6 +377,7 @@ MUST findings are errors to fix. SHOULD findings are warnings: fix them or recor
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-multiple-inheritance"></a>
 ## Multiple inheritance
 
 A class can have more than one parent when it really is a kind of each of them. It's allowed and sometimes the right answer, so write down why you did it.
@@ -370,6 +394,7 @@ A class can have more than one parent when it really is a kind of each of them. 
 > “The Port class will inherit its slots and their facets from both its parents.”  
 > — Ontology 101 §4.3 Multiple inheritance, p.16
 
+<a id="concept-naming-convention"></a>
 ## Naming convention
 
 Decide once how names look, for example classes in PascalCase and singular, slots in camelCase, and then never deviate.
@@ -389,6 +414,7 @@ Decide once how names look, for example classes in PascalCase and singular, slot
 > “it is common to capitalize class names and use lower case for slot names (assuming the system is case-sensitive).”  
 > — Ontology 101 §6.1 Capitalization and delimiters, p.22
 
+<a id="concept-ontology"></a>
 ## Ontology
 
 A shared, precise vocabulary for one subject: what kinds of things exist, how they relate, and which statements about them make sense. It's written down so that people and software use the words the same way.
@@ -405,6 +431,7 @@ A shared, precise vocabulary for one subject: what kinds of things exist, how th
 > “An ontology is an explicit specification of a conceptualization.”  
 > — Gruber 1993 §1 Introduction, p.2
 
+<a id="concept-prescriptive-vs-descriptive"></a>
 ## Prescriptive vs descriptive statements (Rule vs fact)
 
 *Also called:* requirement vs behavior, rule vs behavior
@@ -419,6 +446,7 @@ A shared, precise vocabulary for one subject: what kinds of things exist, how th
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-rule-qualifier"></a>
 ## Qualifier values on a Rule
 
 *Also called:* rule qualifier, rule condition
@@ -433,6 +461,7 @@ A rule often holds only in some situations: 'while the component is open', 'for 
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-range"></a>
 ## Range (of a slot)
 
 For a field that points at another thing, what kind of thing it's allowed to point at.
@@ -449,6 +478,7 @@ For a field that points at another thing, what kind of thing it's allowed to poi
 > “Instance-type slots allow definition of relationships between individuals. Slots with value type Instance must also define a list of allowed classes from which the instances can come.”  
 > — Ontology 101 §3 Step 6, Slot-value type, p.10
 
+<a id="concept-rule-refines"></a>
 ## Refines (Rule to Rule)
 
 *Also called:* REFINES, narrows
@@ -463,6 +493,7 @@ A broad rule ('interactive components support keyboard navigation') can have com
 
 *A toolkit concept (not from the sources).*
 
+<a id="concept-scope"></a>
 ## Scope
 
 The fence around your project. It's what lets you say 'that's out of scope' with confidence.
@@ -479,6 +510,7 @@ The fence around your project. It's what lets you say 'that's out of scope' with
 > “The answers to these questions may change during the ontology-design process, but at any given time they help limit the scope of the model.”  
 > — Ontology 101 §3 Step 1. Determine the domain and scope, p.5
 
+<a id="concept-sibling"></a>
 ## Siblings
 
 Classes that share the same parent. Like same-level headings in a book outline, siblings should be about equally general.
@@ -495,6 +527,7 @@ Classes that share the same parent. Like same-level headings in a book outline, 
 > “All the siblings in the hierarchy (except for the ones at the root) must be at the same level of generality. For example, White wine and Chardonnay should not be subclasses of the same class (say, Wine).”  
 > — Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.14
 
+<a id="concept-slot"></a>
 ## Slot
 
 *Also called:* property, relationship, role, attribute, datatype property, object property
@@ -516,6 +549,7 @@ A field every member of a class has. There are two kinds. A property holds a pla
 > “In general, there are several types of object properties that can become slots in an ontology: “intrinsic” properties such as the flavor of a wine; “extrinsic” properties such as a wine’s name, and area it comes from; parts, if the object is structured; these can be both physical and abstract “parts” (e.g., the courses of a meal) relationships to other individuals;”  
 > — Ontology 101 §3 Step 5. Define the properties of classes—slots, p.8
 
+<a id="concept-inheritance"></a>
 ## Slot inheritance
 
 Attach a slot once, as high in the tree as it applies, and every class below gets it for free.
@@ -529,6 +563,7 @@ Attach a slot once, as high in the tree as it applies, and every class below get
 > “All subclasses of a class inherit the slot of that class.”  
 > — Ontology 101 §3 Step 5. Define the properties of classes—slots, p.9
 
+<a id="concept-subclass"></a>
 ## Subclass / superclass (is-a)
 
 *Also called:* is-a, kind-of, specialization, parent, child
@@ -550,6 +585,7 @@ Ask: 'Is every B, by definition, also an A?' If yes, B is a subclass of A. If th
 > “We organize the classes into a hierarchical taxonomy by asking if by being an instance of one class, the object will necessarily (i.e., by definition) be an instance of some other class.”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.8
 
+<a id="concept-synonym"></a>
 ## Synonym
 
 Shrimp and Prawn are two words for one thing, so they belong in one class with the other name listed as a synonym.
@@ -569,6 +605,7 @@ Shrimp and Prawn are two words for one thing, so they belong in one class with t
 > “Classes represent concepts in the domain and not the words that denote these concepts.”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="concept-terminological-hierarchy"></a>
 ## Terminological hierarchy
 
 Sometimes the hierarchy itself is the point, like a classification of diseases or product categories. In that case it's fine for subclasses to add nothing new.
@@ -582,6 +619,7 @@ Sometimes the hierarchy itself is the point, like a classification of diseases o
 > “Classes in terminological hierarchies do not have to introduce new properties”  
 > — Ontology 101 §4.4 When to introduce a new class (or not), p.16
 
+<a id="concept-development-approach"></a>
 ## Top-down / bottom-up / combination
 
 Start wherever your head naturally is. Many people find the middle easiest ('Red Wine', 'Bordeaux') and work up and down from there.
@@ -604,6 +642,7 @@ Start wherever your head naturally is. Many people find the middle easiest ('Red
 > “None of these three methods is inherently better than any of the others. The approach to take depends strongly on the personal view of the domain.”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.7
 
+<a id="concept-transitivity"></a>
 ## Transitivity (of is-a)
 
 Kind-of relationships chain together. You only need to state the direct parent, and everything further up follows automatically.
@@ -617,6 +656,7 @@ Kind-of relationships chain together. You only need to state the direct parent, 
 > “A subclass relationship is transitive: If B is a subclass of A and C is a subclass of B, then C is a subclass of A”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="concept-value-type"></a>
 ## Value type
 
 Is it text, a number, yes/no, one of a fixed list of words, or a link to another thing?

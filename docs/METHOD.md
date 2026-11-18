@@ -14,6 +14,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 - **Model the domain, not the database.** Decide what your concepts mean before you think about how they'll be stored. The toolkit saves your ontology as graph (LPG) JSON, but you should never make a modeling choice because it's convenient for a graph database. The graph is just the storage format.
 - **Write down what every term means.** A class name alone is ambiguous: does 'Order' mean a purchase or a sequence? Give every class and slot a one-sentence description. The structure tells a machine how to use a term, and the description tells a person what it means.
 
+<a id="step-1-scope"></a>
 ## Step 1: Determine the domain and scope
 
 **Goal:** Write down what the ontology is about, what it's for, who will use and maintain it, and which questions it must answer.
@@ -44,7 +45,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'
 
-**Rules checked from this step:** [`scope-defined`](RULES.md#scope-defined), [`scope-competency-questions`](RULES.md#scope-competency-questions)
+**Rules checked from this step:** [`scope-defined`](RULES.md#rule-scope-defined), [`scope-competency-questions`](RULES.md#rule-scope-competency-questions)
 
 **Commands:** `okb scope`, `okb cq add`
 
@@ -64,6 +65,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-2-reuse"></a>
 ## Step 2: Consider reusing existing ontologies
 
 **Goal:** Check whether someone has already modeled part of your domain, and decide whether to borrow, adapt, just reference it, or skip it.
@@ -91,7 +93,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** The paper notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes.
 
-**Rules checked from this step:** [`reuse-considered`](RULES.md#reuse-considered), [`reuse-recorded`](RULES.md#reuse-recorded)
+**Rules checked from this step:** [`reuse-considered`](RULES.md#rule-reuse-considered), [`reuse-recorded`](RULES.md#rule-reuse-recorded)
 
 **Commands:** `okb reuse add`, `okb reuse none`
 
@@ -105,6 +107,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-3-terms"></a>
 ## Step 3: Enumerate important terms
 
 **Goal:** Brainstorm every term you'd want to make statements about or explain to a user, without worrying yet about what kind of thing each one is.
@@ -145,6 +148,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-4-classes"></a>
 ## Step 4: Define the classes and the class hierarchy
 
 **Goal:** Pick the terms that name things with independent existence, make them classes, and arrange them by 'is a kind of'.
@@ -174,9 +178,9 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.
 
-**Decision guides:** [Top-down, bottom-up, or combination?](DECISIONS.md#decisionapproach) · [Is this really a subclass?](DECISIONS.md#decisionis-a) · [Should I introduce a new subclass here?](DECISIONS.md#decisionnew-class) · [New class, or just a slot value?](DECISIONS.md#decisionclass-or-value) · [Instance or class?](DECISIONS.md#decisioninstance-or-class) · [Are these classes disjoint?](DECISIONS.md#decisiondisjoint) · [Choosing a naming convention](DECISIONS.md#decisionnaming)
+**Decision guides:** [Top-down, bottom-up, or combination?](DECISIONS.md#decision-approach) · [Is this really a subclass?](DECISIONS.md#decision-is-a) · [Should I introduce a new subclass here?](DECISIONS.md#decision-new-class) · [New class, or just a slot value?](DECISIONS.md#decision-class-or-value) · [Instance or class?](DECISIONS.md#decision-instance-or-class) · [Are these classes disjoint?](DECISIONS.md#decision-disjoint) · [Choosing a naming convention](DECISIONS.md#decision-naming)
 
-**Rules checked from this step:** [`hier-is-a-means-kind-of`](RULES.md#hier-is-a-means-kind-of), [`hier-no-cycles`](RULES.md#hier-no-cycles), [`hier-no-singular-plural-pair`](RULES.md#hier-no-singular-plural-pair), [`hier-no-synonym-classes`](RULES.md#hier-no-synonym-classes), [`hier-siblings-same-generality`](RULES.md#hier-siblings-same-generality), [`hier-no-redundant-isa`](RULES.md#hier-no-redundant-isa), [`hier-single-child`](RULES.md#hier-single-child), [`hier-too-many-children`](RULES.md#hier-too-many-children), [`hier-no-subclass-per-restriction`](RULES.md#hier-no-subclass-per-restriction), [`hier-class-or-value`](RULES.md#hier-class-or-value), [`hier-stable-membership`](RULES.md#hier-stable-membership), [`inst-are-leaves`](RULES.md#inst-are-leaves), [`inst-natural-hierarchy-as-classes`](RULES.md#inst-natural-hierarchy-as-classes), [`disjoint-no-shared-members`](RULES.md#disjoint-no-shared-members), [`disjoint-consider-siblings`](RULES.md#disjoint-consider-siblings), [`naming-convention-defined`](RULES.md#naming-convention-defined), [`naming-follow-convention`](RULES.md#naming-follow-convention), [`naming-singular-plural-consistent`](RULES.md#naming-singular-plural-consistent), [`naming-no-type-words`](RULES.md#naming-no-type-words), [`naming-no-abbreviations`](RULES.md#naming-no-abbreviations), [`naming-subclass-names-consistent`](RULES.md#naming-subclass-names-consistent), [`naming-unique`](RULES.md#naming-unique), [`doc-descriptions`](RULES.md#doc-descriptions)
+**Rules checked from this step:** [`hier-is-a-means-kind-of`](RULES.md#rule-hier-is-a-means-kind-of), [`hier-no-cycles`](RULES.md#rule-hier-no-cycles), [`hier-no-singular-plural-pair`](RULES.md#rule-hier-no-singular-plural-pair), [`hier-no-synonym-classes`](RULES.md#rule-hier-no-synonym-classes), [`hier-siblings-same-generality`](RULES.md#rule-hier-siblings-same-generality), [`hier-no-redundant-isa`](RULES.md#rule-hier-no-redundant-isa), [`hier-single-child`](RULES.md#rule-hier-single-child), [`hier-too-many-children`](RULES.md#rule-hier-too-many-children), [`hier-no-subclass-per-restriction`](RULES.md#rule-hier-no-subclass-per-restriction), [`hier-class-or-value`](RULES.md#rule-hier-class-or-value), [`hier-stable-membership`](RULES.md#rule-hier-stable-membership), [`inst-are-leaves`](RULES.md#rule-inst-are-leaves), [`inst-natural-hierarchy-as-classes`](RULES.md#rule-inst-natural-hierarchy-as-classes), [`disjoint-no-shared-members`](RULES.md#rule-disjoint-no-shared-members), [`disjoint-consider-siblings`](RULES.md#rule-disjoint-consider-siblings), [`naming-convention-defined`](RULES.md#rule-naming-convention-defined), [`naming-follow-convention`](RULES.md#rule-naming-follow-convention), [`naming-singular-plural-consistent`](RULES.md#rule-naming-singular-plural-consistent), [`naming-no-type-words`](RULES.md#rule-naming-no-type-words), [`naming-no-abbreviations`](RULES.md#rule-naming-no-abbreviations), [`naming-subclass-names-consistent`](RULES.md#rule-naming-subclass-names-consistent), [`naming-unique`](RULES.md#rule-naming-unique), [`doc-descriptions`](RULES.md#rule-doc-descriptions)
 
 **Commands:** `okb convention`, `okb class add`, `okb class disjoint`, `okb tree`, `okb term set`
 
@@ -205,6 +209,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-5-slots"></a>
 ## Step 5: Define the properties of classes (slots)
 
 **Goal:** Turn the remaining terms into slots and attach each one to the most general class whose members all have it.
@@ -231,9 +236,9 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces. Red Wine gets tanninLevel, because white wines aren't described by tannin.
 
-**Decision guides:** [Which class does this slot go on?](DECISIONS.md#decisionslot-placement) · [New class, or just a slot value?](DECISIONS.md#decisionclass-or-value)
+**Decision guides:** [Which class does this slot go on?](DECISIONS.md#decision-slot-placement) · [New class, or just a slot value?](DECISIONS.md#decision-class-or-value)
 
-**Rules checked from this step:** [`slot-attach-most-general`](RULES.md#slot-attach-most-general), [`slot-domain-fits-all`](RULES.md#slot-domain-fits-all), [`slot-value-type-declared`](RULES.md#slot-value-type-declared), [`doc-descriptions`](RULES.md#doc-descriptions)
+**Rules checked from this step:** [`slot-attach-most-general`](RULES.md#rule-slot-attach-most-general), [`slot-domain-fits-all`](RULES.md#rule-slot-domain-fits-all), [`slot-value-type-declared`](RULES.md#rule-slot-value-type-declared), [`doc-descriptions`](RULES.md#rule-doc-descriptions)
 
 **Commands:** `okb property add`, `okb relationship add`, `okb show`, `okb term set`
 
@@ -256,6 +261,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-6-facets"></a>
 ## Step 6: Define the facets of the slots
 
 **Goal:** For every slot, decide its value type, allowed values or range, cardinality, and any defaults, fixed values or inverse.
@@ -284,9 +290,9 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine, multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.
 
-**Decision guides:** [What should this slot's range be?](DECISIONS.md#decisionrange) · [Edge property, or make the relationship its own class?](DECISIONS.md#decisionedge-or-class)
+**Decision guides:** [What should this slot's range be?](DECISIONS.md#decision-range) · [Edge property, or make the relationship its own class?](DECISIONS.md#decision-edge-or-class)
 
-**Rules checked from this step:** [`slot-instance-needs-range`](RULES.md#slot-instance-needs-range), [`slot-enum-needs-values`](RULES.md#slot-enum-needs-values), [`slot-cardinality-declared`](RULES.md#slot-cardinality-declared), [`slot-cardinality-coherent`](RULES.md#slot-cardinality-coherent), [`slot-range-remove-subclass`](RULES.md#slot-range-remove-subclass), [`slot-range-collapse-subclasses`](RULES.md#slot-range-collapse-subclasses), [`slot-range-all-but-few`](RULES.md#slot-range-all-but-few), [`slot-range-not-too-general`](RULES.md#slot-range-not-too-general), [`slot-default-allowed`](RULES.md#slot-default-allowed), [`slot-fixed-not-overridden`](RULES.md#slot-fixed-not-overridden), [`slot-inverse-consistent`](RULES.md#slot-inverse-consistent), [`slot-edge-properties`](RULES.md#slot-edge-properties), [`hier-subclass-adds-something`](RULES.md#hier-subclass-adds-something), [`terms-dispositioned`](RULES.md#terms-dispositioned)
+**Rules checked from this step:** [`slot-instance-needs-range`](RULES.md#rule-slot-instance-needs-range), [`slot-enum-needs-values`](RULES.md#rule-slot-enum-needs-values), [`slot-cardinality-declared`](RULES.md#rule-slot-cardinality-declared), [`slot-cardinality-coherent`](RULES.md#rule-slot-cardinality-coherent), [`slot-range-remove-subclass`](RULES.md#rule-slot-range-remove-subclass), [`slot-range-collapse-subclasses`](RULES.md#rule-slot-range-collapse-subclasses), [`slot-range-all-but-few`](RULES.md#rule-slot-range-all-but-few), [`slot-range-not-too-general`](RULES.md#rule-slot-range-not-too-general), [`slot-default-allowed`](RULES.md#rule-slot-default-allowed), [`slot-fixed-not-overridden`](RULES.md#rule-slot-fixed-not-overridden), [`slot-inverse-consistent`](RULES.md#rule-slot-inverse-consistent), [`slot-edge-properties`](RULES.md#rule-slot-edge-properties), [`hier-subclass-adds-something`](RULES.md#rule-hier-subclass-adds-something), [`terms-dispositioned`](RULES.md#rule-terms-dispositioned)
 
 **Commands:** `okb slot set`, `okb relationship inverse`, `okb relationship property`, `okb class fix`, `okb class default`, `okb class restrict`
 
@@ -303,6 +309,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-7-instances"></a>
 ## Step 7: Create instances
 
 **Goal:** Add real individuals: choose a class, create the instance, and fill in its slot values.
@@ -327,9 +334,9 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate, tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.
 
-**Decision guides:** [Instance or class?](DECISIONS.md#decisioninstance-or-class)
+**Decision guides:** [Instance or class?](DECISIONS.md#decision-instance-or-class)
 
-**Rules checked from this step:** [`inst-granularity`](RULES.md#inst-granularity), [`inst-not-of-abstract`](RULES.md#inst-not-of-abstract), [`slot-values-respect-facets`](RULES.md#slot-values-respect-facets), [`slot-value-slot-applies`](RULES.md#slot-value-slot-applies)
+**Rules checked from this step:** [`inst-granularity`](RULES.md#rule-inst-granularity), [`inst-not-of-abstract`](RULES.md#rule-inst-not-of-abstract), [`slot-values-respect-facets`](RULES.md#rule-slot-values-respect-facets), [`slot-value-slot-applies`](RULES.md#rule-slot-value-slot-applies)
 
 **Commands:** `okb instance add`, `okb instance set`
 
@@ -343,6 +350,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 </details>
 
+<a id="step-8-review"></a>
 ## Step 8: Review against your questions, and iterate
 
 **Goal:** Stand back: check each competency question can be answered, run the full validator, review the judgment-only rules, record decisions, and go around again.
@@ -372,7 +380,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 
 **Wine example:** The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel.
 
-**Rules checked from this step:** [`scope-cq-coverage`](RULES.md#scope-cq-coverage), [`scope-cq-families`](RULES.md#scope-cq-families), [`scope-no-unneeded`](RULES.md#scope-no-unneeded), [`doc-record-decisions`](RULES.md#doc-record-decisions)
+**Rules checked from this step:** [`scope-cq-coverage`](RULES.md#rule-scope-cq-coverage), [`scope-cq-families`](RULES.md#rule-scope-cq-families), [`scope-no-unneeded`](RULES.md#rule-scope-no-unneeded), [`doc-record-decisions`](RULES.md#rule-doc-record-decisions)
 
 **Commands:** `okb cq link`, `okb validate --all`, `okb decision add`, `okb diagram`
 

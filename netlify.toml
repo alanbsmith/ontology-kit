@@ -1,0 +1,9 @@
+# The Ontology Kit docs site (site/). Netlify installs the root package (it has a lockfile) before
+# this runs; the site is its own npm package, so it's installed here. `npm run site` regenerates
+# the docs from the meta-KB first, so the deployed pages are never stale.
+[build]
+  command = "npm ci --prefix site && npm run site"
+  publish = "site/dist"
+
+[build.environment]
+  NODE_VERSION = "24"
