@@ -433,3 +433,122 @@ h4 {
 	outline: var(--focus-width) solid var(--color-focus);
 	outline-offset: 0;
 }
+
+/* Results: the same quiet lists as the outline and the menu. Each page is a title over a muted
+   excerpt; its matching sections hang under a rule in the margin, like the outline's entries. */
+#search-ui .pagefind-ui__message {
+	height: auto;
+	padding: 0;
+	margin-block: var(--space-sm) var(--space-xs);
+	font-size: var(--text-small);
+	font-weight: var(--weight-regular);
+	color: var(--color-text-muted);
+}
+
+#search-ui .pagefind-ui__results-area {
+	margin-top: 0;
+}
+
+#search-ui .pagefind-ui__results {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-tight);
+	margin: 0;
+}
+
+#search-ui .pagefind-ui__result,
+#search-ui .pagefind-ui__result:last-of-type {
+	padding: 0;
+	border: 0;
+}
+
+#search-ui .pagefind-ui__result-inner {
+	width: 100%;
+	margin: 0;
+	padding: var(--space-xs) var(--space-sm);
+	border-radius: var(--radius-md);
+}
+
+#search-ui .pagefind-ui__result-inner:hover {
+	background: var(--color-surface);
+}
+
+#search-ui .pagefind-ui__result-title {
+	font-size: var(--text-body);
+	font-weight: var(--weight-strong);
+	line-height: var(--leading-heading);
+}
+
+#search-ui .pagefind-ui__result-title .pagefind-ui__result-link {
+	color: var(--color-text);
+	text-underline-offset: 0.2em;
+}
+
+#search-ui .pagefind-ui__result-excerpt {
+	min-width: 0;
+	margin-top: var(--space-tight);
+	font-size: var(--text-small);
+	line-height: 1.5;
+	color: var(--color-text-muted);
+}
+
+#search-ui .pagefind-ui__result-nested {
+	width: 100%;
+	margin-top: var(--space-xs);
+	padding: 0 0 0 var(--space-sm);
+	border-inline-start: var(--border-width) solid var(--color-border);
+}
+
+#search-ui .pagefind-ui__result-nested:first-of-type {
+	padding-top: 0;
+}
+
+#search-ui .pagefind-ui__result-nested .pagefind-ui__result-title {
+	font-size: var(--text-small);
+}
+
+#search-ui .pagefind-ui__result-nested .pagefind-ui__result-link {
+	font-size: inherit;
+}
+
+#search-ui .pagefind-ui__result-nested .pagefind-ui__result-link::before {
+	content: none;
+}
+
+#search-ui .pagefind-ui__result-nested .pagefind-ui__result-excerpt {
+	margin-top: 0.125rem;
+}
+
+/* Matches: a soft wash in the text color, never a loud yellow. */
+#search-ui mark {
+	padding-inline: 0.1em;
+	border-radius: 0.25em;
+	background: var(--color-surface-hover);
+	color: var(--color-text);
+}
+
+:root[data-contrast='more'] #search-ui mark {
+	background: none;
+	font-weight: var(--weight-strong);
+	text-decoration: underline;
+}
+
+/* "Load more results": a pill like the panel's other buttons. */
+#search-ui .pagefind-ui__button {
+	height: auto;
+	min-height: 2.75rem;
+	margin-top: var(--space-md);
+	border: var(--border-width) solid var(--color-border-strong);
+	border-radius: var(--radius-full);
+	background: none;
+	color: var(--color-link);
+	font: inherit;
+	font-size: var(--text-small);
+	font-weight: var(--weight-strong);
+}
+
+#search-ui .pagefind-ui__button:hover {
+	background: var(--color-surface);
+	border-color: var(--color-border-strong);
+	color: var(--color-link-hover);
+}
