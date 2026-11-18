@@ -281,7 +281,7 @@ export function show(ont: Ontology, n: OkbNode): string {
     const primary = ont.get(ont.rel.primary(n.id));
     const decls = (primary?.type === "Slot" && primary.edgeProperties) || [];
     if (decls.length) line("edge props", decls.map((d) => `${d.name} (${d.valueType}${d.allowedValues ? ` {${d.allowedValues.join(", ")}}` : ""}${d.required ? ", required" : ""})`).join(", ") + c.dim(" + rule"));
-    line("attached to", ont.domain(n.id).map((d) => ont.label(d)).join(", ") || c.yellow("(no class yet)"));
+    line("attached to", [...ont.domain(n.id).map((d) => ont.label(d)), ...(n.appliesToRules ? ["every rule"] : [])].join(", ") || c.yellow("(no class yet)"));
     const users = ont.ofType("Class").filter((x) => x.facetOverrides?.[n.id]);
     if (users.length) line("restricted by", users.map((u) => u.name).join(", "));
   } else if (n.type === "Instance") {
@@ -295,9 +295,22 @@ export function show(ont: Ontology, n: OkbNode): string {
       out.push(`    ${ont.label(sid).padEnd(18)} ${shown}`);
     }
   } else {
-    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
+    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name", "values", "authored"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
+    if (n.type === "Rule") {
+      if (n.authored) line("authored", "yes (written by the ontology's owner)");
+      for (const sid of ont.applicableSlots(n.id)) {
+        const vals = ont.statedValues(n.id, sid);
+        if (vals.length) line(ont.label(sid), vals.join(", "));
+      }
+    }
     const outs = ont.edges.filter((e) => e.from === n.id);
-    for (const e of outs) line(e.type, ont.label(e.to));
+    for (const e of outs) line(e.type, ont.label(e.to) + (e.adds ? c.dim(` (adds: ${e.adds})`) : ""));
+    if (n.type === "Rule") {
+      for (const [type, label] of Object.entries({ REFINES: "refined by", FULFILLS: "fulfilled by" })) {
+        const by = ont.sources(n.id, type).map((x) => ont.label(x));
+        if (by.length) line(label, by.join(", "));
+      }
+    }
   }
   const decisions = ont.sources(n.id, "ABOUT");
   if (decisions.length) {

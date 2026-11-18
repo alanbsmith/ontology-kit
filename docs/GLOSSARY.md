@@ -1,10 +1,10 @@
 # Glossary
 
-> Generated from the meta-KB (v2.3.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+> Generated from the meta-KB (v2.4.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
 
 Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.
 
-[Abstract class](#concept-abstract-class) · [Cardinality](#concept-cardinality) · [Class](#concept-class) · [Class hierarchy (taxonomy)](#concept-class-hierarchy) · [Competency question](#concept-competency-question) · [Conceptualization](#concept-conceptualization) · [Default value](#concept-default-value) · [Design decision (record)](#concept-design-decision) · [Direct subclass](#concept-direct-subclass) · [Disjoint classes](#concept-disjoint) · [Domain (of a slot)](#concept-domain) · [Edge property (relationship property)](#concept-edge-property) · [Facet](#concept-facet) · [Facet override (restriction on a subclass)](#concept-facet-override) · [Fixed (class-level) slot value](#concept-fixed-value) · [Instance](#concept-instance) · [Intrinsic vs. extrinsic property](#concept-intrinsic-extrinsic) · [Inverse slots](#concept-inverse-slots) · [Knowledge base](#concept-knowledge-base) · [Labeled property graph (LPG)](#concept-lpg) · [Modality (MUST / SHOULD / MAY)](#concept-modality) · [Multiple inheritance](#concept-multiple-inheritance) · [Naming convention](#concept-naming-convention) · [Ontology](#concept-ontology) · [Range (of a slot)](#concept-range) · [Scope](#concept-scope) · [Siblings](#concept-sibling) · [Slot](#concept-slot) · [Slot inheritance](#concept-inheritance) · [Subclass / superclass (is-a)](#concept-subclass) · [Synonym](#concept-synonym) · [Terminological hierarchy](#concept-terminological-hierarchy) · [Top-down / bottom-up / combination](#concept-development-approach) · [Transitivity (of is-a)](#concept-transitivity) · [Value type](#concept-value-type)
+[Abstract class](#concept-abstract-class) · [Authored rule](#concept-authored-rule) · [Cardinality](#concept-cardinality) · [Class](#concept-class) · [Class hierarchy (taxonomy)](#concept-class-hierarchy) · [Competency question](#concept-competency-question) · [Conceptualization](#concept-conceptualization) · [Default value](#concept-default-value) · [Design decision (record)](#concept-design-decision) · [Direct subclass](#concept-direct-subclass) · [Disjoint classes](#concept-disjoint) · [Domain (of a slot)](#concept-domain) · [Edge property (relationship property)](#concept-edge-property) · [Facet](#concept-facet) · [Facet override (restriction on a subclass)](#concept-facet-override) · [Fixed (class-level) slot value](#concept-fixed-value) · [Fulfills (fact to Rule)](#concept-rule-fulfills) · [Instance](#concept-instance) · [Intrinsic vs. extrinsic property](#concept-intrinsic-extrinsic) · [Inverse slots](#concept-inverse-slots) · [Knowledge base](#concept-knowledge-base) · [Labeled property graph (LPG)](#concept-lpg) · [Modality (MUST / SHOULD / MAY)](#concept-modality) · [Multiple inheritance](#concept-multiple-inheritance) · [Naming convention](#concept-naming-convention) · [Ontology](#concept-ontology) · [Prescriptive vs descriptive statements (Rule vs fact)](#concept-prescriptive-vs-descriptive) · [Qualifier values on a Rule](#concept-rule-qualifier) · [Range (of a slot)](#concept-range) · [Refines (Rule to Rule)](#concept-rule-refines) · [Scope](#concept-scope) · [Siblings](#concept-sibling) · [Slot](#concept-slot) · [Slot inheritance](#concept-inheritance) · [Subclass / superclass (is-a)](#concept-subclass) · [Synonym](#concept-synonym) · [Terminological hierarchy](#concept-terminological-hierarchy) · [Top-down / bottom-up / combination](#concept-development-approach) · [Transitivity (of is-a)](#concept-transitivity) · [Value type](#concept-value-type)
 
 <a id="concept-abstract-class"></a>
 ## Abstract class
@@ -19,6 +19,21 @@ A grouping class that exists to organize other classes. Nothing is ever 'just' o
 
 > “Protégé-2000 allows users to specify some classes as Abstract, signifying that the class cannot have any direct instances.”  
 > — Ontology 101 §4.6 An instance or a class?, p.18
+
+<a id="concept-authored-rule"></a>
+## Authored rule
+
+*Also called:* owner-written rule
+
+Sometimes the owner knows a principle the documentation never states in one place. Write it down in a file, register the file as a Source, and cite the sentence. It then has the same quote and check trail as any other rule. Being authored is a label, not an exemption.
+
+**Definition.** A Rule written by the ontology's owner rather than extracted from a document (`authored: true`, `extracted: false`). Every rule needs provenance, authored or extracted: an authored rule cites its sentence in an owner-written file registered as a Source, and goes through the same verification.
+
+**Example.** 'Interactive components MUST support keyboard navigation in their operable conditions' cited from principles.md.
+
+**In okb.** `okb rule add --authored --cites <quote id> ...`. Shown in `okb rule list` and `okb show`; exported as `authored` on the OkbRule node. prov-cites-quote and prov-verified apply to it unchanged.
+
+*A toolkit concept (not from the sources).*
 
 <a id="concept-cardinality"></a>
 ## Cardinality
@@ -254,6 +269,21 @@ A fact about the whole class, not a starting suggestion. Every Dessert Wine is s
 > “Slot values cannot be changed. For example, we can say that the slot sugar has value SWEET for the Dessert wine class. Then all the subclasses and instances of the Dessert wine class will have the SWEET value for the slot sugar. This value cannot be changed in any of the subclasses or instances of the class.”  
 > — Ontology 101 §5.2 Default values, p.21
 
+<a id="concept-rule-fulfills"></a>
+## Fulfills (fact to Rule)
+
+*Also called:* FULFILLS, meets, satisfies
+
+A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfill yet?'.
+
+**Definition.** An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfill one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.
+
+**Example.** (Button activates on Enter and Space)-[:FULFILLS]->(Interactive components support keyboard navigation)
+
+**In okb.** `okb fulfills <instance> <rule>`.
+
+*A toolkit concept (not from the sources).*
+
 <a id="concept-instance"></a>
 ## Instance
 
@@ -401,6 +431,36 @@ A shared, precise vocabulary for one subject: what kinds of things exist, how th
 > “An ontology is an explicit specification of a conceptualization.”  
 > — Gruber 1993 §1 Introduction, p.2
 
+<a id="concept-prescriptive-vs-descriptive"></a>
+## Prescriptive vs descriptive statements (Rule vs fact)
+
+*Also called:* requirement vs behavior, rule vs behavior
+
+'Interactive components MUST support keyboard navigation' tells you what is required, of everything. 'Button handles Enter and Space' tells you what one component does. Keep them apart: the first is a Rule, the second is a fact about Button. Then you can ask which facts meet which rules.
+
+**Definition.** A prescriptive statement says what any implementation must, should or may do; it is a Rule, with a modality. A descriptive statement says what one implementation does; it is an ordinary Instance of a domain class (for example a Behavior), with no modality. A descriptive fact can meet a prescriptive rule, and the FULFILLS edge records that.
+
+**Example.** (Rule: Interactive components MUST support keyboard navigation) <-[:FULFILLS]- (Behavior: Button activates on Enter and Space)
+
+**In okb.** Rules: `okb rule add`. Descriptive facts: `okb instance add --of <your Behavior class>`. Link them with `okb fulfills <instance> <rule>`.
+
+*A toolkit concept (not from the sources).*
+
+<a id="concept-rule-qualifier"></a>
+## Qualifier values on a Rule
+
+*Also called:* rule qualifier, rule condition
+
+A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfills it can be compared on the same terms.
+
+**Definition.** Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and declared to apply to Rules (`appliesToRules`), so every rule can carry them and nothing else can; no class is involved. Values are validated like instance slot values (allowed values, cardinality). Rules have no inheritance: each rule states its own values, and a refining rule does not inherit its broader rule's.
+
+**Example.** Rule 'Menus close on Escape' with condition = open and inputModality = keyboard.
+
+**In okb.** `okb slot add condition --on-rules --type Enumerated --values open,disabled` (add `--on Behavior` as well to share the slot with a descriptive class), then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.
+
+*A toolkit concept (not from the sources).*
+
 <a id="concept-range"></a>
 ## Range (of a slot)
 
@@ -417,6 +477,21 @@ For a field that points at another thing, what kind of thing it's allowed to poi
 
 > “Instance-type slots allow definition of relationships between individuals. Slots with value type Instance must also define a list of allowed classes from which the instances can come.”  
 > — Ontology 101 §3 Step 6, Slot-value type, p.10
+
+<a id="concept-rule-refines"></a>
+## Refines (Rule to Rule)
+
+*Also called:* REFINES, narrows
+
+A broad rule ('interactive components support keyboard navigation') can have component rules that say how, for one component ('Menu moves focus with the arrow keys'). The component rule REFINES the broad one. It is not a subclass: it adds a requirement to the broad rule's setting.
+
+**Definition.** An edge from a rule to a broader rule that it narrows by adding a part, condition, key or case. Stored in one direction (specific → broad). The optional `adds` property names what the narrower rule adds, so a verifier can check that the detail appears in its quote. Refinement cannot loop.
+
+**Example.** (Menu rule)-[:REFINES {adds: "arrow keys move focus"}]->(keyboard navigation rule)
+
+**In okb.** `okb rule refines <rule> <broader> --adds "..."` or `okb rule add ... --refines <broader> --adds "..."`.
+
+*A toolkit concept (not from the sources).*
 
 <a id="concept-scope"></a>
 ## Scope

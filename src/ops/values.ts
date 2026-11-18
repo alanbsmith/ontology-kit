@@ -15,7 +15,10 @@ export function parseAssignments(args: string[]): { slot: string; op: "=" | "+="
 export function findSlotFor(ont: Ontology, ownerId: string, ref: string): SlotNode {
   const s = ont.find(ref, "Slot");
   if (!ont.applicableSlots(ownerId).includes(s.id)) {
-    throw new OkbError(`'${s.name}' isn't a slot of ${ont.label(ownerId)} (attached to: ${ont.domain(s.id).map((d) => ont.label(d)).join(", ") || "nothing"}).`);
+    const forRule = ont.get(ownerId)?.type === "Rule";
+    const where = [...ont.domain(s.id).map((d) => ont.label(d)), ...(s.appliesToRules ? ["Rules"] : [])].join(", ") || "nothing";
+    const hint = forRule ? ` Make it apply to rules: okb slot set ${s.name} --on-rules.` : "";
+    throw new OkbError(`'${s.name}' isn't a slot of ${ont.label(ownerId)} (attached to: ${where}).${hint}`);
   }
   return s;
 }
@@ -58,11 +61,12 @@ function splitValues(slot: SlotNode, raw: string): string[] {
 /** Set values on an Instance (literal values / relationship edges) or a Class (fixed values). */
 export function assign(ont: Ontology, ownerId: string, assignments: string[], mode: "value" | "fixed" = "value"): Notes {
   const owner = ont.require(ownerId);
-  if (owner.type !== "Instance" && owner.type !== "Class") throw new OkbError(`Only instances and classes have values; ${ont.label(ownerId)} is ${an(owner.type)}.`);
+  if (owner.type !== "Instance" && owner.type !== "Class" && owner.type !== "Rule") throw new OkbError(`Only instances, classes and rules have values; ${ont.label(ownerId)} is ${an(owner.type)}.`);
   const notes: Notes = [];
   const firstFixed = mode === "fixed" && !ont.ofType("Class").some((c) => Object.keys(c.fixedValues ?? {}).length || ont.rel.slotsWithValues(c.id).length);
   for (const a of parseAssignments(assignments)) {
     const slot = findSlotFor(ont, ownerId, a.slot);
+    if (owner.type === "Rule" && slot.valueType === "Instance") throw new OkbError(`${slot.name} is a relationship, and a rule's qualifiers must be properties. Link rules with okb rule refines.`);
     const vals = a.raw === "" ? [] : splitValues(slot, a.raw).map((r) => coerce(ont, slot, r, owner.type === "Class"));
     if (slot.valueType === "Instance") {
       const current = ont.rel.values(ownerId, slot.id);

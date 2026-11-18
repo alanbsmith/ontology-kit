@@ -54,6 +54,8 @@ Work through the outline block by block, in the sections your competency questio
 
 Rules for the draft:
 
+- A quote that several nodes share (a list lead-in, say) is added once. Attach it to the other nodes with `okb cite <node> <quote id>`.
+- Rules the owner writes (not extracted) use `okb rule add --authored`; they cite a quote from an owner-written Source and are verified like any other. Descriptive facts (what one implementation does) are Instances, linked to the rules they meet with `okb fulfills`; a component rule that narrows a broader one uses `okb rule refines`. See [FORMAT.md](FORMAT.md#rules).
 - "consider", "can", "may", "should" in the quote → **SHOULD / MAY** in the draft, never MUST. `okb rule add` warns when MUST is drafted from a quote with no "must/required/always/never".
 - Every number, enum value or named entity in the draft must appear in the quote. No filling gaps from general knowledge.
 - One quote → one claim.

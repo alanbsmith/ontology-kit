@@ -10,6 +10,8 @@ import { coerce } from "./values.ts";
 export interface SlotOpts {
   on?: string[]; off?: string[]; type?: string; values?: string[]; range?: string[]; addRange?: string[]; removeRange?: string[];
   card?: string; min?: number; max?: number; default?: string; description?: string; force?: boolean;
+  /** Apply the slot to every Rule (or stop doing so). */
+  onRules?: boolean; offRules?: boolean;
 }
 
 export function addSlot(ont: Ontology, name: string, o: SlotOpts): Notes {
@@ -28,7 +30,7 @@ export function addSlot(ont: Ontology, name: string, o: SlotOpts): Notes {
   notes.unshift(added.valueType === "Instance"
     ? `Added relationship ${name}: (${o.on?.join("|") || "?"})-[:${added.relType}]->(${ont.range(id).map((r) => ont.label(r)).join("|") || "?"}).`
     : `Added property ${name}${o.on?.length ? ` on ${o.on.join(", ")}` : ""} (${added.valueType}).`);
-  if (!o.on?.length) notes.push(`Attach it to a class: okb slot set ${name} --on <Class>`);
+  if (!o.on?.length && !added.appliesToRules) notes.push(`Attach it to a class: okb slot set ${name} --on <Class>  (or to every rule: --on-rules)`);
   if (!o.card) notes.push(`Decide how many values it holds: --card single or --card multiple (Step 6).`);
   if (!o.description) notes.push(`Add a one-line description: okb slot set ${name} --desc "..."`);
   linkTermIfAny(ont, name, id, "slot");
@@ -53,6 +55,7 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
       }
       delete s.relType;
     } else {
+      if (s.appliesToRules) throw new OkbError(`${s.name} applies to rules, and a rule's qualifiers must be properties. Run okb slot set ${s.name} --off-rules first.`);
       ont.rel.becomeRelationship(s);
     }
   }
@@ -92,6 +95,12 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
     const cl = ont.find(c, "Class");
     ont.removeEdges((e) => e.from === cl.id && e.type === "HAS_SLOT" && e.to === s.id);
   }
+  if (o.onRules && o.offRules) throw new OkbError("Pick one of --on-rules and --off-rules.");
+  if (o.onRules) {
+    if (s.valueType === "Instance") throw new OkbError(`${s.name} is a relationship. A rule's qualifiers must be properties; link rules with okb rule refines.`);
+    s.appliesToRules = true;
+  }
+  if (o.offRules) delete s.appliesToRules;
   if (o.default !== undefined) {
     if (o.default === "") delete s.default;
     else s.default = coerce(ont, s, o.default);
