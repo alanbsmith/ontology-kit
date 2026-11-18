@@ -295,7 +295,7 @@ export function show(ont: Ontology, n: OkbNode): string {
       out.push(`    ${ont.label(sid).padEnd(18)} ${shown}`);
     }
   } else {
-    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name", "values"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
+    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name", "values", "authored"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
     if (n.type === "Rule") {
       if (n.authored) line("authored", "yes (written by the ontology's owner)");
       for (const sid of ont.applicableSlots(n.id)) {
