@@ -1,6 +1,6 @@
 /**
- * Deterministic generative art for the docs pages' header bands: a small graph of nodes and
- * edges, seeded by a string. It is the docs-site counterpart of the Truchet tiles on the owner's
+ * Deterministic generative art for the docs pages' header bands: a small graph of clusters (nodes
+ * and edges), seeded by a string. It is the docs-site counterpart of the Truchet tiles on the owner's
  * blog (~/Projects/writing/src/lib/truchet.ts).
  *
  * Same route in, same image out. Seed it with the page's route (`/rules/`), never its title, so
@@ -12,7 +12,8 @@
  *
  * Plain, erasable TypeScript with no Astro imports, so tests/graph-art.test.ts can import it.
  *
- * GENERATOR VERSION 2 (a 20×6 grid instead of 14×4; everything else is unchanged from version 1).
+ * GENERATOR VERSION 3 (clusters: class hubs with instances and subclasses around them, instead of a
+ * jittered grid).
  * Changing anything below (hash, PRNG, order of rand() calls, grid, edge rules, palette rules)
  * changes every image. Treat edits as a deliberate redesign.
  */
@@ -68,150 +69,93 @@ export interface GraphArt {
 
 const n = (v: number) => +v.toFixed(2);
 
-// Node sizes, as fractions of the shorter cell side.
-const INSTANCE_R = [0.05, 0.065];
-const CLASS_R = [0.09, 0.11];
-const HUB_R = 0.15;
-/** Nodes stay this far (plus their radius) inside their cell, so neighbors never touch. */
-const CELL_MARGIN = 0.12;
-/** An edge passes no closer than this to any node it doesn't join (times the cell side). */
-const CLEARANCE = 0.12;
-
-/** Distance from point (px, py) to the segment a→b. */
-function segmentDistance(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
-	const dx = bx - ax;
-	const dy = by - ay;
-	const len2 = dx * dx + dy * dy;
-	const t = len2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / len2)) : 0;
-	return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
-}
-
-/** Union-find over node indexes, for the spanning pass and the connectivity check. */
-function components(count: number) {
-	const parent = Array.from({ length: count }, (_, i) => i);
-	const root = (i: number): number => (parent[i] === i ? i : (parent[i] = root(parent[i])));
-	return {
-		root,
-		join(a: number, b: number) {
-			const ra = root(a);
-			const rb = root(b);
-			if (ra === rb) return false;
-			parent[ra] = rb;
-			return true;
-		},
-	};
-}
-
-export function graphArt(seed: string, { width = 2000, height = 400, cols = 20, rows = 6 } = {}): GraphArt {
+/**
+ * Shaped like an ontology: a few class hubs (rings), each with instance dots around it and
+ * sometimes subclass rings with dots of their own. Hubs are joined to each other by a spanning
+ * tree plus one extra link, so the whole graph is always connected.
+ */
+export function graphArt(seed: string, { width = 2000, height = 400 } = {}): GraphArt {
 	const rand = mulberry32(hashString(seed));
-	const cw = width / cols;
-	const ch = height / rows;
-	const unit = Math.min(cw, ch);
+	const between = (lo: number, hi: number) => lo + rand() * (hi - lo);
 
 	// Three neighboring hues on the palette ring: analogous, so every page looks related.
 	const base = Math.floor(rand() * PALETTE_SIZE);
 	const ring = [base, (base + 1) % PALETTE_SIZE, (base + PALETTE_SIZE - 1) % PALETTE_SIZE];
+	const hue = () => ring[Math.floor(rand() * ring.length)] + 1;
 
-	const strokeWidth = n(unit * (0.022 + rand() * 0.008));
+	const strokeWidth = n(between(2.2, 2.8));
+	const pad = strokeWidth * 2;
 
-	// 1. A jittered grid: one candidate node per cell, nudged inside it but clear of its edges.
-	const keep = HUB_R + CELL_MARGIN;
-	const cells = Array.from({ length: cols * rows }, (_, i) => {
-		const x = i % cols;
-		const y = Math.floor(i / cols);
-		return {
-			x,
-			y,
-			cx: (x + keep + rand() * (1 - 2 * keep)) * cw,
-			cy: (y + keep + rand() * (1 - 2 * keep)) * ch,
-		};
-	});
+	const nodes: GraphArtNode[] = [];
+	const links: [number, number][] = [];
+	const add = (kind: NodeKind, art: number, x: number, y: number, r: number) => {
+		// Keep the whole node (ring stroke included) inside the viewBox.
+		const cx = Math.min(width - r - pad, Math.max(r + pad, x));
+		const cy = Math.min(height - r - pad, Math.max(r + pad, y));
+		nodes.push({ art, cx: n(cx), cy: n(cy), r: n(r), kind });
+		return nodes.length - 1;
+	};
 
-	// Edge candidates between present cells: the next present cell to the right and below (one
-	// gap may be skipped), and the diagonals down-left and down-right. A candidate that would pass
-	// over a node it doesn't join is dropped, using the largest radius any node can have.
-	const present = new Set(cells.map((_, i) => i));
-	const at = (x: number, y: number) => (x >= 0 && x < cols && y >= 0 && y < rows ? y * cols + x : -1);
-	const clear = (a: number, b: number) =>
-		[...present].every(
-			(k) =>
-				k === a ||
-				k === b ||
-				segmentDistance(cells[k].cx, cells[k].cy, cells[a].cx, cells[a].cy, cells[b].cx, cells[b].cy) >=
-					(HUB_R + CLEARANCE) * unit,
-		);
-	const candidates = (): [number, number][] => {
-		const out: [number, number][] = [];
-		for (const i of present) {
-			const { x, y } = cells[i];
-			for (const [dx, dy] of [
-				[1, 0],
-				[0, 1],
-			]) {
-				let j = at(x + dx, y + dy);
-				if (j >= 0 && !present.has(j)) j = at(x + 2 * dx, y + 2 * dy);
-				if (j >= 0 && present.has(j)) out.push([i, j]);
-			}
-			for (const dx of [-1, 1]) {
-				const j = at(x + dx, y + 1);
-				if (j >= 0 && present.has(j)) out.push([i, j]);
-			}
+	// Place a ring of dots around a node, each joined to it, and a link or two between neighbors.
+	const orbit = (parent: number, count: number, near: number, far: number, art: number) => {
+		const { cx, cy } = nodes[parent];
+		const start = rand() * Math.PI * 2;
+		const kids: number[] = [];
+		for (let i = 0; i < count; i++) {
+			const angle = start + ((i + rand() * 0.7) / count) * Math.PI * 2;
+			const dist = between(near, far);
+			const kid = add('instance', rand() < 0.25 ? hue() : art, cx + Math.cos(angle) * dist * 1.25, cy + Math.sin(angle) * dist * 0.8, between(4, 6.5));
+			links.push([parent, kid]);
+			kids.push(kid);
 		}
-		return out.filter(([a, b]) => clear(a, b));
-	};
-	const connected = () => {
-		const uf = components(cells.length);
-		for (const [a, b] of candidates()) uf.join(a, b);
-		const roots = new Set([...present].map((i) => uf.root(i)));
-		return roots.size === 1;
+		for (let i = 0; i + 1 < kids.length; i++) if (rand() < 0.22) links.push([kids[i], kids[i + 1]]);
 	};
 
-	// 2. Skip some cells so the grid doesn't read as a lattice, but never one whose loss would
-	// split the graph.
-	for (let i = 0; i < cells.length; i++) {
-		if (rand() >= 0.22) continue;
-		present.delete(i);
-		if (!connected()) present.add(i);
+	// 1. Hub positions: spread out by rejection sampling (keeps the best of a few tries).
+	const count = 6 + Math.floor(rand() * 3);
+	const hubs: number[] = [];
+	for (let i = 0; i < count; i++) {
+		let best = { x: 0, y: 0, gap: -1 };
+		for (let t = 0; t < 12; t++) {
+			const x = between(110, width - 110);
+			const y = between(100, height - 100);
+			const gap = Math.min(Infinity, ...hubs.map((h) => Math.hypot(nodes[h].cx - x, (nodes[h].cy - y) * 1.6)));
+			if (gap > best.gap) best = { x, y, gap };
+		}
+		const art = hue();
+		const hub = add('class', art, best.x, best.y, between(13, 18));
+		hubs.push(hub);
+
+		// 2. Around each hub: instances, and sometimes subclass rings with instances of their own.
+		orbit(hub, 3 + Math.floor(rand() * 5), 40, 85, art);
+		const subs = Math.floor(rand() * 3);
+		for (let k = 0; k < subs; k++) {
+			const angle = rand() * Math.PI * 2;
+			const dist = between(85, 130);
+			const sub = add('class', art, best.x + Math.cos(angle) * dist * 1.3, best.y + Math.sin(angle) * dist * 0.7, between(8, 10.5));
+			links.push([hub, sub]);
+			orbit(sub, 2 + Math.floor(rand() * 4), 30, 60, art);
+		}
 	}
 
-	// 3. Edges: a random spanning tree first, so the graph is always connected, then a few of the
-	// remaining candidates for some cycles.
-	const pool = candidates()
-		.map((pair) => ({ pair, w: rand() }))
-		.sort((a, b) => a.w - b.w);
-	const uf = components(cells.length);
-	const chosen: [number, number][] = [];
-	const extra: [number, number][] = [];
-	for (const { pair } of pool) (uf.join(...pair) ? chosen : extra).push(pair);
-	for (const pair of extra) if (rand() < 0.3) chosen.push(pair);
-
-	// 4. Nodes: the best-connected few become hubs (large classes); the rest are classes or
-	// instances at random. Each takes a hue from the ring.
-	const order = [...present];
-	const index = new Map(order.map((cell, i) => [cell, i]));
-	const degree = new Map(order.map((cell) => [cell, 0]));
-	for (const [a, b] of chosen) {
-		degree.set(a, degree.get(a)! + 1);
-		degree.set(b, degree.get(b)! + 1);
+	// 3. Join the hubs: a minimum spanning tree (Prim), then one extra link for a cycle.
+	const gap = (a: number, b: number) => Math.hypot(nodes[a].cx - nodes[b].cx, nodes[a].cy - nodes[b].cy);
+	const inTree = new Set([hubs[0]]);
+	const bridges: [number, number][] = [];
+	while (inTree.size < hubs.length) {
+		let best: [number, number] | undefined;
+		for (const a of inTree) for (const b of hubs) if (!inTree.has(b) && (!best || gap(a, b) < gap(...best))) best = [a, b];
+		bridges.push(best!);
+		inTree.add(best![1]);
 	}
-	const hubs = new Set(
-		[...order]
-			.sort((a, b) => degree.get(b)! - degree.get(a)! || a - b)
-			.slice(0, 1 + Math.floor(rand() * 3)),
-	);
-	const nodes: GraphArtNode[] = order.map((cell) => {
-		const art = ring[Math.floor(rand() * ring.length)] + 1;
-		const isClass = hubs.has(cell) || rand() < 0.35;
-		const [lo, hi] = isClass ? CLASS_R : INSTANCE_R;
-		const r = hubs.has(cell) ? HUB_R : lo + rand() * (hi - lo);
-		return { art, cx: n(cells[cell].cx), cy: n(cells[cell].cy), r: n(r * unit), kind: isClass ? 'class' : 'instance' };
-	});
+	const spare = hubs.flatMap((a) => hubs.filter((b) => b > a).map((b): [number, number] => [a, b])).filter(([a, b]) => !bridges.some(([x, y]) => (x === a && y === b) || (x === b && y === a)));
+	if (spare.length) bridges.push(spare[Math.floor(rand() * spare.length)]);
+	links.push(...bridges);
 
-	// Each edge takes the color of one of its ends, so color runs along the graph.
-	const links = chosen.map(([a, b]): [number, number] => [index.get(a)!, index.get(b)!]);
+	// An edge takes the color of its second end, so each cluster's spokes match its dots.
 	const d = new Map<number, string>();
 	for (const [a, b] of links) {
-		const art = nodes[rand() < 0.5 ? a : b].art;
+		const art = nodes[b].art;
 		d.set(art, (d.get(art) ?? '') + `M${nodes[a].cx} ${nodes[a].cy}L${nodes[b].cx} ${nodes[b].cy}`);
 	}
 
@@ -219,7 +163,7 @@ export function graphArt(seed: string, { width = 2000, height = 400, cols = 20, 
 		width,
 		height,
 		strokeWidth,
-		edges: ring.map((i) => ({ art: i + 1, d: d.get(i + 1) ?? '' })).filter((e) => e.d),
+		edges: [...d].map(([art, path]) => ({ art, d: path })),
 		nodes,
 		links,
 	};
