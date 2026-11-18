@@ -163,6 +163,8 @@ export interface SlotNode extends ExtractedFields {
   relType?: string;
   /** Relationships only: properties its edges can carry. */
   edgeProperties?: EdgePropertyDecl[];
+  /** The slot applies to every Rule (qualifier values in Rule.values). Rules have no classes and no inheritance. */
+  appliesToRules?: boolean;
 }
 
 /** A slot whose values link to other things; they're stored as edges of type relType. */
@@ -221,13 +223,20 @@ export const MODALITIES = ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"] as
 export const VERIFICATION_STATUSES = ["SUPPORTED", "OVERREACH", "UNSUPPORTED"] as const;
 export type Modality = (typeof MODALITIES)[number];
 
-/** A domain rule extracted from documentation (docs/EXTRACTION-PIPELINE.md). */
+/**
+ * A domain rule: a requirement on any implementation, extracted from documentation
+ * (docs/EXTRACTION-PIPELINE.md) or written by the ontology's owner.
+ */
 export interface RuleNode extends ExtractedFields {
   type: "Rule";
   id: string;
   name: string;
   modality: Modality;
   statement: string;
+  /** Written by the ontology owner, not extracted. It still cites a quote and gets verified. */
+  authored?: boolean;
+  /** Qualifier values for property slots that apply to Rules (Slot.appliesToRules), e.g. condition. Each rule states its own; nothing is inherited through REFINES. */
+  values?: Record<string, StoredValue>;
 }
 
 export type OkbNode =

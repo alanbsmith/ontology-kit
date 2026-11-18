@@ -82,7 +82,7 @@ export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
   ont.removeNode(n.id);
   for (const [sid, before] of slotsBefore) {
     if (sid === n.id) continue;
-    if (before.domain > 0 && ont.domain(sid).length === 0) notes.push(`Warning: slot ${ont.label(sid)} is no longer attached to any class. Attach it (okb slot set ${ont.label(sid)} --on <Class>) or remove it.`);
+    if (before.domain > 0 && !ont.isAttached(sid)) notes.push(`Warning: slot ${ont.label(sid)} is no longer attached to any class. Attach it (okb slot set ${ont.label(sid)} --on <Class>) or remove it.`);
     if (before.range > 0 && ont.range(sid).length < before.range) notes.push(`Warning: slot ${ont.label(sid)}'s range lost ${nameOrText(n)}${ont.range(sid).length ? "" : ", and is now empty"}.`);
   }
   notes.unshift(`Removed ${n.type} '${nameOrText(n) ?? n.id}'.`);

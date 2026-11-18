@@ -9,6 +9,7 @@ import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./m
 import { OkbError, nameOrText, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
+import { assign } from "./ops/values.ts";
 import { findQuote, loadPages } from "./quotes.ts";
 import {
   MODALITIES, VERIFICATION_STATUSES as STATUSES, isOneOf,
@@ -104,13 +105,18 @@ export async function addQuote(ont: Ontology, sourceRef: string, quote: string, 
   ont.addNode(loc);
   ont.addEdge(loc.id, "PART_OF", src.id);
   notes.unshift(`Added ${loc.id} at ${loc.locator}${loc.startLine ? `, line ${loc.lines}` : ""}.`);
-  for (const c of o.cites ?? []) {
-    const n = ont.find(c, ["Class", "Slot", "Instance", "Rule", "DesignDecision"]);
-    ont.addEdge(n.id, "CITES", loc.id);
-    n.extracted = true;
-    notes.push(`${n.type} ${nameOrText(n) ?? n.id} now cites it.`);
-  }
+  for (const c of o.cites ?? []) notes.push(cite(ont, c, loc.id)[0]);
   return notes;
+}
+
+/** Attach an existing quote to a node: a CITES edge. Marks the node extracted, except an authored rule. */
+export function cite(ont: Ontology, nodeRef: string, locRef: string): Notes {
+  const n = ont.find(nodeRef, ["Class", "Slot", "Instance", "Rule", "DesignDecision"]);
+  const loc = ont.find(locRef, "SourceLocation");
+  const had = ont.targets(n.id, "CITES").includes(loc.id);
+  ont.addEdge(n.id, "CITES", loc.id);
+  if (!(n.type === "Rule" && n.authored)) n.extracted = true;
+  return [had ? `${n.type} ${nameOrText(n) ?? n.id} already cited ${loc.id}.` : `${n.type} ${nameOrText(n) ?? n.id} now cites ${loc.id}.`];
 }
 
 function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
@@ -176,19 +182,38 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
   return notes;
 }
 
-export function addRule(ont: Ontology, o: { statement: string; modality: string; governs?: string[]; cites?: string[]; name?: string }): Notes {
+export interface AddRuleOpts {
+  statement: string;
+  modality: string;
+  governs?: string[];
+  cites?: string[];
+  name?: string;
+  /** Written by the ontology owner rather than extracted. Still needs a quote and verification. */
+  authored?: boolean;
+  /** Qualifier values as slot=value (slots declared with --on-rules). */
+  values?: string[];
+  /** Rules this one refines, and what it adds to each. */
+  refines?: string[];
+  adds?: string;
+}
+
+export function addRule(ont: Ontology, o: AddRuleOpts): Notes {
   const modality = o.modality.toUpperCase().replace(/ /g, "_");
   if (!isOneOf(MODALITIES, modality)) throw new OkbError(`--modality must be one of ${MODALITIES.join(", ")}.`);
   if (!o.cites?.length) throw new OkbError("Quote first: a rule needs --cites <quote id> (add the quote with okb quote add).");
   const name = o.name ?? o.statement.split(/\s+/).slice(0, 6).join(" ");
   const id = ont.newId("Rule", name);
-  ont.addNode({ type: "Rule", id, name, modality, statement: o.statement, extracted: true });
+  if (o.adds && !o.refines?.length) throw new OkbError("--adds says what a refining rule adds, so it needs --refines <rule>.");
+  const refined = (o.refines ?? []).map((r) => ont.find(r, "Rule"));
+  ont.addNode({ type: "Rule", id, name, modality, statement: o.statement, ...(o.authored ? { authored: true, extracted: false } : { extracted: true }) });
   for (const c of o.cites) {
     const loc = ont.find(c, "SourceLocation");
     ont.addEdge(id, "CITES", loc.id);
   }
   for (const g of o.governs ?? []) ont.addEdge(id, "GOVERNS", ont.find(g, ["Class", "Slot", "Instance"]).id);
-  const notes = [`Added rule ${id} (${modality}): ${o.statement}`];
+  const notes = [`Added ${o.authored ? "authored " : ""}rule ${id} (${modality}): ${o.statement}`];
+  if (o.values?.length) notes.push(...assign(ont, id, o.values));
+  for (const r of refined) notes.push(...refine(ont, id, r.id, { adds: o.adds }));
   const quotes = o.cites.map((c) => ont.find(c, "SourceLocation").quote as string);
   const q = quotes.join(" ").toLowerCase();
   if (/^MUST/.test(modality) && !/\b(must|requir\w*|always|never|shall|mandatory)\b/.test(q)) {
@@ -196,6 +221,37 @@ export function addRule(ont: Ontology, o: { statement: string; modality: string;
   }
   notes.push(`Next: verify it in a fresh context, then okb verify ${id} --status SUPPORTED|OVERREACH|UNSUPPORTED`);
   return notes;
+}
+
+/** `rule` REFINES `broader`: it narrows the broader rule by adding a part, condition, key or case. */
+export function refine(ont: Ontology, ruleRef: string, broaderRef: string, o: { adds?: string; remove?: boolean } = {}): Notes {
+  const rule = ont.find(ruleRef, "Rule");
+  const broader = ont.find(broaderRef, "Rule");
+  if (rule.id === broader.id) throw new OkbError("A rule can't refine itself.");
+  if (o.remove) {
+    const n = ont.removeEdges((e) => e.type === "REFINES" && e.from === rule.id && e.to === broader.id);
+    return [n ? `${rule.id} no longer refines ${broader.id}.` : `${rule.id} didn't refine ${broader.id}.`];
+  }
+  if (ont.reaches(broader.id, rule.id, "REFINES")) throw new OkbError(`${broader.id} already refines ${rule.id} (directly or through other rules), so this would be a cycle.`);
+  // Refining again replaces the edge, so a new --adds updates the old one instead of adding a second edge.
+  const adds = o.adds ?? (ont.outEdges(rule.id, "REFINES").find((e) => e.to === broader.id)?.adds as string | undefined);
+  ont.removeEdges((e) => e.type === "REFINES" && e.from === rule.id && e.to === broader.id);
+  ont.addEdge(rule.id, "REFINES", broader.id, adds ? { adds } : {});
+  const notes = [`${rule.id} refines ${broader.id}${adds ? ` (adds: ${adds})` : ""}.`];
+  if (!adds) notes.push("Tip: say what it adds with --adds \"...\" so a verifier can check that detail appears in its quote.");
+  return notes;
+}
+
+/** `instance` FULFILLS `rule`: a descriptive fact that meets the rule. Many instances may fulfill one rule. */
+export function fulfill(ont: Ontology, instanceRef: string, ruleRef: string, o: { remove?: boolean } = {}): Notes {
+  const inst = ont.find(instanceRef, "Instance");
+  const rule = ont.find(ruleRef, "Rule");
+  if (o.remove) {
+    const n = ont.removeEdges((e) => e.type === "FULFILLS" && e.from === inst.id && e.to === rule.id);
+    return [n ? `${inst.name} no longer fulfills ${rule.id}.` : `${inst.name} didn't fulfill ${rule.id}.`];
+  }
+  ont.addEdge(inst.id, "FULFILLS", rule.id);
+  return [`${inst.name} fulfills ${rule.id}.`];
 }
 
 export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; approve?: boolean }): Notes {

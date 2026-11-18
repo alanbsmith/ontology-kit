@@ -57,7 +57,9 @@ Export                 okb export [--format json|cypher] [--with-schema] [--no-i
 Documents              okb source add docs/button.md [--repo-url https://github.com/.../button.md] [--url https://site/button]
 (extraction)           okb source outline <source> [--quotable] [--json]     every block, with heading path and lines
                        okb quote add <source> "verbatim text" [--cites Node] [--line N]   located automatically
-                       okb rule add --statement "..." --modality SHOULD --governs Button --cites <quote id>
+                       okb rule add --statement "..." --modality SHOULD --governs Button --cites <quote id> [--authored] [--value slot=value] [--refines <rule> --adds "..."]
+                       okb rule refines <rule> <broader rule> [--adds "..."]     okb fulfills <instance> <rule>
+                       okb cite <node> <quote id>                                attach an existing quote to a node
                        okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] · okb verify <node> --approve
                        okb source refresh <source>                            after the document changes
 
@@ -302,10 +304,10 @@ async function main(argvIn: string[]) {
 
     case "slot": {
       const rest2 = rest.slice(1);
-      const slotOpts = { on: strs, off: strs, type: str, values: strs, range: strs, "add-range": strs, "remove-range": strs, card: str, min: str, max: str, default: str, desc: str, force: bool } as const;
+      const slotOpts = { on: strs, off: strs, type: str, values: strs, range: strs, "add-range": strs, "remove-range": strs, card: str, min: str, max: str, default: str, desc: str, force: bool, "on-rules": bool, "off-rules": bool } as const;
       const toOpts = (v: Record<string, any>): ops.SlotOpts => ({
         on: v.on, off: v.off, type: v.type, values: v.values, range: v.range, addRange: v["add-range"], removeRange: v["remove-range"],
-        card: v.card, min: num(v.min, "--min"), max: num(v.max, "--max"), default: v.default, description: v.desc, force: v.force,
+        card: v.card, min: num(v.min, "--min"), max: num(v.max, "--max"), default: v.default, description: v.desc, force: v.force, onRules: v["on-rules"], offRules: v["off-rules"],
       });
       if (sub === "add") {
         const { v, p } = parse(rest2, slotOpts);
@@ -634,17 +636,34 @@ async function main(argvIn: string[]) {
 
     case "rule": {
       if (sub === "add") {
-        const { v } = parse(rest.slice(1), { statement: str, modality: str, governs: strs, cites: strs, name: str });
-        if (!v.statement || !v.modality) throw new OkbError('Usage: okb rule add --statement "..." --modality MUST|SHOULD|MAY|MUST_NOT|SHOULD_NOT --cites <quote id> [--governs <Class|slot>]');
-        return mutate(v, (ont) => prov.addRule(ont, { statement: v.statement, modality: v.modality, governs: v.governs, cites: v.cites, name: v.name }));
+        const { v } = parse(rest.slice(1), { statement: str, modality: str, governs: strs, cites: strs, name: str, authored: bool, value: strs, refines: strs, adds: str });
+        if (!v.statement || !v.modality) throw new OkbError('Usage: okb rule add --statement "..." --modality MUST|SHOULD|MAY|MUST_NOT|SHOULD_NOT --cites <quote id> [--governs <Class|slot>] [--authored] [--value slot=value ...] [--refines <rule> [--adds "..."]]');
+        return mutate(v, (ont) => prov.addRule(ont, { statement: v.statement, modality: v.modality, governs: v.governs, cites: v.cites, name: v.name, authored: v.authored, values: v.value, refines: v.refines, adds: v.adds }));
+      }
+      if (sub === "refines") {
+        const { v, p } = parse(rest.slice(1), { adds: str, remove: bool });
+        if (p.length !== 2) throw new OkbError('Usage: okb rule refines <rule> <broader rule> [--adds "..."] [--remove]');
+        return mutate(v, (ont) => prov.refine(ont, p[0], p[1], { adds: v.adds, remove: v.remove }));
       }
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
       for (const r of ont.ofType("Rule")) {
         const st = r.verification?.status ?? "unverified";
-        console.log(`${c.bold(r.id)} ${c.dim(`[${r.modality} · ${st}${r.extractionConfidence ? " · " + r.extractionConfidence : ""}]`)}\n   ${r.statement}${c.dim(`\n   governs: ${ont.targets(r.id, "GOVERNS").map((x) => ont.label(x)).join(", ") || "—"} · cites: ${ont.targets(r.id, "CITES").join(", ")}`)}`);
+        console.log(`${c.bold(r.id)} ${c.dim(`[${r.modality} · ${r.authored ? "authored · " : ""}${st}${r.extractionConfidence ? " · " + r.extractionConfidence : ""}]`)}\n   ${r.statement}${c.dim(`\n   governs: ${ont.targets(r.id, "GOVERNS").map((x) => ont.label(x)).join(", ") || "—"} · cites: ${ont.targets(r.id, "CITES").join(", ")}`)}`);
       }
       return;
+    }
+
+    case "cite": {
+      const { v, p } = parse(rest);
+      if (p.length !== 2) throw new OkbError("Usage: okb cite <node> <quote id>   (attach an existing quote; see okb quote list)");
+      return mutate(v, (ont) => prov.cite(ont, p[0], p[1]));
+    }
+
+    case "fulfills": {
+      const { v, p } = parse(rest, { remove: bool });
+      if (p.length !== 2) throw new OkbError("Usage: okb fulfills <instance> <rule> [--remove]");
+      return mutate(v, (ont) => prov.fulfill(ont, p[0], p[1], { remove: v.remove }));
     }
 
     case "verify": {

@@ -37,7 +37,7 @@ export const STEP_CHECKS: Record<string, StepCheck> = {
   classes_min2_with_isa: (o) => o.ofType("Class").length >= 2 && o.edgesOf("IS_A").length >= 1,
   no_errors_hierarchy: noErrorsFrom([4]),
   slots_min1: (o) => o.ofType("Slot").length >= 1,
-  slots_attached: (o) => o.ofType("Slot").every((s) => o.domain(s.id).length > 0),
+  slots_attached: (o) => o.ofType("Slot").every((s) => o.isAttached(s.id)),
   slots_faceted: (o) => o.ofType("Slot").length > 0 && o.ofType("Slot").every((s) => s.valueType && s.cardinality),
   no_errors_slots: noErrorsFrom([5, 6]),
   instances_min3: (o) => o.ofType("Instance").length >= 3,
