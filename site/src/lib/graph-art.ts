@@ -12,8 +12,8 @@
  *
  * Plain, erasable TypeScript with no Astro imports, so tests/graph-art.test.ts can import it.
  *
- * GENERATOR VERSION 3 (clusters: class hubs with instances and subclasses around them, instead of a
- * jittered grid).
+ * GENERATOR VERSION 4 (10–13 clusters, each larger, instead of 6–8; version 3 replaced the jittered
+ * grid with clusters).
  * Changing anything below (hash, PRNG, order of rand() calls, grid, edge rules, palette rules)
  * changes every image. Treat edits as a deliberate redesign.
  */
@@ -108,18 +108,18 @@ export function graphArt(seed: string, { width = 2000, height = 400 } = {}): Gra
 			links.push([parent, kid]);
 			kids.push(kid);
 		}
-		for (let i = 0; i + 1 < kids.length; i++) if (rand() < 0.22) links.push([kids[i], kids[i + 1]]);
+		for (let i = 0; i + 1 < kids.length; i++) if (rand() < 0.3) links.push([kids[i], kids[i + 1]]);
 	};
 
 	// 1. Hub positions: spread out by rejection sampling (keeps the best of a few tries).
-	const count = 6 + Math.floor(rand() * 3);
+	const count = 10 + Math.floor(rand() * 4);
 	const hubs: number[] = [];
 	for (let i = 0; i < count; i++) {
 		let best = { x: 0, y: 0, gap: -1 };
-		for (let t = 0; t < 12; t++) {
-			const x = between(110, width - 110);
-			const y = between(100, height - 100);
-			const gap = Math.min(Infinity, ...hubs.map((h) => Math.hypot(nodes[h].cx - x, (nodes[h].cy - y) * 1.6)));
+		for (let t = 0; t < 20; t++) {
+			const x = between(80, width - 80);
+			const y = between(70, height - 70);
+			const gap = Math.min(Infinity, ...hubs.map((h) => Math.hypot(nodes[h].cx - x, (nodes[h].cy - y) * 1.3)));
 			if (gap > best.gap) best = { x, y, gap };
 		}
 		const art = hue();
@@ -127,14 +127,14 @@ export function graphArt(seed: string, { width = 2000, height = 400 } = {}): Gra
 		hubs.push(hub);
 
 		// 2. Around each hub: instances, and sometimes subclass rings with instances of their own.
-		orbit(hub, 3 + Math.floor(rand() * 5), 40, 85, art);
-		const subs = Math.floor(rand() * 3);
+		orbit(hub, 5 + Math.floor(rand() * 6), 40, 90, art);
+		const subs = 1 + Math.floor(rand() * 3);
 		for (let k = 0; k < subs; k++) {
 			const angle = rand() * Math.PI * 2;
 			const dist = between(85, 130);
 			const sub = add('class', art, best.x + Math.cos(angle) * dist * 1.3, best.y + Math.sin(angle) * dist * 0.7, between(8, 10.5));
 			links.push([hub, sub]);
-			orbit(sub, 2 + Math.floor(rand() * 4), 30, 60, art);
+			orbit(sub, 3 + Math.floor(rand() * 4), 30, 65, art);
 		}
 	}
 

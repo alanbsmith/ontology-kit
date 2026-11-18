@@ -100,7 +100,7 @@
 
 	/* Generated post art (see src/lib/truchet.ts). The tile sits on the page tone. */
 	--color-art-bg: var(--color-surface);
-	--art-wash: 0.2; /* opacity of the art behind an article title */
+	--art-wash: 0.2; /* opacity of the art behind an article title (0.4 in dark, below) */
 	--color-art-1: light-dark(var(--day-art-1), var(--night-art-1));
 	--color-art-2: light-dark(var(--day-art-2), var(--night-art-2));
 	--color-art-3: light-dark(var(--day-art-3), var(--night-art-3));
@@ -180,6 +180,17 @@
 
 :root[data-theme='dark'] {
 	color-scheme: dark;
+}
+
+/* Light art on a dark page needs more opacity to read as much as dark art on a light one. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		--art-wash: 0.4;
+	}
+}
+
+:root[data-theme='dark'] {
+	--art-wash: 0.4;
 }
 
 /* ---------- Reading settings (set on <html> by the settings panel) ---------- */
