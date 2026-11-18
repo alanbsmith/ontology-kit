@@ -1,0 +1,197 @@
+---
+import { outlineItems, type Heading } from '../lib/outline';
+
+/**
+ * A heading outline beside the page's text, on wide screens only. It sticks to the
+ * viewport while you read and marks the section you are in. On narrower screens there is no
+ * room for it and it is not rendered visibly: the headings are still anchored in the text.
+ *
+ * "Scroll to top" sits just under the list. It is a real link to #top (the <body>), so it works
+ * without JavaScript and keeps the keyboard's place; the smooth scroll comes from
+ * `scroll-behavior` in global.css, which reduced motion turns off. It fades in once you have
+ * scrolled down a bit, and its space is always reserved so nothing shifts when it appears.
+ *
+ * Copied from the owner's blog (~/Projects/writing/src/components/Outline.astro). The docs
+ * place it as the third column of the page grid instead of positioning it in the margin.
+ */
+interface Props {
+	headings: Heading[];
+}
+
+const items = outlineItems(Astro.props.headings);
+---
+
+{
+	items.length >= 2 && (
+		<aside class="outline" aria-label="On this page">
+			<div class="inner">
+				<p class="label">On this page</p>
+				<ul data-spy>
+					{items.map((h) => (
+						<li class={h.depth === 3 ? 'sub' : undefined}>
+							<a href={`#${h.slug}`}>{h.text}</a>
+						</li>
+					))}
+				</ul>
+				<a class="to-top" href="#top" data-to-top>
+					<span>Scroll to top</span>
+					<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+						<circle cx="12" cy="12" r="10"></circle>
+						<path d="M8 14.5l4-4 4 4"></path>
+					</svg>
+				</a>
+			</div>
+		</aside>
+	)
+}
+
+<script>
+	// Marks the links for the section being read: the last heading that has reached the upper part
+	// of the screen. It marks every list on the page (the outline in the margin, and the contents
+	// sheet on narrower screens). A handful of headings, so it is cheap to check on every scroll
+	// event.
+	const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-spy] a')];
+	if (links.length) {
+		const pairs = links
+			.map((link) => [link, document.getElementById(decodeURIComponent(link.hash.slice(1)))] as const)
+			.filter((pair): pair is readonly [HTMLAnchorElement, HTMLElement] => pair[1] !== null);
+		const headings = [...new Set(pairs.map((pair) => pair[1]))];
+
+		const update = () => {
+			const line = innerHeight * 0.3;
+			// The last heading that has reached the line, or none while still in the intro.
+			const current = headings.filter((h) => h.getBoundingClientRect().top <= line).at(-1);
+			for (const [link, heading] of pairs) {
+				if (heading === current) link.setAttribute('aria-current', 'location');
+				else link.removeAttribute('aria-current');
+			}
+		};
+
+		addEventListener('scroll', update, { passive: true });
+		addEventListener('resize', update);
+		update();
+	}
+
+	const toTop = document.querySelector<HTMLAnchorElement>('[data-to-top]');
+	if (toTop) {
+		const SHOW_AFTER = 600; // px scrolled before the link appears
+		const show = () => toTop.toggleAttribute('data-visible', scrollY > SHOW_AFTER);
+		addEventListener('scroll', show, { passive: true });
+		show();
+
+		// The hash only moves the page (and the keyboard's starting point) to the top, so drop it
+		// once the browser has followed the link. The scroll itself is not interrupted.
+		toTop.addEventListener('click', () => {
+			setTimeout(() => history.replaceState(null, '', location.pathname + location.search), 0);
+		});
+	}
+</script>
+
+<style>
+	/* A column of the docs grid (see the page layout), on wide screens only. Below 80rem there is
+	   no room beside the sidebar and the text; the nav's contents sheet does this job there. */
+	.outline {
+		display: none;
+	}
+
+	@media (min-width: 80rem) {
+		.outline {
+			display: block;
+			padding-block-start: var(--page-top);
+		}
+	}
+
+	.inner {
+		position: sticky;
+		top: 6rem;
+		max-height: calc(100dvh - 10rem);
+		/* Docs change: only the list scrolls, so "Scroll to top" stays in view under a long
+		   outline (the rules page has 57 entries). */
+		display: flex;
+		flex-direction: column;
+	}
+
+	.inner ul {
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.inner .to-top {
+		flex: none;
+		align-self: flex-start;
+	}
+
+	.label {
+		margin: 0 0 var(--space-xs);
+		font-size: var(--text-small);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-inline-start: var(--border-width) solid var(--color-border);
+	}
+
+	a {
+		display: block;
+		margin-inline-start: calc(-1 * var(--border-width));
+		padding: 0.25rem var(--space-sm);
+		border-inline-start: 2px solid transparent;
+		font-size: var(--text-small);
+		line-height: 1.4;
+		color: var(--color-text-muted);
+		text-decoration: none;
+	}
+
+	.sub a {
+		padding-inline-start: var(--space-md);
+	}
+
+	a:hover {
+		color: var(--color-text);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	a[aria-current='location'] {
+		border-inline-start-color: var(--color-text);
+		color: var(--color-text);
+		font-weight: var(--weight-strong);
+	}
+
+	/* Plain text and a circled chevron, under the list. Hidden (but still taking its space) until
+	   the page has been scrolled; visibility keeps it out of the tab order while hidden. */
+	.outline .to-top {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-xs);
+		margin: var(--space-md) 0 0;
+		padding: 0;
+		border: 0;
+		font-size: var(--text-small);
+		color: var(--color-text-muted);
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.outline .to-top[data-visible] {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.outline .to-top:hover {
+		color: var(--color-text);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.outline .to-top {
+			transition:
+				opacity var(--duration) var(--ease-out),
+				visibility var(--duration);
+		}
+	}
+</style>

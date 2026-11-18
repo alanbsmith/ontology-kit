@@ -1,0 +1,435 @@
+/* Copied from the owner's blog (~/Projects/writing). Blog-only parts (card reveal, list art) removed;
+   docs-specific additions are at the end. */
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	scroll-padding-top: var(--nav-clearance);
+}
+
+body {
+	margin: 0;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	background: var(--color-surface);
+	color: var(--color-text);
+	font-family: var(--font-body);
+	font-size: var(--text-body);
+	line-height: var(--leading-body);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* The nav floats at the bottom on narrow screens: keep content clear of it. */
+@media (max-width: 47.99rem) {
+	body {
+		padding-block-end: var(--nav-clearance);
+	}
+}
+
+::selection {
+	background: var(--color-selection);
+}
+
+a {
+	color: var(--color-link);
+	text-underline-offset: 0.2em;
+}
+
+a:hover {
+	color: var(--color-link-hover);
+}
+
+:root[data-contrast='more'] a {
+	text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+	outline: var(--focus-width) solid var(--color-focus);
+	outline-offset: 3px;
+}
+
+img,
+svg {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Reading column and wider page column. */
+.container,
+.container-wide {
+	width: 100%;
+	margin-inline: auto;
+	padding-inline: var(--space-gutter);
+}
+
+.container {
+	max-width: calc(var(--measure) + 2 * var(--space-gutter));
+}
+
+.container-wide {
+	max-width: calc(var(--width-page) + 2 * var(--space-gutter));
+}
+
+/* Space above page content. On wide screens the nav floats over the top of the page (it takes
+   no layout space), so this clears it: nav height plus a generous gap. */
+:root {
+	--page-top: var(--space-2xl);
+}
+
+@media (min-width: 48rem) {
+	:root {
+		--page-top: 8rem;
+	}
+}
+
+main {
+	flex: 1;
+	padding-block: var(--page-top) var(--space-3xl);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+.muted {
+	color: var(--color-text-muted);
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-heading);
+	font-weight: var(--weight-heading);
+	line-height: var(--leading-heading);
+	text-wrap: balance;
+}
+
+/* ---------- Article prose ---------- */
+
+.prose {
+	font-family: var(--font-reading);
+	color: var(--color-text-body);
+}
+
+/* Headings stay at full strength against the slightly softer body text. */
+.prose :is(h2, h3, h4) {
+	color: var(--color-text);
+}
+
+.prose > * + * {
+	margin-top: var(--space-md);
+}
+
+.prose h2 {
+	font-size: var(--text-heading);
+	margin-top: var(--space-2xl);
+}
+
+.prose h3 {
+	font-size: var(--text-subheading);
+	margin-top: var(--space-xl);
+}
+
+.prose h4 {
+	font-size: var(--text-body);
+	margin-top: var(--space-xl);
+}
+
+.prose :is(h2, h3, h4) {
+	position: relative;
+}
+
+.prose .anchor {
+	margin-inline-start: 0.4em;
+	color: var(--color-text-muted);
+	text-decoration: none;
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.prose :is(h2, h3, h4):hover .anchor,
+.prose .anchor:focus-visible {
+	opacity: 1;
+}
+
+/* Touch devices have no hover: keep anchors discoverable. */
+@media (hover: none) {
+	.prose .anchor {
+		opacity: 0.5;
+	}
+}
+
+.prose :is(ul, ol) {
+	padding-inline-start: var(--space-md);
+}
+
+.prose li + li {
+	margin-top: var(--space-xs);
+}
+
+/* Quotes and callouts: a rounded rule in the margin, not a card. */
+.prose blockquote {
+	position: relative;
+	margin-inline: 0;
+	padding-inline-start: var(--space-md);
+	color: var(--color-text-muted);
+}
+
+.prose blockquote::before {
+	content: '';
+	position: absolute;
+	inset-block: 0;
+	inset-inline-start: 0;
+	width: 0.25rem;
+	background: var(--color-border-strong);
+	border-radius: var(--radius-full);
+}
+
+.prose blockquote > * + * {
+	margin-top: var(--space-sm);
+}
+
+.prose hr {
+	border: 0;
+	height: 2px;
+	margin-block: var(--space-2xl);
+	background: var(--color-border);
+	border-radius: var(--radius-full);
+}
+
+.prose img {
+	display: block;
+	border-radius: var(--radius-md);
+}
+
+.prose table {
+	display: block;
+	overflow-x: auto;
+	border-collapse: collapse;
+	font-size: var(--text-small);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-md);
+}
+
+.prose :is(th, td) {
+	padding: var(--space-xs) var(--space-sm);
+	border-bottom: var(--border-width) solid var(--color-border);
+	text-align: start;
+}
+
+.prose tr:last-child td {
+	border-bottom: 0;
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+	font-family: var(--font-mono);
+	font-size: var(--text-code);
+	background: var(--color-surface-raised);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-sm);
+	padding: 0.1em 0.4em;
+	overflow-wrap: anywhere;
+}
+
+/* Shiki block code (Night Owl / Night Owl Light, chosen via light-dark) */
+.prose pre.astro-code {
+	font-family: var(--font-mono);
+	font-size: var(--text-small);
+	line-height: 1.7;
+	background-color: var(--color-code-bg);
+	color: var(--color-code-text);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: var(--space-md);
+	overflow-x: auto;
+	tab-size: 2;
+}
+
+.prose pre.astro-code code {
+	font-family: inherit;
+}
+
+.prose pre.astro-code span {
+	color: light-dark(var(--shiki-light), var(--shiki-dark));
+	font-style: light-dark(var(--shiki-light-font-style, normal), var(--shiki-dark-font-style, normal));
+}
+
+/* Code blocks may be wider than the text column on large screens. */
+@media (min-width: 60rem) {
+	.prose pre.astro-code,
+	.prose pre.mermaid {
+		margin-inline: calc(-1 * var(--space-lg));
+	}
+}
+
+/* Mermaid: plain source until the client script swaps in the SVG. */
+.prose pre.mermaid {
+	font-family: var(--font-mono);
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+	background: none;
+	white-space: pre;
+	overflow-x: auto;
+}
+
+.prose pre.mermaid[data-processed] {
+	color: inherit;
+	display: flex;
+	justify-content: center;
+}
+
+/* Soft, rounded boxes like the cards, with a hairline-weight stroke. */
+.prose pre.mermaid .node rect,
+.prose pre.mermaid .cluster rect {
+	rx: var(--radius-sm, 0.5rem);
+	ry: var(--radius-sm, 0.5rem);
+	stroke-width: var(--border-width);
+}
+
+/* ---------- Motion ----------
+   Progressive enhancement: without these rules, or in a browser that cannot run them, the page
+   is simply there. Only opacity and position move, and people who ask their system for less
+   motion get none of it. */
+
+@keyframes fade-up {
+	from {
+		opacity: 0;
+		translate: 0 var(--motion-distance);
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	/* In-page jumps (scroll to top, the outline, heading links) glide instead of cutting. */
+	html {
+		scroll-behavior: smooth;
+	}
+
+	/* On page load, one after another: set --i on each element (0, 1, 2 ...). */
+	.enter {
+		animation: fade-up var(--duration-slow) var(--ease-out) both;
+		animation-delay: calc(var(--i, 0) * 90ms);
+	}
+
+	.fade-in {
+		animation: fade-in var(--duration-slow) var(--ease-out) both;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		animation-delay: 0s !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ---------- Docs additions ---------- */
+
+/* Source passages in the generated docs fold away under a summary. */
+.prose details {
+	padding: var(--space-xs) var(--space-sm);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-md);
+}
+
+.prose summary {
+	cursor: pointer;
+	font-size: var(--text-small);
+	font-weight: var(--weight-strong);
+	color: var(--color-text);
+}
+
+.prose details[open] > summary {
+	margin-block-end: var(--space-sm);
+}
+
+.prose details > * + * {
+	margin-top: var(--space-sm);
+}
+
+/* Task lists ("You're done when") keep their boxes in the margin. */
+.prose .contains-task-list {
+	list-style: none;
+	padding-inline-start: 0;
+}
+
+/* Rules and glossary pages have long tables of short cells: let them breathe less. */
+.prose td code {
+	overflow-wrap: normal;
+	white-space: nowrap;
+}
+
+/* ---------- Pagefind search (its UI is injected, so these rules are global) ----------
+   Scoped by #search-ui so they win over Pagefind's own stylesheet, which loads later. */
+
+#search-ui .pagefind-ui__search-input {
+	color: var(--color-text);
+	font-weight: var(--weight-regular);
+}
+
+#search-ui .pagefind-ui__search-input:focus-visible {
+	outline-offset: 2px;
+}
+
+/* "Clear" becomes an × icon. The word stays in the button (font-size 0), so it keeps its
+   accessible name. */
+#search-ui .pagefind-ui__search-clear {
+	display: grid;
+	place-items: center;
+	/* The form also holds the results, so center on the input row (64px tall, scaled). */
+	top: calc(32px * var(--pagefind-ui-scale));
+	translate: 0 -50%;
+	right: var(--space-xs);
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius-full);
+	background: none;
+	color: var(--color-text-muted);
+	font-size: 0;
+}
+
+#search-ui .pagefind-ui__search-clear::before {
+	content: '';
+	width: 1.25rem;
+	height: 1.25rem;
+	background: currentColor;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+#search-ui .pagefind-ui__search-clear:hover {
+	background: var(--color-surface);
+	color: var(--color-text);
+}
+
+#search-ui .pagefind-ui__search-clear:focus-visible {
+	outline: var(--focus-width) solid var(--color-focus);
+	outline-offset: 0;
+}

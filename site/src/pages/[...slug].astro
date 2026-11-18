@@ -1,0 +1,201 @@
+---
+// Every docs page: one markdown file from the repo, rendered in place. The routes come from
+// nav.ts. The Mermaid script is the blog's (~/Projects/writing/src/components/ArticlePage.astro).
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Outline from '../components/Outline.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { PAGES, sidebar, type Page } from '../nav.ts';
+import { metaNodes } from '../lib/meta.ts';
+
+export function getStaticPaths() {
+	return PAGES.map((page) => ({
+		params: { slug: page.route.replace(/^\/|\/$/g, '') || undefined },
+		props: { page },
+	}));
+}
+
+interface Props {
+	page: Page;
+}
+const { page } = Astro.props;
+const entry = await getEntry('docs', page.source);
+if (!entry) throw new Error(`No docs entry for ${page.source}`);
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const title: string = remarkPluginFrontmatter.title ?? page.label;
+const groups = sidebar(metaNodes);
+const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.source}`;
+---
+
+<Base title={title} outline={headings}>
+	<div class="docs">
+		<aside class="sidebar">
+			<nav aria-label="Docs">
+				<Sidebar groups={groups} current={page.route} />
+			</nav>
+		</aside>
+		<main id="main">
+			<article data-pagefind-body>
+				<h1>{title}</h1>
+				<div class="prose">
+					<Content />
+				</div>
+			</article>
+			<p class="source muted"><a href={sourceUrl}>View this page's source on GitHub</a></p>
+		</main>
+		<Outline headings={headings} />
+	</div>
+</Base>
+
+<script>
+	// Mermaid is heavy, so it only loads on pages that actually contain a diagram.
+	const blocks = Array.from(document.querySelectorAll<HTMLElement>('pre.mermaid'));
+
+	if (blocks.length) {
+		const sources = blocks.map((block) => block.textContent ?? '');
+		const { default: mermaid } = await import('mermaid');
+
+		// Mermaid derives its shades with a color library that cannot read oklch() or light-dark(),
+		// so each site token is resolved by the browser (theme, contrast and vision settings
+		// included) and handed over as a plain hex color.
+		const canvas = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+		const token = (name: string) => {
+			const probe = document.createElement('span');
+			probe.style.color = `var(${name})`;
+			blocks[0].parentElement!.append(probe);
+			const css = getComputedStyle(probe).color;
+			probe.remove();
+			canvas.clearRect(0, 0, 1, 1);
+			canvas.fillStyle = css;
+			canvas.fillRect(0, 0, 1, 1);
+			const [r, g, b] = canvas.getImageData(0, 0, 1, 1).data;
+			return '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('');
+		};
+
+		// A row of boxes shrinks to unreadable text on a phone, so a left-to-right (or right-to-left)
+		// flowchart is drawn top to bottom there. Wider screens keep the direction the page set.
+		const narrow = matchMedia('(max-width: 36rem)');
+		const forScreen = (source: string) =>
+			narrow.matches ? source.replace(/^(\s*(?:flowchart|graph)\s+)(?:LR|RL)\b/, '$1TD') : source;
+
+		let drawing = false;
+		let again = false;
+
+		const draw = async () => {
+			// Settings can change several attributes at once; run one pass at a time.
+			if (drawing) return (again = true);
+			drawing = true;
+			do {
+				again = false;
+				const text = token('--color-text');
+				const muted = token('--color-text-muted');
+				const raised = token('--color-surface-raised');
+				const border = token('--color-border-strong');
+				mermaid.initialize({
+					startOnLoad: false,
+					securityLevel: 'strict',
+					theme: 'base',
+					// Newer mermaid defaults to a gradient stroke and drop shadow; the site has neither.
+					look: 'classic',
+					fontFamily: getComputedStyle(document.body).fontFamily,
+					themeVariables: {
+						fontSize: '16px',
+						background: 'transparent',
+						primaryColor: raised,
+						primaryBorderColor: border,
+						primaryTextColor: text,
+						secondaryColor: raised,
+						tertiaryColor: raised,
+						lineColor: muted,
+						textColor: text,
+						edgeLabelBackground: token('--color-surface'),
+						clusterBkg: raised,
+						clusterBorder: border,
+					},
+					// The decision guides' boxes hold whole sentences: wrap them a little wider.
+					flowchart: { padding: 16, nodeSpacing: 40, rankSpacing: 40, wrappingWidth: 280 },
+				});
+				blocks.forEach((block, i) => {
+					block.removeAttribute('data-processed');
+					block.textContent = forScreen(sources[i]);
+				});
+				await mermaid.run({ nodes: blocks });
+			} while (again);
+			drawing = false;
+		};
+
+		await draw();
+		// The diagrams are taller than their source text, so a link to a heading further down
+		// (/decisions/#decision-is-a) lands short once they are drawn. Jump to it again.
+		const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+		if (target) {
+			await document.fonts.ready;
+			requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant', block: 'start' }));
+		}
+		// Follow the system theme and every reading setting that changes a color or a font.
+		matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+		narrow.addEventListener('change', draw);
+		new MutationObserver(draw).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme', 'data-contrast', 'data-vision', 'data-font'],
+		});
+	}
+</script>
+
+<style>
+	/* One column on narrow screens; the sidebar joins at 64rem and the outline at 80rem. */
+	.docs {
+		flex: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		column-gap: var(--space-xl);
+		justify-content: center;
+		width: 100%;
+		max-width: calc(var(--measure) + 2 * var(--space-gutter));
+		margin-inline: auto;
+		padding-inline: var(--space-gutter);
+	}
+
+	@media (min-width: 64rem) {
+		.docs {
+			grid-template-columns: 15rem minmax(0, var(--measure));
+			max-width: none;
+		}
+	}
+
+	@media (min-width: 80rem) {
+		.docs {
+			grid-template-columns: 15rem minmax(0, var(--measure)) 14rem;
+		}
+	}
+
+	.sidebar {
+		display: none;
+	}
+
+	@media (min-width: 64rem) {
+		.sidebar {
+			display: block;
+			padding-block-start: var(--page-top);
+		}
+
+		.sidebar nav {
+			position: sticky;
+			top: 6rem;
+			max-height: calc(100dvh - 7rem);
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			padding-block-end: var(--space-lg);
+		}
+	}
+
+	h1 {
+		font-size: var(--text-title);
+		margin-block: 0 var(--space-lg);
+	}
+
+	.source {
+		margin-block-start: var(--space-2xl);
+		font-size: var(--text-small);
+	}
+</style>

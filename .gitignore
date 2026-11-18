@@ -7,3 +7,8 @@ sources/*.pdf
 .vale/styles/*
 !.vale/styles/config/
 !.vale/styles/Okb/
+
+# Docs site (site/ is its own npm package)
+site/node_modules/
+site/dist/
+site/.astro/

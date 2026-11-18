@@ -1,0 +1,105 @@
+---
+import type { NavGroup } from '../nav.ts';
+
+/**
+ * The docs navigation: the sidebar on wide screens, and the menu sheet's contents on narrow
+ * ones. Built from nav.ts and the meta-KB, so new steps and decision guides appear on their own.
+ */
+interface Props {
+	groups: NavGroup[];
+	/** The current route, for aria-current. */
+	current: string;
+}
+const { groups, current } = Astro.props;
+---
+
+<div class="sidebar-nav">
+	{
+		groups.map((group) => (
+			<section>
+				<h2 class="group">{group.label}</h2>
+				<ul>
+					{group.links.map((link) => (
+						<li>
+							<a href={link.href} aria-current={link.href === current ? 'page' : undefined}>
+								{link.label}
+							</a>
+							{link.children && (
+								<ul class="children">
+									{link.children.map((child) => (
+										<li>
+											<a href={child.href}>{child.label}</a>
+										</li>
+									))}
+								</ul>
+							)}
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+</div>
+
+<style>
+	.sidebar-nav {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-md);
+		font-size: var(--text-small);
+	}
+
+	.group {
+		margin: 0 0 var(--space-tight);
+		font-size: var(--text-small);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-inline-start: var(--border-width) solid var(--color-border);
+	}
+
+	.children {
+		border: 0;
+		margin-block-end: var(--space-tight);
+	}
+
+	a {
+		display: block;
+		margin-inline-start: calc(-1 * var(--border-width));
+		padding: 0.25rem var(--space-sm);
+		border-inline-start: 2px solid transparent;
+		line-height: 1.4;
+		color: var(--color-text-muted);
+		text-decoration: none;
+	}
+
+	.children a {
+		padding-inline-start: var(--space-md);
+	}
+
+	a:hover {
+		color: var(--color-text);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	a[aria-current='page'] {
+		border-inline-start-color: var(--color-text);
+		color: var(--color-text);
+		font-weight: var(--weight-strong);
+	}
+
+	/* Coarse pointers get full-size targets. */
+	@media (pointer: coarse) {
+		a {
+			display: flex;
+			align-items: center;
+			min-height: 2.75rem;
+		}
+	}
+</style>
