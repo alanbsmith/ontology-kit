@@ -12,7 +12,7 @@
  *
  * Plain, erasable TypeScript with no Astro imports, so tests/graph-art.test.ts can import it.
  *
- * GENERATOR VERSION 1.
+ * GENERATOR VERSION 2 (a 20×6 grid instead of 14×4; everything else is unchanged from version 1).
  * Changing anything below (hash, PRNG, order of rand() calls, grid, edge rules, palette rules)
  * changes every image. Treat edits as a deliberate redesign.
  */
@@ -102,7 +102,7 @@ function components(count: number) {
 	};
 }
 
-export function graphArt(seed: string, { width = 2000, height = 400, cols = 14, rows = 4 } = {}): GraphArt {
+export function graphArt(seed: string, { width = 2000, height = 400, cols = 20, rows = 6 } = {}): GraphArt {
 	const rand = mulberry32(hashString(seed));
 	const cw = width / cols;
 	const ch = height / rows;
