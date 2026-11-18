@@ -233,10 +233,12 @@ export function refine(ont: Ontology, ruleRef: string, broaderRef: string, o: { 
     return [n ? `${rule.id} no longer refines ${broader.id}.` : `${rule.id} didn't refine ${broader.id}.`];
   }
   if (ont.reaches(broader.id, rule.id, "REFINES")) throw new OkbError(`${broader.id} already refines ${rule.id} (directly or through other rules), so this would be a cycle.`);
-  const e = ont.addEdge(rule.id, "REFINES", broader.id);
-  if (o.adds !== undefined) e.adds = o.adds;
-  const notes = [`${rule.id} refines ${broader.id}${e.adds ? ` (adds: ${e.adds})` : ""}.`];
-  if (!e.adds) notes.push("Tip: say what it adds with --adds \"...\" so a verifier can check that detail appears in its quote.");
+  // Refining again replaces the edge, so a new --adds updates the old one instead of adding a second edge.
+  const adds = o.adds ?? (ont.outEdges(rule.id, "REFINES").find((e) => e.to === broader.id)?.adds as string | undefined);
+  ont.removeEdges((e) => e.type === "REFINES" && e.from === rule.id && e.to === broader.id);
+  ont.addEdge(rule.id, "REFINES", broader.id, adds ? { adds } : {});
+  const notes = [`${rule.id} refines ${broader.id}${adds ? ` (adds: ${adds})` : ""}.`];
+  if (!adds) notes.push("Tip: say what it adds with --adds \"...\" so a verifier can check that detail appears in its quote.");
   return notes;
 }
 

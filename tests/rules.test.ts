@@ -130,6 +130,14 @@ describe("REFINES and FULFILLS", () => {
     assert.ok(!types.includes("REFINES:rule.broad") && !types.includes("FULFILLS:rule.broad") && types.includes("FULFILLS:rule.narrow"));
   });
 
+  it("update adds when refining again, without a second edge", async () => {
+    const { ont } = await pair();
+    prov.refine(ont, "rule.narrow", "rule.broad", { adds: "arrow keys and Home/End" });
+    assert.deepEqual(ont.edgesOf("REFINES").map((e) => e.adds), ["arrow keys and Home/End"]);
+    prov.refine(ont, "rule.narrow", "rule.broad");
+    assert.equal(ont.edgesOf("REFINES")[0].adds, "arrow keys and Home/End", "kept when --adds is omitted");
+  });
+
   it("refuse self and circular refinement, and can be removed", async () => {
     const { ont } = await pair();
     assert.throws(() => prov.refine(ont, "rule.broad", "rule.broad"), /itself/);

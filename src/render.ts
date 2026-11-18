@@ -306,9 +306,9 @@ export function show(ont: Ontology, n: OkbNode): string {
     const outs = ont.edges.filter((e) => e.from === n.id);
     for (const e of outs) line(e.type, ont.label(e.to) + (e.adds ? c.dim(` (adds: ${e.adds})`) : ""));
     if (n.type === "Rule") {
-      for (const type of ["REFINES", "FULFILLS"]) {
+      for (const [type, label] of Object.entries({ REFINES: "refined by", FULFILLS: "fulfilled by" })) {
         const by = ont.sources(n.id, type).map((x) => ont.label(x));
-        if (by.length) line(type === "REFINES" ? "refined by" : "fulfilled by", by.join(", "));
+        if (by.length) line(label, by.join(", "));
       }
     }
   }
