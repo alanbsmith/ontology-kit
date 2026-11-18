@@ -12,8 +12,8 @@
  *
  * Plain, erasable TypeScript with no Astro imports, so tests/graph-art.test.ts can import it.
  *
- * GENERATOR VERSION 4 (10–13 clusters, each larger, instead of 6–8; version 3 replaced the jittered
- * grid with clusters).
+ * GENERATOR VERSION 4 (clusters scale with the width, 10–13 at the default 2000; version 3 replaced
+ * the jittered grid with clusters).
  * Changing anything below (hash, PRNG, order of rand() calls, grid, edge rules, palette rules)
  * changes every image. Treat edits as a deliberate redesign.
  */
@@ -112,7 +112,8 @@ export function graphArt(seed: string, { width = 2000, height = 400 } = {}): Gra
 	};
 
 	// 1. Hub positions: spread out by rejection sampling (keeps the best of a few tries).
-	const count = 10 + Math.floor(rand() * 4);
+	// About one cluster per 200 units of width, so a narrow banner is as dense as a wide one.
+	const count = Math.round(width / 200) + Math.floor(rand() * 4);
 	const hubs: number[] = [];
 	for (let i = 0; i < count; i++) {
 		let best = { x: 0, y: 0, gap: -1 };

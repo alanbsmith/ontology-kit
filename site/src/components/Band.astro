@@ -7,32 +7,40 @@ import { graphArt } from '../lib/graph-art.ts';
 interface Props {
 	seed: string;
 }
-const art = graphArt(Astro.props.seed);
+const wide = graphArt(Astro.props.seed);
+const narrow = graphArt(Astro.props.seed, { width: 800 });
 ---
 
 <header class="band">
-	<svg
-		class="art fade-in"
-		viewBox={`0 0 ${art.width} ${art.height}`}
-		preserveAspectRatio="xMidYMid slice"
-		aria-hidden="true"
-		focusable="false"
-	>
-		<g fill="none" stroke-width={art.strokeWidth} stroke-linecap="round">
-			{art.edges.map((e) => <path d={e.d} stroke={`var(--color-art-${e.art})`} />)}
-		</g>
-		<g stroke-width={art.strokeWidth * 1.6}>
-			{
-				art.nodes.map((node) =>
-					node.kind === 'class' ? (
-						<circle cx={node.cx} cy={node.cy} r={node.r} fill="var(--color-surface-raised)" stroke={`var(--color-art-${node.art})`} />
-					) : (
-						<circle cx={node.cx} cy={node.cy} r={node.r} fill={`var(--color-art-${node.art})`} stroke="none" />
-					),
-				)
-			}
-		</g>
-	</svg>
+	{
+		/* Two drawings of the same graph family: a wide one, and a narrow one for phones, so the art
+		   is whole at every width instead of a cropped slice of the wide one. */
+		[
+			{ size: 'wide', art: wide },
+			{ size: 'narrow', art: narrow },
+		].map(({ size, art }) => (
+			<svg
+				class={`art fade-in ${size}`}
+				viewBox={`0 0 ${art.width} ${art.height}`}
+				preserveAspectRatio="xMidYMid slice"
+				aria-hidden="true"
+				focusable="false"
+			>
+				<g fill="none" stroke-width={art.strokeWidth} stroke-linecap="round">
+					{art.edges.map((e) => <path d={e.d} stroke={`var(--color-art-${e.art})`} />)}
+				</g>
+				<g stroke-width={art.strokeWidth * 1.6}>
+					{art.nodes.map((node) =>
+						node.kind === 'class' ? (
+							<circle cx={node.cx} cy={node.cy} r={node.r} fill="var(--color-surface-raised)" stroke={`var(--color-art-${node.art})`} />
+						) : (
+							<circle cx={node.cx} cy={node.cy} r={node.r} fill={`var(--color-art-${node.art})`} stroke="none" />
+						),
+					)}
+				</g>
+			</svg>
+		))
+	}
 	<div class="band-text">
 		<slot />
 	</div>
@@ -58,6 +66,20 @@ const art = graphArt(Astro.props.seed);
 		max-width: none;
 		opacity: var(--art-wash);
 		pointer-events: none;
+	}
+
+	.art.narrow {
+		display: none;
+	}
+
+	@media (max-width: 47.99rem) {
+		.art.wide {
+			display: none;
+		}
+
+		.art.narrow {
+			display: block;
+		}
 	}
 
 	/* The title shares its left edge with the article text, as in the blog. */
