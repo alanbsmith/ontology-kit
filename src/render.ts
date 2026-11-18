@@ -281,7 +281,7 @@ export function show(ont: Ontology, n: OkbNode): string {
     const primary = ont.get(ont.rel.primary(n.id));
     const decls = (primary?.type === "Slot" && primary.edgeProperties) || [];
     if (decls.length) line("edge props", decls.map((d) => `${d.name} (${d.valueType}${d.allowedValues ? ` {${d.allowedValues.join(", ")}}` : ""}${d.required ? ", required" : ""})`).join(", ") + c.dim(" + rule"));
-    line("attached to", ont.domain(n.id).map((d) => ont.label(d)).join(", ") || c.yellow("(no class yet)"));
+    line("attached to", [...ont.domain(n.id).map((d) => ont.label(d)), ...(n.appliesToRules ? ["every rule"] : [])].join(", ") || c.yellow("(no class yet)"));
     const users = ont.ofType("Class").filter((x) => x.facetOverrides?.[n.id]);
     if (users.length) line("restricted by", users.map((u) => u.name).join(", "));
   } else if (n.type === "Instance") {

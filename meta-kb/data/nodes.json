@@ -1487,10 +1487,10 @@
       "rule qualifier",
       "rule condition"
     ],
-    "definition": "Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and attached to a class named Rule; they are validated like instance slot values (allowed values, cardinality).",
+    "definition": "Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and declared to apply to Rules (`appliesToRules`), so every rule can carry them and nothing else can; no class is involved. Values are validated like instance slot values (allowed values, cardinality). Rules have no inheritance: each rule states its own values, and a refining rule does not inherit its broader rule's.",
     "plainLanguage": "A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfills it can be compared on the same terms.",
     "example": "Rule 'Menus close on Escape' with condition = open and inputModality = keyboard.",
-    "inThisToolkit": "`okb class add Rule --abstract`, `okb slot add condition --on Rule --type Enumerated --values open,disabled`, then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.",
+    "inThisToolkit": "`okb slot add condition --on-rules --type Enumerated --values open,disabled` (add `--on Behavior` as well to share the slot with a descriptive class), then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.",
     "origin": "operational"
   },
   {
@@ -3231,7 +3231,7 @@
       "id",
       "name"
     ],
-    "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as)."
+    "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."
   },
   {
     "type": "NodeType",
@@ -3288,7 +3288,7 @@
       "modality",
       "statement"
     ],
-    "description": "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots attached to the ontology's class named Rule (e.g. condition, inputModality)."
+    "description": "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots that apply to Rules (e.g. condition, inputModality). Not inherited through REFINES."
   },
   {
     "type": "EdgeType",

@@ -428,7 +428,7 @@ export const CHECKS: Record<string, Check> = {
     const hits: Hit[] = [];
     const owners = [...ont.ofType("Instance"), ...ont.ofType("Rule"), ...classes(ont)];
     for (const n of owners) {
-      // A rule's qualifier values are checked like an instance's (the Rule class's slots).
+      // A rule's qualifier values are checked like an instance's, against the slots that apply to Rules.
       const holdsValues = n.type !== "Class";
       const ctx = ont.classContext(n.id);
       const applicable = ont.applicableSlots(n.id);

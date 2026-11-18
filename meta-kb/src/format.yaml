@@ -19,7 +19,7 @@ nodeTypes:
   - {name: Class, origin: ontology101, models: concept.class, required: [id, name],
      description: "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
   - {name: Slot, origin: ontology101, models: concept.slot, required: [id, name],
-     description: "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as)."}
+     description: "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."}
   - {name: Instance, origin: ontology101, models: concept.instance, required: [id, name],
      description: "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
   - {name: DesignDecision, origin: ontology101, models: concept.design-decision, required: [id, title, decision],
@@ -29,7 +29,7 @@ nodeTypes:
   - {name: SourceLocation, origin: operational, models: concept.lpg, required: [id, quote],
      description: "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."}
   - {name: Rule, origin: operational, models: concept.lpg, required: [id, modality, statement],
-     description: "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots attached to the ontology's class named Rule (e.g. condition, inputModality)."}
+     description: "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots that apply to Rules (e.g. condition, inputModality). Not inherited through REFINES."}
 
 # Relationship values are NOT listed here: an Instance-type Slot gets a `relType`
 # (its name in UPPER_SNAKE case, e.g. maker -> MAKER), and each value is an edge of

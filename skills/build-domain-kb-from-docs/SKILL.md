@@ -38,7 +38,7 @@ From each quote draft exactly one node, claiming no more than the quote supports
 - A link between things (a component composes another, a token is used by a component) → `okb relationship add <name> --from <Class> --to <Class>`. Its values are stored as edges named after it (`composes` → `:COMPOSES`).
 - A styling-only variant → work through `okb explain decision.class-or-value`. Usually an enumerated value, not a class.
 - A requirement or recommendation → `okb rule add --statement "..." --modality <MUST|SHOULD|MAY|MUST_NOT|SHOULD_NOT> --governs <Class|slot> --cites <quote id>`.
-  - Add `--value slot=value` for qualifier slots attached to a class named `Rule` (for example `condition=open`), and `--refines <broader rule> --adds "..."` when it narrows a broader rule.
+  - Add `--value slot=value` for qualifier slots declared with `okb slot add ... --on-rules` (for example `condition=open`); each rule states its own values, and nothing is inherited through `--refines`, and `--refines <broader rule> --adds "..."` when it narrows a broader rule.
   - A quote shared by several nodes is added once; attach it to the others with `okb cite <node> <quote id>`.
   - A fact about what one component does (not a requirement) is an Instance, not a Rule. Link it to the rule it meets with `okb fulfills <instance> <rule>`.
   - A rule the owner wrote, not extracted, uses `--authored` and cites the owner's file. It's verified like any other rule.

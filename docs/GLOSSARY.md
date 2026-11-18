@@ -425,11 +425,11 @@ A shared, precise vocabulary for one subject: what kinds of things exist, how th
 
 A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfills it can be compared on the same terms.
 
-**Definition.** Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and attached to a class named Rule; they are validated like instance slot values (allowed values, cardinality).
+**Definition.** Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and declared to apply to Rules (`appliesToRules`), so every rule can carry them and nothing else can; no class is involved. Values are validated like instance slot values (allowed values, cardinality). Rules have no inheritance: each rule states its own values, and a refining rule does not inherit its broader rule's.
 
 **Example.** Rule 'Menus close on Escape' with condition = open and inputModality = keyboard.
 
-**In okb.** `okb class add Rule --abstract`, `okb slot add condition --on Rule --type Enumerated --values open,disabled`, then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.
+**In okb.** `okb slot add condition --on-rules --type Enumerated --values open,disabled` (add `--on Behavior` as well to share the slot with a descriptive class), then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.
 
 *A toolkit concept (not from the sources).*
 

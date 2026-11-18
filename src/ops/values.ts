@@ -1,6 +1,6 @@
 /** Parsing and storing values: instance values, class fixed values, defaults and restrictions. */
 import * as naming from "../naming.ts";
-import { OkbError, RULE_CLASS, type Ontology, literalValues, nameOrText } from "../model.ts";
+import { OkbError, type Ontology, literalValues, nameOrText } from "../model.ts";
 import type { Literal, SlotNode } from "../types.ts";
 import { an, splitList as list, type Notes } from "./common.ts";
 
@@ -15,8 +15,10 @@ export function parseAssignments(args: string[]): { slot: string; op: "=" | "+="
 export function findSlotFor(ont: Ontology, ownerId: string, ref: string): SlotNode {
   const s = ont.find(ref, "Slot");
   if (!ont.applicableSlots(ownerId).includes(s.id)) {
-    const hint = ont.get(ownerId)?.type === "Rule" ? ` Attach it to the ${RULE_CLASS} class first: okb slot add ${s.name} --on ${RULE_CLASS}.` : "";
-    throw new OkbError(`'${s.name}' isn't a slot of ${ont.label(ownerId)} (attached to: ${ont.domain(s.id).map((d) => ont.label(d)).join(", ") || "nothing"}).${hint}`);
+    const forRule = ont.get(ownerId)?.type === "Rule";
+    const where = [...ont.domain(s.id).map((d) => ont.label(d)), ...(s.appliesToRules ? ["Rules"] : [])].join(", ") || "nothing";
+    const hint = forRule ? ` Make it apply to rules: okb slot set ${s.name} --on-rules.` : "";
+    throw new OkbError(`'${s.name}' isn't a slot of ${ont.label(ownerId)} (attached to: ${where}).${hint}`);
   }
   return s;
 }

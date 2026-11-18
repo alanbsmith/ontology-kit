@@ -218,7 +218,7 @@ function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean },
   if (held) notes.push(`${held} rule(s) haven't passed verification, so they're left out (okb validate lists them). --include-unverified exports them with their status.`);
 }
 
-/** A rule's qualifier values (slots attached to the Rule class), keyed by slot name. */
+/** A rule's qualifier values (slots declared with --on-rules), keyed by slot name. */
 function ruleQualifiers(ont: Ontology, r: RuleNode): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const sid of ont.applicableSlots(r.id)) {

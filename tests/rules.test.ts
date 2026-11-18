@@ -22,10 +22,9 @@ async function setup() {
   const dir = mkdtempSync(join(tmpdir(), "okb-rules-"));
   const ont = Ontology.create(dir, "Components");
   ops.setConventions(ont, {});
-  ops.addClass(ont, "Rule", { description: "Stands in for Rule nodes, so slots can be attached to them.", abstract: true });
   ops.addClass(ont, "Behavior", { description: "What one component does." });
-  ops.addSlot(ont, "condition", { on: ["Rule", "Behavior"], type: "Enumerated", values: ["open", "disabled"], description: "State of the governed node." });
-  ops.addSlot(ont, "inputModality", { on: ["Rule", "Behavior"], type: "Enumerated", values: ["touch", "mouse", "keyboard"], card: "multiple", description: "Input device." });
+  ops.addSlot(ont, "condition", { on: ["Behavior"], onRules: true, type: "Enumerated", values: ["open", "disabled"], description: "State of the governed node." });
+  ops.addSlot(ont, "inputModality", { on: ["Behavior"], onRules: true, type: "Enumerated", values: ["touch", "mouse", "keyboard"], card: "multiple", description: "Input device." });
   mkdirSync(join(dir, "docs"));
   copyFileSync(FIXTURE, join(dir, "docs", "button.md"));
   prov.addSource(ont, join(dir, "docs", "button.md"), {});
@@ -81,11 +80,40 @@ describe("qualifier values on rules", () => {
     assert.match(show(ont, r), /condition\s+open/);
   });
 
-  it("reject values outside the allowed set, and slots that aren't attached to Rule", async () => {
+  it("reject values outside the allowed set, and slots that don't apply to rules", async () => {
     const { ont, l1 } = await setup();
     assert.throws(() => prov.addRule(ont, { statement: "x y z.", modality: "MUST", cites: [l1], values: ["condition=sleeping"] }), /must be one of/);
     ops.addSlot(ont, "color", { on: ["Behavior"], type: "String", description: "Color." });
-    assert.throws(() => prov.addRule(ont, { statement: "x y z.", modality: "MUST", cites: [l1], values: ["color=red"] }), /Attach it to the Rule class/);
+    assert.throws(() => prov.addRule(ont, { statement: "x y z.", modality: "MUST", cites: [l1], values: ["color=red"] }), /okb slot set color --on-rules/);
+  });
+
+  it("belong to rules alone when the slot is only declared on rules, and are refused on instances", async () => {
+    const { ont, l1 } = await setup();
+    ops.addSlot(ont, "scope", { onRules: true, type: "String", description: "Where the rule applies." });
+    prov.addRule(ont, { statement: "Menus close on Escape.", modality: "MUST", cites: [l1], values: ["scope=menus"] });
+    assert.throws(() => ops.addInstance(ont, "Menu", { of: ["Behavior"], assignments: ["scope=menus"] }), /isn't a slot of Menu \(attached to: Rules\)/);
+    assert.ok(!errors(ont).some((f) => f.rule === "slot-value-slot-applies"));
+  });
+
+  it("can't be relationships, and every rule needs a required one", async () => {
+    const { ont, l1 } = await setup();
+    ops.addSlot(ont, "owner", { type: "Instance", on: ["Behavior"], range: ["Behavior"], description: "Owner." });
+    assert.throws(() => ops.updateSlot(ont, "owner", { onRules: true }), /must be properties/);
+    ops.addSlot(ont, "area", { onRules: true, type: "String", min: 1, description: "Area." });
+    prov.addRule(ont, { statement: "Menus close on Escape.", modality: "MUST", cites: [l1] });
+    assert.ok(errors(ont).some((f) => f.rule === "slot-values-respect-facets" && /at least 1 required/.test(f.message)));
+  });
+
+  it("are not inherited through REFINES: each rule states its own", async () => {
+    const { ont, l1, l2 } = await setup();
+    prov.addRule(ont, { statement: "Be keyboard operable.", modality: "MUST", cites: [l1], name: "broad", values: ["condition=open"] });
+    prov.addRule(ont, { statement: "Menus move focus with arrow keys.", modality: "MUST", cites: [l2], name: "narrow", refines: ["rule.broad"] });
+    const cond = ont.find("condition", "Slot").id;
+    assert.deepEqual(ont.statedValues("rule.narrow", cond), []);
+    for (const r of ont.ofType("Rule")) prov.verify(ont, r.id, { status: "SUPPORTED" });
+    const byId = (id: string) => exportGraph(ont).nodes.find((n) => n.id === id)!.properties;
+    assert.equal(byId("rule.broad").condition, "open");
+    assert.ok(!("condition" in byId("rule.narrow")));
   });
 
   it("are flagged when a hand edit breaks them", async () => {
@@ -174,7 +202,8 @@ describe("okb cite", () => {
   it("runs the whole workflow from the command line", async () => {
     const { dir, l1, l2 } = await setup().then(async (c) => { c.ont.save(); return c; });
     const okb = (...a: string[]) => execFileSync("node", [CLI, "-C", dir, ...a], { encoding: "utf8" });
-    okb("rule", "add", "--statement", "Be keyboard operable.", "--modality", "MUST", "--authored", "--cites", l1, "--name", "broad", "--value", "condition=open");
+    okb("slot", "add", "severity", "--on-rules", "--type", "Enumerated", "--values", "high,low");
+    okb("rule", "add", "--statement", "Be keyboard operable.", "--modality", "MUST", "--authored", "--cites", l1, "--name", "broad", "--value", "condition=open", "--value", "severity=high");
     okb("rule", "add", "--statement", "Menus move focus with arrow keys.", "--modality", "MUST", "--cites", l2, "--name", "narrow", "--refines", "rule.broad", "--adds", "arrow keys");
     okb("instance", "add", "Menu arrows", "--of", "Behavior");
     okb("fulfills", "Menu arrows", "rule.broad");
@@ -185,5 +214,6 @@ describe("okb cite", () => {
     const g = JSON.parse(okb("export", "--format", "json"));
     assert.deepEqual(g.relationships.map((r: any) => r.type).sort(), ["CITES", "CITES", "CITES", "FULFILLS", "PART_OF", "PART_OF", "REFINES"]);
     assert.equal(g.nodes.find((n: any) => n.id === "rule.broad").properties.condition, "open");
+    assert.equal(g.nodes.find((n: any) => n.id === "rule.broad").properties.severity, "high");
   });
 });

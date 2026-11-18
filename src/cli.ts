@@ -304,10 +304,10 @@ async function main(argvIn: string[]) {
 
     case "slot": {
       const rest2 = rest.slice(1);
-      const slotOpts = { on: strs, off: strs, type: str, values: strs, range: strs, "add-range": strs, "remove-range": strs, card: str, min: str, max: str, default: str, desc: str, force: bool } as const;
+      const slotOpts = { on: strs, off: strs, type: str, values: strs, range: strs, "add-range": strs, "remove-range": strs, card: str, min: str, max: str, default: str, desc: str, force: bool, "on-rules": bool, "off-rules": bool } as const;
       const toOpts = (v: Record<string, any>): ops.SlotOpts => ({
         on: v.on, off: v.off, type: v.type, values: v.values, range: v.range, addRange: v["add-range"], removeRange: v["remove-range"],
-        card: v.card, min: num(v.min, "--min"), max: num(v.max, "--max"), default: v.default, description: v.desc, force: v.force,
+        card: v.card, min: num(v.min, "--min"), max: num(v.max, "--max"), default: v.default, description: v.desc, force: v.force, onRules: v["on-rules"], offRules: v["off-rules"],
       });
       if (sub === "add") {
         const { v, p } = parse(rest2, slotOpts);

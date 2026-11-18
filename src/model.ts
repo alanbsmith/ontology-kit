@@ -401,17 +401,8 @@ export class Ontology {
   /** Classes a node belongs to for slot purposes: an instance's classes, or a class and its ancestors. */
   classContext(id: string): string[] {
     const n = this.byId.get(id);
-    if (n?.type === "Rule") return this.ruleContext();
+    if (n?.type === "Rule") return [];
     return [...(n?.type === "Instance" ? this.instanceClasses(id) : this.up(id))];
-  }
-
-  /**
-   * Rules aren't instances of a class, so the slots they can carry values for come from
-   * the ontology's own class named Rule (okb slot add condition --on Rule), plus its ancestors.
-   */
-  ruleContext(): string[] {
-    const cls = this.ofType("Class").find((k) => naming.key(k.name) === naming.key(RULE_CLASS));
-    return cls ? [...this.up(cls.id)] : [];
   }
 
   /** Whether following `type` edges from `from` ever reaches `to`. */
@@ -437,16 +428,22 @@ export class Ontology {
     return out;
   }
 
-  /** Own + inherited slots of a class, or all slots of an instance. */
+  /** Own + inherited slots of a class, all slots of an instance, or the slots declared to apply to Rules. */
   applicableSlots(id: string): string[] {
     const n = this.byId.get(id);
     if (n?.type === "Instance") return this.slotsOfClasses(this.instanceClasses(id));
-    if (n?.type === "Rule") return this.slotsOfClasses(this.ruleContext());
+    if (n?.type === "Rule") return this.ofType("Slot").filter((s) => s.appliesToRules).map((s) => s.id);
     return this.slotsOfClasses([id, ...this.ancestors(id)]);
   }
 
   domain(slotId: string): string[] {
     return this.sources(slotId, "HAS_SLOT");
+  }
+
+  /** Whether a slot belongs to anything: a class, or every Rule. */
+  isAttached(slotId: string): boolean {
+    const s = this.byId.get(slotId);
+    return this.domain(slotId).length > 0 || (s?.type === "Slot" && s.appliesToRules === true);
   }
 
   range(slotId: string): string[] {
@@ -511,9 +508,6 @@ export class Ontology {
     return null;
   }
 }
-
-/** The name of the ontology class that holds the slots Rules can carry values for. */
-export const RULE_CLASS = "Rule";
 
 /** A node's own literal value for a slot: an instance's value, or a class's fixed value. */
 export function literalValue(n: OkbNode, slotId: string): StoredValue | undefined {

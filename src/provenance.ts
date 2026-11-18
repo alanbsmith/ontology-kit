@@ -190,7 +190,7 @@ export interface AddRuleOpts {
   name?: string;
   /** Written by the ontology owner rather than extracted. Still needs a quote and verification. */
   authored?: boolean;
-  /** Qualifier values as slot=value (slots attached to the Rule class). */
+  /** Qualifier values as slot=value (slots declared with --on-rules). */
   values?: string[];
   /** Rules this one refines, and what it adds to each. */
   refines?: string[];

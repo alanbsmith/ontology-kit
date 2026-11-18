@@ -163,6 +163,8 @@ export interface SlotNode extends ExtractedFields {
   relType?: string;
   /** Relationships only: properties its edges can carry. */
   edgeProperties?: EdgePropertyDecl[];
+  /** The slot applies to every Rule (qualifier values in Rule.values). Rules have no classes and no inheritance. */
+  appliesToRules?: boolean;
 }
 
 /** A slot whose values link to other things; they're stored as edges of type relType. */
@@ -233,7 +235,7 @@ export interface RuleNode extends ExtractedFields {
   statement: string;
   /** Written by the ontology owner, not extracted. It still cites a quote and gets verified. */
   authored?: boolean;
-  /** Qualifier values for property slots whose domain includes the Rule class (e.g. condition). */
+  /** Qualifier values for property slots that apply to Rules (Slot.appliesToRules), e.g. condition. Each rule states its own; nothing is inherited through REFINES. */
   values?: Record<string, StoredValue>;
 }
 
