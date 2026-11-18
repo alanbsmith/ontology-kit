@@ -73,7 +73,8 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 			<li class="menu-item">
 				<button type="button" class="pill-button" popovertarget="menu-sheet" aria-label="Menu">
 					<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true" focusable="false">
-						<path d="M4 6h16M4 12h16M4 18h16" />
+						<rect x="3" y="4.5" width="18" height="15" rx="3" />
+						<path d="M9 4.5v15" />
 					</svg>
 					<span class="pill-label">Menu</span>
 				</button>
@@ -84,8 +85,6 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 						<circle cx="11" cy="11" r="6.5" />
 						<path d="M16 16l4.5 4.5" />
 					</svg>
-					<span class="pill-label">Search</span>
-					<kbd aria-hidden="true">/</kbd>
 				</button>
 			</li>
 		</ul>
@@ -854,38 +853,53 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 		background: var(--color-surface);
 	}
 
+	/* Search is a plain icon button; "/" opens it too (aria-keyshortcuts says so). */
 	.search-button {
-		min-width: 9rem;
-		border: var(--border-width) solid var(--color-border);
-		color: var(--color-text-muted);
+		padding-inline: var(--space-xs);
 	}
 
-	.search-button kbd {
-		margin-inline-start: auto;
-		padding: 0 0.4em;
-		border: var(--border-width) solid var(--color-border);
-		border-radius: var(--radius-sm);
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
+	/* From 48rem the menu is a side panel: it slides in from the left edge over a dimmed page,
+	   and Escape, Done or a click outside closes it. Phones keep the bottom sheet. */
+	@media (min-width: 48rem) {
+		.menu-panel {
+			inset: 0 auto 0 0;
+			translate: 0 0;
+			width: min(20rem, 85vw);
+			height: 100dvh;
+			max-height: none;
+			padding: var(--space-md);
+			border-block: 0;
+			border-inline-start: 0;
+			border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+		}
+
+		.menu-panel::backdrop {
+			background: light-dark(oklch(0.2 0.03 260 / 0.25), oklch(0 0 0 / 0.45));
+		}
+
+		.menu-panel .done {
+			display: inline-flex;
+		}
 	}
 
-	/* The sidebar does this job from 64rem up. */
-	@media (min-width: 64rem) {
-		.menu-item {
-			display: none;
+	@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+		.menu-panel:not(:popover-open) {
+			opacity: 1;
+			translate: -100% 0;
+		}
+
+		@starting-style {
+			.menu-panel:popover-open {
+				opacity: 1;
+				translate: -100% 0;
+			}
 		}
 	}
 
 	/* On a phone the pill holds icons only; the buttons keep their accessible names. */
 	@media (max-width: 47.99rem) {
-		.pill-label,
-		.search-button kbd {
+		.pill-label {
 			display: none;
-		}
-
-		.search-button {
-			min-width: 0;
-			border: 0;
 		}
 
 		.brand span {

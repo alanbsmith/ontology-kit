@@ -128,14 +128,14 @@ tests/                  node:test suites
 
 ## Docs site
 
-The docs in this repo are also published as a website, with search, a sidebar, light and dark themes and reading settings. It's an [Astro](https://astro.build) site in `site/` that reads these markdown files in place, so there's nothing to copy or keep in sync. To build it, or to work on it with live reload:
+The docs in this repo are also published as a website, with search, a side-panel menu, light and dark themes and reading settings. It's an [Astro](https://astro.build) site in `site/` that reads these markdown files in place, so there's nothing to copy or keep in sync. To build it, or to work on it with live reload:
 
 ```bash
 npm run site       # regenerate docs/, then build the site into site/dist (with the search index)
 npm run site:dev   # the same, served at http://localhost:4321 while you edit
 ```
 
-Run `npm ci --prefix site` once first. Pages and the sidebar are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`npm --prefix site run preview`). Netlify builds and hosts it from `netlify.toml`.
+Run `npm ci --prefix site` once first. Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`npm --prefix site run preview`). Netlify builds and hosts it from `netlify.toml`.
 
 ## Changing rules
 

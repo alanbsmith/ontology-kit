@@ -4,9 +4,7 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Outline from '../components/Outline.astro';
-import Sidebar from '../components/Sidebar.astro';
-import { PAGES, sidebar, type Page } from '../nav.ts';
-import { metaNodes } from '../lib/meta.ts';
+import { PAGES, type Page } from '../nav.ts';
 
 export function getStaticPaths() {
 	return PAGES.map((page) => ({
@@ -23,17 +21,11 @@ const entry = await getEntry('docs', page.source);
 if (!entry) throw new Error(`No docs entry for ${page.source}`);
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const title: string = remarkPluginFrontmatter.title ?? page.label;
-const groups = sidebar(metaNodes);
 const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.source}`;
 ---
 
 <Base title={title} outline={headings}>
 	<div class="docs">
-		<aside class="sidebar">
-			<nav aria-label="Docs">
-				<Sidebar groups={groups} current={page.route} />
-			</nav>
-		</aside>
 		<main id="main">
 			<article data-pagefind-body>
 				<h1>{title}</h1>
@@ -143,49 +135,28 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 </script>
 
 <style>
-	/* One column on narrow screens; the sidebar joins at 64rem and the outline at 80rem. */
+	/* The text column is centered, as in the blog. From 80rem the outline sits in the right-hand
+	   column beside it. The site nav is a side panel opened from the header (see Nav.astro), so
+	   there's only ever one list of links beside the text. */
 	.docs {
 		flex: 1;
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
-		column-gap: var(--space-xl);
-		justify-content: center;
 		width: 100%;
 		max-width: calc(var(--measure) + 2 * var(--space-gutter));
 		margin-inline: auto;
 		padding-inline: var(--space-gutter);
 	}
 
-	@media (min-width: 64rem) {
-		.docs {
-			grid-template-columns: 15rem minmax(0, var(--measure));
-			max-width: none;
-		}
-	}
-
 	@media (min-width: 80rem) {
 		.docs {
-			grid-template-columns: 15rem minmax(0, var(--measure)) 14rem;
-		}
-	}
-
-	.sidebar {
-		display: none;
-	}
-
-	@media (min-width: 64rem) {
-		.sidebar {
-			display: block;
-			padding-block-start: var(--page-top);
+			grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure)) minmax(0, 1fr);
+			column-gap: var(--space-xl);
+			max-width: none;
 		}
 
-		.sidebar nav {
-			position: sticky;
-			top: 6rem;
-			max-height: calc(100dvh - 7rem);
-			overflow-y: auto;
-			overscroll-behavior: contain;
-			padding-block-end: var(--space-lg);
+		main {
+			grid-column: 2;
 		}
 	}
 
