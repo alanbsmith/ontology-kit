@@ -84,7 +84,7 @@ describe("qualifier values on rules", () => {
   it("reject values outside the allowed set, and slots that aren't attached to Rule", async () => {
     const { ont, l1 } = await setup();
     assert.throws(() => prov.addRule(ont, { statement: "x y z.", modality: "MUST", cites: [l1], values: ["condition=sleeping"] }), /must be one of/);
-    ops.addSlot(ont, "color", { on: ["Behavior"], type: "String", description: "Colour." });
+    ops.addSlot(ont, "color", { on: ["Behavior"], type: "String", description: "Color." });
     assert.throws(() => prov.addRule(ont, { statement: "x y z.", modality: "MUST", cites: [l1], values: ["color=red"] }), /Attach it to the Rule class/);
   });
 
