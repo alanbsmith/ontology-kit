@@ -1,7 +1,7 @@
 {
   "format": "okb-export/2",
   "ontology": "Wine and Food",
-  "metaKbVersion": "2.3.1",
+  "metaKbVersion": "2.4.0",
   "nodes": [
     {
       "id": "i.chateau-morgon",

@@ -162,6 +162,7 @@ function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean },
     return true;
   };
   let held = 0;
+  const ruleIds = new Set<string>();
   for (const r of ont.ofType("Rule")) {
     if (!isVerified(r) && !o.unverified) {
       held++;
@@ -180,17 +181,19 @@ function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean },
         rels.push({ type: "GOVERNS", from: r.id, to: n.id, properties: {} });
       }
     }
-    push({
-      id: r.id,
-      labels: ["OkbRule"],
-      properties: compact({
+    const fixed: Record<string, unknown> = {
         okbId: r.id, name: r.name, statement: r.statement, modality: r.modality,
+        authored: r.authored === true,
         verification: r.verification?.status ?? "UNVERIFIED",
         approvedAfter: r.verification?.approvedAfter,
         extractionConfidence: r.extractionConfidence,
         ...governs,
-      }),
-    });
+    };
+    const qualifiers = ruleQualifiers(ont, r);
+    const clash = Object.keys(qualifiers).filter((k) => k in fixed);
+    if (clash.length) notes.push(`${r.id}: qualifier(s) ${clash.join(", ")} share a name with a fixed OkbRule property, so the fixed one is exported. Rename the slot.`);
+    push({ id: r.id, labels: ["OkbRule"], properties: compact({ ...qualifiers, ...fixed }) });
+    ruleIds.add(r.id);
     for (const lid of ont.targets(r.id, "CITES")) {
       const loc = ont.get(lid);
       if (loc?.type !== "SourceLocation") continue;
@@ -209,7 +212,21 @@ function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean },
       }
     }
   }
+  // Links between exported rules, and from the descriptive facts that fulfil them.
+  const exported = (id: string) => ruleIds.has(id);
+  for (const e of ont.edgesOf("REFINES")) if (exported(e.from) && exported(e.to)) rels.push({ type: "REFINES", from: e.from, to: e.to, properties: compact({ adds: e.adds }) });
+  for (const e of ont.edgesOf("FULFILLS")) if (exported(e.to)) rels.push({ type: "FULFILLS", from: e.from, to: e.to, properties: {} });
   if (held) notes.push(`${held} rule(s) haven't passed verification, so they're left out (okb validate lists them). --include-unverified exports them with their status.`);
+}
+
+/** A rule's qualifier values (slots attached to the Rule class), keyed by slot name. */
+function ruleQualifiers(ont: Ontology, r: RuleNode): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const sid of ont.applicableSlots(r.id)) {
+    const s = ont.get(sid);
+    if (s?.type === "Slot" && r.values?.[sid] !== undefined) out[s.name] = r.values[sid];
+  }
+  return out;
 }
 
 /**

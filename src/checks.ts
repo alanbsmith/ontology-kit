@@ -148,6 +148,9 @@ export const CHECKS: Record<string, Check> = {
       for (const p of et.props) {
         if (e[p] === undefined) hits.push({ message: `Edge ${tag} is missing property '${p}'.`, nodes: [e.from] });
       }
+      for (const p of et.optionalProps) {
+        if (e[p] !== undefined && typeof e[p] !== "string") hits.push({ message: `Edge ${tag} has property '${p}' = ${JSON.stringify(e[p])}; it must be text.`, nodes: [e.from] });
+      }
     }
     return hits;
   },
@@ -423,9 +426,10 @@ export const CHECKS: Record<string, Check> = {
 
   "slot-values-respect-facets": (ont) => {
     const hits: Hit[] = [];
-    const owners = [...ont.ofType("Instance"), ...classes(ont)];
+    const owners = [...ont.ofType("Instance"), ...ont.ofType("Rule"), ...classes(ont)];
     for (const n of owners) {
-      const isInst = n.type === "Instance";
+      // A rule's qualifier values are checked like an instance's (the Rule class's slots).
+      const isInst = n.type !== "Class";
       const ctx = ont.classContext(n.id);
       const applicable = ont.applicableSlots(n.id);
       for (const sid of applicable) {
@@ -461,10 +465,10 @@ export const CHECKS: Record<string, Check> = {
 
   "slot-value-slot-applies": (ont) => {
     const hits: Hit[] = [];
-    for (const n of [...ont.ofType("Instance"), ...classes(ont)]) {
+    for (const n of [...ont.ofType("Instance"), ...ont.ofType("Rule"), ...classes(ont)]) {
       const applicable = new Set(ont.applicableSlots(n.id));
       const used = new Set<string>();
-      const fields = n.type === "Instance" ? [n.values] : [n.fixedValues, n.defaults, n.facetOverrides];
+      const fields = n.type === "Class" ? [n.fixedValues, n.defaults, n.facetOverrides] : [n.values];
       for (const field of fields) for (const sid of Object.keys(field ?? {})) used.add(sid);
       for (const sid of ont.rel.slotsWithValues(n.id)) used.add(sid);
       for (const sid of used) {
@@ -775,7 +779,7 @@ export const CHECKS: Record<string, Check> = {
     for (const n of ont.nodes) {
       const { extracted, verification } = pipeline(n);
       if ((n.type === "Rule" || extracted) && !verification) {
-        hits.push({ message: `${n.type} ${L(ont, n.id)} was extracted from a document but hasn't been verified against its quote yet (Step 3 of the extraction pipeline): okb verify ${n.id} --status ...`, nodes: [n.id] });
+        hits.push({ message: `${n.type} ${L(ont, n.id)} ${n.type === "Rule" && n.authored ? "was written by the owner" : "was extracted from a document"} but hasn't been verified against its quote yet (Step 3 of the extraction pipeline): okb verify ${n.id} --status ...`, nodes: [n.id] });
       }
     }
     for (const n of ont.nodes) {

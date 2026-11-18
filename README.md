@@ -6,7 +6,7 @@ A toolkit that walks a beginner through building their first ontology, following
 
 | Part                     | What it is                                                                                                                                                                                                                                                                                   |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **meta-KB** (`meta-kb/`) | A knowledge base _about building knowledge bases_: the 8-step method, 35 glossary concepts, 7 principles, 10 decision guides and 57 rules. Every rule cites a verbatim, page-checked quote from the paper (or Gruber 1993), or says plainly that it's a toolkit convention.                  |
+| **meta-KB** (`meta-kb/`) | A knowledge base _about building knowledge bases_: the 8-step method, 40 glossary concepts, 7 principles, 10 decision guides and 57 rules. Every rule cites a verbatim, page-checked quote from the paper (or Gruber 1993), or says plainly that it's a toolkit convention.                  |
 | **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                       |
 | **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate). |
 
@@ -28,7 +28,7 @@ npm test             # the test suite, including building the wine example end t
 Check which version you have:
 
 ```bash
-okb version          # okb 1.0.0 · meta-KB 2.3.1
+okb version          # okb 1.0.0 · meta-KB 2.4.0
 ```
 
 The meta-KB version tracks changes to the method and rules; [`meta-kb/README.md`](meta-kb/README.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).

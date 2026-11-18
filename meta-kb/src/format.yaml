@@ -29,7 +29,7 @@ nodeTypes:
   - {name: SourceLocation, origin: operational, models: concept.lpg, required: [id, quote],
      description: "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."}
   - {name: Rule, origin: operational, models: concept.lpg, required: [id, modality, statement],
-     description: "A domain rule extracted from documentation (`okb rule add`), e.g. 'Buttons meet a 24px minimum touch target'. extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft."}
+     description: "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots attached to the ontology's class named Rule (e.g. condition, inputModality)."}
 
 # Relationship values are NOT listed here: an Instance-type Slot gets a `relType`
 # (its name in UPPER_SNAKE case, e.g. maker -> MAKER), and each value is an edge of
@@ -60,3 +60,7 @@ edgeTypes:
      description: "Provenance: passage → its document."}
   - {name: GOVERNS, from: [Rule], to: [Class, Slot, Instance], origin: operational, models: concept.lpg,
      description: "Domain rule → what it constrains."}
+  - {name: REFINES, from: [Rule], to: [Rule], optionalProps: [adds], origin: operational, models: concept.rule-refines,
+     description: "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."}
+  - {name: FULFILLS, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
+     description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfil one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}

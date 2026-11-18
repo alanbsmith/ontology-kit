@@ -5,7 +5,7 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.3.1.** It should match the meta-KB version that `okb version` prints.
+**Version 2.4.0.** It should match the meta-KB version that `okb version` prints.
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `ontology-kit/meta-kb/` (usually `~/Projects/ontology-kit`) and the pipeline in `ontology-kit/docs/EXTRACTION-PIPELINE.md`.
 

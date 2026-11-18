@@ -8,7 +8,7 @@ import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
 import {
   DISPOSITIONS, VALUE_TYPES,
   type ClassNode, type Conventions, type Facets, type GraphEdge, type InstanceNode, type Manifest, type NodeOf, type NodeType,
-  type OkbNode, type OntologyNode, type SlotNode, type StoredValue,
+  type OkbNode, type OntologyNode, type RuleNode, type SlotNode, type StoredValue,
 } from "./types.ts";
 
 export { DISPOSITIONS, VALUE_TYPES };
@@ -332,7 +332,7 @@ export class Ontology {
     this._nodes = this._nodes.filter((x) => x.id !== id);
     this._edges = this._edges.filter((e) => e.from !== id && e.to !== id);
     for (const x of this.nodes) {
-      if (x.type === "Instance") delete x.values?.[id];
+      if (x.type === "Instance" || x.type === "Rule") delete x.values?.[id];
       else if (x.type === "Class") {
         delete x.fixedValues?.[id];
         delete x.defaults?.[id];
@@ -401,7 +401,30 @@ export class Ontology {
   /** Classes a node belongs to for slot purposes: an instance's classes, or a class and its ancestors. */
   classContext(id: string): string[] {
     const n = this.byId.get(id);
+    if (n?.type === "Rule") return this.ruleContext();
     return [...(n?.type === "Instance" ? this.instanceClasses(id) : this.up(id))];
+  }
+
+  /**
+   * Rules aren't instances of a class, so the slots they can carry values for come from
+   * the ontology's own class named Rule (okb slot add condition --on Rule), plus its ancestors.
+   */
+  ruleContext(): string[] {
+    const cls = this.ofType("Class").find((k) => naming.key(k.name) === naming.key(RULE_CLASS));
+    return cls ? [...this.up(cls.id)] : [];
+  }
+
+  /** Whether following `type` edges from `from` ever reaches `to`. */
+  reaches(from: string, to: string, type: string): boolean {
+    const seen = new Set<string>();
+    const stack = [from];
+    for (let id = stack.pop(); id !== undefined; id = stack.pop()) {
+      if (id === to) return true;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      stack.push(...this.targets(id, type));
+    }
+    return false;
   }
 
   ownSlots(id: string): string[] {
@@ -418,6 +441,7 @@ export class Ontology {
   applicableSlots(id: string): string[] {
     const n = this.byId.get(id);
     if (n?.type === "Instance") return this.slotsOfClasses(this.instanceClasses(id));
+    if (n?.type === "Rule") return this.slotsOfClasses(this.ruleContext());
     return this.slotsOfClasses([id, ...this.ancestors(id)]);
   }
 
@@ -488,16 +512,19 @@ export class Ontology {
   }
 }
 
+/** The name of the ontology class that holds the slots Rules can carry values for. */
+export const RULE_CLASS = "Rule";
+
 /** A node's own literal value for a slot: an instance's value, or a class's fixed value. */
 export function literalValue(n: OkbNode, slotId: string): StoredValue | undefined {
-  if (n.type === "Instance") return n.values?.[slotId];
+  if (n.type === "Instance" || n.type === "Rule") return n.values?.[slotId];
   if (n.type === "Class") return n.fixedValues?.[slotId];
   return undefined;
 }
 
-/** Where a node keeps its own literal values: instances in `values`, classes in `fixedValues`. */
-export function literalValues(n: InstanceNode | ClassNode): Record<string, StoredValue> {
-  return n.type === "Instance" ? (n.values ??= {}) : (n.fixedValues ??= {});
+/** Where a node keeps its own literal values: instances and rules in `values`, classes in `fixedValues`. */
+export function literalValues(n: InstanceNode | ClassNode | RuleNode): Record<string, StoredValue> {
+  return n.type === "Class" ? (n.fixedValues ??= {}) : (n.values ??= {});
 }
 
 /** A node's name, or a question's/term's text (undefined for anything else). */

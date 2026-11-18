@@ -77,3 +77,11 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ## v2.3.1
 
 - **Skills state their version.** Each shipped skill starts with `**Version X.Y.Z.**`, matching the meta-KB, and checks it against `okb version` when it starts; if they differ, it says which is out of date. Changing a skill's instructions now bumps the version (a patch for skill-only changes), and the docs drift check fails if a skill's version lags.
+
+## v2.4.0
+
+- **Authored rules.** `authored` is a documented Rule field (`okb rule add --authored`, with `extracted: false`). It is shown in `okb rule list` and `okb show` and exported on `OkbRule`. Authored rules keep `prov-cites-quote` and `prov-verified`.
+- **Qualifier values on Rules.** A Rule can carry `values{slotId: value}` for slots attached to the ontology's class named `Rule`, checked like instance values (`okb rule add --value condition=open`).
+- **`REFINES` (Rule → Rule, optional `adds`) and `FULFILLS` (Instance → Rule)** edges, set with `okb rule refines` and `okb fulfills`, and exported. The format registry gains `optionalProps` for edge types.
+- **`okb cite <node> <quote id>`** attaches an existing quote to a node.
+- New glossary entries: `concept.prescriptive-vs-descriptive`, `concept.rule-qualifier`, `concept.rule-refines`, `concept.rule-fulfills`, `concept.authored-rule`.

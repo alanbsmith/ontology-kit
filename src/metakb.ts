@@ -135,6 +135,8 @@ export interface MetaEdgeType {
   fromTypes: string[];
   toTypes: string[];
   props: string[];
+  /** Edge properties that may be present (String-valued); `props` are the required ones. */
+  optionalProps: string[];
   description: string;
 }
 

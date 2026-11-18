@@ -221,13 +221,20 @@ export const MODALITIES = ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"] as
 export const VERIFICATION_STATUSES = ["SUPPORTED", "OVERREACH", "UNSUPPORTED"] as const;
 export type Modality = (typeof MODALITIES)[number];
 
-/** A domain rule extracted from documentation (docs/EXTRACTION-PIPELINE.md). */
+/**
+ * A domain rule: a requirement on any implementation, extracted from documentation
+ * (docs/EXTRACTION-PIPELINE.md) or written by the ontology's owner.
+ */
 export interface RuleNode extends ExtractedFields {
   type: "Rule";
   id: string;
   name: string;
   modality: Modality;
   statement: string;
+  /** Written by the ontology owner, not extracted. It still cites a quote and gets verified. */
+  authored?: boolean;
+  /** Qualifier values for property slots whose domain includes the Rule class (e.g. condition). */
+  values?: Record<string, StoredValue>;
 }
 
 export type OkbNode =

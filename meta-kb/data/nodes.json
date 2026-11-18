@@ -2,7 +2,7 @@
   {
     "type": "MetaKB",
     "id": "metakb",
-    "version": "2.3.1",
+    "version": "2.4.0",
     "formatVersion": "okb-lpg/2",
     "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
   },
@@ -1463,6 +1463,76 @@
     "plainLanguage": "MUST findings are errors to fix. SHOULD findings are warnings: fix them or record why not. MAY findings are hints worth a look.",
     "example": "'Slots with value type Instance must also define a list of allowed classes' → MUST. 'If a class has only one direct subclass there may be a modeling problem' → MAY.",
     "inThisToolkit": "Rule.modality in the meta-KB; `okb validate` maps MUST→error, SHOULD→warning, MAY→info unless a rule states a documented override.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.prescriptive-vs-descriptive",
+    "name": "Prescriptive vs descriptive statements (Rule vs fact)",
+    "aliases": [
+      "requirement vs behavior",
+      "rule vs behavior"
+    ],
+    "definition": "A prescriptive statement says what any implementation must, should or may do; it is a Rule, with a modality. A descriptive statement says what one implementation does; it is an ordinary Instance of a domain class (for example a Behavior), with no modality. A descriptive fact can meet a prescriptive rule, and the FULFILLS edge records that.",
+    "plainLanguage": "'Interactive components MUST support keyboard navigation' tells you what is required, of everything. 'Button handles Enter and Space' tells you what one component does. Keep them apart: the first is a Rule, the second is a fact about Button. Then you can ask which facts meet which rules.",
+    "example": "(Rule: Interactive components MUST support keyboard navigation) <-[:FULFILLS]- (Behavior: Button activates on Enter and Space)",
+    "inThisToolkit": "Rules: `okb rule add`. Descriptive facts: `okb instance add --of <your Behavior class>`. Link them with `okb fulfills <instance> <rule>`.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.rule-qualifier",
+    "name": "Qualifier values on a Rule",
+    "aliases": [
+      "rule qualifier",
+      "rule condition"
+    ],
+    "definition": "Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and attached to a class named Rule; they are validated like instance slot values (allowed values, cardinality).",
+    "plainLanguage": "A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfils it can be compared on the same terms.",
+    "example": "Rule 'Menus close on Escape' with condition = open and inputModality = keyboard.",
+    "inThisToolkit": "`okb class add Rule --abstract`, `okb slot add condition --on Rule --type Enumerated --values open,disabled`, then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.rule-refines",
+    "name": "Refines (Rule to Rule)",
+    "aliases": [
+      "REFINES",
+      "narrows"
+    ],
+    "definition": "An edge from a rule to a broader rule that it narrows by adding a part, condition, key or case. Stored in one direction (specific → broad). The optional `adds` property names what the narrower rule adds, so a verifier can check that the detail appears in its quote. Refinement cannot loop.",
+    "plainLanguage": "A broad rule ('interactive components support keyboard navigation') can have component rules that say how, for one component ('Menu moves focus with the arrow keys'). The component rule REFINES the broad one. It is not a subclass: it adds a requirement to the broad rule's setting.",
+    "example": "(Menu rule)-[:REFINES {adds: \"arrow keys move focus\"}]->(keyboard navigation rule)",
+    "inThisToolkit": "`okb rule refines <rule> <broader> --adds \"...\"` or `okb rule add ... --refines <broader> --adds \"...\"`.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.rule-fulfills",
+    "name": "Fulfills (fact to Rule)",
+    "aliases": [
+      "FULFILLS",
+      "meets",
+      "satisfies"
+    ],
+    "definition": "An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfil one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.",
+    "plainLanguage": "A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfil yet?'.",
+    "example": "(Button activates on Enter and Space)-[:FULFILLS]->(Interactive components support keyboard navigation)",
+    "inThisToolkit": "`okb fulfills <instance> <rule>`.",
+    "origin": "operational"
+  },
+  {
+    "type": "Concept",
+    "id": "concept.authored-rule",
+    "name": "Authored rule",
+    "aliases": [
+      "owner-written rule"
+    ],
+    "definition": "A Rule written by the ontology's owner rather than extracted from a document (`authored: true`, `extracted: false`). Every rule needs provenance, authored or extracted: an authored rule cites its sentence in an owner-written file registered as a Source, and goes through the same verification.",
+    "plainLanguage": "Sometimes the owner knows a principle the documentation never states in one place. Write it down in a file, register the file as a Source, and cite the sentence. It then has the same quote and check trail as any other rule. Being authored is a label, not an exemption.",
+    "example": "'Interactive components MUST support keyboard navigation in their operable conditions' cited from principles.md.",
+    "inThisToolkit": "`okb rule add --authored --cites <quote id> ...`. Shown in `okb rule list` and `okb show`; exported as `authored` on the OkbRule node. prov-cites-quote and prov-verified apply to it unchanged.",
     "origin": "operational"
   },
   {
@@ -3218,7 +3288,7 @@
       "modality",
       "statement"
     ],
-    "description": "A domain rule extracted from documentation (`okb rule add`), e.g. 'Buttons meet a 24px minimum touch target'. extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft."
+    "description": "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots attached to the ontology's class named Rule (e.g. condition, inputModality)."
   },
   {
     "type": "EdgeType",
@@ -3232,6 +3302,7 @@
       "Class"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Subclass → superclass. Transitive; no cycles."
   },
   {
@@ -3246,6 +3317,7 @@
       "Class"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Instance → its class (most specific one that fits). An instance may have more than one."
   },
   {
@@ -3260,6 +3332,7 @@
       "Slot"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Class → slot attached to it. The set of these classes is the slot's domain."
   },
   {
@@ -3274,6 +3347,7 @@
       "Class"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Instance-type slot → allowed class of its values."
   },
   {
@@ -3288,6 +3362,7 @@
       "Slot"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Declares two relationship slots inverse. The `from` slot's relType is the stored direction; the `to` slot reads those edges backwards. Stored once."
   },
   {
@@ -3302,6 +3377,7 @@
       "Class"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Declares two classes disjoint. Stored once; symmetric."
   },
   {
@@ -3318,6 +3394,7 @@
       "Instance"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Competency question → an element needed to answer it."
   },
   {
@@ -3334,6 +3411,7 @@
       "Instance"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Step-3 term → what it turned into."
   },
   {
@@ -3355,6 +3433,7 @@
       "Rule"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Design decision → what it's about."
   },
   {
@@ -3373,6 +3452,7 @@
       "SourceLocation"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Provenance: element → the verbatim passage it came from."
   },
   {
@@ -3387,6 +3467,7 @@
       "Source"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Provenance: passage → its document."
   },
   {
@@ -3403,6 +3484,39 @@
       "Instance"
     ],
     "props": [],
+    "optionalProps": [],
     "description": "Domain rule → what it constrains."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.REFINES",
+    "name": "REFINES",
+    "origin": "operational",
+    "fromTypes": [
+      "Rule"
+    ],
+    "toTypes": [
+      "Rule"
+    ],
+    "props": [],
+    "optionalProps": [
+      "adds"
+    ],
+    "description": "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."
+  },
+  {
+    "type": "EdgeType",
+    "id": "edgetype.FULFILLS",
+    "name": "FULFILLS",
+    "origin": "operational",
+    "fromTypes": [
+      "Instance"
+    ],
+    "toTypes": [
+      "Rule"
+    ],
+    "props": [],
+    "optionalProps": [],
+    "description": "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfil one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."
   }
 ]
