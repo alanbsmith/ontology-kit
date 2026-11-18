@@ -44,13 +44,13 @@ Work through the outline block by block, in the sections your competency questio
 
 ### 2. Draft: one claim per quote, no stronger than the quote
 
-| The quote describes...          | Command                                                                                                                 |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| a kind of thing                 | `okb class add ...`, then `okb quote add ... --cites <Class>`                                                           |
-| a property, option or prop      | `okb property add ...` with facets; options become `--values`                                                           |
-| a link between things           | `okb relationship add <name> --from <Class> --to <Class>`                                                               |
-| a styling-only variant          | use the [class-or-value decision guide](DECISIONS.md#decisionclass-or-value). Usually an enumerated value, not a class. |
-| a requirement or recommendation | `okb rule add --statement "..." --modality SHOULD --governs <Class> --cites <quote id>`                                 |
+| The quote describes...          | Command                                                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| a kind of thing                 | `okb class add ...`, then `okb quote add ... --cites <Class>`                                                            |
+| a property, option or prop      | `okb property add ...` with facets; options become `--values`                                                            |
+| a link between things           | `okb relationship add <name> --from <Class> --to <Class>`                                                                |
+| a styling-only variant          | use the [class-or-value decision guide](DECISIONS.md#decision-class-or-value). Usually an enumerated value, not a class. |
+| a requirement or recommendation | `okb rule add --statement "..." --modality SHOULD --governs <Class> --cites <quote id>`                                  |
 
 Rules for the draft:
 

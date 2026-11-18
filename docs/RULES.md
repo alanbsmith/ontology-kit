@@ -15,64 +15,65 @@ What `okb validate` checks, and what the ontology-review skill asks about. Each 
 
 | Rule | Modality | Severity | Check | Basis | From step |
 |---|---|---|---|---|---|
-| [`hier-is-a-means-kind-of`](#hier-is-a-means-kind-of) | MUST | error | judgment | direct | 4 |
-| [`hier-no-cycles`](#hier-no-cycles) | SHOULD NOT | error | mechanical | direct | 4 |
-| [`hier-no-singular-plural-pair`](#hier-no-singular-plural-pair) | MUST NOT | error | heuristic | direct | 4 |
-| [`hier-no-synonym-classes`](#hier-no-synonym-classes) | MUST NOT | error | heuristic | direct | 4 |
-| [`hier-siblings-same-generality`](#hier-siblings-same-generality) | MUST | error | judgment | direct | 4 |
-| [`hier-no-redundant-isa`](#hier-no-redundant-isa) | SHOULD NOT | warning | mechanical | interpretive | 4 |
-| [`hier-single-child`](#hier-single-child) | MAY | info | mechanical | direct | 4 |
-| [`hier-too-many-children`](#hier-too-many-children) | MAY | info | mechanical | direct | 4 |
-| [`hier-subclass-adds-something`](#hier-subclass-adds-something) | SHOULD | warning | heuristic | direct | 6 |
-| [`hier-no-subclass-per-restriction`](#hier-no-subclass-per-restriction) | SHOULD NOT | warning | judgment | direct | 4 |
-| [`hier-class-or-value`](#hier-class-or-value) | SHOULD | warning | judgment | direct | 4 |
-| [`hier-stable-membership`](#hier-stable-membership) | SHOULD | warning | judgment | direct | 4 |
-| [`inst-are-leaves`](#inst-are-leaves) | MUST NOT | error | mechanical | interpretive | 4 |
-| [`inst-natural-hierarchy-as-classes`](#inst-natural-hierarchy-as-classes) | SHOULD | warning | judgment | direct | 4 |
-| [`inst-granularity`](#inst-granularity) | SHOULD | warning | judgment | interpretive | 7 |
-| [`inst-not-of-abstract`](#inst-not-of-abstract) | MUST NOT | error | mechanical | direct | 7 |
-| [`slot-attach-most-general`](#slot-attach-most-general) | SHOULD | warning | mechanical | direct | 5 |
-| [`slot-domain-fits-all`](#slot-domain-fits-all) | MUST | error | judgment | direct | 5 |
-| [`slot-range-remove-subclass`](#slot-range-remove-subclass) | SHOULD | warning | mechanical | direct | 6 |
-| [`slot-range-collapse-subclasses`](#slot-range-collapse-subclasses) | SHOULD | warning | mechanical | direct | 6 |
-| [`slot-range-all-but-few`](#slot-range-all-but-few) | MAY | info | heuristic | direct | 6 |
-| [`slot-range-not-too-general`](#slot-range-not-too-general) | SHOULD NOT | warning | heuristic | direct | 6 |
-| [`slot-value-type-declared`](#slot-value-type-declared) | MUST | error | mechanical | operational | 5 |
-| [`slot-instance-needs-range`](#slot-instance-needs-range) | MUST | error | mechanical | direct | 6 |
-| [`slot-enum-needs-values`](#slot-enum-needs-values) | MUST | error | mechanical | interpretive | 6 |
-| [`slot-cardinality-declared`](#slot-cardinality-declared) | SHOULD | warning | mechanical | operational | 6 |
-| [`slot-cardinality-coherent`](#slot-cardinality-coherent) | MUST | error | mechanical | interpretive | 6 |
-| [`slot-values-respect-facets`](#slot-values-respect-facets) | MUST | error | mechanical | interpretive | 7 |
-| [`slot-value-slot-applies`](#slot-value-slot-applies) | MUST | error | mechanical | interpretive | 7 |
-| [`slot-default-allowed`](#slot-default-allowed) | MUST | error | mechanical | interpretive | 6 |
-| [`slot-fixed-not-overridden`](#slot-fixed-not-overridden) | MUST NOT | error | mechanical | direct | 6 |
-| [`slot-inverse-consistent`](#slot-inverse-consistent) | SHOULD | warning | heuristic | interpretive | 6 |
-| [`slot-edge-properties`](#slot-edge-properties) | MUST | error | mechanical | operational | 6 |
-| [`disjoint-no-shared-members`](#disjoint-no-shared-members) | MUST NOT | error | mechanical | direct | 4 |
-| [`disjoint-consider-siblings`](#disjoint-consider-siblings) | MAY | info | mechanical | direct | 4 |
-| [`naming-convention-defined`](#naming-convention-defined) | MUST | error | mechanical | direct | 4 |
-| [`naming-follow-convention`](#naming-follow-convention) | MUST | error | mechanical | direct | 4 |
-| [`naming-singular-plural-consistent`](#naming-singular-plural-consistent) | SHOULD | warning | heuristic | direct | 4 |
-| [`naming-no-type-words`](#naming-no-type-words) | SHOULD NOT | warning | mechanical | direct | 4 |
-| [`naming-no-abbreviations`](#naming-no-abbreviations) | SHOULD NOT | info | heuristic | direct | 4 |
-| [`naming-subclass-names-consistent`](#naming-subclass-names-consistent) | SHOULD | warning | mechanical | direct | 4 |
-| [`naming-unique`](#naming-unique) | MUST | error | mechanical | operational | 3 |
-| [`scope-defined`](#scope-defined) | SHOULD | warning | mechanical | direct | 1 |
-| [`scope-competency-questions`](#scope-competency-questions) | SHOULD | warning | mechanical | operational | 1 |
-| [`scope-cq-coverage`](#scope-cq-coverage) | SHOULD | warning | mechanical | interpretive | 8 |
-| [`scope-no-unneeded`](#scope-no-unneeded) | SHOULD NOT | info | heuristic | direct | 8 |
-| [`scope-cq-families`](#scope-cq-families) | SHOULD | warning | judgment | interpretive | 8 |
-| [`doc-descriptions`](#doc-descriptions) | SHOULD | warning | mechanical | interpretive | 4 |
-| [`doc-record-decisions`](#doc-record-decisions) | SHOULD | warning | judgment | interpretive | 4 |
-| [`reuse-considered`](#reuse-considered) | SHOULD | warning | judgment | direct | 3 |
-| [`terms-dispositioned`](#terms-dispositioned) | SHOULD | warning | mechanical | operational | 6 |
-| [`reuse-recorded`](#reuse-recorded) | SHOULD | warning | mechanical | operational | 3 |
-| [`struct-well-formed`](#struct-well-formed) | MUST | error | mechanical | operational | 1 |
-| [`prov-verified`](#prov-verified) | MUST | error | mechanical | operational | 1 |
-| [`prov-cites-quote`](#prov-cites-quote) | MUST | error | mechanical | operational | 1 |
-| [`prov-quote-current`](#prov-quote-current) | MUST | error | mechanical | operational | 1 |
-| [`prov-duplicate-quotes`](#prov-duplicate-quotes) | MAY | info | mechanical | operational | 1 |
+| [`hier-is-a-means-kind-of`](#rule-hier-is-a-means-kind-of) | MUST | error | judgment | direct | 4 |
+| [`hier-no-cycles`](#rule-hier-no-cycles) | SHOULD NOT | error | mechanical | direct | 4 |
+| [`hier-no-singular-plural-pair`](#rule-hier-no-singular-plural-pair) | MUST NOT | error | heuristic | direct | 4 |
+| [`hier-no-synonym-classes`](#rule-hier-no-synonym-classes) | MUST NOT | error | heuristic | direct | 4 |
+| [`hier-siblings-same-generality`](#rule-hier-siblings-same-generality) | MUST | error | judgment | direct | 4 |
+| [`hier-no-redundant-isa`](#rule-hier-no-redundant-isa) | SHOULD NOT | warning | mechanical | interpretive | 4 |
+| [`hier-single-child`](#rule-hier-single-child) | MAY | info | mechanical | direct | 4 |
+| [`hier-too-many-children`](#rule-hier-too-many-children) | MAY | info | mechanical | direct | 4 |
+| [`hier-subclass-adds-something`](#rule-hier-subclass-adds-something) | SHOULD | warning | heuristic | direct | 6 |
+| [`hier-no-subclass-per-restriction`](#rule-hier-no-subclass-per-restriction) | SHOULD NOT | warning | judgment | direct | 4 |
+| [`hier-class-or-value`](#rule-hier-class-or-value) | SHOULD | warning | judgment | direct | 4 |
+| [`hier-stable-membership`](#rule-hier-stable-membership) | SHOULD | warning | judgment | direct | 4 |
+| [`inst-are-leaves`](#rule-inst-are-leaves) | MUST NOT | error | mechanical | interpretive | 4 |
+| [`inst-natural-hierarchy-as-classes`](#rule-inst-natural-hierarchy-as-classes) | SHOULD | warning | judgment | direct | 4 |
+| [`inst-granularity`](#rule-inst-granularity) | SHOULD | warning | judgment | interpretive | 7 |
+| [`inst-not-of-abstract`](#rule-inst-not-of-abstract) | MUST NOT | error | mechanical | direct | 7 |
+| [`slot-attach-most-general`](#rule-slot-attach-most-general) | SHOULD | warning | mechanical | direct | 5 |
+| [`slot-domain-fits-all`](#rule-slot-domain-fits-all) | MUST | error | judgment | direct | 5 |
+| [`slot-range-remove-subclass`](#rule-slot-range-remove-subclass) | SHOULD | warning | mechanical | direct | 6 |
+| [`slot-range-collapse-subclasses`](#rule-slot-range-collapse-subclasses) | SHOULD | warning | mechanical | direct | 6 |
+| [`slot-range-all-but-few`](#rule-slot-range-all-but-few) | MAY | info | heuristic | direct | 6 |
+| [`slot-range-not-too-general`](#rule-slot-range-not-too-general) | SHOULD NOT | warning | heuristic | direct | 6 |
+| [`slot-value-type-declared`](#rule-slot-value-type-declared) | MUST | error | mechanical | operational | 5 |
+| [`slot-instance-needs-range`](#rule-slot-instance-needs-range) | MUST | error | mechanical | direct | 6 |
+| [`slot-enum-needs-values`](#rule-slot-enum-needs-values) | MUST | error | mechanical | interpretive | 6 |
+| [`slot-cardinality-declared`](#rule-slot-cardinality-declared) | SHOULD | warning | mechanical | operational | 6 |
+| [`slot-cardinality-coherent`](#rule-slot-cardinality-coherent) | MUST | error | mechanical | interpretive | 6 |
+| [`slot-values-respect-facets`](#rule-slot-values-respect-facets) | MUST | error | mechanical | interpretive | 7 |
+| [`slot-value-slot-applies`](#rule-slot-value-slot-applies) | MUST | error | mechanical | interpretive | 7 |
+| [`slot-default-allowed`](#rule-slot-default-allowed) | MUST | error | mechanical | interpretive | 6 |
+| [`slot-fixed-not-overridden`](#rule-slot-fixed-not-overridden) | MUST NOT | error | mechanical | direct | 6 |
+| [`slot-inverse-consistent`](#rule-slot-inverse-consistent) | SHOULD | warning | heuristic | interpretive | 6 |
+| [`slot-edge-properties`](#rule-slot-edge-properties) | MUST | error | mechanical | operational | 6 |
+| [`disjoint-no-shared-members`](#rule-disjoint-no-shared-members) | MUST NOT | error | mechanical | direct | 4 |
+| [`disjoint-consider-siblings`](#rule-disjoint-consider-siblings) | MAY | info | mechanical | direct | 4 |
+| [`naming-convention-defined`](#rule-naming-convention-defined) | MUST | error | mechanical | direct | 4 |
+| [`naming-follow-convention`](#rule-naming-follow-convention) | MUST | error | mechanical | direct | 4 |
+| [`naming-singular-plural-consistent`](#rule-naming-singular-plural-consistent) | SHOULD | warning | heuristic | direct | 4 |
+| [`naming-no-type-words`](#rule-naming-no-type-words) | SHOULD NOT | warning | mechanical | direct | 4 |
+| [`naming-no-abbreviations`](#rule-naming-no-abbreviations) | SHOULD NOT | info | heuristic | direct | 4 |
+| [`naming-subclass-names-consistent`](#rule-naming-subclass-names-consistent) | SHOULD | warning | mechanical | direct | 4 |
+| [`naming-unique`](#rule-naming-unique) | MUST | error | mechanical | operational | 3 |
+| [`scope-defined`](#rule-scope-defined) | SHOULD | warning | mechanical | direct | 1 |
+| [`scope-competency-questions`](#rule-scope-competency-questions) | SHOULD | warning | mechanical | operational | 1 |
+| [`scope-cq-coverage`](#rule-scope-cq-coverage) | SHOULD | warning | mechanical | interpretive | 8 |
+| [`scope-no-unneeded`](#rule-scope-no-unneeded) | SHOULD NOT | info | heuristic | direct | 8 |
+| [`scope-cq-families`](#rule-scope-cq-families) | SHOULD | warning | judgment | interpretive | 8 |
+| [`doc-descriptions`](#rule-doc-descriptions) | SHOULD | warning | mechanical | interpretive | 4 |
+| [`doc-record-decisions`](#rule-doc-record-decisions) | SHOULD | warning | judgment | interpretive | 4 |
+| [`reuse-considered`](#rule-reuse-considered) | SHOULD | warning | judgment | direct | 3 |
+| [`terms-dispositioned`](#rule-terms-dispositioned) | SHOULD | warning | mechanical | operational | 6 |
+| [`reuse-recorded`](#rule-reuse-recorded) | SHOULD | warning | mechanical | operational | 3 |
+| [`struct-well-formed`](#rule-struct-well-formed) | MUST | error | mechanical | operational | 1 |
+| [`prov-verified`](#rule-prov-verified) | MUST | error | mechanical | operational | 1 |
+| [`prov-cites-quote`](#rule-prov-cites-quote) | MUST | error | mechanical | operational | 1 |
+| [`prov-quote-current`](#rule-prov-quote-current) | MUST | error | mechanical | operational | 1 |
+| [`prov-duplicate-quotes`](#rule-prov-duplicate-quotes) | MAY | info | mechanical | operational | 1 |
 
+<a id="rule-hier-is-a-means-kind-of"></a>
 ## hier-is-a-means-kind-of
 
 **MUST** · error · judgment · basis: direct · from step 4
@@ -99,6 +100,7 @@ An IS_A link from B to A must mean that every instance of B is necessarily an in
 > “We organize the classes into a hierarchical taxonomy by asking if by being an instance of one class, the object will necessarily (i.e., by definition) be an instance of some other class.”  
 > — Ontology 101 §3 Step 4. Define the classes and the class hierarchy, p.8
 
+<a id="rule-hier-no-cycles"></a>
 ## hier-no-cycles
 
 **SHOULD NOT** · error · mechanical · basis: direct · from step 4
@@ -116,6 +118,7 @@ The class hierarchy should not contain cycles (A is a subclass of B and B is, di
 > “We should avoid cycles in the class hierarchy. We say that there is a cycle in a hierarchy when some class A has a subclass B and at the same time B is a superclass of A. Creating such a cycle in a hierarchy amounts to declaring that the classes A and B are equivalent”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="rule-hier-no-singular-plural-pair"></a>
 ## hier-no-singular-plural-pair
 
 **MUST NOT** · error · heuristic · basis: direct · from step 4
@@ -131,6 +134,7 @@ The hierarchy must not make the singular and plural versions of the same concept
 > “A common modeling mistake is to include both a singular and a plural version of the same concept in the hierarchy making the former a subclass of the latter. For example, it is wrong to define a class Wines and a class Wine as a subclass of Wines.”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.12
 
+<a id="rule-hier-no-synonym-classes"></a>
 ## hier-no-synonym-classes
 
 **MUST NOT** · error · heuristic · basis: direct · from step 4
@@ -154,6 +158,7 @@ Synonyms for the same concept must not be represented as different classes.
 > “Many systems allow associating a list of synonyms, translations, or presentation names with a class. If a system does not allow these associations, synonyms could always be listed in the class documentation.”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="rule-hier-siblings-same-generality"></a>
 ## hier-siblings-same-generality
 
 **MUST** · error · judgment · basis: direct · from step 4
@@ -174,6 +179,7 @@ All siblings in the hierarchy, except those at the root, must be at the same lev
 > “The concepts at the root of the hierarchy however (which are often represented as direct subclasses of some very general class, such as Thing) represent major divisions of the domain and do not have to be similar concepts.”  
 > — Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.14
 
+<a id="rule-hier-no-redundant-isa"></a>
 ## hier-no-redundant-isa
 
 **SHOULD NOT** · warning · mechanical · basis: interpretive · from step 4
@@ -195,6 +201,7 @@ A class should not have a direct IS_A edge to an ancestor it already reaches thr
 > “All the siblings in the hierarchy (except for the ones at the root) must be at the same level of generality. For example, White wine and Chardonnay should not be subclasses of the same class (say, Wine).”  
 > — Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.14
 
+<a id="rule-hier-single-child"></a>
 ## hier-single-child
 
 **MAY** · info · mechanical · basis: direct · from step 4
@@ -215,6 +222,7 @@ A class with only one direct subclass may indicate a modeling problem or an inco
 > “There are no hard rules for the number of direct subclasses that a class should have. However, many well-structured ontologies have between two and a dozen direct subclasses.”  
 > — Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.14
 
+<a id="rule-hier-too-many-children"></a>
 ## hier-too-many-children
 
 **MAY** · info · mechanical · basis: direct · from step 4
@@ -235,6 +243,7 @@ A class with more than a dozen direct subclasses may need additional intermediat
 > “However, if no natural classes exist to group concepts in the long list of siblings, there is no need to create artificial classes—just leave the classes the way they are.”  
 > — Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.15
 
+<a id="rule-hier-subclass-adds-something"></a>
 ## hier-subclass-adds-something
 
 **SHOULD** · warning · heuristic · basis: direct · from step 6
@@ -261,6 +270,7 @@ Each subclass should add something its superclass doesn't have: new slots, new s
 > “Another reason to introduce new classes without any new properties is to model concepts among which domain experts commonly make a distinction even though we may have decided not to model the distinction itself.”  
 > — Ontology 101 §4.4 When to introduce a new class (or not), p.16
 
+<a id="rule-hier-no-subclass-per-restriction"></a>
 ## hier-no-subclass-per-restriction
 
 **SHOULD NOT** · warning · judgment · basis: direct · from step 4
@@ -281,6 +291,7 @@ Do not create a subclass for each additional restriction; strike a balance betwe
 > “When defining a class hierarchy, our goal is to strike a balance between creating new classes useful for class organization and creating too many classes.”  
 > — Ontology 101 §4.4 When to introduce a new class (or not), p.17
 
+<a id="rule-hier-class-or-value"></a>
 ## hier-class-or-value
 
 **SHOULD** · warning · judgment · basis: direct · from step 4
@@ -304,6 +315,7 @@ Create a new class for a distinction if objects with different values are though
 > “Usually numbers, colors, locations are slot values and do not cause the creation of new classes.”  
 > — Ontology 101 §4.5 A new class or a property value?, p.17
 
+<a id="rule-hier-stable-membership"></a>
 ## hier-stable-membership
 
 **SHOULD** · warning · judgment · basis: direct · from step 4
@@ -321,6 +333,7 @@ The class an individual belongs to should not change often; avoid classes define
 > “A class to which an individual instance belongs should not change often. Usually when we use extrinsic rather than intrinsic properties of concepts to differentiate among classes, instances of those classes will have to migrate often from one class to another.”  
 > — Ontology 101 §4.5 A new class or a property value?, p.17
 
+<a id="rule-inst-are-leaves"></a>
 ## inst-are-leaves
 
 **MUST NOT** · error · mechanical · basis: interpretive · from step 4
@@ -339,6 +352,7 @@ Instances must not be arranged in a hierarchy: only classes can have subclasses 
 > “Only classes can be arranged in a hierarchy—knowledge-representation systems do not have a notion of sub-instance.”  
 > — Ontology 101 §4.6 An instance or a class?, p.19
 
+<a id="rule-inst-natural-hierarchy-as-classes"></a>
 ## inst-natural-hierarchy-as-classes
 
 **SHOULD** · warning · judgment · basis: direct · from step 4
@@ -362,6 +376,7 @@ If concepts form a natural hierarchy, represent them as classes, even if some ha
 > “Only classes can be arranged in a hierarchy—knowledge-representation systems do not have a notion of sub-instance.”  
 > — Ontology 101 §4.6 An instance or a class?, p.19
 
+<a id="rule-inst-granularity"></a>
 ## inst-granularity
 
 **SHOULD** · warning · judgment · basis: interpretive · from step 7
@@ -385,6 +400,7 @@ Choose the level at which classes end and instances begin from the application: 
 > “the most specific concepts that will constitute answers to those questions are very good candidates for individuals in the knowledge base.”  
 > — Ontology 101 §4.6 An instance or a class?, p.18
 
+<a id="rule-inst-not-of-abstract"></a>
 ## inst-not-of-abstract
 
 **MUST NOT** · error · mechanical · basis: direct · from step 7
@@ -400,6 +416,7 @@ An abstract class must not have direct instances.
 > “Protégé-2000 allows users to specify some classes as Abstract, signifying that the class cannot have any direct instances.”  
 > — Ontology 101 §4.6 An instance or a class?, p.18
 
+<a id="rule-slot-attach-most-general"></a>
 ## slot-attach-most-general
 
 **SHOULD** · warning · mechanical · basis: direct · from step 5
@@ -424,6 +441,7 @@ A slot should be attached at the most general class that can have the property. 
 > “If a list of classes defining a range or a domain of a slot contains all subclasses of a class A, but not the class A itself, the range should contain only the class A and not the subclasses.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
+<a id="rule-slot-domain-fits-all"></a>
 ## slot-domain-fits-all
 
 **MUST** · error · judgment · basis: direct · from step 5
@@ -444,6 +462,7 @@ Every class a slot is attached to must be able to have the property the slot rep
 > “do not define a domain and range that is overly general: all the classes in the domain of a slot should be described by the slot and instances of all the classes in the range of a slot should be potential fillers for the slot. Do not choose an overly general class for range (i.e., one would not want to make the range THING) but one would want to choose a class that will cover all fillers”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.10
 
+<a id="rule-slot-range-remove-subclass"></a>
 ## slot-range-remove-subclass
 
 **SHOULD** · warning · mechanical · basis: direct · from step 6
@@ -459,6 +478,7 @@ If a slot's range includes a class and its subclass, remove the subclass.
 > “If a list of classes defining a range or a domain of a slot includes a class and its subclass, remove the subclass.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
+<a id="rule-slot-range-collapse-subclasses"></a>
 ## slot-range-collapse-subclasses
 
 **SHOULD** · warning · mechanical · basis: direct · from step 6
@@ -474,6 +494,7 @@ If a slot's range lists all subclasses of a class A but not A itself, the range 
 > “If a list of classes defining a range or a domain of a slot contains all subclasses of a class A, but not the class A itself, the range should contain only the class A and not the subclasses.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
+<a id="rule-slot-range-all-but-few"></a>
 ## slot-range-all-but-few
 
 **MAY** · info · heuristic · basis: direct · from step 6
@@ -489,6 +510,7 @@ If a slot's range lists all but a few subclasses of a class A, consider whether 
 > “If a list of classes defining a range or a domain of a slot contains all but a few subclasses of a class A, consider if the class A would make a more appropriate range definition.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
+<a id="rule-slot-range-not-too-general"></a>
 ## slot-range-not-too-general
 
 **SHOULD NOT** · warning · heuristic · basis: direct · from step 6
@@ -507,6 +529,7 @@ A slot's range should not be overly general (such as Thing): instances of every 
 > “When defining a domain or a range for a slot, find the most general classes or class that can be respectively the domain or the range for the slots.”  
 > — Ontology 101 §3 Step 6, Domain and range of a slot, p.10
 
+<a id="rule-slot-value-type-declared"></a>
 ## slot-value-type-declared
 
 **MUST** · error · mechanical · basis: operational · from step 5
@@ -522,6 +545,7 @@ Every slot must declare a value type (String, Integer, Float, Number, Boolean, E
 > “A value-type facet describes what types of values can fill in the slot.”  
 > — Ontology 101 §3 Step 6, Slot-value type, p.9
 
+<a id="rule-slot-instance-needs-range"></a>
 ## slot-instance-needs-range
 
 **MUST** · error · mechanical · basis: direct · from step 6
@@ -537,6 +561,7 @@ Slots with value type Instance must define a list of allowed classes (a range).
 > “Instance-type slots allow definition of relationships between individuals. Slots with value type Instance must also define a list of allowed classes from which the instances can come.”  
 > — Ontology 101 §3 Step 6, Slot-value type, p.10
 
+<a id="rule-slot-enum-needs-values"></a>
 ## slot-enum-needs-values
 
 **MUST** · error · mechanical · basis: interpretive · from step 6
@@ -552,6 +577,7 @@ Enumerated slots must list their allowed values.
 > “Enumerated slots specify a list of specific allowed values for the slot.”  
 > — Ontology 101 §3 Step 6, Slot-value type, p.9
 
+<a id="rule-slot-cardinality-declared"></a>
 ## slot-cardinality-declared
 
 **SHOULD** · warning · mechanical · basis: operational · from step 6
@@ -570,6 +596,7 @@ Every slot should declare its cardinality (single or multiple).
 > “Slot cardinality defines how many values a slot can have. Some systems distinguish only between single cardinality (allowing at most one value) and multiple cardinality (allowing any number of values).”  
 > — Ontology 101 §3 Step 6, Slot cardinality, p.9
 
+<a id="rule-slot-cardinality-coherent"></a>
 ## slot-cardinality-coherent
 
 **MUST** · error · mechanical · basis: interpretive · from step 6
@@ -591,6 +618,7 @@ Cardinality facets must be coherent: minimum ≤ maximum, neither negative, and 
 > “Maximum cardinality of M means that a slot can have at most M values.”  
 > — Ontology 101 §3 Step 6, Slot cardinality, p.9
 
+<a id="rule-slot-values-respect-facets"></a>
 ## slot-values-respect-facets
 
 **MUST** · error · mechanical · basis: interpretive · from step 7
@@ -621,6 +649,7 @@ Every slot value must satisfy the slot's facets: its value type, allowed values,
 > “In practical terms, each subclass should either have new slots added to it, or have new slot values defined, or override some facets for the inherited slots.”  
 > — Ontology 101 §4.4 When to introduce a new class (or not), p.16
 
+<a id="rule-slot-value-slot-applies"></a>
 ## slot-value-slot-applies
 
 **MUST** · error · mechanical · basis: interpretive · from step 7
@@ -642,6 +671,7 @@ An instance (or class) may only have values for slots attached to its class or i
 > “All subclasses of a class inherit the slot of that class.”  
 > — Ontology 101 §3 Step 5. Define the properties of classes—slots, p.9
 
+<a id="rule-slot-default-allowed"></a>
 ## slot-default-allowed
 
 **MUST** · error · mechanical · basis: interpretive · from step 6
@@ -660,6 +690,7 @@ A default value must be a value the slot's facets allow.
 > “We can then change the value to any other value that the facets will allow. That is, default values are there for convenience: they do not enforce any new restrictions on the model or change the model in any way.”  
 > — Ontology 101 §5.2 Default values, p.21
 
+<a id="rule-slot-fixed-not-overridden"></a>
 ## slot-fixed-not-overridden
 
 **MUST NOT** · error · mechanical · basis: direct · from step 6
@@ -675,6 +706,7 @@ A fixed slot value set on a class must not be changed by any of its subclasses o
 > “Slot values cannot be changed. For example, we can say that the slot sugar has value SWEET for the Dessert wine class. Then all the subclasses and instances of the Dessert wine class will have the SWEET value for the slot sugar. This value cannot be changed in any of the subclasses or instances of the class.”  
 > — Ontology 101 §5.2 Default values, p.21
 
+<a id="rule-slot-inverse-consistent"></a>
 ## slot-inverse-consistent
 
 **SHOULD** · warning · heuristic · basis: interpretive · from step 6
@@ -696,6 +728,7 @@ Inverse slots should mirror each other: the range of one should match the domain
 > “The slot produces for the class Winery is an inverse of the slot maker for the class Wine.”  
 > — Ontology 101 §5.1 Inverse slots, Figure 9, p.21
 
+<a id="rule-slot-edge-properties"></a>
 ## slot-edge-properties
 
 **MUST** · error · mechanical · basis: operational · from step 6
@@ -708,6 +741,7 @@ Properties on relationship edges must be declared on the relationship and must m
 
 *Fix:* `okb relationship property <rel> <name> --type ...` to declare; `okb link <from> <rel> <to> name=value` to set.
 
+<a id="rule-disjoint-no-shared-members"></a>
 ## disjoint-no-shared-members
 
 **MUST NOT** · error · mechanical · basis: direct · from step 4
@@ -726,6 +760,7 @@ No class or instance may fall under two classes declared disjoint, and a class m
 > “Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error.”  
 > — Ontology 101 §4.8 Disjoint subclasses, p.20
 
+<a id="rule-disjoint-consider-siblings"></a>
 ## disjoint-consider-siblings
 
 **MAY** · info · mechanical · basis: direct · from step 4
@@ -741,6 +776,7 @@ Consider declaring sibling classes disjoint when nothing can belong to more than
 > “Specifying that classes are disjoint enables the system to validate the ontology better. If we declare the Red wine and the White wine classes to be disjoint and later create a class that is a subclass of both Riesling (a subclass of White wine) and Port (a subclass of Red wine), a system can indicate that there is a modeling error.”  
 > — Ontology 101 §4.8 Disjoint subclasses, p.20
 
+<a id="rule-naming-convention-defined"></a>
 ## naming-convention-defined
 
 **MUST** · error · mechanical · basis: direct · from step 4
@@ -759,6 +795,7 @@ Define a naming convention for classes and slots (capitalization, delimiters, si
 > “Defining naming conventions for concepts in an ontology and then strictly adhering to these conventions not only makes the ontology easier to understand but also helps avoid some common modeling mistakes.”  
 > — Ontology 101 §6 What's in a name?, p.21
 
+<a id="rule-naming-follow-convention"></a>
 ## naming-follow-convention
 
 **MUST** · error · mechanical · basis: direct · from step 4
@@ -774,6 +811,7 @@ Class and slot names must follow the declared naming convention.
 > “However, we need to Define a naming convention for classes and slots and adhere to it.”  
 > — Ontology 101 §6 What's in a name?, p.21
 
+<a id="rule-naming-singular-plural-consistent"></a>
 ## naming-singular-plural-consistent
 
 **SHOULD** · warning · heuristic · basis: direct · from step 4
@@ -792,6 +830,7 @@ Class names should consistently be singular or consistently plural, as declared 
 > “The best way to avoid such an error is always to use either singular or plural in naming classes”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.12
 
+<a id="rule-naming-no-type-words"></a>
 ## naming-no-type-words
 
 **SHOULD NOT** · warning · mechanical · basis: direct · from step 4
@@ -810,6 +849,7 @@ Do not add strings such as 'class', 'property' or 'slot' to concept names.
 > “Here are a few more things to consider when defining naming conventions:”  
 > — Ontology 101 §6.4 Other naming considerations, p.23
 
+<a id="rule-naming-no-abbreviations"></a>
 ## naming-no-abbreviations
 
 **SHOULD NOT** · info · heuristic · basis: direct · from step 4
@@ -827,6 +867,7 @@ Avoid abbreviations in concept names.
 > “It is usually a good idea to avoid abbreviations in concept names (that is, use Cabernet Sauvignon rather than Cab)”  
 > — Ontology 101 §6.4 Other naming considerations, p.23
 
+<a id="rule-naming-subclass-names-consistent"></a>
 ## naming-subclass-names-consistent
 
 **SHOULD** · warning · mechanical · basis: direct · from step 4
@@ -842,6 +883,7 @@ Names of direct subclasses of a class should either all include or all omit the 
 > “Names of direct subclasses of a class should either all include or not include the name of the superclass.”  
 > — Ontology 101 §6.4 Other naming considerations, p.23
 
+<a id="rule-naming-unique"></a>
 ## naming-unique
 
 **MUST** · error · mechanical · basis: operational · from step 3
@@ -860,6 +902,7 @@ Names must be unique among classes, among slots and among instances (ignoring ca
 > “It is however, important to consider other systems with which your system may interact.”  
 > — Ontology 101 §6.1 Capitalization and delimiters, p.22
 
+<a id="rule-scope-defined"></a>
 ## scope-defined
 
 **SHOULD** · warning · mechanical · basis: direct · from step 1
@@ -878,6 +921,7 @@ Start by defining the domain and scope: the domain covered, what the ontology is
 > “The answers to these questions may change during the ontology-design process, but at any given time they help limit the scope of the model.”  
 > — Ontology 101 §3 Step 1. Determine the domain and scope, p.5
 
+<a id="rule-scope-competency-questions"></a>
 ## scope-competency-questions
 
 **SHOULD** · warning · mechanical · basis: operational · from step 1
@@ -899,6 +943,7 @@ An ontology should have competency questions (the toolkit suggests at least thre
 > “These competency questions are just a sketch and do not need to be exhaustive.”  
 > — Ontology 101 §3 Step 1, Competency questions, p.5
 
+<a id="rule-scope-cq-coverage"></a>
 ## scope-cq-coverage
 
 **SHOULD** · warning · mechanical · basis: interpretive · from step 8
@@ -917,6 +962,7 @@ Each competency question should be linked to the classes and slots needed to ans
 > “The classes alone will not provide enough information to answer the competency questions from Step 1.”  
 > — Ontology 101 §3 Step 5. Define the properties of classes—slots, p.8
 
+<a id="rule-scope-no-unneeded"></a>
 ## scope-no-unneeded
 
 **SHOULD NOT** · info · heuristic · basis: direct · from step 8
@@ -939,6 +985,7 @@ The ontology should not contain all possible information, properties and distinc
 > “The ontology should not contain all the possible properties of and distinctions among classes in the hierarchy.”  
 > — Ontology 101 §4.7 Limiting the scope, p.19
 
+<a id="rule-scope-cq-families"></a>
 ## scope-cq-families
 
 **SHOULD** · warning · judgment · basis: interpretive · from step 8
@@ -959,6 +1006,7 @@ Treat each competency question as one example of a type of question: once it's a
 > “These questions will serve as the litmus test later: Does the ontology contain enough information to answer these types of questions?”  
 > — Ontology 101 §3 Step 1, Competency questions, p.5
 
+<a id="rule-doc-descriptions"></a>
 ## doc-descriptions
 
 **SHOULD** · warning · mechanical · basis: interpretive · from step 4
@@ -977,6 +1025,7 @@ Every class and slot should have a human-readable description of what it denotes
 > “Many systems allow associating a list of synonyms, translations, or presentation names with a class. If a system does not allow these associations, synonyms could always be listed in the class documentation.”  
 > — Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.13
 
+<a id="rule-doc-record-decisions"></a>
 ## doc-record-decisions
 
 **SHOULD** · warning · judgment · basis: interpretive · from step 4
@@ -994,6 +1043,7 @@ Record design decisions in the documentation, above all deliberate omissions mad
 > “However, we should record such design decision in the documentation for the benefit of the users who will be looking at this ontology and who may not be aware of the application we had in mind.”  
 > — Ontology 101 §4.7 Limiting the scope, p.20
 
+<a id="rule-reuse-considered"></a>
 ## reuse-considered
 
 **SHOULD** · warning · judgment · basis: direct · from step 3
@@ -1014,6 +1064,7 @@ Consider reusing existing ontologies or vocabularies before building from scratc
 > “Reusing existing ontologies may be a requirement if our system needs to interact with other applications that have already committed to particular ontologies or controlled vocabularies.”  
 > — Ontology 101 §3 Step 2. Consider reusing existing ontologies, p.5-6
 
+<a id="rule-terms-dispositioned"></a>
 ## terms-dispositioned
 
 **SHOULD** · warning · mechanical · basis: operational · from step 6
@@ -1032,6 +1083,7 @@ Every term brainstormed in Step 3 should end up as a class, slot, instance, slot
 > “Most of the remaining terms are likely to be properties of these classes.”  
 > — Ontology 101 §3 Step 5. Define the properties of classes—slots, p.8
 
+<a id="rule-reuse-recorded"></a>
 ## reuse-recorded
 
 **SHOULD** · warning · mechanical · basis: operational · from step 3
@@ -1044,6 +1096,7 @@ Record the outcome of Step 2: each existing ontology considered, or that none wa
 
 *Fix:* `okb reuse add ...` for each candidate, or `okb reuse none --why ...`.
 
+<a id="rule-struct-well-formed"></a>
 ## struct-well-formed
 
 **MUST** · error · mechanical · basis: operational · from step 1
@@ -1056,6 +1109,7 @@ Files must be well-formed: unique node ids, known node and edge types, edges poi
 
 *Fix:* Fix the node/edge named in the finding (or undo the hand edit).
 
+<a id="rule-prov-verified"></a>
 ## prov-verified
 
 **MUST** · error · mechanical · basis: operational · from step 1
@@ -1068,6 +1122,7 @@ A node extracted from a document must be verified against its quote, and anythin
 
 *Fix:* Edit the statement to match the quote, then set verification.status to SUPPORTED with a note, or delete the node.
 
+<a id="rule-prov-cites-quote"></a>
 ## prov-cites-quote
 
 **MUST** · error · mechanical · basis: operational · from step 1
@@ -1080,6 +1135,7 @@ Every domain Rule, and every node marked as extracted, must CITE at least one So
 
 *Fix:* Add the SourceLocation and CITES edge, or delete the unsupported node.
 
+<a id="rule-prov-quote-current"></a>
 ## prov-quote-current
 
 **MUST** · error · mechanical · basis: operational · from step 1
@@ -1092,6 +1148,7 @@ Each SourceLocation quote must still appear verbatim in its source document (che
 
 *Fix:* Re-extract from the current document, or update localPath to the version you cited.
 
+<a id="rule-prov-duplicate-quotes"></a>
 ## prov-duplicate-quotes
 
 **MAY** · info · mechanical · basis: operational · from step 1
