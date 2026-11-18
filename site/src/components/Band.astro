@@ -1,0 +1,92 @@
+---
+// The header band on every docs page: edge to edge, with generated graph art (nodes and edges,
+// see ../lib/graph-art.ts) as a faint backdrop behind the slotted title. Adapted from the blog's
+// Band (~/Projects/writing/src/components/Band.astro). Seed it with the page's route.
+import { graphArt } from '../lib/graph-art.ts';
+
+interface Props {
+	seed: string;
+}
+const wide = graphArt(Astro.props.seed);
+const narrow = graphArt(Astro.props.seed, { width: 800 });
+---
+
+<header class="band">
+	{
+		/* Two drawings of the same graph family: a wide one, and a narrow one for phones, so the art
+		   is whole at every width instead of a cropped slice of the wide one. */
+		[
+			{ size: 'wide', art: wide },
+			{ size: 'narrow', art: narrow },
+		].map(({ size, art }) => (
+			<svg
+				class={`art fade-in ${size}`}
+				viewBox={`0 0 ${art.width} ${art.height}`}
+				preserveAspectRatio="xMidYMid slice"
+				aria-hidden="true"
+				focusable="false"
+			>
+				<g fill="none" stroke-width={art.strokeWidth} stroke-linecap="round">
+					{art.edges.map((e) => <path d={e.d} stroke={`var(--color-art-${e.art})`} />)}
+				</g>
+				<g stroke-width={art.strokeWidth * 1.6}>
+					{art.nodes.map((node) =>
+						node.kind === 'class' ? (
+							<circle cx={node.cx} cy={node.cy} r={node.r} fill="var(--color-surface-raised)" stroke={`var(--color-art-${node.art})`} />
+						) : (
+							<circle cx={node.cx} cy={node.cy} r={node.r} fill={`var(--color-art-${node.art})`} stroke="none" />
+						),
+					)}
+				</g>
+			</svg>
+		))
+	}
+	<div class="band-text">
+		<slot />
+	</div>
+</header>
+
+<style>
+	/* Edge to edge, not a card: set apart by tone and a hairline, like the footer. It starts at the
+	   very top of the page, and the floating nav sits over it, so the text clears the nav. */
+	.band {
+		position: relative;
+		overflow: hidden;
+		background: var(--color-surface-raised);
+		border-bottom: var(--border-width) solid var(--color-border);
+	}
+
+	/* A quiet backdrop behind the title, not a column beside it. */
+	.art {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		max-width: none;
+		opacity: var(--art-wash);
+		pointer-events: none;
+	}
+
+	.art.narrow {
+		display: none;
+	}
+
+	@media (max-width: 47.99rem) {
+		.art.wide {
+			display: none;
+		}
+
+		.art.narrow {
+			display: block;
+		}
+	}
+
+	/* The title shares its left edge with the article text, as in the blog. */
+	.band-text {
+		position: relative;
+		max-width: calc(var(--measure) + 2 * var(--space-gutter));
+		margin-inline: auto;
+		padding: calc(var(--page-top) + var(--space-md)) var(--space-gutter) var(--space-xl);
+	}
+</style>

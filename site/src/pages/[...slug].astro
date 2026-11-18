@@ -3,6 +3,7 @@
 // nav.ts. The Mermaid script is the blog's (~/Projects/writing/src/components/ArticlePage.astro).
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Band from '../components/Band.astro';
 import Outline from '../components/Outline.astro';
 import { PAGES, type Page } from '../nav.ts';
 
@@ -25,10 +26,13 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 ---
 
 <Base title={title} outline={headings}>
+	<Band seed={page.route}>
+		<!-- Pagefind reads the page title from this h1, so it is indexed with the article. -->
+		<div data-pagefind-body><h1>{title}</h1></div>
+	</Band>
 	<div class="docs">
 		<main id="main">
 			<article data-pagefind-body>
-				<h1>{title}</h1>
 				<div class="prose">
 					<Content />
 				</div>
@@ -160,9 +164,14 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 		}
 	}
 
+	/* The band above carries the page's top clearance, so the text starts closer to it. */
+	main {
+		padding-block-start: var(--space-xl);
+	}
+
 	h1 {
 		font-size: var(--text-title);
-		margin-block: 0 var(--space-lg);
+		margin-block: 0;
 	}
 
 	.source {

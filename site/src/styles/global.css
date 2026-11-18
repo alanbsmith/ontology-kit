@@ -224,6 +224,8 @@ h4 {
 	font-size: var(--text-small);
 	border: var(--border-width) solid var(--color-border);
 	border-radius: var(--radius-md);
+	/* White on the light page tone; dark keeps the page color. */
+	background: light-dark(oklch(1 0 0), transparent);
 }
 
 .prose :is(th, td) {

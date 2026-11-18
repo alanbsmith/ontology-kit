@@ -100,7 +100,7 @@
 
 	/* Generated post art (see src/lib/truchet.ts). The tile sits on the page tone. */
 	--color-art-bg: var(--color-surface);
-	--art-wash: 0.2; /* opacity of the art behind an article title */
+	--art-wash: 0.4; /* opacity of the art behind an article title */
 	--color-art-1: light-dark(var(--day-art-1), var(--night-art-1));
 	--color-art-2: light-dark(var(--day-art-2), var(--night-art-2));
 	--color-art-3: light-dark(var(--day-art-3), var(--night-art-3));
