@@ -107,8 +107,8 @@ describe("REFINES and FULFILLS", () => {
     prov.addRule(ont, { statement: "Menus move focus with arrow keys.", modality: "MUST", cites: [l2], name: "narrow", refines: ["rule.broad"], adds: "arrow keys" });
     for (const r of ont.ofType("Rule")) prov.verify(ont, r.id, { status: "SUPPORTED" });
     ops.addInstance(ont, "Menu arrows", { of: ["Behavior"], assignments: ["condition=open"] });
-    prov.fulfil(ont, "Menu arrows", "rule.narrow");
-    prov.fulfil(ont, "Menu arrows", "rule.broad");
+    prov.fulfill(ont, "Menu arrows", "rule.narrow");
+    prov.fulfill(ont, "Menu arrows", "rule.broad");
     return ctx;
   }
 
@@ -144,7 +144,7 @@ describe("REFINES and FULFILLS", () => {
     assert.throws(() => prov.refine(ont, "rule.broad", "rule.narrow"), /cycle/);
     prov.refine(ont, "rule.narrow", "rule.broad", { remove: true });
     assert.equal(ont.edgesOf("REFINES").length, 0);
-    prov.fulfil(ont, "Menu arrows", "rule.broad", { remove: true });
+    prov.fulfill(ont, "Menu arrows", "rule.broad", { remove: true });
     assert.equal(ont.edgesOf("FULFILLS").length, 1);
   });
 

@@ -1488,7 +1488,7 @@
       "rule condition"
     ],
     "definition": "Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and attached to a class named Rule; they are validated like instance slot values (allowed values, cardinality).",
-    "plainLanguage": "A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfils it can be compared on the same terms.",
+    "plainLanguage": "A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfills it can be compared on the same terms.",
     "example": "Rule 'Menus close on Escape' with condition = open and inputModality = keyboard.",
     "inThisToolkit": "`okb class add Rule --abstract`, `okb slot add condition --on Rule --type Enumerated --values open,disabled`, then `okb rule add ... --value condition=open`. Checked by slot-values-respect-facets; exported as properties of the OkbRule node.",
     "origin": "operational"
@@ -1516,8 +1516,8 @@
       "meets",
       "satisfies"
     ],
-    "definition": "An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfil one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.",
-    "plainLanguage": "A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfil yet?'.",
+    "definition": "An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfill one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.",
+    "plainLanguage": "A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfill yet?'.",
     "example": "(Button activates on Enter and Space)-[:FULFILLS]->(Interactive components support keyboard navigation)",
     "inThisToolkit": "`okb fulfills <instance> <rule>`.",
     "origin": "operational"
@@ -3517,6 +3517,6 @@
     ],
     "props": [],
     "optionalProps": [],
-    "description": "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfil one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."
+    "description": "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfill one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."
   }
 ]

@@ -663,7 +663,7 @@ async function main(argvIn: string[]) {
     case "fulfills": {
       const { v, p } = parse(rest, { remove: bool });
       if (p.length !== 2) throw new OkbError("Usage: okb fulfills <instance> <rule> [--remove]");
-      return mutate(v, (ont) => prov.fulfil(ont, p[0], p[1], { remove: v.remove }));
+      return mutate(v, (ont) => prov.fulfill(ont, p[0], p[1], { remove: v.remove }));
     }
 
     case "verify": {

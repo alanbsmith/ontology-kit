@@ -212,7 +212,7 @@ function exportRules(ont: Ontology, o: { schema: boolean; unverified: boolean },
       }
     }
   }
-  // Links between exported rules, and from the descriptive facts that fulfil them.
+  // Links between exported rules, and from the descriptive facts that fulfill them.
   for (const e of ont.edgesOf("REFINES")) if (ruleIds.has(e.from) && ruleIds.has(e.to)) rels.push({ type: "REFINES", from: e.from, to: e.to, properties: compact({ adds: e.adds }) });
   for (const e of ont.edgesOf("FULFILLS")) if (ruleIds.has(e.to)) rels.push({ type: "FULFILLS", from: e.from, to: e.to, properties: {} });
   if (held) notes.push(`${held} rule(s) haven't passed verification, so they're left out (okb validate lists them). --include-unverified exports them with their status.`);

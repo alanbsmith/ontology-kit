@@ -63,4 +63,4 @@ edgeTypes:
   - {name: REFINES, from: [Rule], to: [Rule], optionalProps: [adds], origin: operational, models: concept.rule-refines,
      description: "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."}
   - {name: FULFILLS, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
-     description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfil one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}
+     description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfill one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}

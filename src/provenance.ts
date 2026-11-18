@@ -242,16 +242,16 @@ export function refine(ont: Ontology, ruleRef: string, broaderRef: string, o: { 
   return notes;
 }
 
-/** `instance` FULFILLS `rule`: a descriptive fact that meets the rule. Many instances may fulfil one rule. */
-export function fulfil(ont: Ontology, instanceRef: string, ruleRef: string, o: { remove?: boolean } = {}): Notes {
+/** `instance` FULFILLS `rule`: a descriptive fact that meets the rule. Many instances may fulfill one rule. */
+export function fulfill(ont: Ontology, instanceRef: string, ruleRef: string, o: { remove?: boolean } = {}): Notes {
   const inst = ont.find(instanceRef, "Instance");
   const rule = ont.find(ruleRef, "Rule");
   if (o.remove) {
     const n = ont.removeEdges((e) => e.type === "FULFILLS" && e.from === inst.id && e.to === rule.id);
-    return [n ? `${inst.name} no longer fulfils ${rule.id}.` : `${inst.name} didn't fulfil ${rule.id}.`];
+    return [n ? `${inst.name} no longer fulfills ${rule.id}.` : `${inst.name} didn't fulfill ${rule.id}.`];
   }
   ont.addEdge(inst.id, "FULFILLS", rule.id);
-  return [`${inst.name} fulfils ${rule.id}.`];
+  return [`${inst.name} fulfills ${rule.id}.`];
 }
 
 export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; approve?: boolean }): Notes {

@@ -257,9 +257,9 @@ A fact about the whole class, not a starting suggestion. Every Dessert Wine is s
 
 *Also called:* FULFILLS, meets, satisfies
 
-A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfil yet?'.
+A rule says what's needed; a fact says what one implementation does. FULFILLS connects the two, so you can ask 'how does Button meet the keyboard rule?' or 'which rules does nothing fulfill yet?'.
 
-**Definition.** An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfil one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.
+**Definition.** An edge from a descriptive fact (an Instance, such as a Behavior) to the Rule it meets. Many facts may fulfill one rule, because there is often more than one way to meet it. Read backwards it is 'is fulfilled by', not 'requires'. Stored in one direction.
 
 **Example.** (Button activates on Enter and Space)-[:FULFILLS]->(Interactive components support keyboard navigation)
 
@@ -423,7 +423,7 @@ A shared, precise vocabulary for one subject: what kinds of things exist, how th
 
 *Also called:* rule qualifier, rule condition
 
-A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfils it can be compared on the same terms.
+A rule often holds only in some situations: 'while the component is open', 'for keyboard users'. Store that as values on the rule, using slots you define, so you can filter rules by situation. The same slots can sit on descriptive facts, so a rule and the fact that fulfills it can be compared on the same terms.
 
 **Definition.** Slot values stored on a Rule (`Rule.values{slotId: value}`) that say when or for whom it applies, such as the state of the governed node (condition) or the input device (inputModality). The slots are defined by the ontology and attached to a class named Rule; they are validated like instance slot values (allowed values, cardinality).
 
