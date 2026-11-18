@@ -20,6 +20,7 @@ const DEFAULT_DESCRIPTION = 'A beginner-friendly toolkit for building ontologies
 
 const { title, description = DEFAULT_DESCRIPTION, outline } = Astro.props;
 const pageTitle = title && title !== SITE_TITLE ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -29,6 +30,7 @@ const pageTitle = title && title !== SITE_TITLE ? `${title} | ${SITE_TITLE}` : S
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<Font cssVariable="--font-inter" preload={[{ weight: 400, style: "normal" }, { weight: 700, style: "normal" }]} />

@@ -15,6 +15,8 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
+	// The production domain, for canonical links. The site is served from the root: no base path.
+	site: 'https://ontology-kit.dev',
 	trailingSlash: 'ignore',
 	markdown: {
 		processor: unified({

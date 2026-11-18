@@ -128,7 +128,7 @@ tests/                  node:test suites
 
 ## Docs site
 
-The docs in this repo are also published as a website, with search, a side-panel menu, light and dark themes and reading settings. It's an [Astro](https://astro.build) site in `site/` that reads these markdown files in place, so there's nothing to copy or keep in sync. To build it, or to work on it with live reload:
+The docs in this repo are also published as a website at [ontology-kit.dev](https://ontology-kit.dev), with search, a side-panel menu, light and dark themes and reading settings. It's an [Astro](https://astro.build) site in `site/` that reads these markdown files in place, so there's nothing to copy or keep in sync. To build it, or to work on it with live reload:
 
 ```bash
 npm run site       # regenerate docs/, then build the site into site/dist (with the search index)
