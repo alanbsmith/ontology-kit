@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { PAGES, sidebar, type MetaNode } from "../site/src/nav.ts";
+import { PAGES, sequence, sidebar, type MetaNode } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const nodes: MetaNode[] = JSON.parse(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"));
@@ -14,11 +14,21 @@ test("site: every page's source file exists", () => {
   for (const p of PAGES) assert.ok(existsSync(join(ROOT, p.source)), `${p.route} → ${p.source} is missing`);
 });
 
-test("site: every docs/*.md file has a page", () => {
+// Markdown files under docs/ that deliberately have no page.
+const UNROUTED_DOCS: string[] = [];
+
+function markdownFiles(dir: string): string[] {
+  return readdirSync(join(ROOT, dir), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? markdownFiles(`${dir}/${e.name}`) : e.name.endsWith(".md") ? [`${dir}/${e.name}`] : [],
+  );
+}
+
+test("site: every docs/**/*.md file has a page", () => {
   const sources = new Set(PAGES.map((p) => p.source));
-  for (const f of readdirSync(join(ROOT, "docs")).filter((f) => f.endsWith(".md"))) {
-    assert.ok(sources.has(`docs/${f}`), `docs/${f} isn't in site/src/nav.ts`);
+  for (const f of markdownFiles("docs")) {
+    assert.ok(sources.has(f) || UNROUTED_DOCS.includes(f), `${f} isn't in site/src/nav.ts`);
   }
+  if (existsSync(join(ROOT, "CONTRIBUTING.md"))) assert.ok(sources.has("CONTRIBUTING.md"), "CONTRIBUTING.md isn't in site/src/nav.ts");
 });
 
 test("site: routes are unique and every page is in the sidebar", () => {
@@ -29,11 +39,32 @@ test("site: routes are unique and every page is in the sidebar", () => {
 
 test("site: the sidebar lists every step and decision guide from the meta-KB, by stable anchor", () => {
   const hrefs = sidebar(nodes).flatMap((g) => g.links.flatMap((l) => [l.href, ...(l.children ?? []).map((c) => c.href)]));
-  for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(hrefs.includes(`/method/#${n.id.replace(/\./g, "-")}`), n.id);
-  for (const n of nodes.filter((n) => n.type === "Decision")) assert.ok(hrefs.includes(`/decisions/#${n.id.replace(/\./g, "-")}`), n.id);
+  for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(hrefs.includes(`/build/methodology/#${n.id.replace(/\./g, "-")}`), n.id);
+  for (const n of nodes.filter((n) => n.type === "Decision")) assert.ok(hrefs.includes(`/reference/decisions/#${n.id.replace(/\./g, "-")}`), n.id);
   // The anchors exist in the generated pages.
   const method = readFileSync(join(ROOT, "docs/METHOD.md"), "utf8");
   for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(method.includes(`<a id="${n.id.replace(/\./g, "-")}"></a>`), n.id);
+});
+
+test("site: the sidebar has only non-empty groups, in order, with every page once", () => {
+  const groups = sidebar(nodes);
+  assert.deepEqual(groups.map((g) => g.label), ["Getting started", "Build", "Reference", "Contributing"]);
+  for (const g of groups) assert.ok(g.links.length > 0, g.label);
+});
+
+test("site: previous/next follows the sidebar order, and only the ends lack a link", () => {
+  const seq = sequence(nodes);
+  const expected = sidebar(nodes).flatMap((g) => g.links.flatMap((l) => [l.href, ...(l.children ?? []).map((c) => c.href)]));
+  assert.deepEqual(seq.map((l) => l.href), expected);
+  assert.equal(new Set(expected).size, expected.length, "sequence has duplicates");
+  const first = PAGES[0].route;
+  assert.equal(seq[0].href, first);
+  for (const p of PAGES) {
+    const i = seq.findIndex((l) => l.href === p.route);
+    assert.ok(i >= 0, p.route);
+    assert.equal(i > 0, p.route !== first, `${p.route} previous`);
+    assert.equal(i < seq.length - 1, p.route !== PAGES[PAGES.length - 1].route, `${p.route} next`);
+  }
 });
 
 test("site: links are rewritten to routes or GitHub, and a link to an unrouted .md fails", async () => {
@@ -45,9 +76,9 @@ test("site: links are rewritten to routes or GitHub, and a link to an unrouted .
     run({ type: "root", children: [link] }, { path: join(ROOT, from) });
     return link.url;
   };
-  assert.equal(rewrite("METHOD.md#step-2-reuse"), "/method/#step-2-reuse");
-  assert.equal(rewrite("../../docs/DECISIONS.md", "examples/wine/TRANSCRIPT.md"), "/decisions/");
-  assert.equal(rewrite("meta-kb/README.md", "README.md"), "/meta-kb/");
+  assert.equal(rewrite("METHOD.md#step-2-reuse"), "/build/methodology/#step-2-reuse");
+  assert.equal(rewrite("../../docs/DECISIONS.md", "examples/wine/TRANSCRIPT.md"), "/reference/decisions/");
+  assert.equal(rewrite("meta-kb/README.md", "README.md"), "/contributing/meta-kb/");
   assert.equal(rewrite("../src/checks.ts"), "https://github.com/alanbsmith/ontology-kit/blob/main/src/checks.ts");
   assert.equal(rewrite("../skills"), "https://github.com/alanbsmith/ontology-kit/tree/main/skills");
   assert.equal(rewrite("#node-types"), "#node-types");

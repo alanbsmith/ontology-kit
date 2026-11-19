@@ -16,14 +16,14 @@ export interface Page {
 
 export const PAGES: readonly Page[] = [
   { route: "/", source: "README.md", label: "Home" },
-  { route: "/examples/wine/", source: "examples/wine/TRANSCRIPT.md", label: "Wine walkthrough" },
-  { route: "/method/", source: "docs/METHOD.md", label: "Overview" },
-  { route: "/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
-  { route: "/rules/", source: "docs/RULES.md", label: "Rules" },
-  { route: "/decisions/", source: "docs/DECISIONS.md", label: "Decision guides" },
-  { route: "/format/", source: "docs/FORMAT.md", label: "File format" },
-  { route: "/extraction-pipeline/", source: "docs/EXTRACTION-PIPELINE.md", label: "Extraction pipeline" },
-  { route: "/meta-kb/", source: "meta-kb/README.md", label: "Meta-KB" },
+  { route: "/getting-started/tutorial/", source: "examples/wine/TRANSCRIPT.md", label: "Wine tutorial" },
+  { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology" },
+  { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs" },
+  { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
+  { route: "/reference/rules/", source: "docs/RULES.md", label: "Rules" },
+  { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides" },
+  { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format" },
+  { route: "/contributing/meta-kb/", source: "meta-kb/README.md", label: "Meta-KB internals" },
   { route: "/contributing/code-review/", source: "docs/CODE-REVIEW.md", label: "Code review worklist" },
 ];
 
@@ -66,24 +66,38 @@ function link(route: string, children?: NavLink[]): NavLink {
 }
 
 /**
- * The sidebar. Steps and decision guides come from the meta-KB, so new ones appear without a
- * change here.
+ * The sidebar, in five groups by what the reader is doing. A group with no pages yet is left out.
+ * Steps and decision guides come from the meta-KB, so new ones appear without a change here.
  */
 export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
   const steps = nodes
     .filter((n) => n.type === "Step")
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map((s) => ({ label: `${s.order}. ${s.name}`, href: `/method/#${anchorId(s.id)}` }));
+    .map((s) => ({ label: `${s.order}. ${s.name}`, href: `/build/methodology/#${anchorId(s.id)}` }));
   const decisions = nodes
     .filter((n) => n.type === "Decision")
-    .map((d) => ({ label: d.name ?? d.id, href: `/decisions/#${anchorId(d.id)}` }));
-  return [
-    { label: "Start", links: [link("/"), link("/examples/wine/")] },
-    { label: "The method", links: [link("/method/"), ...steps] },
+    .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
+  const groups: NavGroup[] = [
+    { label: "Getting started", links: [link("/"), link("/getting-started/tutorial/")] },
+    { label: "Learn", links: [] },
+    { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
-      links: [link("/glossary/"), link("/rules/"), link("/decisions/", decisions), link("/format/"), link("/extraction-pipeline/"), link("/meta-kb/")],
+      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/format/")],
     },
-    { label: "Contributing", links: [link("/contributing/code-review/")] },
+    { label: "Contributing", links: [link("/contributing/meta-kb/"), link("/contributing/code-review/")] },
   ];
+  return groups.filter((g) => g.links.length > 0);
+}
+
+/** Every sidebar entry in reading order: each page, then its children. Drives previous/next. */
+export function sequence(nodes: readonly MetaNode[]): NavLink[] {
+  return sidebar(nodes).flatMap((g) => g.links.flatMap((l) => [{ label: l.label, href: l.href }, ...(l.children ?? [])]));
+}
+
+/** The entries before and after a page in the sequence; either is undefined at the ends. */
+export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: NavLink; next?: NavLink } {
+  const seq = sequence(nodes);
+  const i = seq.findIndex((l) => l.href === route);
+  return i < 0 ? {} : { prev: seq[i - 1], next: seq[i + 1] };
 }

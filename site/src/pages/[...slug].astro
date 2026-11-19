@@ -5,7 +5,8 @@ import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Band from '../components/Band.astro';
 import Outline from '../components/Outline.astro';
-import { PAGES, type Page } from '../nav.ts';
+import { PAGES, neighbors, type Page } from '../nav.ts';
+import { metaNodes } from '../lib/meta.ts';
 
 export function getStaticPaths() {
 	return PAGES.map((page) => ({
@@ -22,6 +23,7 @@ const entry = await getEntry('docs', page.source);
 if (!entry) throw new Error(`No docs entry for ${page.source}`);
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const title: string = remarkPluginFrontmatter.title ?? page.label;
+const { prev, next } = neighbors(metaNodes, page.route);
 const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.source}`;
 ---
 
@@ -37,6 +39,10 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 					<Content />
 				</div>
 			</article>
+			<nav class="pager" aria-label="Previous and next pages">
+				{prev ? <a class="prev" href={prev.href} rel="prev">Previous: {prev.label}</a> : <span />}
+				{next ? <a class="next" href={next.href} rel="next">Next: {next.label}</a> : <span />}
+			</nav>
 			<p class="source muted"><a href={sourceUrl}>View this page's source on GitHub</a></p>
 		</main>
 		<Outline headings={headings} />
@@ -172,6 +178,20 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 	h1 {
 		font-size: var(--text-title);
 		margin-block: 0;
+	}
+
+	.pager {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: var(--space-md);
+		margin-block-start: var(--space-2xl);
+		font-size: var(--text-small);
+	}
+
+	.pager .next {
+		margin-inline-start: auto;
+		text-align: end;
 	}
 
 	.source {
