@@ -46,42 +46,8 @@ Each rule states its **basis**:
 2. `npm run verify:quotes`: compiles `data/`, re-checks every quote against `sources/*.pdf`, and fails on any inconsistency (see the header of `build.ts` for the full list).
 3. If you added a mechanical/heuristic rule, add a check with the same id to `src/checks.ts` and a fixture to `tests/checks.test.ts`. The build and the test suite both fail until you do.
 4. `npm run docs && npm test`.
-5. Bump `VERSION` in `build.ts` when rules change meaning or a shipped skill's instructions change (a patch version for skill-only changes), and update the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. Ontologies record the meta-KB version they were created with (`okb.json`).
+5. Bump `VERSION` in `build.ts` when rules change meaning or a shipped skill's instructions change (a patch version for skill-only changes), and update the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. Add an entry to the [changelog](../docs/CHANGELOG.md). Ontologies record the meta-KB version they were created with (`okb.json`).
 
-## Changes from the first draft (v1)
+## Changelog
 
-The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differences:
-
-- **Every rule now cites a quote that actually supports it.** In v1 several rules cited the nearest section's headline quote rather than the sentence that states the rule (for example the no-cycles, synonym and one-child/twelve-children rules all cited unrelated sentences). The v1 inverse-slot rule also overstated the paper, which calls storing both directions redundant (just convenient for data entry) rather than something you should do.
-- **Modalities were re-derived from the wording.** For example, "Do not add strings such as 'class'…" sits in a list of things "to consider", so it's SHOULD NOT (warning), not MUST NOT.
-- **Quotes are checked mechanically** against the PDFs, with page numbers.
-- **Domain-neutral.** Examples come from the paper's wine ontology rather than Canvas Kit, and the `DomainKB` registry was dropped: which KBs follow the rules is recorded in each KB (`okb.json` → `metaKbVersion`), not in the meta-KB.
-- **Added:** the method as Step nodes, decision guides, principles (including Gruber's knowledge-level principle), plain-language explanations, a `basis` for every rule, and the okb file-format registry. The v1 `EdgeType` registry's design-system edges (`COMPOSES`, `PREFERRED_OVER`, `CONFLICTS_WITH`, `IS_VARIANT_OF`) are modeled in v2 as Instance-type slots with class-level fixed values. That keeps them inside the Ontology 101 primitives, so they get range and fixed-value checks for free.
-
-## v2.1
-
-- **Relationships are stored LPG-style.** A relationship slot's values are edges named after it (`maker` → `:MAKER`) instead of generic `HAS_VALUE` edges. The file format is now `okb-lpg/2`; `okb-lpg/1` files are migrated automatically when loaded.
-- **Inverse slots are stored once.** One edge per fact, read from both ends. The paper calls storing both directions redundant, and in a graph it's pure duplication. `slot-inverse-consistent` now checks only that domains and ranges mirror each other; values can't disagree.
-- **Everyday vocabulary.** The glossary maps slot → property / relationship, and to OWL datatype/object properties and LPG node properties/relationship types. The CLI adds `okb property` and `okb relationship` alongside `okb slot`.
-- `okb export` writes instance data for graph databases (JSON or openCypher).
-
-## v2.2
-
-- **Edge properties.** Relationships can declare properties for their edges (`condition`, `strength`...), with facets checked by the new `slot-edge-properties` rule, plus a reserved `rule` reference to the Rule that justifies the link. New glossary entry `concept.edge-property` and decision guide `decision.edge-or-class` (edge property vs. making the relationship its own class). Both are marked as toolkit concepts: Ontology 101's frame model has no relationship properties.
-
-## v2.3
-
-- **Question families.** A competency question stands for a type of question (the paper: "just a sketch" and "do not need to be exhaustive"). The new judgment rule `scope-cq-families` asks, once a question is answered, whether the ontology should also answer its family: the same question about similar things, and related questions about the same thing. Anything not wanted is recorded as out of scope. `okb cq link` and `okb cq set --status answerable` suggest the family from what's already built, and `okb review` lists every family. Step 1 now says not to list every question up front, and Step 8 asks about families.
-- `scope-no-unneeded` now suggests adding the question an element serves before removing the element.
-
-## v2.3.1
-
-- **Skills state their version.** Each shipped skill starts with `**Version X.Y.Z.**`, matching the meta-KB, and checks it against `okb version` when it starts; if they differ, it says which is out of date. Changing a skill's instructions now bumps the version (a patch for skill-only changes), and the docs drift check fails if a skill's version lags.
-
-## v2.4.0
-
-- **Authored rules.** `authored` is a documented Rule field (`okb rule add --authored`, with `extracted: false`). It is shown in `okb rule list` and `okb show` and exported on `OkbRule`. Authored rules keep `prov-cites-quote` and `prov-verified`.
-- **Qualifier values on Rules.** A Rule can carry `values{slotId: value}` for slots declared with `okb slot add ... --on-rules` (`appliesToRules`), checked like instance values (`okb rule add --value condition=open`). Rules have no inheritance: nothing is inherited through `REFINES`, and no class named `Rule` is involved.
-- **`REFINES` (Rule → Rule, optional `adds`) and `FULFILLS` (Instance → Rule)** edges, set with `okb rule refines` and `okb fulfills`, and exported. The format registry gains `optionalProps` for edge types.
-- **`okb cite <node> <quote id>`** attaches an existing quote to a node.
-- New glossary entries: `concept.prescriptive-vs-descriptive`, `concept.rule-qualifier`, `concept.rule-refines`, `concept.rule-fulfills`, `concept.authored-rule`.
+What changed in each version, from the first draft to now, is in the [changelog](../docs/CHANGELOG.md).

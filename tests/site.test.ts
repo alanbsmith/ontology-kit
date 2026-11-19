@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { INSTALL_COMMAND } from "../site/src/lib/install.ts";
 import { PAGES, sequence, sidebar, type MetaNode } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -67,6 +68,11 @@ test("site: previous/next follows the sidebar order, and only the ends lack a li
   }
 });
 
+test("site: the README has no page, and installation.md shows the install command", () => {
+  assert.ok(!PAGES.some((p) => p.source === "README.md"));
+  assert.ok(readFileSync(join(ROOT, "docs/getting-started/installation.md"), "utf8").includes(INSTALL_COMMAND));
+});
+
 test("site: links are rewritten to routes or GitHub, and a link to an unrouted .md fails", async () => {
   const plugin = pathToFileURL(join(ROOT, "site/src/plugins/remark-repo-links.mjs")).href;
   const { remarkRepoLinks } = await import(plugin);
@@ -78,7 +84,8 @@ test("site: links are rewritten to routes or GitHub, and a link to an unrouted .
   };
   assert.equal(rewrite("METHOD.md#step-2-reuse"), "/build/methodology/#step-2-reuse");
   assert.equal(rewrite("../../docs/DECISIONS.md", "examples/wine/TRANSCRIPT.md"), "/reference/decisions/");
-  assert.equal(rewrite("meta-kb/README.md", "README.md"), "/contributing/meta-kb/");
+  assert.equal(rewrite("meta-kb/README.md", "CONTRIBUTING.md"), "/contributing/meta-kb/");
+  assert.equal(rewrite("../README.md"), "https://github.com/alanbsmith/ontology-kit/blob/main/README.md");
   assert.equal(rewrite("../src/checks.ts"), "https://github.com/alanbsmith/ontology-kit/blob/main/src/checks.ts");
   assert.equal(rewrite("../skills"), "https://github.com/alanbsmith/ontology-kit/tree/main/skills");
   assert.equal(rewrite("#node-types"), "#node-types");

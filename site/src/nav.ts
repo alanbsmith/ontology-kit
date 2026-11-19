@@ -15,7 +15,8 @@ export interface Page {
 }
 
 export const PAGES: readonly Page[] = [
-  { route: "/", source: "README.md", label: "Home" },
+  { route: "/getting-started/", source: "docs/getting-started/introduction.md", label: "Introduction" },
+  { route: "/getting-started/installation/", source: "docs/getting-started/installation.md", label: "Installation" },
   { route: "/getting-started/tutorial/", source: "examples/wine/TRANSCRIPT.md", label: "Wine tutorial" },
   { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology" },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs" },
@@ -23,6 +24,8 @@ export const PAGES: readonly Page[] = [
   { route: "/reference/rules/", source: "docs/RULES.md", label: "Rules" },
   { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides" },
   { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format" },
+  { route: "/reference/changelog/", source: "docs/CHANGELOG.md", label: "Changelog" },
+  { route: "/contributing/", source: "CONTRIBUTING.md", label: "Contributing" },
   { route: "/contributing/meta-kb/", source: "meta-kb/README.md", label: "Meta-KB internals" },
   { route: "/contributing/code-review/", source: "docs/CODE-REVIEW.md", label: "Code review worklist" },
 ];
@@ -78,14 +81,14 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .filter((n) => n.type === "Decision")
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
-    { label: "Getting started", links: [link("/"), link("/getting-started/tutorial/")] },
+    { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/tutorial/")] },
     { label: "Learn", links: [] },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
-      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/format/")],
+      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/format/"), link("/reference/changelog/")],
     },
-    { label: "Contributing", links: [link("/contributing/meta-kb/"), link("/contributing/code-review/")] },
+    { label: "Contributing", links: [link("/contributing/"), link("/contributing/meta-kb/"), link("/contributing/code-review/")] },
   ];
   return groups.filter((g) => g.links.length > 0);
 }

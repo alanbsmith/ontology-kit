@@ -21,7 +21,7 @@ import { parse as parseYaml } from "yaml";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
 const DEFAULT_DOCS = [
-  "README.md", "CLAUDE.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", "docs/getting-started/introduction.md", "docs/getting-started/installation.md", "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
   "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md",
 ];
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");

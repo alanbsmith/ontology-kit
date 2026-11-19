@@ -1,6 +1,7 @@
 {
   "name": "ontology-kit",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "A beginner-friendly toolkit for building ontologies the Ontology 101 way: guided method, meta-knowledge base of rules, and the okb CLI.",
   "type": "module",
   "private": true,
@@ -21,7 +22,7 @@
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
     "format:docs": "prettier --write \"**/*.md\"",
-    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && vale --glob=\"*.md\" README.md CLAUDE.md docs/FORMAT.md docs/EXTRACTION-PIPELINE.md docs/CODE-REVIEW.md meta-kb/README.md sources/README.md skills .claude/skills"
+    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && vale --glob=\"*.md\" README.md CLAUDE.md docs/FORMAT.md docs/EXTRACTION-PIPELINE.md docs/CODE-REVIEW.md docs/CHANGELOG.md docs/getting-started CONTRIBUTING.md meta-kb/README.md sources/README.md skills .claude/skills"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

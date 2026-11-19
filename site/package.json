@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "description": "The Ontology Kit docs site. Reads the repo's markdown in place; see README.md (Docs site).",
+  "description": "The Ontology Kit docs site. Reads the repo's markdown in place; see CONTRIBUTING.md (The docs site).",
   "engines": {
     "node": ">=24"
   },
