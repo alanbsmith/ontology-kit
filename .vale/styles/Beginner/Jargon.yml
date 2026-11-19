@@ -1,0 +1,23 @@
+# Beginner pages say "kind" and "property" first, and introduce the formal term deliberately.
+extends: substitution
+message: "Beginners may not know '%s'. Try '%s', or define the term on first use and link it."
+level: warning
+ignorecase: true
+swap:
+  kinds: classes
+  kind: class
+  properties: slots
+  property: slot
+  examples: instances
+  example: instance
+  family tree: taxonomy
+  is-a relationship: subsumption
+  no overlap: disjointness
+  how many values: cardinality
+  rules: axioms
+  rule: axiom
+  limits on values: facets
+  limit on values: facet
+  allowed values: range
+  where it applies: domain
+  vocabularies: ontologies

@@ -22,7 +22,7 @@
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
     "format:docs": "prettier --write \"**/*.md\"",
-    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && vale --glob=\"*.md\" README.md CLAUDE.md docs/FORMAT.md docs/EXTRACTION-PIPELINE.md docs/CODE-REVIEW.md docs/CHANGELOG.md docs/getting-started CONTRIBUTING.md meta-kb/README.md sources/README.md skills .claude/skills"
+    "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && scripts/vale.sh"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

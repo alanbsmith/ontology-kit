@@ -55,6 +55,51 @@ npm run site:dev       # the same, served at http://localhost:4321 while you edi
 
 Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`npm --prefix site run preview`). Netlify builds and hosts it from `netlify.toml`.
 
+## Writing style
+
+The beginner pages are `docs/getting-started/*.md`, `docs/learn/*.md`, `docs/build/*.md` and `examples/*/tutorial-src/*.md`. They're written for a developer who is new to ontologies and has a problem to solve, not a vocabulary to learn. `npm run lint:docs` applies extra Vale rules to these paths (the `Beginner` style in `.vale/styles/Beginner`). The reference docs (METHOD, RULES, FORMAT and so on) keep the normal rules.
+
+### Explain, don't just describe
+
+A description says what something is. An explanation says why you'd care and how it plays out. Write the way you'd answer a colleague's question. After every definition, cover three things:
+
+1. **The problem it solves.** What goes wrong without it?
+2. **What it looks like in practice.** Show a small, concrete example.
+3. **What to do next.** Link the step or command that uses it.
+
+Reviewers use these pairs as the bar. If a paragraph reads like the left column, rewrite it.
+
+#### A concept
+
+- Describe: "A facet constrains the values of a slot."
+- Explain: "You want every wine's body to be light, medium or full, never 'pretty strong'. A facet is how you say that. Without one, `okb validate` can't catch a typo like `medum`."
+
+#### A rule
+
+- Describe: "`hier-no-cycles`: the class hierarchy must be acyclic."
+- Explain: "If Wine is a kind of Beverage and Beverage is a kind of Wine, every question about 'all beverages' loops forever. okb stops this with `hier-no-cycles`. When it fires, it names the two kinds in the loop. Delete one of the `is-a` links."
+
+#### A step
+
+- Describe: "Step 3 enumerates the important terms in the domain."
+- Explain: "Before you design anything, write down the nouns people use when they talk about wine: grape, winery, vintage, body. Don't sort them yet. A messy list now saves you from missing a kind of thing later. Run `okb term add` for each one."
+
+### Voice and structure
+
+- **Write for one reader:** a developer who has never built an ontology. Say "you".
+- **Examples before abstractions.** Show the wine, then name the idea.
+- **One idea per paragraph.** If a paragraph needs "also" or "separately", split it.
+- **Keep sentences short**, under about 25 words. Aim for a reading grade of 9 or lower.
+- **Define a term on first use and link it** to its entry in the [glossary](docs/GLOSSARY.md). Link the first mention on each page, not every mention.
+- **Lead with the task.** Put the command or action first and the theory after it.
+- **Keep headings short**, three words at most.
+
+### Plain words first
+
+Beginner pages say "kind" before "class" and "property" before "slot", and introduce the formal word once, deliberately: "A _kind_ (the method calls it a class) ...". The `Beginner.Jargon` rule flags the formal words with a suggested swap. It's a warning to weigh, not an error. If the formal term is the point of the page, keep it and define it. Two rules are suggestions, not errors: `Beginner.Weasel` flags phrases that describe without explaining, and `Beginner.Readability` flags a page above grade 9.
+
+Add new project terms to `.vale/styles/config/vocabularies/Okb/accept.txt` (it's case-sensitive).
+
 ## Before you commit
 
 Run these after every change. All of them must pass:

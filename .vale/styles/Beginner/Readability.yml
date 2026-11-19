@@ -1,0 +1,7 @@
+# Target: a reader at about the 9th grade or lower.
+extends: metric
+message: "Reading grade is %s. Aim for 9 or lower."
+level: warning
+formula: |
+  (0.39 * (words / sentences)) + (11.8 * (syllables / words)) - 15.59
+condition: "> 9"
