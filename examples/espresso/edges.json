@@ -705,122 +705,122 @@
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-cortado",
+    "from": "i.vertex-cortado",
     "type": "INSTANCE_OF",
     "to": "c.cortado"
   },
   {
-    "from": "i.corner-cortado",
+    "from": "i.vertex-cortado",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-cortado",
+    "from": "i.vertex-cortado",
     "type": "CONTAINS",
     "to": "i.steamed-whole-milk"
   },
   {
-    "from": "i.corner-flat-white",
+    "from": "i.vertex-flat-white",
     "type": "INSTANCE_OF",
     "to": "c.flat-white"
   },
   {
-    "from": "i.corner-flat-white",
+    "from": "i.vertex-flat-white",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-flat-white",
+    "from": "i.vertex-flat-white",
     "type": "CONTAINS",
     "to": "i.steamed-whole-milk"
   },
   {
-    "from": "i.corner-cappuccino",
+    "from": "i.vertex-cappuccino",
     "type": "INSTANCE_OF",
     "to": "c.cappuccino"
   },
   {
-    "from": "i.corner-cappuccino",
+    "from": "i.vertex-cappuccino",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-cappuccino",
+    "from": "i.vertex-cappuccino",
     "type": "CONTAINS",
     "to": "i.steamed-whole-milk"
   },
   {
-    "from": "i.corner-cappuccino",
+    "from": "i.vertex-cappuccino",
     "type": "CONTAINS",
     "to": "i.milk-foam"
   },
   {
-    "from": "i.corner-breve",
+    "from": "i.vertex-breve",
     "type": "INSTANCE_OF",
     "to": "c.breve"
   },
   {
-    "from": "i.corner-breve",
+    "from": "i.vertex-breve",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-breve",
+    "from": "i.vertex-breve",
     "type": "CONTAINS",
     "to": "i.steamed-half-and-half"
   },
   {
-    "from": "i.corner-breve",
+    "from": "i.vertex-breve",
     "type": "CONTAINS",
     "to": "i.milk-foam"
   },
   {
-    "from": "i.corner-mocha",
+    "from": "i.vertex-mocha",
     "type": "INSTANCE_OF",
     "to": "c.mocha"
   },
   {
-    "from": "i.corner-mocha",
+    "from": "i.vertex-mocha",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-mocha",
+    "from": "i.vertex-mocha",
     "type": "CONTAINS",
     "to": "i.chocolate-syrup"
   },
   {
-    "from": "i.corner-mocha",
+    "from": "i.vertex-mocha",
     "type": "CONTAINS",
     "to": "i.steamed-whole-milk"
   },
   {
-    "from": "i.corner-affogato",
+    "from": "i.vertex-affogato",
     "type": "INSTANCE_OF",
     "to": "c.affogato"
   },
   {
-    "from": "i.corner-affogato",
+    "from": "i.vertex-affogato",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-affogato",
+    "from": "i.vertex-affogato",
     "type": "CONTAINS",
     "to": "i.vanilla-gelato"
   },
   {
-    "from": "i.corner-macchiato",
+    "from": "i.vertex-macchiato",
     "type": "INSTANCE_OF",
     "to": "c.macchiato"
   },
   {
-    "from": "i.corner-macchiato",
+    "from": "i.vertex-macchiato",
     "type": "CONTAINS",
     "to": "i.double-shot"
   },
   {
-    "from": "i.corner-macchiato",
+    "from": "i.vertex-macchiato",
     "type": "CONTAINS",
     "to": "i.milk-foam",
     "amount": "splash"
@@ -896,19 +896,19 @@
     "to": "c.mocha"
   },
   {
-    "from": "loc.corner-cafe-house-guide.1",
+    "from": "loc.vertex-coffee-house-guide.1",
     "type": "PART_OF",
     "to": "house-guide"
   },
   {
-    "from": "loc.corner-cafe-house-guide.2",
+    "from": "loc.vertex-coffee-house-guide.2",
     "type": "PART_OF",
     "to": "house-guide"
   },
   {
     "from": "rule.milk-drinks-have-milk",
     "type": "CITES",
-    "to": "loc.corner-cafe-house-guide.1"
+    "to": "loc.vertex-coffee-house-guide.1"
   },
   {
     "from": "rule.milk-drinks-have-milk",
@@ -918,7 +918,7 @@
   {
     "from": "rule.breve-uses-half-and-half",
     "type": "CITES",
-    "to": "loc.corner-cafe-house-guide.2"
+    "to": "loc.vertex-coffee-house-guide.2"
   },
   {
     "from": "rule.breve-uses-half-and-half",
@@ -932,12 +932,12 @@
     "adds": "The milk must be half-and-half."
   },
   {
-    "from": "i.corner-breve",
+    "from": "i.vertex-breve",
     "type": "FULFILLS",
     "to": "rule.breve-uses-half-and-half"
   },
   {
-    "from": "i.corner-cortado",
+    "from": "i.vertex-cortado",
     "type": "FULFILLS",
     "to": "rule.milk-drinks-have-milk"
   }

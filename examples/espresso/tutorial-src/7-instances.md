@@ -31,12 +31,12 @@ Now add the menu items. Give only the values that aren't already fixed or defaul
 
 ```okb
 okb instance add "House espresso" --of Espresso "contains=Double shot" "pourOrder=Shot into a warm cup"
-okb instance add "Corner cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
-okb instance add "Corner flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
-okb instance add "Corner cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
-okb instance add "Corner breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
-okb instance add "Corner mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
-okb instance add "Corner affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
+okb instance add "Vertex cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
+okb instance add "Vertex flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
+okb instance add "Vertex cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
+okb instance add "Vertex breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
+okb instance add "Vertex mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
+okb instance add "Vertex affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
 ```
 
 ## Add a link value
@@ -44,8 +44,8 @@ okb instance add "Corner affogato" --of Affogato "contains=Double shot,Vanilla g
 Some facts belong to the link itself. A macchiato has only a splash of foam, so say that on the link:
 
 ```okb
-okb instance add "Corner macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
-okb link "Corner macchiato" contains "Milk foam" amount=splash
+okb instance add "Vertex macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
+okb link "Vertex macchiato" contains "Milk foam" amount=splash
 ```
 
 ## Read the output
@@ -53,7 +53,7 @@ okb link "Corner macchiato" contains "Milk foam" amount=splash
 Look at a drink and at an ingredient:
 
 ```okb
-okb show "Corner breve"
+okb show "Vertex breve"
 okb show "Milk foam"
 ```
 
@@ -73,7 +73,7 @@ okb step next
 
 > **Common mistakes**
 >
-> - **Making an instance a class.** "Corner cortado" is one cup on one menu. "Cortado" is a kind.
+> - **Making an instance a class.** "Vertex cortado" is one cup on one menu. "Cortado" is a kind.
 > - **Skipping a required link.** A drink needs at least one ingredient, so `okb validate` reports a drink without `contains`.
 
 ## Next step

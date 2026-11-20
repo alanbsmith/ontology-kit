@@ -728,8 +728,8 @@
   },
   {
     "type": "Instance",
-    "id": "i.corner-cortado",
-    "name": "Corner cortado",
+    "id": "i.vertex-cortado",
+    "name": "Vertex cortado",
     "values": {
       "s.pour-order": "Shot first, then equal warm milk",
       "s.texture": "silky"
@@ -737,16 +737,16 @@
   },
   {
     "type": "Instance",
-    "id": "i.corner-flat-white",
-    "name": "Corner flat white",
+    "id": "i.vertex-flat-white",
+    "name": "Vertex flat white",
     "values": {
       "s.pour-order": "Shot first, then thin milk"
     }
   },
   {
     "type": "Instance",
-    "id": "i.corner-cappuccino",
-    "name": "Corner cappuccino",
+    "id": "i.vertex-cappuccino",
+    "name": "Vertex cappuccino",
     "values": {
       "s.pour-order": "Shot, milk, then a cap of foam",
       "s.espresso-to-milk-ratio": 0.33,
@@ -756,8 +756,8 @@
   },
   {
     "type": "Instance",
-    "id": "i.corner-breve",
-    "name": "Corner breve",
+    "id": "i.vertex-breve",
+    "name": "Vertex breve",
     "values": {
       "s.pour-order": "Shot, half-and-half, then foam",
       "s.espresso-to-milk-ratio": 0.33,
@@ -767,24 +767,24 @@
   },
   {
     "type": "Instance",
-    "id": "i.corner-mocha",
-    "name": "Corner mocha",
+    "id": "i.vertex-mocha",
+    "name": "Vertex mocha",
     "values": {
       "s.pour-order": "Chocolate, shot, then milk"
     }
   },
   {
     "type": "Instance",
-    "id": "i.corner-affogato",
-    "name": "Corner affogato",
+    "id": "i.vertex-affogato",
+    "name": "Vertex affogato",
     "values": {
       "s.pour-order": "Gelato first, shot poured over"
     }
   },
   {
     "type": "Instance",
-    "id": "i.corner-macchiato",
-    "name": "Corner macchiato",
+    "id": "i.vertex-macchiato",
+    "name": "Vertex macchiato",
     "values": {
       "s.pour-order": "Shot, then a spoonful of foam",
       "s.texture": "silky"
@@ -793,17 +793,17 @@
   {
     "type": "Source",
     "id": "house-guide",
-    "title": "Corner Café house guide",
+    "title": "Vertex Coffee house guide",
     "localPath": "tutorial-src/sources/house-guide.md",
     "format": "markdown"
   },
   {
     "type": "SourceLocation",
-    "id": "loc.corner-cafe-house-guide.1",
+    "id": "loc.vertex-coffee-house-guide.1",
     "quote": "Every milk drink must contain milk or cream.",
-    "locator": "Corner Café house guide > Milk drinks",
+    "locator": "Vertex Coffee house guide > Milk drinks",
     "headingPath": [
-      "Corner Café house guide",
+      "Vertex Coffee house guide",
       "Milk drinks"
     ],
     "startLine": 5,
@@ -813,11 +813,11 @@
   },
   {
     "type": "SourceLocation",
-    "id": "loc.corner-cafe-house-guide.2",
+    "id": "loc.vertex-coffee-house-guide.2",
     "quote": "A breve must use half-and-half, never whole milk.",
-    "locator": "Corner Café house guide > Breve",
+    "locator": "Vertex Coffee house guide > Breve",
     "headingPath": [
-      "Corner Café house guide",
+      "Vertex Coffee house guide",
       "Breve"
     ],
     "startLine": 9,
@@ -837,7 +837,7 @@
     "verification": {
       "status": "SUPPORTED",
       "checkedAgainst": [
-        "loc.corner-cafe-house-guide.1"
+        "loc.vertex-coffee-house-guide.1"
       ],
       "approvedAfter": "SUPPORTED"
     }
@@ -854,7 +854,7 @@
     "verification": {
       "status": "SUPPORTED",
       "checkedAgainst": [
-        "loc.corner-cafe-house-guide.2"
+        "loc.vertex-coffee-house-guide.2"
       ],
       "approvedAfter": "SUPPORTED"
     }

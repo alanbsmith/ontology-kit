@@ -51,12 +51,12 @@ Now add the menu items. Give only the values that aren't already fixed or defaul
 
 ```bash
 okb instance add "House espresso" --of Espresso "contains=Double shot" "pourOrder=Shot into a warm cup"
-okb instance add "Corner cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
-okb instance add "Corner flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
-okb instance add "Corner cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
-okb instance add "Corner breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
-okb instance add "Corner mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
-okb instance add "Corner affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
+okb instance add "Vertex cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
+okb instance add "Vertex flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
+okb instance add "Vertex cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
+okb instance add "Vertex breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
+okb instance add "Vertex mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
+okb instance add "Vertex affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
 ```
 
 ```text
@@ -64,37 +64,37 @@ Added House espresso (an Espresso).
 House espresso.contains = Double shot
 House espresso.pourOrder = "Shot into a warm cup"
 
-Added Corner cortado (a Cortado).
-Corner cortado.contains = Double shot, Steamed whole milk
-Corner cortado.pourOrder = "Shot first, then equal warm milk"
+Added Vertex cortado (a Cortado).
+Vertex cortado.contains = Double shot, Steamed whole milk
+Vertex cortado.pourOrder = "Shot first, then equal warm milk"
 Filled in default texture = "silky".
 
-Added Corner flat white (a FlatWhite).
-Corner flat white.contains = Double shot, Steamed whole milk
-Corner flat white.pourOrder = "Shot first, then thin milk"
+Added Vertex flat white (a FlatWhite).
+Vertex flat white.contains = Double shot, Steamed whole milk
+Vertex flat white.pourOrder = "Shot first, then thin milk"
 
-Added Corner cappuccino (a Cappuccino).
+Added Vertex cappuccino (a Cappuccino).
   Tip: Cappuccino has subclasses (Breve). Use the most specific class that fits.
-Corner cappuccino.contains = Double shot, Steamed whole milk, Milk foam
-Corner cappuccino.pourOrder = "Shot, milk, then a cap of foam"
+Vertex cappuccino.contains = Double shot, Steamed whole milk, Milk foam
+Vertex cappuccino.pourOrder = "Shot, milk, then a cap of foam"
 Filled in default espressoToMilkRatio = 0.33.
 Filled in default texture = "foamy".
 Filled in default origin = "Italy".
 
-Added Corner breve (a Breve).
-Corner breve.contains = Double shot, Steamed half-and-half, Milk foam
-Corner breve.pourOrder = "Shot, half-and-half, then foam"
+Added Vertex breve (a Breve).
+Vertex breve.contains = Double shot, Steamed half-and-half, Milk foam
+Vertex breve.pourOrder = "Shot, half-and-half, then foam"
 Filled in default espressoToMilkRatio = 0.33.
 Filled in default texture = "foamy".
 Filled in default origin = "USA".
 
-Added Corner mocha (a Mocha).
-Corner mocha.contains = Double shot, Chocolate syrup, Steamed whole milk
-Corner mocha.pourOrder = "Chocolate, shot, then milk"
+Added Vertex mocha (a Mocha).
+Vertex mocha.contains = Double shot, Chocolate syrup, Steamed whole milk
+Vertex mocha.pourOrder = "Chocolate, shot, then milk"
 
-Added Corner affogato (an Affogato).
-Corner affogato.contains = Double shot, Vanilla gelato
-Corner affogato.pourOrder = "Gelato first, shot poured over"
+Added Vertex affogato (an Affogato).
+Vertex affogato.contains = Double shot, Vanilla gelato
+Vertex affogato.pourOrder = "Gelato first, shot poured over"
 ```
 
 ## Add a link value
@@ -102,17 +102,17 @@ Corner affogato.pourOrder = "Gelato first, shot poured over"
 Some facts belong to the link itself. A macchiato has only a splash of foam, so say that on the link:
 
 ```bash
-okb instance add "Corner macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
-okb link "Corner macchiato" contains "Milk foam" amount=splash
+okb instance add "Vertex macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
+okb link "Vertex macchiato" contains "Milk foam" amount=splash
 ```
 
 ```text
-Added Corner macchiato (a Macchiato).
-Corner macchiato.contains = Double shot
-Corner macchiato.pourOrder = "Shot, then a spoonful of foam"
+Added Vertex macchiato (a Macchiato).
+Vertex macchiato.contains = Double shot
+Vertex macchiato.pourOrder = "Shot, then a spoonful of foam"
 Filled in default texture = "silky".
 
-Linked (Corner macchiato)-[:CONTAINS {amount: "splash"}]->(Milk foam)
+Linked (Vertex macchiato)-[:CONTAINS {amount: "splash"}]->(Milk foam)
 ```
 
 ## Read the output
@@ -120,12 +120,12 @@ Linked (Corner macchiato)-[:CONTAINS {amount: "splash"}]->(Milk foam)
 Look at a drink and at an ingredient:
 
 ```bash
-okb show "Corner breve"
+okb show "Vertex breve"
 okb show "Milk foam"
 ```
 
 ```text
-Corner breve  Instance · i.corner-breve
+Vertex breve  Instance · i.vertex-breve
   instance of    Breve
 
   Values
@@ -141,7 +141,7 @@ Milk foam  Instance · i.milk-foam
   instance of    Foam
 
   Values
-    usedIn             Corner cappuccino, Corner breve, Corner macchiato {amount: "splash"}
+    usedIn             Vertex cappuccino, Vertex breve, Vertex macchiato {amount: "splash"}
 ```
 
 - **Values you didn't type.** The breve has `espressoToMilkRatio` and `texture` from the defaults on Cappuccino, and `origin` from its own default, USA. `variationOf` lists both Latte and Cappuccino, from the class.
@@ -242,7 +242,7 @@ Commands
 
 > **Common mistakes**
 >
-> - **Making an instance a class.** "Corner cortado" is one cup on one menu. "Cortado" is a kind.
+> - **Making an instance a class.** "Vertex cortado" is one cup on one menu. "Cortado" is a kind.
 > - **Skipping a required link.** A drink needs at least one ingredient, so `okb validate` reports a drink without `contains`.
 
 ## Next step

@@ -1,4 +1,4 @@
-# Corner Café house guide
+# Vertex Coffee house guide
 
 ## Milk drinks
 

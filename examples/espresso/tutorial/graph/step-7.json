@@ -730,8 +730,8 @@
     },
     {
       "type": "Instance",
-      "id": "i.corner-cortado",
-      "name": "Corner cortado",
+      "id": "i.vertex-cortado",
+      "name": "Vertex cortado",
       "values": {
         "s.pour-order": "Shot first, then equal warm milk",
         "s.texture": "silky"
@@ -739,16 +739,16 @@
     },
     {
       "type": "Instance",
-      "id": "i.corner-flat-white",
-      "name": "Corner flat white",
+      "id": "i.vertex-flat-white",
+      "name": "Vertex flat white",
       "values": {
         "s.pour-order": "Shot first, then thin milk"
       }
     },
     {
       "type": "Instance",
-      "id": "i.corner-cappuccino",
-      "name": "Corner cappuccino",
+      "id": "i.vertex-cappuccino",
+      "name": "Vertex cappuccino",
       "values": {
         "s.pour-order": "Shot, milk, then a cap of foam",
         "s.espresso-to-milk-ratio": 0.33,
@@ -758,8 +758,8 @@
     },
     {
       "type": "Instance",
-      "id": "i.corner-breve",
-      "name": "Corner breve",
+      "id": "i.vertex-breve",
+      "name": "Vertex breve",
       "values": {
         "s.pour-order": "Shot, half-and-half, then foam",
         "s.espresso-to-milk-ratio": 0.33,
@@ -769,24 +769,24 @@
     },
     {
       "type": "Instance",
-      "id": "i.corner-mocha",
-      "name": "Corner mocha",
+      "id": "i.vertex-mocha",
+      "name": "Vertex mocha",
       "values": {
         "s.pour-order": "Chocolate, shot, then milk"
       }
     },
     {
       "type": "Instance",
-      "id": "i.corner-affogato",
-      "name": "Corner affogato",
+      "id": "i.vertex-affogato",
+      "name": "Vertex affogato",
       "values": {
         "s.pour-order": "Gelato first, shot poured over"
       }
     },
     {
       "type": "Instance",
-      "id": "i.corner-macchiato",
-      "name": "Corner macchiato",
+      "id": "i.vertex-macchiato",
+      "name": "Vertex macchiato",
       "values": {
         "s.pour-order": "Shot, then a spoonful of foam",
         "s.texture": "silky"
@@ -1500,122 +1500,122 @@
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-cortado",
+      "from": "i.vertex-cortado",
       "type": "INSTANCE_OF",
       "to": "c.cortado"
     },
     {
-      "from": "i.corner-cortado",
+      "from": "i.vertex-cortado",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-cortado",
+      "from": "i.vertex-cortado",
       "type": "CONTAINS",
       "to": "i.steamed-whole-milk"
     },
     {
-      "from": "i.corner-flat-white",
+      "from": "i.vertex-flat-white",
       "type": "INSTANCE_OF",
       "to": "c.flat-white"
     },
     {
-      "from": "i.corner-flat-white",
+      "from": "i.vertex-flat-white",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-flat-white",
+      "from": "i.vertex-flat-white",
       "type": "CONTAINS",
       "to": "i.steamed-whole-milk"
     },
     {
-      "from": "i.corner-cappuccino",
+      "from": "i.vertex-cappuccino",
       "type": "INSTANCE_OF",
       "to": "c.cappuccino"
     },
     {
-      "from": "i.corner-cappuccino",
+      "from": "i.vertex-cappuccino",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-cappuccino",
+      "from": "i.vertex-cappuccino",
       "type": "CONTAINS",
       "to": "i.steamed-whole-milk"
     },
     {
-      "from": "i.corner-cappuccino",
+      "from": "i.vertex-cappuccino",
       "type": "CONTAINS",
       "to": "i.milk-foam"
     },
     {
-      "from": "i.corner-breve",
+      "from": "i.vertex-breve",
       "type": "INSTANCE_OF",
       "to": "c.breve"
     },
     {
-      "from": "i.corner-breve",
+      "from": "i.vertex-breve",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-breve",
+      "from": "i.vertex-breve",
       "type": "CONTAINS",
       "to": "i.steamed-half-and-half"
     },
     {
-      "from": "i.corner-breve",
+      "from": "i.vertex-breve",
       "type": "CONTAINS",
       "to": "i.milk-foam"
     },
     {
-      "from": "i.corner-mocha",
+      "from": "i.vertex-mocha",
       "type": "INSTANCE_OF",
       "to": "c.mocha"
     },
     {
-      "from": "i.corner-mocha",
+      "from": "i.vertex-mocha",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-mocha",
+      "from": "i.vertex-mocha",
       "type": "CONTAINS",
       "to": "i.chocolate-syrup"
     },
     {
-      "from": "i.corner-mocha",
+      "from": "i.vertex-mocha",
       "type": "CONTAINS",
       "to": "i.steamed-whole-milk"
     },
     {
-      "from": "i.corner-affogato",
+      "from": "i.vertex-affogato",
       "type": "INSTANCE_OF",
       "to": "c.affogato"
     },
     {
-      "from": "i.corner-affogato",
+      "from": "i.vertex-affogato",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-affogato",
+      "from": "i.vertex-affogato",
       "type": "CONTAINS",
       "to": "i.vanilla-gelato"
     },
     {
-      "from": "i.corner-macchiato",
+      "from": "i.vertex-macchiato",
       "type": "INSTANCE_OF",
       "to": "c.macchiato"
     },
     {
-      "from": "i.corner-macchiato",
+      "from": "i.vertex-macchiato",
       "type": "CONTAINS",
       "to": "i.double-shot"
     },
     {
-      "from": "i.corner-macchiato",
+      "from": "i.vertex-macchiato",
       "type": "CONTAINS",
       "to": "i.milk-foam",
       "amount": "splash"

@@ -785,53 +785,53 @@ $ okb instance add "House espresso" --of Espresso "contains=Double shot" "pourOr
 Added House espresso (an Espresso).
 House espresso.contains = Double shot
 House espresso.pourOrder = "Shot into a warm cup"
-$ okb instance add "Corner cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
-Added Corner cortado (a Cortado).
-Corner cortado.contains = Double shot, Steamed whole milk
-Corner cortado.pourOrder = "Shot first, then equal warm milk"
+$ okb instance add "Vertex cortado" --of Cortado "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then equal warm milk"
+Added Vertex cortado (a Cortado).
+Vertex cortado.contains = Double shot, Steamed whole milk
+Vertex cortado.pourOrder = "Shot first, then equal warm milk"
 Filled in default texture = "silky".
-$ okb instance add "Corner flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
-Added Corner flat white (a FlatWhite).
-Corner flat white.contains = Double shot, Steamed whole milk
-Corner flat white.pourOrder = "Shot first, then thin milk"
-$ okb instance add "Corner cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
-Added Corner cappuccino (a Cappuccino).
+$ okb instance add "Vertex flat white" --of FlatWhite "contains=Double shot,Steamed whole milk" "pourOrder=Shot first, then thin milk"
+Added Vertex flat white (a FlatWhite).
+Vertex flat white.contains = Double shot, Steamed whole milk
+Vertex flat white.pourOrder = "Shot first, then thin milk"
+$ okb instance add "Vertex cappuccino" --of Cappuccino "contains=Double shot,Steamed whole milk,Milk foam" "pourOrder=Shot, milk, then a cap of foam"
+Added Vertex cappuccino (a Cappuccino).
   Tip: Cappuccino has subclasses (Breve). Use the most specific class that fits.
-Corner cappuccino.contains = Double shot, Steamed whole milk, Milk foam
-Corner cappuccino.pourOrder = "Shot, milk, then a cap of foam"
+Vertex cappuccino.contains = Double shot, Steamed whole milk, Milk foam
+Vertex cappuccino.pourOrder = "Shot, milk, then a cap of foam"
 Filled in default espressoToMilkRatio = 0.33.
 Filled in default texture = "foamy".
 Filled in default origin = "Italy".
-$ okb instance add "Corner breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
-Added Corner breve (a Breve).
-Corner breve.contains = Double shot, Steamed half-and-half, Milk foam
-Corner breve.pourOrder = "Shot, half-and-half, then foam"
+$ okb instance add "Vertex breve" --of Breve "contains=Double shot,Steamed half-and-half,Milk foam" "pourOrder=Shot, half-and-half, then foam"
+Added Vertex breve (a Breve).
+Vertex breve.contains = Double shot, Steamed half-and-half, Milk foam
+Vertex breve.pourOrder = "Shot, half-and-half, then foam"
 Filled in default espressoToMilkRatio = 0.33.
 Filled in default texture = "foamy".
 Filled in default origin = "USA".
-$ okb instance add "Corner mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
-Added Corner mocha (a Mocha).
-Corner mocha.contains = Double shot, Chocolate syrup, Steamed whole milk
-Corner mocha.pourOrder = "Chocolate, shot, then milk"
-$ okb instance add "Corner affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
-Added Corner affogato (an Affogato).
-Corner affogato.contains = Double shot, Vanilla gelato
-Corner affogato.pourOrder = "Gelato first, shot poured over"
+$ okb instance add "Vertex mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
+Added Vertex mocha (a Mocha).
+Vertex mocha.contains = Double shot, Chocolate syrup, Steamed whole milk
+Vertex mocha.pourOrder = "Chocolate, shot, then milk"
+$ okb instance add "Vertex affogato" --of Affogato "contains=Double shot,Vanilla gelato" "pourOrder=Gelato first, shot poured over"
+Added Vertex affogato (an Affogato).
+Vertex affogato.contains = Double shot, Vanilla gelato
+Vertex affogato.pourOrder = "Gelato first, shot poured over"
 ```
 
 ```console
-$ okb instance add "Corner macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
-Added Corner macchiato (a Macchiato).
-Corner macchiato.contains = Double shot
-Corner macchiato.pourOrder = "Shot, then a spoonful of foam"
+$ okb instance add "Vertex macchiato" --of Macchiato "contains=Double shot" "pourOrder=Shot, then a spoonful of foam"
+Added Vertex macchiato (a Macchiato).
+Vertex macchiato.contains = Double shot
+Vertex macchiato.pourOrder = "Shot, then a spoonful of foam"
 Filled in default texture = "silky".
-$ okb link "Corner macchiato" contains "Milk foam" amount=splash
-Linked (Corner macchiato)-[:CONTAINS {amount: "splash"}]->(Milk foam)
+$ okb link "Vertex macchiato" contains "Milk foam" amount=splash
+Linked (Vertex macchiato)-[:CONTAINS {amount: "splash"}]->(Milk foam)
 ```
 
 ```console
-$ okb show "Corner breve"
-Corner breve  Instance · i.corner-breve
+$ okb show "Vertex breve"
+Vertex breve  Instance · i.vertex-breve
   instance of    Breve
 
   Values
@@ -847,7 +847,7 @@ Milk foam  Instance · i.milk-foam
   instance of    Foam
 
   Values
-    usedIn             Corner cappuccino, Corner breve, Corner macchiato {amount: "splash"}
+    usedIn             Vertex cappuccino, Vertex breve, Vertex macchiato {amount: "splash"}
 ```
 
 ```console
@@ -964,32 +964,32 @@ Linked cq.5 → Mocha (Class).
 ```
 
 ```console
-$ okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Corner Café house guide"
-Registered source house-guide: Corner Café house guide
+$ okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Vertex Coffee house guide"
+Registered source house-guide: Vertex Coffee house guide
 Read 2 blocks (2 quotable) under 3 headings.
   Tip: add --repo-url <GitHub URL of this file> so quotes get links to the exact lines.
 Next: okb source outline house-guide   (the list of quotable blocks to work through)
 $ okb quote add house-guide "Every milk drink must contain milk or cream."
-Added loc.corner-cafe-house-guide.1 at Corner Café house guide > Milk drinks, line 5.
+Added loc.vertex-coffee-house-guide.1 at Vertex Coffee house guide > Milk drinks, line 5.
 $ okb quote add house-guide "A breve must use half-and-half, never whole milk."
-Added loc.corner-cafe-house-guide.2 at Corner Café house guide > Breve, line 9.
+Added loc.vertex-coffee-house-guide.2 at Vertex Coffee house guide > Breve, line 9.
 ```
 
 ```console
-$ okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.corner-cafe-house-guide.1
+$ okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.vertex-coffee-house-guide.1
 Added authored rule rule.milk-drinks-have-milk (MUST): A MilkDrink MUST contain a milk ingredient.
 Next: verify it in a fresh context, then okb verify rule.milk-drinks-have-milk --status SUPPORTED|OVERREACH|UNSUPPORTED
-$ okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.corner-cafe-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
+$ okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.vertex-coffee-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
 Added authored rule rule.breve-uses-half-and-half (MUST): A Breve MUST be made with HalfAndHalf.
 rule.breve-uses-half-and-half refines rule.milk-drinks-have-milk (adds: The milk must be half-and-half.).
 Next: verify it in a fresh context, then okb verify rule.breve-uses-half-and-half --status SUPPORTED|OVERREACH|UNSUPPORTED
 $ okb rule list
 rule.milk-drinks-have-milk [MUST · authored · unverified]
    A MilkDrink MUST contain a milk ingredient.
-   governs: MilkDrink · cites: loc.corner-cafe-house-guide.1
+   governs: MilkDrink · cites: loc.vertex-coffee-house-guide.1
 rule.breve-uses-half-and-half [MUST · authored · unverified]
    A Breve MUST be made with HalfAndHalf.
-   governs: Breve · cites: loc.corner-cafe-house-guide.2
+   governs: Breve · cites: loc.vertex-coffee-house-guide.2
 ```
 
 ```console
@@ -1004,10 +1004,10 @@ rule.breve-uses-half-and-half: approved by a person (was SUPPORTED).
 ```
 
 ```console
-$ okb fulfills "Corner breve" "Breve uses half-and-half"
-Corner breve fulfills rule.breve-uses-half-and-half.
-$ okb fulfills "Corner cortado" "Milk drinks have milk"
-Corner cortado fulfills rule.milk-drinks-have-milk.
+$ okb fulfills "Vertex breve" "Breve uses half-and-half"
+Vertex breve fulfills rule.breve-uses-half-and-half.
+$ okb fulfills "Vertex cortado" "Milk drinks have milk"
+Vertex cortado fulfills rule.milk-drinks-have-milk.
 ```
 
 ```console

@@ -27,7 +27,7 @@ okb cq link 5 contains Chocolate Mocha
 A fact describes what something is. A rule says what anything of that kind must, should or may do. The strength is its [modality](../../../docs/GLOSSARY.md#concept-modality): MUST, MUST NOT, SHOULD, SHOULD NOT or MAY. Rules come from a document, so they cite the exact words. Register the café's house guide, quote two sentences from it, and write a rule for each. Both use MUST, because the guide says "must". Both are [authored rules](../../../docs/GLOSSARY.md#concept-authored-rule): you wrote the wording, and the guide backs it up.
 
 ```okb
-okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Corner Café house guide"
+okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Vertex Coffee house guide"
 okb quote add house-guide "Every milk drink must contain milk or cream."
 okb quote add house-guide "A breve must use half-and-half, never whole milk."
 ```
@@ -35,8 +35,8 @@ okb quote add house-guide "A breve must use half-and-half, never whole milk."
 The second rule narrows the first. Every milk drink needs milk, and a breve needs one particular milk. That's a [refinement](../../../docs/GLOSSARY.md#concept-rule-refines):
 
 ```okb
-okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.corner-cafe-house-guide.1
-okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.corner-cafe-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
+okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.vertex-coffee-house-guide.1
+okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.vertex-coffee-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
 okb rule list
 ```
 
@@ -52,8 +52,8 @@ okb verify "Breve uses half-and-half" --approve
 Last, say which menu items follow which rule. A fact that meets a rule [fulfills it](../../../docs/GLOSSARY.md#concept-rule-fulfills):
 
 ```okb
-okb fulfills "Corner breve" "Breve uses half-and-half"
-okb fulfills "Corner cortado" "Milk drinks have milk"
+okb fulfills "Vertex breve" "Breve uses half-and-half"
+okb fulfills "Vertex cortado" "Milk drinks have milk"
 ```
 
 ## Validate and review

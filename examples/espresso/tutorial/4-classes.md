@@ -297,7 +297,7 @@ Commands
 
 > **Common mistakes**
 >
-> - **Making a drink an instance too early.** "Corner cortado" is one cup. "Cortado" is a kind, and you can have two of them.
+> - **Making a drink an instance too early.** "Vertex cortado" is one cup. "Cortado" is a kind, and you can have two of them.
 > - **Forgetting the second parent.** Without it, okb can't tell that a breve is also a cappuccino.
 > - **No disjoint groups.** Without them, okb can't catch a drink filed as both pure espresso and milk drink.
 

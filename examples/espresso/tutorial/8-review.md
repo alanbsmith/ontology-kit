@@ -55,27 +55,27 @@ Linked cq.5 → Mocha (Class).
 A fact describes what something is. A rule says what anything of that kind must, should or may do. The strength is its [modality](../../../docs/GLOSSARY.md#concept-modality): MUST, MUST NOT, SHOULD, SHOULD NOT or MAY. Rules come from a document, so they cite the exact words. Register the café's house guide, quote two sentences from it, and write a rule for each. Both use MUST, because the guide says "must". Both are [authored rules](../../../docs/GLOSSARY.md#concept-authored-rule): you wrote the wording, and the guide backs it up.
 
 ```bash
-okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Corner Café house guide"
+okb source add tutorial-src/sources/house-guide.md --id house-guide --title "Vertex Coffee house guide"
 okb quote add house-guide "Every milk drink must contain milk or cream."
 okb quote add house-guide "A breve must use half-and-half, never whole milk."
 ```
 
 ```text
-Registered source house-guide: Corner Café house guide
+Registered source house-guide: Vertex Coffee house guide
 Read 2 blocks (2 quotable) under 3 headings.
   Tip: add --repo-url <GitHub URL of this file> so quotes get links to the exact lines.
 Next: okb source outline house-guide   (the list of quotable blocks to work through)
 
-Added loc.corner-cafe-house-guide.1 at Corner Café house guide > Milk drinks, line 5.
+Added loc.vertex-coffee-house-guide.1 at Vertex Coffee house guide > Milk drinks, line 5.
 
-Added loc.corner-cafe-house-guide.2 at Corner Café house guide > Breve, line 9.
+Added loc.vertex-coffee-house-guide.2 at Vertex Coffee house guide > Breve, line 9.
 ```
 
 The second rule narrows the first. Every milk drink needs milk, and a breve needs one particular milk. That's a [refinement](../../../docs/GLOSSARY.md#concept-rule-refines):
 
 ```bash
-okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.corner-cafe-house-guide.1
-okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.corner-cafe-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
+okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.vertex-coffee-house-guide.1
+okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.vertex-coffee-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
 okb rule list
 ```
 
@@ -89,10 +89,10 @@ Next: verify it in a fresh context, then okb verify rule.breve-uses-half-and-hal
 
 rule.milk-drinks-have-milk [MUST · authored · unverified]
    A MilkDrink MUST contain a milk ingredient.
-   governs: MilkDrink · cites: loc.corner-cafe-house-guide.1
+   governs: MilkDrink · cites: loc.vertex-coffee-house-guide.1
 rule.breve-uses-half-and-half [MUST · authored · unverified]
    A Breve MUST be made with HalfAndHalf.
-   governs: Breve · cites: loc.corner-cafe-house-guide.2
+   governs: Breve · cites: loc.vertex-coffee-house-guide.2
 ```
 
 A rule starts unverified. Check that each quote supports its rule, then approve them:
@@ -117,14 +117,14 @@ rule.breve-uses-half-and-half: approved by a person (was SUPPORTED).
 Last, say which menu items follow which rule. A fact that meets a rule [fulfills it](../../../docs/GLOSSARY.md#concept-rule-fulfills):
 
 ```bash
-okb fulfills "Corner breve" "Breve uses half-and-half"
-okb fulfills "Corner cortado" "Milk drinks have milk"
+okb fulfills "Vertex breve" "Breve uses half-and-half"
+okb fulfills "Vertex cortado" "Milk drinks have milk"
 ```
 
 ```text
-Corner breve fulfills rule.breve-uses-half-and-half.
+Vertex breve fulfills rule.breve-uses-half-and-half.
 
-Corner cortado fulfills rule.milk-drinks-have-milk.
+Vertex cortado fulfills rule.milk-drinks-have-milk.
 ```
 
 ## Validate and review
