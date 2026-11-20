@@ -6,8 +6,7 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MetaKB } from "./metakb.ts";
-import { renderCliDocs } from "./clidocs.ts";
-import { HELP } from "./help.ts";
+import { renderCheatSheet, renderCliDocs } from "./clidocs.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const meta = MetaKB.get();
@@ -148,6 +147,6 @@ function mermaidText(s: string): string {
   return s.replace(/[#"()[\]{}<>|`;]/g, (c) => `#${c.charCodeAt(0)};`);
 }
 
-const out: [string, string[]][] = [["METHOD.md", method], ["GLOSSARY.md", glossary], ["RULES.md", rules], ["DECISIONS.md", decisions], ["CLI.md", renderCliDocs(HELP).split("\n")]];
+const out: [string, string[]][] = [["METHOD.md", method], ["GLOSSARY.md", glossary], ["RULES.md", rules], ["DECISIONS.md", decisions], ["CLI.md", renderCliDocs().split("\n")], ["CLI-CHEAT-SHEET.md", renderCheatSheet().split("\n")]];
 for (const [f, lines] of out) writeFileSync(join(ROOT, "docs", f), lines.join("\n") + "\n");
 console.log(`Wrote ${out.map(([f]) => "docs/" + f).join(", ")}`);

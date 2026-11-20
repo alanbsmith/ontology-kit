@@ -5,7 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { today } from "../src/clock.ts";
-import { cmdAnchor, listedCommands, renderCliDocs, UNLISTED } from "../src/clidocs.ts";
+import { cmdAnchor, renderCheatSheet, renderCliDocs, undocumentedFlags } from "../src/clidocs.ts";
+import { CHEAT_SHEET, COMMANDS } from "../src/commands.ts";
 import { HELP } from "../src/help.ts";
 import { MetaKB } from "../src/metakb.ts";
 import * as naming from "../src/naming.ts";
@@ -220,16 +221,22 @@ describe("worked example", () => {
 });
 
 describe("docs/CLI.md", () => {
-  it("is generated from the help text and lists every command", () => {
+  it("is generated from src/commands.ts and covers every command", () => {
     const page = readFileSync(join(ROOT, "docs/CLI.md"), "utf8");
-    assert.equal(page, renderCliDocs(HELP) + "\n", "docs/CLI.md is stale: run npm run docs");
+    assert.equal(page, renderCliDocs() + "\n", "docs/CLI.md is stale: run npm run docs");
     // `edgeprop` is the internal target of `relationship property`, not a command people type.
     const src = readFileSync(join(ROOT, "src/cli.ts"), "utf8");
     const dispatch = [...src.matchAll(/^    case "([a-z][a-z-]*)":/gm)].map((m) => m[1]).filter((c) => c !== "edgeprop");
-    const documented = new Set([...listedCommands(HELP), ...Object.keys(UNLISTED)]);
-    for (const cmd of dispatch) {
-      assert.ok(documented.has(cmd), `okb ${cmd} is in the dispatch table but not on docs/CLI.md`);
-      assert.ok(page.includes(`<a id="${cmdAnchor(cmd)}"></a>`), cmd);
-    }
+    const documented = new Set(COMMANDS.map((c) => c.name));
+    for (const cmd of dispatch) assert.ok(documented.has(cmd), `okb ${cmd} is in the dispatch table but not in src/commands.ts`);
+    for (const cmd of documented) assert.ok(page.includes(`<a id="${cmdAnchor(cmd)}"></a>`), cmd);
+  });
+  it("has a cheat sheet that is current and uses real commands", () => {
+    assert.equal(readFileSync(join(ROOT, "docs/CLI-CHEAT-SHEET.md"), "utf8"), renderCheatSheet() + "\n", "docs/CLI-CHEAT-SHEET.md is stale: run npm run docs");
+    const names = new Set(COMMANDS.map((c) => c.name));
+    for (const c of CHEAT_SHEET) assert.ok(names.has(c.example.split(" ")[1]), c.example);
+  });
+  it("documents every flag the help text shows", () => {
+    assert.deepEqual(undocumentedFlags(HELP), []);
   });
 });

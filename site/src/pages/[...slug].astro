@@ -40,8 +40,8 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 				</div>
 			</article>
 			<nav class="pager" aria-label="Previous and next pages">
-				{prev ? <a class="prev" href={prev.href} rel="prev">Previous: {prev.label}</a> : <span />}
-				{next ? <a class="next" href={next.href} rel="next">Next: {next.label}</a> : <span />}
+				{prev ? <a class="prev" href={prev.href} rel="prev"><span class="direction">&larr; Previous</span><span class="label">{prev.label}</span></a> : <span />}
+				{next ? <a class="next" href={next.href} rel="next"><span class="direction">Next &rarr;</span><span class="label">{next.label}</span></a> : <span />}
 			</nav>
 			<p class="source muted"><a href={sourceUrl}>View this page's source on GitHub</a></p>
 		</main>
@@ -180,18 +180,61 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 		margin-block: 0;
 	}
 
+	/* Two large cards side by side; they stack on narrow screens. */
 	.pager {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--space-md);
 		margin-block-start: var(--space-2xl);
-		font-size: var(--text-small);
+	}
+
+	.pager a {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2xs, 0.25rem);
+		padding: var(--space-md) var(--space-lg);
+		border: var(--border-width) solid var(--color-border);
+		border-radius: var(--radius-xl);
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.pager a:hover,
+	.pager a:focus-visible {
+		border-color: var(--color-border-strong);
 	}
 
 	.pager .next {
-		margin-inline-start: auto;
+		grid-column: 2;
 		text-align: end;
+	}
+
+	.pager .direction {
+		font-size: var(--text-small);
+		color: var(--color-text-muted);
+	}
+
+	.pager .label {
+		font-size: var(--text-subheading);
+		font-weight: 600;
+		line-height: 1.3;
+	}
+
+	/* On the widest screens the cards are large enough that body-size titles read better. */
+	@media (min-width: 80rem) {
+		.pager .label {
+			font-size: var(--text-body);
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.pager {
+			grid-template-columns: 1fr;
+		}
+
+		.pager .next {
+			grid-column: 1;
+		}
 	}
 
 	.source {

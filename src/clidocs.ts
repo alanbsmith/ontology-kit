@@ -1,76 +1,90 @@
 /**
- * Renders docs/CLI.md from the `okb help` text (src/help.ts), so the command reference
- * can't drift from the CLI. The help is free text, so this reads each `okb <command> ...`
- * usage from it and groups the usages by command.
+ * Renders docs/CLI.md from the command reference in src/commands.ts. The help text
+ * (src/help.ts) stays the terminal summary; `undocumentedFlags` keeps the two from drifting.
  */
+import { CHEAT_SHEET, COMMANDS, type Arg, type Command, type Form } from "./commands.ts";
 
-/** Commands the help text doesn't list, with what to say about them. Shown after the listed ones. */
-export const UNLISTED: Record<string, { usage: string; desc: string }[]> = {
-  help: [{ usage: "okb help", desc: "show the command summary (also `okb --help` or `okb -h`)" }],
-  version: [{ usage: "okb version", desc: "print the okb version (also `okb --version`)" }],
-};
+/** A stable anchor for a command or subcommand section: `cmd-class`, `cmd-class-add`. */
+export const cmdAnchor = (cmd: string, sub?: string) => `cmd-${cmd}${sub ? `-${sub}` : ""}`;
 
-interface Usage {
-  usage: string;
-  desc?: string;
-  group: string;
+const cell = (s: string) => s.replace(/\|/g, "\\|");
+const GLOBAL_ARGS: Arg[] = [
+  ["-C", "path", "The ontology folder. Defaults to the current folder."],
+  ["--json", "flag", "Print machine-readable output, for commands that support it."],
+];
+
+function table(args: readonly Arg[]): string[] {
+  return ["| Argument | Type | Description |", "| --- | --- | --- |", ...args.map(([n, t, d]) => `| \`${cell(n)}\` | ${cell(t)} | ${cell(d)} |`), ""];
 }
 
-/** A stable anchor for a command's section: `cmd-class`. */
-export const cmdAnchor = (cmd: string) => `cmd-${cmd}`;
-
-/** Every `okb <command>` usage in the help text, in order, with the help group it appeared under. */
-export function parseHelp(help: string): Usage[] {
-  const out: Usage[] = [];
-  let group = "";
-  for (const line of help.split("\n")) {
-    const at = line.search(/(^|\s)okb [a-z]/);
-    if (at < 0) continue;
-    const first = at + (line[at] === " " ? 1 : 0);
-    const label = line.slice(0, first).trim();
-    if (label && !label.startsWith("(")) group = label.replace(/:$/, "");
-    for (const piece of line.slice(first).split(/\s+·\s+|\s{3,}(?=okb [a-z])/)) {
-      const [usage, ...rest] = piece.trim().split(/\s{2,}/);
-      if (!usage.startsWith("okb ")) continue;
-      out.push({ usage, ...(rest.length ? { desc: rest.join(" ") } : {}), group: group || "Getting started" });
-    }
-  }
-  return out;
+function form(cmd: Command, f: Form, lines: string[]) {
+  const level = f.sub ? "####" : "###";
+  if (f.sub) lines.push(`<a id="${cmdAnchor(cmd.name, f.sub)}"></a>`, `#### okb ${cmd.name} ${f.sub}`, "", f.description, "");
+  lines.push("```bash", ...f.examples.map((e) => `$ ${e}`), "```", "");
+  if (f.args.length) lines.push(`${level}# Arguments`, "", ...table(f.args));
 }
 
-/** The commands the help lists, in first-seen order. */
-export function listedCommands(help: string): string[] {
-  return [...new Set(parseHelp(help).map((u) => u.usage.split(" ")[1]))];
+/** Commands in `COMMANDS` order, grouped by their `group`, each group once. */
+function groups(): [string, Command[]][] {
+  const out = new Map<string, Command[]>();
+  for (const c of COMMANDS) out.set(c.group, [...(out.get(c.group) ?? []), c]);
+  return [...out];
 }
 
-export function renderCliDocs(help: string): string {
-  const usages = parseHelp(help);
-  const cmds = listedCommands(help);
-  const notes = help.split("\n").filter((l) => /^(Names|Global options):/.test(l));
+export function renderCliDocs(): string {
   const lines = [
-    "# CLI commands",
+    "# CLI reference",
     "",
-    `> Generated from the \`okb help\` text by \`npm run docs\`. Don't edit by hand: change \`HELP\` in \`src/help.ts\` and regenerate.`,
+    "## Overview",
     "",
-    "Run `okb help` for the same summary in your terminal. Each section below is one command, with every form the help lists for it.",
+    "This page lists every `okb` command, grouped by what you are trying to do. Each entry shows what the command does, an example, and a table of its arguments. For the commands you will use most, see the [cheat sheet](CLI-CHEAT-SHEET.md). In your terminal, `okb help` prints a short summary.",
     "",
-    ...notes.map((n) => `- ${n.replace(/^([^:]+):/, "**$1:**").replace(/-C <folder>|--json|class:Genre|slot:genre/g, "`$&`")}`),
+    "Angle brackets like `<name>` mark a required argument, and square brackets like `[name]` mark an optional one. Two options work with most commands:",
     "",
-    cmds.map((c) => `[\`${c}\`](#${cmdAnchor(c)})`).concat(Object.keys(UNLISTED).filter((c) => !cmds.includes(c)).map((c) => `[\`${c}\`](#${cmdAnchor(c)})`)).join(" · "),
+    ...table(GLOBAL_ARGS),
+    "> **Tip:** When a class and a slot share a name, say which one you mean with `class:Genre` or `slot:genre`.",
     "",
   ];
-  const section = (cmd: string, items: { usage: string; desc?: string }[], groups: string[]) => {
-    lines.push(`<a id="${cmdAnchor(cmd)}"></a>`, `## okb ${cmd}`, "");
-    if (groups.length) lines.push(`*Listed under:* ${groups.join(", ")}`, "");
-    lines.push("```text", ...items.map((i) => i.usage), "```", "");
-    const described = items.filter((i) => i.desc);
-    for (const i of described) lines.push(`- \`${i.usage}\`: ${i.desc}`);
-    if (described.length) lines.push("");
-  };
-  for (const cmd of cmds) {
-    const mine = usages.filter((u) => u.usage.split(" ")[1] === cmd);
-    section(cmd, mine, [...new Set(mine.map((u) => u.group))]);
+  for (const [group, cmds] of groups()) {
+    lines.push(`## ${group}`, "");
+    for (const cmd of cmds) {
+      lines.push(`<a id="${cmdAnchor(cmd.name)}"></a>`, `### okb ${cmd.name}`, "", cmd.description, "");
+      for (const f of cmd.forms) form(cmd, f, lines);
+    }
   }
-  for (const [cmd, items] of Object.entries(UNLISTED)) if (!cmds.includes(cmd)) section(cmd, items, []);
   return lines.join("\n");
+}
+
+export function renderCheatSheet(): string {
+  const lines = [
+    "# CLI cheat sheet",
+    "",
+    "The `okb` commands you will use most, in the order you usually need them. For every command and argument, see the [full reference](CLI.md).",
+    "",
+  ];
+  const rows = CHEAT_SHEET.map((c) => ({ ...c, group: COMMANDS.find((k) => k.name === c.example.split(" ")[1])?.group ?? "" }));
+  for (const [group] of groups()) {
+    const mine = rows.filter((r) => r.group === group);
+    if (!mine.length) continue;
+    lines.push(`## ${group}`, "");
+    for (const r of mine) lines.push('<div class="cheat-card">', "", `${r.description}:`, "", "```bash", r.example, "```", "", "</div>", "");
+  }
+  return lines.join("\n");
+}
+
+/** Flags the help text shows for a command that its reference entry doesn't document. */
+export function undocumentedFlags(help: string): string[] {
+  const missing: string[] = [];
+  const known = new Map(COMMANDS.map((c) => [c.name, new Set(c.forms.flatMap((f) => f.args.map((a) => a[0])))]));
+  for (const line of help.split("\n")) {
+    for (const piece of line.split(/\s+·\s+|\s{3,}(?=okb [a-z])/)) {
+      const m = piece.trim().match(/^okb ([a-z]+)/);
+      if (!m) continue;
+      const doc = known.get(m[1]);
+      for (const [, flag] of piece.matchAll(/(?<![\w-])(--[a-z][a-z-]*)/g)) {
+        if (!doc?.has(flag) && !["--json", "--help"].includes(flag)) missing.push(`okb ${m[1]} ${flag}`);
+      }
+    }
+  }
+  return missing;
 }

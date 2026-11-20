@@ -272,12 +272,30 @@ h4 {
 	font-style: light-dark(var(--shiki-light-font-style, normal), var(--shiki-dark-font-style, normal));
 }
 
-/* Code blocks may be wider than the text column on large screens. */
+/* Tables fill the text column, so they line up with code blocks and body text. */
 @media (min-width: 60rem) {
-	.prose pre.astro-code,
-	.prose pre.mermaid {
-		margin-inline: calc(-1 * var(--space-lg));
+	.prose table {
+		display: table;
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
 	}
+}
+
+/* Cheat sheet: one card per command, so nothing is squeezed on a small screen. */
+.prose .cheat-card {
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: var(--space-md);
+}
+
+.prose .cheat-card > * + * {
+	margin-top: var(--space-sm);
+}
+
+.prose .cheat-card pre.astro-code {
+	border: 0;
+	padding: var(--space-sm) var(--space-md);
 }
 
 /* Mermaid: plain source until the client script swaps in the SVG. */
