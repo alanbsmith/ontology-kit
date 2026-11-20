@@ -5,7 +5,10 @@ docs/RULES.md
 docs/DECISIONS.md
 docs/CLI.md
 docs/CLI-CHEAT-SHEET.md
-examples/wine/
+examples/wine/*.json
+examples/wine/*.md
+examples/wine/tutorial/
+examples/wine/wine.cypher
 meta-kb/data/
 node_modules/
 package-lock.json

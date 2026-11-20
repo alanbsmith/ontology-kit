@@ -1,5 +1,7 @@
 ```mermaid
 classDiagram
+  accTitle: Wine and Food classes
+  accDescr: Class diagram of the Wine and Food ontology: 21 classes, arrows from each class to its parent, and 5 relationships between classes.
   class Wine {
     red|white|rose color
     light|medium|full body

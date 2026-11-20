@@ -16,14 +16,14 @@ npm run build:meta                         # compile meta-kb/src/*.yaml -> meta-
 npm run docs                               # regenerate docs/METHOD|GLOSSARY|RULES|DECISIONS|CLI|CLI-CHEAT-SHEET.md
 npm run site                               # docs + build the docs site into site/dist (npm ci --prefix site first)
 npm run site:dev                           # docs + the site's dev server
-npm run example                            # rebuild examples/wine/ (also run by npm test)
+npm run example                            # rebuild examples/wine/ from its tutorial-src/ (also run by npm test and npm run site)
 npm run format:docs                        # Prettier on the hand-written docs
 npm run lint:docs                          # Prettier check + markdownlint + Vale (brew install vale; it runs `vale sync` itself in a fresh checkout or worktree)
 ```
 
 Run `npx tsc` and `npm test` after every change. There's no code linter. `npm run lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
 
-**Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/`. A diff in `examples/wine/` after a refactor means CLI output changed, so treat it as a behavior change and check it. The example pins its dates with `SOURCE_DATE_EPOCH` (see `src/clock.ts`), so it rebuilds identically on any day.
+**Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/` (except `tutorial-src/`, which is hand-written). A diff in `examples/wine/` after a refactor means CLI output changed, so treat it as a behavior change and check it. The example pins its dates with `SOURCE_DATE_EPOCH` (see `src/clock.ts`), so it rebuilds identically on any day.
 
 ## Architecture
 
@@ -65,6 +65,10 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 ## Docs site
 
 `site/` is a plain Astro site with its own `package.json` and lock file (never add Astro to the root package). It reads the repo's markdown in place through a content collection; a page's title is its first level-1 heading. `site/src/nav.ts` (plain TypeScript, checked by `tests/site.test.ts`) maps routes to source files and builds the sidebar from `meta-kb/data/nodes.json`. A remark plugin rewrites relative links: to a route for a page, to GitHub for anything else, and it fails the build on a link to a `.md` file with no route. The layout, styles and reader features are copied from the owner's Astro blog.
+
+## Tutorials
+
+`examples/lib/tutorial.ts` is the tutorial engine and `examples/build-wine.ts` is its first user. A tutorial's sources are `examples/<name>/tutorial-src/N-slug.md`: prose plus code blocks tagged `okb` that hold only commands (add `fails` after the tag on a block whose commands must fail). The engine runs them in order with the real CLI (dates pinned with `SOURCE_DATE_EPOCH`), then writes `examples/<name>/tutorial/*.md` (commands with real output), `tutorial/graph/step-N.json` (the ontology after each step) and `TRANSCRIPT.md`. The ontology files are whatever the commands make, so change a command in a source and `examples/wine/*.json` change with it: they must stay byte-identical unless the change is meant. Never edit the generated files. Tutorial sources are beginner pages (see CONTRIBUTING.md, "Writing style"), and `site/src/nav.ts` routes the generated pages.
 
 ## Skills in this repo
 

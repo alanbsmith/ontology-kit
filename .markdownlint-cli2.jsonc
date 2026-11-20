@@ -4,7 +4,7 @@
   "ignores": [
     "node_modules/**", "site/node_modules/**", "site/dist/**", "site/.astro/**",
     "docs/METHOD.md", "docs/GLOSSARY.md", "docs/RULES.md", "docs/DECISIONS.md", "docs/CLI.md", "docs/CLI-CHEAT-SHEET.md",
-    "examples/wine/**", "tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
+    "examples/wine/*.md", "examples/wine/tutorial/**", "tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
   ],
   "config": {
     "default": true,

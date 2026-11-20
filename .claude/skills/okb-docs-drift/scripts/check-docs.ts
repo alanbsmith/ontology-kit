@@ -14,15 +14,22 @@
  *     checked against meta-kb/data/manifest.json
  * Exit code 1 if anything is found. It can't judge prose; the skill covers that.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
+/** The tutorial sources (examples/<name>/tutorial-src/*.md); the generated pages next to them copy these. */
+const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
+  ? readdirSync(join(ROOT, "examples"), { withFileTypes: true }).flatMap((e) => {
+      const dir = `examples/${e.name}/tutorial-src`;
+      return e.isDirectory() && existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : [];
+    })
+  : [];
 const DEFAULT_DOCS = [
   "README.md", "CONTRIBUTING.md", "CLAUDE.md", "docs/getting-started/introduction.md", "docs/getting-started/installation.md", "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
-  "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md",
+  "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
 ];
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 

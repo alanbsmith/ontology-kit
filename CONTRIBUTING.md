@@ -24,7 +24,7 @@ meta-kb/src/*.yaml      the meta-KB source (edit these)
 meta-kb/data/*.json     the compiled meta-KB (npm run build:meta)
 meta-kb/build.ts        compiler + integrity checks + quote verification
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (npm run docs)
-examples/               build-wine.ts → examples/wine/ (npm run example)
+examples/               build-wine.ts, lib/tutorial.ts → examples/wine/ (npm run example)
 site/                   the docs site (Astro; its own npm package, reads the markdown in place)
 skills/                 SKILL.md files for Claude
 sources/                the source PDFs (gitignored; see sources/README.md)
@@ -58,6 +58,18 @@ Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `d
 ## Writing style
 
 The beginner pages are `docs/getting-started/*.md`, `docs/learn/*.md`, `docs/build/*.md` and `examples/*/tutorial-src/*.md`. They're written for a developer who is new to ontologies and has a problem to solve, not a vocabulary to learn. `npm run lint:docs` applies extra Vale rules to these paths (the `Beginner` style in `.vale/styles/Beginner`). The reference docs (METHOD, RULES, FORMAT and so on) keep the normal rules.
+
+### Tutorials
+
+The wine tutorial is written in `examples/wine/tutorial-src/*.md`, one file per page (`0-intro.md`, `1-scope.md` and so on). A source is plain prose plus code blocks tagged `okb` that hold only commands, one per line, each starting with `okb`:
+
+````markdown
+```okb
+okb class add Wine --desc "A specific wine."
+```
+````
+
+A block tagged `include` holds a file name and shows that file's contents, such as the diagram an earlier command wrote. Add the word `fails` after the `okb` tag for a command that must fail, such as a mistake you want to show. `npm run example` runs every command in file order with the real CLI, then writes the finished pages to `examples/wine/tutorial/` (with each command and its output), a graph snapshot after each step to `examples/wine/tutorial/graph/`, and `TRANSCRIPT.md`. A command that fails stops the build and names the file and command. Never edit the generated files. To add a tutorial, copy the layout in `examples/lib/tutorial.ts` and add its pages to `site/src/nav.ts`.
 
 ### Explain, don't just describe
 
@@ -111,4 +123,4 @@ npm run lint:docs                                        # Prettier, markdownlin
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts # docs and skills still match the CLI
 ```
 
-`npm test` regenerates tracked files (`meta-kb/data/*.json` and everything in `examples/wine/`). A diff in `examples/wine/` after a refactor means CLI output changed, so check it. Make one commit per change, and keep refactors apart from behavior changes.
+`npm test` regenerates tracked files (`meta-kb/data/*.json` and everything in `examples/wine/` except `tutorial-src/`). A diff in `examples/wine/` after a refactor means CLI output changed, so check it. Make one commit per change, and keep refactors apart from behavior changes.

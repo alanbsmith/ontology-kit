@@ -16,7 +16,7 @@ It has three parts:
 
 ## The path from here
 
-1. **Learn the method.** An ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base. The [wine tutorial](../../examples/wine/TRANSCRIPT.md) builds the paper's wine ontology command by command, with real output.
+1. **Learn the method.** An ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base. The [wine tutorial](../../examples/wine/tutorial/0-intro.md) builds the paper's wine ontology command by command, with real output.
 2. **Install okb.** See [Installation](installation.md).
 3. **Build your first ontology.** Ask Claude to `coach me through building an ontology` (this uses the ontology-coach skill), or run the commands yourself:
 

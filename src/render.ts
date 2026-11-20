@@ -325,7 +325,17 @@ export function show(ont: Ontology, n: OkbNode): string {
 
 export function mermaid(ont: Ontology): string {
   const id = (x: string) => naming.convert(ont.label(x), "PascalCase").replace(/[^A-Za-z0-9]/g, "") || x.replace(/[^A-Za-z0-9]/g, "_");
-  const out = ["```mermaid", "classDiagram"];
+  // accTitle and accDescr become the SVG's <title> and <desc> for screen readers. Mermaid reads each to
+  // the end of its line, so they stay on one line and keep clear of braces.
+  const oneLine = (t: string) => t.replace(/[\r\n{}]+/g, " ").trim();
+  const classes = ont.ofType("Class").length;
+  const links = ont.ofType("Slot").filter((s) => s.valueType === "Instance").length;
+  const out = [
+    "```mermaid",
+    "classDiagram",
+    `  accTitle: ${oneLine(`${ont.manifest.name} classes`)}`,
+    `  accDescr: ${oneLine(`Class diagram of the ${ont.manifest.name} ontology: ${classes} ${classes === 1 ? "class" : "classes"}, arrows from each class to its parent, and ${links} ${links === 1 ? "relationship" : "relationships"} between classes.`)}`,
+  ];
   for (const cl of ont.ofType("Class")) {
     const lines = ont.ownSlots(cl.id)
       .map((s) => ont.get(s))

@@ -28,7 +28,9 @@ const { groups, current } = Astro.props;
 								<ul class="children">
 									{link.children.map((child) => (
 										<li>
-											<a href={child.href}>{child.label}</a>
+											<a href={child.href} aria-current={child.href === current ? 'page' : undefined}>
+												{child.label}
+											</a>
 										</li>
 									))}
 								</ul>

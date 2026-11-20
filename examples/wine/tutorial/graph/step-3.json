@@ -1,0 +1,208 @@
+{
+  "step": 3,
+  "nodes": [
+    {
+      "type": "Ontology",
+      "id": "ontology",
+      "name": "Wine and Food",
+      "domain": "Wines, foods, and which wines go well with which foods",
+      "purpose": "Suggest good wine and food combinations for a restaurant menu and answer diners' questions",
+      "users": [
+        "diners",
+        "waiters"
+      ],
+      "maintainers": [
+        "sommelier"
+      ],
+      "outOfScope": [
+        "winery inventory",
+        "restaurant staff"
+      ],
+      "kind": "application",
+      "reuseReviewed": true
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.1",
+      "text": "Which wine characteristics should I consider when choosing a wine?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.2",
+      "text": "Is Bordeaux a red or white wine?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.3",
+      "text": "Does Cabernet Sauvignon go well with seafood?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.4",
+      "text": "What is the best choice of wine for grilled meat?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.5",
+      "text": "Which characteristics of a wine affect its appropriateness for a dish?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.6",
+      "text": "Which wines does a given winery produce?",
+      "status": "draft"
+    },
+    {
+      "type": "DesignDecision",
+      "id": "d.1",
+      "title": "No existing ontology reused",
+      "decision": "Build from scratch.",
+      "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
+      "date": "2026-09-23"
+    },
+    {
+      "type": "Term",
+      "id": "t.wine",
+      "text": "wine",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.grape",
+      "text": "grape",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.winery",
+      "text": "winery",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.location",
+      "text": "location",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.color",
+      "text": "color",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.body",
+      "text": "body",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.flavor",
+      "text": "flavor",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.sugar",
+      "text": "sugar",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.tannin-level",
+      "text": "tannin level",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.red-wine",
+      "text": "red wine",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.white-wine",
+      "text": "white wine",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.rose-wine",
+      "text": "rosé wine",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.dessert-wine",
+      "text": "dessert wine",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.port",
+      "text": "port",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.bordeaux",
+      "text": "bordeaux",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.beaujolais",
+      "text": "beaujolais",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.food",
+      "text": "food",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.seafood",
+      "text": "seafood",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.red-meat",
+      "text": "red meat",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.goes-well-with",
+      "text": "goes well with",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.vintage-year",
+      "text": "vintage year",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.label-paper",
+      "text": "label paper",
+      "disposition": "undecided"
+    }
+  ],
+  "edges": [
+    {
+      "from": "d.1",
+      "type": "ABOUT",
+      "to": "ontology"
+    }
+  ]
+}

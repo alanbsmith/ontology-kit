@@ -43,3 +43,10 @@ Astro
 Pagefind
 Netlify
 Mermaid
+Morgon
+Pauillac
+Medoc
+Margaux
+Beaujolais
+Sauternes
+Gamay

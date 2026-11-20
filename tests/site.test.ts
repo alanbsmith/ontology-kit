@@ -6,10 +6,13 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { INSTALL_COMMAND } from "../site/src/lib/install.ts";
-import { PAGES, sequence, sidebar, type MetaNode } from "../site/src/nav.ts";
+import { PAGES, sequence, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const nodes: MetaNode[] = JSON.parse(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"));
+
+/** A link's href and every href nested under it. */
+const withChildren = (l: NavLink): string[] => [l.href, ...(l.children ?? []).flatMap(withChildren)];
 
 test("site: every page's source file exists", () => {
   for (const p of PAGES) assert.ok(existsSync(join(ROOT, p.source)), `${p.route} → ${p.source} is missing`);
@@ -34,12 +37,28 @@ test("site: every docs/**/*.md file has a page", () => {
 
 test("site: routes are unique and every page is in the sidebar", () => {
   assert.equal(new Set(PAGES.map((p) => p.route)).size, PAGES.length);
-  const hrefs = sidebar(nodes).flatMap((g) => g.links.map((l) => l.href));
+  const hrefs = sidebar(nodes).flatMap((g) => g.links.flatMap(withChildren));
   for (const p of PAGES) assert.ok(hrefs.includes(p.route), `${p.route} isn't in the sidebar`);
 });
 
+test("site: every generated tutorial page has a route, in step order after the introduction", () => {
+  const tutorials = readdirSync(join(ROOT, "examples")).filter((e) => existsSync(join(ROOT, "examples", e, "tutorial-src")));
+  assert.ok(tutorials.includes("wine"));
+  for (const t of tutorials) {
+    const sources = new Set(PAGES.map((p) => p.source));
+    for (const f of readdirSync(join(ROOT, "examples", t, "tutorial")).filter((f) => f.endsWith(".md"))) {
+      assert.ok(sources.has(`examples/${t}/tutorial/${f}`), `examples/${t}/tutorial/${f} isn't in site/src/nav.ts`);
+    }
+  }
+  const route = (n: number) => PAGES.find((p) => p.source.startsWith(`examples/wine/tutorial/${n}-`))!.route;
+  assert.equal(route(0), "/getting-started/tutorial/wine-ontology/");
+  const seq = sequence(nodes).map((l) => l.href);
+  for (let n = 1; n <= 8; n++) assert.equal(seq.indexOf(route(n)), seq.indexOf(route(n - 1)) + 1, `step ${n} follows step ${n - 1}`);
+  assert.ok(!PAGES.some((p) => p.source.endsWith("TRANSCRIPT.md")), "the transcript is for GitHub readers, not the site");
+});
+
 test("site: the sidebar lists every step and decision guide from the meta-KB, by stable anchor", () => {
-  const hrefs = sidebar(nodes).flatMap((g) => g.links.flatMap((l) => [l.href, ...(l.children ?? []).map((c) => c.href)]));
+  const hrefs = sidebar(nodes).flatMap((g) => g.links.flatMap(withChildren));
   for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(hrefs.includes(`/build/methodology/#${n.id.replace(/\./g, "-")}`), n.id);
   for (const n of nodes.filter((n) => n.type === "Decision")) assert.ok(hrefs.includes(`/reference/decisions/#${n.id.replace(/\./g, "-")}`), n.id);
   // The anchors exist in the generated pages.
@@ -55,7 +74,7 @@ test("site: the sidebar has only non-empty groups, in order, with every page onc
 
 test("site: previous/next follows the sidebar order, and only the ends lack a link", () => {
   const seq = sequence(nodes);
-  const expected = sidebar(nodes).flatMap((g) => g.links.flatMap((l) => [l.href, ...(l.children ?? []).map((c) => c.href)]));
+  const expected = sidebar(nodes).flatMap((g) => g.links.flatMap(withChildren));
   assert.deepEqual(seq.map((l) => l.href), expected);
   assert.equal(new Set(expected).size, expected.length, "sequence has duplicates");
   const first = PAGES[0].route;
@@ -83,7 +102,7 @@ test("site: links are rewritten to routes or GitHub, and a link to an unrouted .
     return link.url;
   };
   assert.equal(rewrite("METHOD.md#step-2-reuse"), "/build/methodology/#step-2-reuse");
-  assert.equal(rewrite("../../docs/DECISIONS.md", "examples/wine/TRANSCRIPT.md"), "/reference/decisions/");
+  assert.equal(rewrite("../../../docs/DECISIONS.md", "examples/wine/tutorial/0-intro.md"), "/reference/decisions/");
   assert.equal(rewrite("meta-kb/README.md", "CONTRIBUTING.md"), "/contributing/meta-kb/");
   assert.equal(rewrite("../README.md"), "https://github.com/alanbsmith/ontology-kit/blob/main/README.md");
   assert.equal(rewrite("../src/checks.ts"), "https://github.com/alanbsmith/ontology-kit/blob/main/src/checks.ts");

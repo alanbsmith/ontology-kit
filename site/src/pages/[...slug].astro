@@ -24,7 +24,9 @@ if (!entry) throw new Error(`No docs entry for ${page.source}`);
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const title: string = remarkPluginFrontmatter.title ?? page.label;
 const { prev, next } = neighbors(metaNodes, page.route);
-const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.source}`;
+// A generated tutorial page links to the hand-written source it was built from.
+const sourceFile = page.source.replace(/^(examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
+const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${sourceFile}`;
 ---
 
 <Base title={title} outline={headings}>
@@ -43,11 +45,52 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 				{prev ? <a class="prev" href={prev.href} rel="prev"><span class="direction">&larr; Previous</span><span class="label">{prev.label}</span></a> : <span />}
 				{next ? <a class="next" href={next.href} rel="next"><span class="direction">Next &rarr;</span><span class="label">{next.label}</span></a> : <span />}
 			</nav>
-			<p class="source muted"><a href={sourceUrl}>View this page's source on GitHub</a></p>
+			<p class="source muted"><a href={sourceUrl}>View page source</a></p>
 		</main>
 		<Outline headings={headings} />
 	</div>
 </Base>
+
+<script>
+	// A copy button on every block of shell commands (the tutorial's `bash` blocks), so a reader
+	// can copy the commands without selecting them. Output blocks are `text` and get none.
+	const COPY_ICON = `<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
+
+	document.querySelectorAll<HTMLElement>('pre[data-language="bash"], pre[data-language="sh"], pre[data-language="shell"], pre[data-language="zsh"]').forEach((pre) => {
+		const wrapper = document.createElement('div');
+		wrapper.className = 'code-block';
+		pre.replaceWith(wrapper);
+		wrapper.append(pre);
+
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'copy-button';
+		button.innerHTML = `${COPY_ICON}<span>Copy</span>`;
+		button.setAttribute('aria-label', 'Copy code to clipboard');
+		const label = button.querySelector('span')!;
+		let reset: number | undefined;
+
+		button.addEventListener('click', async () => {
+			const text = pre.textContent ?? '';
+			try {
+				await navigator.clipboard.writeText(text.replace(/\n$/, ''));
+				label.textContent = 'Copied';
+			} catch {
+				label.textContent = 'Press Ctrl+C';
+				const range = document.createRange();
+				range.selectNodeContents(pre);
+				getSelection()?.removeAllRanges();
+				getSelection()?.addRange(range);
+			}
+			clearTimeout(reset);
+			reset = window.setTimeout(() => (label.textContent = 'Copy'), 2000);
+		});
+
+		// Announced politely when the label changes.
+		label.setAttribute('role', 'status');
+		wrapper.append(button);
+	});
+</script>
 
 <script>
 	// Mermaid is heavy, so it only loads on pages that actually contain a diagram.

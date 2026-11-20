@@ -53,4 +53,4 @@ Skills you linked into `~/.claude/skills/` update with the repo. If you copied o
 
 Existing ontologies keep working: okb converts older file formats when it loads them, and new rules only add findings.
 
-Next: build your first ontology with the [wine tutorial](../../examples/wine/TRANSCRIPT.md).
+Next: build your first ontology with the [wine tutorial](../../examples/wine/tutorial/0-intro.md).
