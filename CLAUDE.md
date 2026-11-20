@@ -18,7 +18,7 @@ npm run site                               # docs + build the docs site into sit
 npm run site:dev                           # docs + the site's dev server
 npm run example                            # rebuild examples/wine/ (also run by npm test)
 npm run format:docs                        # Prettier on the hand-written docs
-npm run lint:docs                          # Prettier check + markdownlint + Vale (brew install vale; vale sync once)
+npm run lint:docs                          # Prettier check + markdownlint + Vale (brew install vale; it runs `vale sync` itself in a fresh checkout or worktree)
 ```
 
 Run `npx tsc` and `npm test` after every change. There's no code linter. `npm run lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
