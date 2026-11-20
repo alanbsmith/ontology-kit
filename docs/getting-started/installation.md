@@ -33,7 +33,7 @@ Claude Code and Cursor both load skills from `~/.claude/skills/`, and the link k
 Check which version you have:
 
 ```bash
-okb version          # okb 1.0.0 · meta-KB 2.4.0
+okb version          # okb 1.0.0 · meta-KB 2.4.1
 ```
 
 The meta-KB version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).

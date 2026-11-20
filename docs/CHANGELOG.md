@@ -39,3 +39,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 - **`REFINES` (Rule → Rule, optional `adds`) and `FULFILLS` (Instance → Rule)** edges, set with `okb rule refines` and `okb fulfills`, and exported. The format registry gains `optionalProps` for edge types.
 - **`okb cite <node> <quote id>`** attaches an existing quote to a node.
 - New glossary entries: `concept.prescriptive-vs-descriptive`, `concept.rule-qualifier`, `concept.rule-refines`, `concept.rule-fulfills`, `concept.authored-rule`.
+
+## v2.4.1
+
+- **Skills point at the docs site.** The three shipped skills now send readers to the Installation page for updating, and to `https://ontology-kit.dev/llms.txt` (an index of every docs page, each also served as markdown) instead of the README. No rule changed.

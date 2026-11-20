@@ -51,7 +51,7 @@ Link only the ones you want. A link keeps the skill current when you `git pull` 
 Near the top of each `SKILL.md`, under its title, a line says which version it is:
 
 ```text
-**Version 2.4.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.4.1.** It should match the meta-KB version that `okb version` prints.
 ```
 
 All three skills share the meta-KB's version number, and `okb version` prints it:
@@ -61,7 +61,7 @@ okb version
 ```
 
 ```text
-okb 1.0.0 · meta-KB 2.4.0
+okb 1.0.0 · meta-KB 2.4.1
 ```
 
 Each skill checks the two numbers when it starts. If they differ, it tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.
