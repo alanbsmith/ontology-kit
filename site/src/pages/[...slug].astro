@@ -4,9 +4,11 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Band from '../components/Band.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import Outline from '../components/Outline.astro';
 import { PAGES, neighbors, type Page } from '../nav.ts';
 import { metaNodes } from '../lib/meta.ts';
+import { breadcrumbs } from '../lib/breadcrumbs.ts';
 import { timeLabel } from '../lib/reading-time.ts';
 
 export function getStaticPaths() {
@@ -29,6 +31,7 @@ const title: string = remarkPluginFrontmatter.title ?? page.label;
 const bodies = new Map<string, string>();
 for (const p of PAGES) bodies.set(p.route, (await getEntry('docs', p.source))?.body ?? '');
 const time = timeLabel(page.route, (route) => bodies.get(route) ?? '');
+const trail = breadcrumbs(page.route);
 const { prev, next } = neighbors(metaNodes, page.route);
 // A generated tutorial page links to the hand-written source it was built from.
 const sourceFile = page.source.replace(/^(examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
@@ -37,6 +40,7 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${source
 
 <Base title={title} outline={headings}>
 	<Band seed={page.route}>
+		<Breadcrumb items={trail} />
 		<!-- Pagefind reads the page title from this h1, so it is indexed with the article. -->
 		<div data-pagefind-body><h1>{title}</h1></div>
 		{time && <p class="meta">{time}</p>}
