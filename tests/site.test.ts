@@ -92,3 +92,16 @@ test("site: links are rewritten to routes or GitHub, and a link to an unrouted .
   assert.equal(rewrite("https://example.com/a.md"), "https://example.com/a.md");
   assert.throws(() => rewrite("../sources/README.md"), /no route/);
 });
+
+test("site: every Mermaid diagram on a page has accTitle and accDescr", () => {
+  let found = 0;
+  for (const p of PAGES) {
+    const blocks = readFileSync(join(ROOT, p.source), "utf8").matchAll(/^```mermaid\n([\s\S]*?)^```/gm);
+    for (const [, body] of blocks) {
+      found++;
+      assert.match(body, /^\s*accTitle:\s*\S/m, `a Mermaid block in ${p.source} has no accTitle`);
+      assert.match(body, /^\s*accDescr:\s*\S/m, `a Mermaid block in ${p.source} has no accDescr`);
+    }
+  }
+  assert.ok(found > 0, "found no Mermaid blocks to check");
+});

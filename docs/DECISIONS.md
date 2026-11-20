@@ -11,6 +11,8 @@ The recurring "which way do I model this?" questions, as short yes/no walkthroug
 
 ```mermaid
 flowchart TD
+  accTitle: Top-down, bottom-up, or combination?
+  accDescr: A flowchart of 2 yes or no questions, asked in order: 1. Do you naturally think of this domain starting from its broadest categories? 2. Do you think in concrete examples first (specific products, cases, items)? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Do you naturally think of this domain starting from its broadest categories?")
   Q1Y["Go top-down: create the most general classes first, then specialize."]
   Q1 -->|Yes| Q1Y
@@ -47,6 +49,8 @@ None of the three is better than the others. Combination is often the easiest fo
 
 ```mermaid
 flowchart TD
+  accTitle: Is this really a subclass?
+  accDescr: A flowchart of 4 yes or no questions, asked in order: 1. Is every single X, by definition, also a Y (not just usually)? 2. Is X a singular/plural or alternative name for Y? 3. Is X one particular thing rather than a kind of thing? 4. Is X already a subclass of Y through another parent? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Is every single X, by definition, also a Y #40;not just usually#41;?")
   Q1 -->|Yes| Q2
   Q1N["Not a subclass. If X is part of Y, made by Y, or related to Y, use a slot."]
@@ -103,6 +107,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+  accTitle: Should I introduce a new subclass here?
+  accDescr: A flowchart of 4 yes or no questions, asked in order: 1. Will the subclass have slots the parent doesn't have? 2. Will it have different restrictions (a fixed value, fewer allowed values, a different cardinality)? 3. Will it take part in relationships the parent doesn't (e.g. 'goes well with seafood')? 4. Is this a reference hierarchy people browse to pick a level of detail, or a distinction experts always make? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Will the subclass have slots the parent doesn't have?")
   Q1Y["Create it."]
   Q1 -->|Yes| Q1Y
@@ -167,6 +173,8 @@ Aim for a balance: neither a deep hierarchy of near-identical classes nor a flat
 
 ```mermaid
 flowchart TD
+  accTitle: New class, or just a slot value?
+  accDescr: A flowchart of 4 yes or no questions, asked in order: 1. Would things with different values change which values are allowed in OTHER classes' slots? (e.g. red vs white changes which dishes pair well) 2. Do people in the domain think of things with different values as different kinds of things? 3. Could one individual change its value over time (chilled/not chilled, active/inactive)? 4. Is it a number, color, location or similar measurement? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Would things with different values change which values are allowed in OTHER classes' slots? #40;e.g. red vs white changes which dishes pair well#41;")
   Q1Y["Make classes."]
   Q1 -->|Yes| Q1Y
@@ -225,6 +233,8 @@ The same distinction can be a class in one ontology and a value in another. It d
 
 ```mermaid
 flowchart TD
+  accTitle: Instance or class?
+  accDescr: A flowchart of 3 yes or no questions, asked in order: 1. Do the concepts form a natural hierarchy (one inside another, like regions)? 2. Is it among the most specific things that appear in the answers to your competency questions? 3. Will you need to record different facts about finer-grained versions of it (e.g. each vintage)? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Do the concepts form a natural hierarchy #40;one inside another, like regions#41;?")
   Q1Y["Classes #40;possibly abstract#41;, even if they have no instances yet."]
   Q1 -->|Yes| Q1Y
@@ -270,6 +280,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+  accTitle: Are these classes disjoint?
+  accDescr: A flowchart of 1 yes or no questions, asked in order: 1. Can any single thing be a member of both classes at once? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Can any single thing be a member of both classes at once?")
   Q1Y["Not disjoint. Leave them."]
   Q1 -->|Yes| Q1Y
@@ -296,6 +308,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+  accTitle: Which class does this slot go on?
+  accDescr: A flowchart of 2 yes or no questions, asked in order: 1. Does every member of the parent class have this property? 2. Are you about to attach it to every child of some class? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Does every member of the parent class have this property?")
   Q1Y["Move up and ask again about the next parent."]
   Q1 -->|Yes| Q1Y
@@ -334,6 +348,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+  accTitle: What should this slot's range be?
+  accDescr: A flowchart of 4 yes or no questions, asked in order: 1. Is there one class that covers every valid value? 2. Does your list include a class and its subclass? 3. Does your list include all (or nearly all) children of one class? 4. Is the range something like Thing/Entity/Object? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Is there one class that covers every valid value?")
   Q1Y["Use the most general such class that contains only valid values."]
   Q1 -->|Yes| Q1Y
@@ -394,6 +410,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+  accTitle: Choosing a naming convention
+  accDescr: A flowchart of 4 yes or no questions, asked in order: 1. Will the names be used in code, a graph database, or URLs that don't handle spaces well? 2. Is there a reason to prefer plural class names (e.g. a system you integrate with uses them)? 3. Do you want slot names to show they're slots (hasMaker, makerOf)? 4. Will the data go into a graph database? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Will the names be used in code, a graph database, or URLs that don't handle spaces well?")
   Q1Y["Use PascalCase for classes and camelCase for slots #40;the toolkit default#41;."]
   Q1 -->|Yes| Q1Y
@@ -458,6 +476,8 @@ There's often no reason to prefer one option; what matters is sticking to it. Co
 
 ```mermaid
 flowchart TD
+  accTitle: Edge property, or make the relationship its own class?
+  accDescr: A flowchart of 3 yes or no questions, asked in order: 1. Is the extra information a simple value about this one link (a short condition, a number, a date)? 2. Does the qualifier need relationships of its own (to people, sources, other components), or several values that vary independently? 3. Will you query or validate by it (e.g. 'all recommendations that apply to dense layouts')? Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.
   Q1("Is the extra information a simple value about this one link #40;a short condition, a number, a date#41;?")
   Q1 -->|Yes| Q2
   Q1N["Make the relationship a class #40;e.g. a Recommendation with slots from, to, condition, audience#41;, so it can have its own relationships."]

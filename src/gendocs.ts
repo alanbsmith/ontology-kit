@@ -95,7 +95,7 @@ const decisions = HEADER("Decision guides");
 decisions.push("The recurring \"which way do I model this?\" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.", "");
 for (const d of meta.ofType("Decision")) {
   // The second anchor is the old dot-less id (`decisionclass-or-value`), kept so existing links still land.
-  decisions.push(`${anchorTag(d.id)}<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "", ...flowchart(d.tests as DecisionTest[]), "");
+  decisions.push(`${anchorTag(d.id)}<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "", ...flowchart(d.name, d.tests as DecisionTest[]), "");
   (d.tests as any[]).forEach((t, i) => {
     const yes = t.ifYes === "continue" ? "go to the next question" : t.ifYes;
     const no = t.ifNo === "continue" ? "go to the next question" : t.ifNo;
@@ -116,8 +116,10 @@ interface DecisionTest {
  * A Mermaid flowchart of a decision guide's questions. "continue" leads to the next question
  * (or to "Done" after the last one). The numbered list under it stays as the accessible text.
  */
-function flowchart(tests: DecisionTest[]): string[] {
-  const lines = ["```mermaid", "flowchart TD"];
+function flowchart(name: string, tests: DecisionTest[]): string[] {
+  // accTitle and accDescr become the SVG's <title> and <desc> for screen readers (one line each).
+  const desc = `A flowchart of ${tests.length} yes or no questions, asked in order: ${tests.map((t, i) => `${i + 1}. ${t.ask}`).join(" ")} Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.`;
+  const lines = ["```mermaid", "flowchart TD", `  accTitle: ${accText(name)}`, `  accDescr: ${accText(desc)}`];
   let done = false;
   tests.forEach((t, i) => {
     const q = `Q${i + 1}`;
@@ -140,6 +142,11 @@ function flowchart(tests: DecisionTest[]): string[] {
   if (done) lines.push(`  Done(["Done"])`);
   lines.push("```");
   return lines;
+}
+
+/** Mermaid reads accTitle and accDescr to the end of the line, so only line breaks and braces need care. */
+function accText(s: string): string {
+  return s.replace(/\s+/g, " ").replace(/[{}]/g, "").trim();
 }
 
 /** Escapes the characters Mermaid treats specially inside a quoted label, as Mermaid entity codes. */
