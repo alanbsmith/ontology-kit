@@ -28,7 +28,7 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
     })
   : [];
 const DEFAULT_DOCS = [
-  "README.md", "CONTRIBUTING.md", "CLAUDE.md", "docs/getting-started/introduction.md", "docs/getting-started/installation.md", "docs/getting-started/quickstart.md", "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", "docs/getting-started/introduction.md", "docs/getting-started/installation.md", "docs/getting-started/quickstart.md", "docs/build/index.md", "docs/build/with-claude.md", "docs/build/with-the-cli.md", "docs/build/review.md", "docs/build/export.md", "docs/reference/skills.md", "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
   "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
 ];
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");

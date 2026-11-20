@@ -8,7 +8,7 @@ An ontology built with okb is a folder with three JSON files:
 | `nodes.json` | A list of nodes. Each has `id`, `type` and type-specific properties.                      |
 | `edges.json` | A list of edges. Each has `from`, `type`, `to` and sometimes properties.                  |
 
-It's a labeled property graph (LPG). In this file the **schema is data**: classes and slots are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Exporting](#exporting-to-a-graph-database)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
+It's a labeled property graph (LPG). In this file the **schema is data**: classes and slots are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
 
 ## Vocabulary: slots, properties, relationships
 
@@ -80,25 +80,7 @@ A Rule is **prescriptive**: a requirement on any implementation, with a modality
 
 ## Exporting to a graph database
 
-`okb export` writes the **data** the way graph databases expect it:
-
-```bash
-okb export --format cypher --out wine.cypher        # openCypher CREATE script (Neo4j, Memgraph, Neptune)
-okb export --out wine.json                          # {nodes: [{id, labels, properties}], relationships: [{type, from, to, properties}]}
-okb export --with-schema --out wine-full.json       # also the class graph: (:OkbClass) nodes, IS_A, INSTANCE_OF, class-level values
-okb export --no-inherited ...                       # don't copy fixed class values onto instances
-okb export --no-rules ...                           # data only: leave out rules, quotes and sources
-okb export --include-unverified ...                 # also rules that haven't passed verification yet
-```
-
-- Each **instance** becomes a node labeled with its class and every ancestor, most specific first: `(:Beaujolais:RedWine:Wine)`. Labels are flat, so multiple labels are how a graph database expresses is-a.
-- **Property values**, including fixed values inherited from classes (`color: "red"` from RedWine), become node properties. Every node gets `okbId` and `name`.
-- **Relationships** between instances are exported as-is. Class-level links to an instance (every Merlot's grape is _Merlot grape_) are copied onto each member with an `inheritedFrom` property. Class-level links to a class (RedWine goes well with RedMeat) exist only in the schema, so they're exported with `--with-schema`.
-- **Rules** come along by default, so an app reading the export gets the guidance with the data. Each verified domain rule becomes an `(:OkbRule {statement, modality, authored, verification, governsClasses, governsSlots, governsInstances, <qualifier slots>})` node that `CITES` its quote, `(:OkbSourceLocation {quote, locator, sourceLink, ...})`, which is `PART_OF` its document, `(:OkbSource)`. `governsClasses` holds class names, so `MATCH (r:OkbRule) WHERE "Button" IN r.governsClasses` works against instance labels without the schema. A rule also gets `GOVERNS` edges to the instances it's about, and to `(:OkbClass)` nodes with `--with-schema`. Its qualifier values are properties named by their slots, `REFINES` edges (with `adds`) join exported rules, and `FULFILLS` edges run from instances to exported rules.
-- **Only verified rules are exported.** A rule that's unverified, OVERREACH but not yet approved, or UNSUPPORTED is left out, and so is any link whose `rule` property points at it, because that rule is the link's only justification. The export's `notes` say how many were held back. `--include-unverified` exports them with their `verification` status (`UNVERIFIED` when there's none yet), for review tools rather than apps.
-- **Every `rule` property points at an exported `OkbRule` node.** With `--no-rules` the property is removed from links, since the id would point at nothing.
-
-The export format is `okb-export/2`. Version 1 had no rules, so every node in it was an instance.
+`okb export` writes the data as JSON or as an openCypher script for Neo4j, Neptune and Memgraph (the `okb-export/2` format). What it writes, its options and an example are on the [Export](build/export.md) page.
 
 Files from the previous format (`okb-lpg/1`, which used `HAS_VALUE` edges) are converted automatically the next time okb loads them.
 

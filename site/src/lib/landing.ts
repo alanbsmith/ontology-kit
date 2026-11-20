@@ -10,6 +10,7 @@ import { join } from "node:path";
 export const LANDING_LINKS = {
   start: "/getting-started/quickstart/",
   learn: "/learn/knowledge-graphs/",
+  build: "/build/",
   tutorial: "/getting-started/tutorial/wine-ontology/",
   espresso: "/getting-started/tutorial/espresso-ontology/",
   contributing: "/contributing/",
