@@ -6,13 +6,17 @@ okb-graph {
 	font-size: var(--text-small);
 }
 
-okb-graph .og-frame {
-	position: relative;
-	height: clamp(20rem, 60vh, 32rem);
+/* One box holds the graph and, under a hairline, the inspector for the selected node. */
+okb-graph .og-box {
 	border: var(--border-width) solid var(--color-border);
 	border-radius: var(--radius-xl);
 	background: var(--color-surface);
 	overflow: hidden;
+}
+
+okb-graph .og-frame {
+	position: relative;
+	height: clamp(20rem, 60vh, 32rem);
 }
 
 okb-graph svg {
@@ -196,10 +200,8 @@ okb-graph .og-legend svg {
 }
 
 okb-graph .og-inspector {
-	margin-block-start: var(--space-sm);
-	padding: var(--space-md);
-	border: var(--border-width) solid var(--color-border);
-	border-radius: var(--radius-lg);
+	padding: var(--space-sm) var(--space-md);
+	border-block-start: var(--border-width) solid var(--color-border);
 	background: var(--color-surface-raised);
 }
 

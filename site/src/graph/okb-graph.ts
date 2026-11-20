@@ -140,8 +140,9 @@ class OkbGraph extends HTMLElement {
 		this.filters = html('div', { className: 'og-filters' });
 		this.inspector = html('div', { className: 'og-inspector' });
 		this.inspector.setAttribute('aria-live', 'polite');
-		this.replaceChildren(this.frameEl);
-		this.append(this.filters, this.inspector, this.legend(), this.fallback!);
+		// The inspector is part of the same box as the graph, under it.
+		this.replaceChildren(html('div', { className: 'og-box' }, this.frameEl, this.inspector));
+		this.append(this.filters, this.legend(), this.fallback!);
 		this.buildFilters();
 		this.inspect();
 
