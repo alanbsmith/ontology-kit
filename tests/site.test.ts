@@ -6,6 +6,8 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { INSTALL_COMMAND } from "../site/src/lib/install.ts";
+import { graphNames, loadGraph } from "../site/src/graph/data.ts";
+import { buildGraph, defaultTypes, findNode } from "../site/src/graph/model.ts";
 import { PAGES, defaultOpen, sectionKey, sequence, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -68,7 +70,7 @@ test("site: the sidebar lists every step and decision guide from the meta-KB, by
 
 test("site: the sidebar has only non-empty groups, in order, with every page once", () => {
   const groups = sidebar(nodes);
-  assert.deepEqual(groups.map((g) => g.label), ["Getting started", "Build", "Reference", "Contributing"]);
+  assert.deepEqual(groups.map((g) => g.label), ["Getting started", "Learn", "Build", "Reference", "Contributing"]);
   for (const g of groups) assert.ok(g.links.length > 0, g.label);
 });
 
@@ -142,4 +144,29 @@ test("site: sidebar sections open for the page being read, and only those", () =
   // Every group and every link with children has a distinct key.
   const keys = groups.flatMap((g) => [sectionKey(g), ...g.links.filter((l) => l.children).map(sectionKey)]);
   assert.equal(new Set(keys).size, keys.length);
+});
+
+test("site: every <okb-graph> has a text fallback and a src that has a data endpoint", () => {
+  const names = new Set(graphNames(ROOT).map((n) => `/data/${n}.json`));
+  let found = 0;
+  for (const p of PAGES) {
+    const text = readFileSync(join(ROOT, p.source), "utf8");
+    for (const [, attrs, body] of text.matchAll(/<okb-graph\b([^>]*)>([\s\S]*?)<\/okb-graph>/g)) {
+      found++;
+      const src = /\bsrc="([^"]*)"/.exec(attrs)?.[1];
+      assert.ok(src && names.has(src), `an <okb-graph> in ${p.source} has src="${src}", which no data endpoint serves`);
+      // A focus or highlight name that matches no node would silently show the whole graph.
+      const raw = loadGraph(ROOT, src.replace(/^\/data\/|\.json$/g, ""));
+      const extra = (/\bshow="([^"]*)"/.exec(attrs)?.[1] ?? "").split(",").map((t) => t.trim()).filter(Boolean);
+      const shown = buildGraph(raw, [...defaultTypes(raw), ...extra]);
+      for (const attr of ["focus", "highlight"]) {
+        const names = (new RegExp(`\\b${attr}="([^"]*)"`).exec(attrs)?.[1] ?? "").split(",").map((n) => n.trim()).filter(Boolean);
+        for (const name of names) assert.ok(findNode(shown, name), `${p.source}: ${attr}="${name}" matches no node in ${src}`);
+      }
+      assert.ok(body.replace(/<[^>]*>/g, "").trim().length > 20, `an <okb-graph> in ${p.source} has an empty text fallback`);
+      assert.ok(!/\n\s*\n/.test(body), `an <okb-graph> in ${p.source} has a blank line, which would end the HTML block`);
+    }
+    assert.equal(/<okb-graph\b/.test(text), text.includes("</okb-graph>"), `${p.source} has an unclosed <okb-graph>`);
+  }
+  assert.ok(found > 0, "found no <okb-graph> embeds to check");
 });

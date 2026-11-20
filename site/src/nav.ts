@@ -38,6 +38,7 @@ export const PAGES: readonly Page[] = [
   { route: "/getting-started/tutorial/espresso-ontology/6-facets/", source: "examples/espresso/tutorial/6-facets.md", label: "6. Facets" },
   { route: "/getting-started/tutorial/espresso-ontology/7-instances/", source: "examples/espresso/tutorial/7-instances.md", label: "7. Instances" },
   { route: "/getting-started/tutorial/espresso-ontology/8-review/", source: "examples/espresso/tutorial/8-review.md", label: "8. Review" },
+  { route: "/learn/knowledge-graphs/", source: "docs/learn/knowledge-graphs.md", label: "What is a knowledge graph?" },
   { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology" },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs" },
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
@@ -109,7 +110,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
-    { label: "Learn", links: [] },
+    { label: "Learn", links: [link("/learn/knowledge-graphs/")] },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
