@@ -23,6 +23,7 @@ export const PAGES: readonly Page[] = [
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
   { route: "/reference/rules/", source: "docs/RULES.md", label: "Rules" },
   { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides" },
+  { route: "/reference/cli/", source: "docs/CLI.md", label: "CLI commands" },
   { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format" },
   { route: "/reference/changelog/", source: "docs/CHANGELOG.md", label: "Changelog" },
   { route: "/contributing/", source: "CONTRIBUTING.md", label: "Contributing" },
@@ -86,7 +87,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
-      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/format/"), link("/reference/changelog/")],
+      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/cli/"), link("/reference/format/"), link("/reference/changelog/")],
     },
     { label: "Contributing", links: [link("/contributing/"), link("/contributing/meta-kb/"), link("/contributing/code-review/")] },
   ];

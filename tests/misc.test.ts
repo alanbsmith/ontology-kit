@@ -5,6 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { today } from "../src/clock.ts";
+import { cmdAnchor, listedCommands, renderCliDocs, UNLISTED } from "../src/clidocs.ts";
+import { HELP } from "../src/help.ts";
 import { MetaKB } from "../src/metakb.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
@@ -214,5 +216,20 @@ describe("worked example", () => {
     const ont = Ontology.load(dir);
     assert.deepEqual(ont.edges, [{ from: "i.x", type: "KNOWS", to: "i.y" }]);
     assert.equal(ont.manifest.format, "okb-lpg/2");
+  });
+});
+
+describe("docs/CLI.md", () => {
+  it("is generated from the help text and lists every command", () => {
+    const page = readFileSync(join(ROOT, "docs/CLI.md"), "utf8");
+    assert.equal(page, renderCliDocs(HELP) + "\n", "docs/CLI.md is stale: run npm run docs");
+    // `edgeprop` is the internal target of `relationship property`, not a command people type.
+    const src = readFileSync(join(ROOT, "src/cli.ts"), "utf8");
+    const dispatch = [...src.matchAll(/^    case "([a-z][a-z-]*)":/gm)].map((m) => m[1]).filter((c) => c !== "edgeprop");
+    const documented = new Set([...listedCommands(HELP), ...Object.keys(UNLISTED)]);
+    for (const cmd of dispatch) {
+      assert.ok(documented.has(cmd), `okb ${cmd} is in the dispatch table but not on docs/CLI.md`);
+      assert.ok(page.includes(`<a id="${cmdAnchor(cmd)}"></a>`), cmd);
+    }
   });
 });

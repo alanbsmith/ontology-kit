@@ -3,6 +3,7 @@ docs/METHOD.md
 docs/GLOSSARY.md
 docs/RULES.md
 docs/DECISIONS.md
+docs/CLI.md
 examples/wine/
 meta-kb/data/
 node_modules/

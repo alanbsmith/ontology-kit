@@ -5,7 +5,7 @@ description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md,
 
 # okb docs drift check
 
-ontology-kit already keeps some docs honest by generating them (`npm run docs` writes METHOD, GLOSSARY, RULES and DECISIONS from the meta-KB). The rest are hand-written, and they drift silently. Beginners follow them literally: a README that shows a flag that no longer exists teaches the wrong thing, and a skill that tells Claude to run a renamed command fails on someone's first ontology. This skill finds that drift and fixes it.
+ontology-kit already keeps some docs honest by generating them (`npm run docs` writes METHOD, GLOSSARY, RULES and DECISIONS from the meta-KB, and CLI from the `okb help` text). The rest are hand-written, and they drift silently. Beginners follow them literally: a README that shows a flag that no longer exists teaches the wrong thing, and a skill that tells Claude to run a renamed command fails on someone's first ontology. This skill finds that drift and fixes it.
 
 It has two layers: a script for what can be checked mechanically, and a read-through for what only a person (or you) can judge.
 
@@ -38,7 +38,7 @@ The script knows that names exist, not that the docs say true things about them.
 - **The file format.** docs/FORMAT.md's property lists should match the interfaces in `src/types.ts` (`ClassNode`, `SlotNode`, ...), because those are what okb actually reads and writes.
 - **Versions.** `docs/CHANGELOG.md` should cover `VERSION` in `meta-kb/build.ts`.
 
-Leave generated docs alone (METHOD, GLOSSARY, RULES, DECISIONS say "Generated from the meta-KB" at the top). If one of them is wrong, the fix is in `meta-kb/src/*.yaml` followed by `npm run build:meta && npm run docs`.
+Leave generated docs alone (METHOD, GLOSSARY, RULES, DECISIONS and CLI say "Generated from" at the top). If one of them is wrong, the fix is in `meta-kb/src/*.yaml` followed by `npm run build:meta && npm run docs`.
 
 ## 3. Report, then fix
 
