@@ -57,6 +57,14 @@ describe("tutorial engine", () => {
     assert.match(readFileSync(join(dir, "TRANSCRIPT.md"), "utf8"), /^# Demo\n\nIntro\.\n\n## Intro\n[\s\S]*## Step 1\n/);
   });
 
+  it("writes no pages with pages: false, but keeps the snapshots and the transcript", () => {
+    const dir = demo({ "0-intro.md": intro, "1-scope.md": "# Step 1\n\n```okb\nokb cq add \"Is it hot?\"\n```\n" });
+    buildTutorial({ dir, date: "2026-09-23", pages: false, transcript: { title: "Demo", intro: ["Intro."] } });
+    assert.ok(!existsSync(join(dir, "tutorial", "0-intro.md")) && !existsSync(join(dir, "tutorial", "1-scope.md")));
+    assert.ok(existsSync(join(dir, "tutorial", "graph", "step-1.json")));
+    assert.ok(existsSync(join(dir, "TRANSCRIPT.md")));
+  });
+
   it("rebuilds from nothing and gives identical files each time", () => {
     const dir = demo({ "0-intro.md": intro, "1-scope.md": "# Step 1\n\n```okb\nokb cq add \"Is it hot?\"\n```\n" });
     build(dir);

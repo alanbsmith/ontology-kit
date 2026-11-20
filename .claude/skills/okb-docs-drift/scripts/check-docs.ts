@@ -172,7 +172,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
 
 /** Paths that only exist after a command runs (PDFs are gitignored, examples are built). */
 function isGenerated(p: string): boolean {
-  return /^sources\/.*\.pdf$/.test(p) || /^examples\/wine\//.test(p);
+  return /^sources\/.*\.pdf$/.test(p) || /^examples\/(wine|espresso)\//.test(p);
 }
 
 // Main

@@ -18,7 +18,7 @@
     "docs": "node src/gendocs.ts",
     "site": "npm run docs && npm run example && npm --prefix site run build",
     "site:dev": "npm run docs && npm run example && npm --prefix site run dev",
-    "example": "node examples/build-wine.ts",
+    "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
     "format:docs": "prettier --write \"**/*.md\"",

@@ -29,6 +29,15 @@ export const PAGES: readonly Page[] = [
   { route: "/getting-started/tutorial/wine-ontology/6-facets/", source: "examples/wine/tutorial/6-facets.md", label: "6. Facets" },
   { route: "/getting-started/tutorial/wine-ontology/7-instances/", source: "examples/wine/tutorial/7-instances.md", label: "7. Instances" },
   { route: "/getting-started/tutorial/wine-ontology/8-review/", source: "examples/wine/tutorial/8-review.md", label: "8. Review" },
+  { route: "/getting-started/tutorial/espresso-ontology/", source: "examples/espresso/tutorial/0-intro.md", label: "Tutorial: Espresso ontology" },
+  { route: "/getting-started/tutorial/espresso-ontology/1-scope/", source: "examples/espresso/tutorial/1-scope.md", label: "1. Scope" },
+  { route: "/getting-started/tutorial/espresso-ontology/2-reuse/", source: "examples/espresso/tutorial/2-reuse.md", label: "2. Reuse" },
+  { route: "/getting-started/tutorial/espresso-ontology/3-terms/", source: "examples/espresso/tutorial/3-terms.md", label: "3. Terms" },
+  { route: "/getting-started/tutorial/espresso-ontology/4-classes/", source: "examples/espresso/tutorial/4-classes.md", label: "4. Classes" },
+  { route: "/getting-started/tutorial/espresso-ontology/5-slots/", source: "examples/espresso/tutorial/5-slots.md", label: "5. Slots" },
+  { route: "/getting-started/tutorial/espresso-ontology/6-facets/", source: "examples/espresso/tutorial/6-facets.md", label: "6. Facets" },
+  { route: "/getting-started/tutorial/espresso-ontology/7-instances/", source: "examples/espresso/tutorial/7-instances.md", label: "7. Instances" },
+  { route: "/getting-started/tutorial/espresso-ontology/8-review/", source: "examples/espresso/tutorial/8-review.md", label: "8. Review" },
   { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology" },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs" },
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
@@ -99,7 +108,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .filter((n) => n.type === "Decision")
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
-    { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/"))] },
+    { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
     { label: "Learn", links: [] },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {

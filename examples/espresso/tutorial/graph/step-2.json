@@ -1,0 +1,76 @@
+{
+  "step": 2,
+  "nodes": [
+    {
+      "type": "Ontology",
+      "id": "ontology",
+      "name": "Espresso drinks",
+      "domain": "Espresso-based coffee drinks and what goes in them",
+      "purpose": "Help baristas and customers compare drinks on a café menu",
+      "users": [
+        "baristas",
+        "customers"
+      ],
+      "maintainers": [
+        "head barista"
+      ],
+      "outOfScope": [
+        "brewing equipment",
+        "coffee beans and roasting"
+      ],
+      "kind": "application",
+      "reuseReviewed": true
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.1",
+      "text": "Which drinks have no milk?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.2",
+      "text": "What's the difference between a cortado and a latte?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.3",
+      "text": "What goes into a cappuccino?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.4",
+      "text": "Which drinks are a variation of another drink?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.5",
+      "text": "Which drinks on the menu come with chocolate?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.6",
+      "text": "How much does each drink cost?",
+      "status": "draft"
+    },
+    {
+      "type": "DesignDecision",
+      "id": "d.1",
+      "title": "No existing ontology reused",
+      "decision": "Build from scratch.",
+      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
+      "date": "2026-09-23"
+    }
+  ],
+  "edges": [
+    {
+      "from": "d.1",
+      "type": "ABOUT",
+      "to": "ontology"
+    }
+  ]
+}

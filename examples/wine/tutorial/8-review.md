@@ -262,3 +262,5 @@ Wrote wine-export.json: 30 nodes, 37 relationships (json).
 ## Next step
 
 You built a complete, valid ontology and exported it. To build one for your own subject, start again at [Step 1](1-scope.md) with your own domain, or ask Claude to coach you through it.
+
+If you'd like more practice first, try the [espresso tutorial](../../espresso/tutorial/0-intro.md). It builds a small ontology of coffee drinks in the same eight steps, and it adds a class with two parents, rules from a document, and a warning you decide about.

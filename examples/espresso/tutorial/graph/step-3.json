@@ -1,0 +1,286 @@
+{
+  "step": 3,
+  "nodes": [
+    {
+      "type": "Ontology",
+      "id": "ontology",
+      "name": "Espresso drinks",
+      "domain": "Espresso-based coffee drinks and what goes in them",
+      "purpose": "Help baristas and customers compare drinks on a café menu",
+      "users": [
+        "baristas",
+        "customers"
+      ],
+      "maintainers": [
+        "head barista"
+      ],
+      "outOfScope": [
+        "brewing equipment",
+        "coffee beans and roasting"
+      ],
+      "kind": "application",
+      "reuseReviewed": true
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.1",
+      "text": "Which drinks have no milk?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.2",
+      "text": "What's the difference between a cortado and a latte?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.3",
+      "text": "What goes into a cappuccino?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.4",
+      "text": "Which drinks are a variation of another drink?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.5",
+      "text": "Which drinks on the menu come with chocolate?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.6",
+      "text": "How much does each drink cost?",
+      "status": "draft"
+    },
+    {
+      "type": "DesignDecision",
+      "id": "d.1",
+      "title": "No existing ontology reused",
+      "decision": "Build from scratch.",
+      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
+      "date": "2026-09-23"
+    },
+    {
+      "type": "Term",
+      "id": "t.drink",
+      "text": "drink",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.espresso",
+      "text": "espresso",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.ristretto",
+      "text": "ristretto",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.lungo",
+      "text": "lungo",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.americano",
+      "text": "americano",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.long-black",
+      "text": "long black",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.macchiato",
+      "text": "macchiato",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.cortado",
+      "text": "cortado",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.flat-white",
+      "text": "flat white",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.cappuccino",
+      "text": "cappuccino",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.latte",
+      "text": "latte",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.breve",
+      "text": "breve",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.mocha",
+      "text": "mocha",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.con-panna",
+      "text": "con panna",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.affogato",
+      "text": "affogato",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.cafe-bombon",
+      "text": "cafe bombon",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.ingredient",
+      "text": "ingredient",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.coffee",
+      "text": "coffee",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.water",
+      "text": "water",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.milk",
+      "text": "milk",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.whole-milk",
+      "text": "whole milk",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.half-and-half",
+      "text": "half and half",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.condensed-milk",
+      "text": "condensed milk",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.foam",
+      "text": "foam",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.chocolate",
+      "text": "chocolate",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.whipped-cream",
+      "text": "whipped cream",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.gelato",
+      "text": "gelato",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.pull-volume",
+      "text": "pull volume",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.espresso-to-milk-ratio",
+      "text": "espresso to milk ratio",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.texture",
+      "text": "texture",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.pour-order",
+      "text": "pour order",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.contains",
+      "text": "contains",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.variation-of",
+      "text": "variation of",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.origin",
+      "text": "origin",
+      "disposition": "undecided"
+    },
+    {
+      "type": "Term",
+      "id": "t.tip-jar",
+      "text": "tip jar",
+      "disposition": "undecided"
+    }
+  ],
+  "edges": [
+    {
+      "from": "d.1",
+      "type": "ABOUT",
+      "to": "ontology"
+    }
+  ]
+}

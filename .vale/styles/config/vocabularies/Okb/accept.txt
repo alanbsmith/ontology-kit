@@ -51,3 +51,16 @@ Beaujolais
 Sauternes
 Gamay
 Cortado
+[Cc]ortado
+[Mm]acchiato
+[Ll]ungo
+[Rr]istretto
+[Aa]mericano
+[Aa]ffogato
+ConPanna
+CafeBombon
+[Cc]appuccino
+[Bb]reve
+[Ll]atte
+[Mm]ocha
+[Gg]elato

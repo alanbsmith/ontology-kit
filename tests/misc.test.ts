@@ -182,6 +182,14 @@ describe("worked example", () => {
     const st = computeStatus(ont, findings);
     assert.ok(st.steps.every((s) => s.complete), JSON.stringify(st.steps.filter((s) => !s.complete)));
   });
+  it("builds the espresso ontology with no errors and one open warning", () => {
+    execFileSync(process.execPath, [join(ROOT, "examples/build-espresso.ts")], { stdio: "ignore" });
+    const dir = join(ROOT, "examples/espresso");
+    const findings = runChecks(Ontology.load(dir), { all: true }).findings;
+    assert.equal(findings.filter((f) => f.severity === "error").length, 0);
+    const open = findings.filter((f) => f.severity === "warning" && !f.explainedBy);
+    assert.deepEqual(open.map((f) => f.rule), ["scope-cq-coverage"], "the landing page shows this warning");
+  });
   it("stores each relationship once, under its own type", () => {
     const ont = Ontology.load(join(ROOT, "examples/wine"));
     assert.ok(ont.edgesOf("MAKER").length >= 2);
