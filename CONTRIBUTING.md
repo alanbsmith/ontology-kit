@@ -69,7 +69,7 @@ okb class add Wine --desc "A specific wine."
 ```
 ````
 
-A block tagged `include` holds a file name and shows that file's contents, such as the diagram an earlier command wrote. Add the word `fails` after the `okb` tag for a command that must fail, such as a mistake you want to show. `npm run example` runs every command in file order with the real CLI, then writes the finished pages to `examples/wine/tutorial/` (with each command and its output), a graph snapshot after each step to `examples/wine/tutorial/graph/`, and `TRANSCRIPT.md`. A command that fails stops the build and names the file and command. Never edit the generated files. To add a tutorial, copy the layout in `examples/lib/tutorial.ts` and add its pages to `site/src/nav.ts`.
+A block tagged `include` holds a file name and shows that file's contents, such as the diagram an earlier command wrote. Add the word `fails` after the `okb` tag for a command that must fail, such as a mistake you want to show. `npm run example` runs every command in file order with the real CLI, then writes the finished pages to `examples/wine/tutorial/` (with each command and its output), a graph snapshot after each step to `examples/wine/tutorial/graph/`, and `TRANSCRIPT.md`. A command that fails stops the build and names the file and command. Never edit the generated files. To add a tutorial, copy the layout in `examples/lib/tutorial.ts` and add its pages to `site/src/nav.ts`. The `write-tutorial` skill (`.claude/skills/write-tutorial/SKILL.md`) has the page layout, voice, link and command-block conventions that keep tutorials alike. Read it before you write or review one.
 
 ### Explain, don't just describe
 
