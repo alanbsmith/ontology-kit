@@ -190,7 +190,6 @@ okb-graph .og-filters label {
 }
 
 okb-graph .og-legend {
-	justify-content: flex-end;
 	margin-block: 0 var(--space-xs);
 }
 
