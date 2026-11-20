@@ -5,7 +5,11 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { today } from "../src/clock.ts";
+import { cmdAnchor, renderCheatSheet, renderCliDocs, undocumentedFlags } from "../src/clidocs.ts";
+import { CHEAT_SHEET, COMMANDS } from "../src/commands.ts";
+import { HELP } from "../src/help.ts";
 import { MetaKB } from "../src/metakb.ts";
+import { SITE_URL, ruleUrl } from "../src/site.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
 import { Ontology } from "../src/model.ts";
@@ -179,6 +183,14 @@ describe("worked example", () => {
     const st = computeStatus(ont, findings);
     assert.ok(st.steps.every((s) => s.complete), JSON.stringify(st.steps.filter((s) => !s.complete)));
   });
+  it("builds the espresso ontology with no errors and one open warning", () => {
+    execFileSync(process.execPath, [join(ROOT, "examples/build-espresso.ts")], { stdio: "ignore" });
+    const dir = join(ROOT, "examples/espresso");
+    const findings = runChecks(Ontology.load(dir), { all: true }).findings;
+    assert.equal(findings.filter((f) => f.severity === "error").length, 0);
+    const open = findings.filter((f) => f.severity === "warning" && !f.explainedBy);
+    assert.deepEqual(open.map((f) => f.rule), ["scope-cq-coverage"], "the landing page shows this warning");
+  });
   it("stores each relationship once, under its own type", () => {
     const ont = Ontology.load(join(ROOT, "examples/wine"));
     assert.ok(ont.edgesOf("MAKER").length >= 2);
@@ -214,5 +226,36 @@ describe("worked example", () => {
     const ont = Ontology.load(dir);
     assert.deepEqual(ont.edges, [{ from: "i.x", type: "KNOWS", to: "i.y" }]);
     assert.equal(ont.manifest.format, "okb-lpg/2");
+  });
+});
+
+describe("docs/CLI.md", () => {
+  it("is generated from src/commands.ts and covers every command", () => {
+    const page = readFileSync(join(ROOT, "docs/CLI.md"), "utf8");
+    assert.equal(page, renderCliDocs() + "\n", "docs/CLI.md is stale: run npm run docs");
+    // `edgeprop` is the internal target of `relationship property`, not a command people type.
+    const src = readFileSync(join(ROOT, "src/cli.ts"), "utf8");
+    const dispatch = [...src.matchAll(/^    case "([a-z][a-z-]*)":/gm)].map((m) => m[1]).filter((c) => c !== "edgeprop");
+    const documented = new Set(COMMANDS.map((c) => c.name));
+    for (const cmd of dispatch) assert.ok(documented.has(cmd), `okb ${cmd} is in the dispatch table but not in src/commands.ts`);
+    for (const cmd of documented) assert.ok(page.includes(`<a id="${cmdAnchor(cmd)}"></a>`), cmd);
+  });
+  it("has a cheat sheet that is current and uses real commands", () => {
+    assert.equal(readFileSync(join(ROOT, "docs/CLI-CHEAT-SHEET.md"), "utf8"), renderCheatSheet() + "\n", "docs/CLI-CHEAT-SHEET.md is stale: run npm run docs");
+    const names = new Set(COMMANDS.map((c) => c.name));
+    for (const c of CHEAT_SHEET) assert.ok(names.has(c.example.split(" ")[1]), c.example);
+  });
+  it("documents every flag the help text shows", () => {
+    assert.deepEqual(undocumentedFlags(HELP), []);
+  });
+});
+
+describe("site links", () => {
+  const rulesPage = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "docs", "RULES.md"), "utf8");
+  it("has a rule-<key> anchor on the Rules page for every rule", () => {
+    for (const r of MetaKB.get().ofType("Rule")) {
+      assert.equal(ruleUrl(r.id), `${SITE_URL}/reference/rules/#rule-${r.key}`);
+      assert.ok(rulesPage.includes(`<a id="rule-${r.key}"></a>`), `no anchor for ${r.key}`);
+    }
   });
 });

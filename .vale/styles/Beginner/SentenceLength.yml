@@ -1,0 +1,6 @@
+extends: occurrence
+message: "This sentence is long. Split it so a newcomer can take it in at once."
+level: warning
+scope: sentence
+max: 25
+token: '[^\s]+'

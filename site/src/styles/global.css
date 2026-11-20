@@ -212,6 +212,18 @@ h4 {
 	border-radius: var(--radius-full);
 }
 
+/* A link that leaves the site (the paper, GitHub, "View page source") gets a small arrow, so nobody is surprised
+   by a new site. Links to ontology-kit.dev itself and relative links stay plain. */
+:is(.prose, .source) a[href^='http']:not([href*='ontology-kit.dev'])::after {
+	content: '';
+	display: inline-block;
+	width: 0.7em;
+	height: 0.7em;
+	margin-inline-start: 0.2em;
+	background: currentColor;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
 .prose img {
 	display: block;
 	border-radius: var(--radius-md);
@@ -268,16 +280,66 @@ h4 {
 }
 
 .prose pre.astro-code span {
-	color: light-dark(var(--shiki-light), var(--shiki-dark));
+	/* Night Owl Light's blue and red tokens fall under 4.5:1 on the code background, so darken the light tokens a little. */
+	color: light-dark(color-mix(in srgb, var(--shiki-light) 80%, black), var(--shiki-dark));
 	font-style: light-dark(var(--shiki-light-font-style, normal), var(--shiki-dark-font-style, normal));
 }
 
-/* Code blocks may be wider than the text column on large screens. */
+/* Copy button on blocks of commands (added by the page script). */
+.code-block {
+	position: relative;
+}
+
+.code-block pre.astro-code {
+	padding-inline-end: 6.5rem;
+}
+
+.copy-button {
+	position: absolute;
+	inset-block-start: var(--space-sm);
+	inset-inline-end: var(--space-sm);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	font: inherit;
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+	background: var(--color-surface-raised);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-sm);
+	padding: 0.25em 0.6em;
+	cursor: pointer;
+}
+
+.copy-button:hover {
+	color: var(--color-text);
+	border-color: var(--color-border-strong);
+}
+
+/* Tables fill the text column, so they line up with code blocks and body text. */
 @media (min-width: 60rem) {
-	.prose pre.astro-code,
-	.prose pre.mermaid {
-		margin-inline: calc(-1 * var(--space-lg));
+	.prose table {
+		display: table;
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
 	}
+}
+
+/* Cheat sheet: one card per command, so nothing is squeezed on a small screen. */
+.prose .cheat-card {
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-md);
+	padding: var(--space-md);
+}
+
+.prose .cheat-card > * + * {
+	margin-top: var(--space-sm);
+}
+
+.prose .cheat-card pre.astro-code {
+	border: 0;
+	padding: var(--space-sm) var(--space-md);
 }
 
 /* Mermaid: plain source until the client script swaps in the SVG. */

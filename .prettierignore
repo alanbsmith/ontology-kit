@@ -3,7 +3,12 @@ docs/METHOD.md
 docs/GLOSSARY.md
 docs/RULES.md
 docs/DECISIONS.md
-examples/wine/
+docs/CLI.md
+docs/CLI-CHEAT-SHEET.md
+examples/wine/*.json
+examples/wine/*.md
+examples/wine/tutorial/
+examples/wine/wine.cypher
 meta-kb/data/
 node_modules/
 package-lock.json

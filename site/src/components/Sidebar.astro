@@ -1,45 +1,126 @@
 ---
-import type { NavGroup } from '../nav.ts';
+import { defaultOpen, sectionKey, type NavGroup } from '../nav.ts';
 
 /**
  * The docs navigation: the sidebar on wide screens, and the menu sheet's contents on narrow
  * ones. Built from nav.ts and the meta-KB, so new steps and decision guides appear on their own.
+ *
+ * Group headings, chapter headings (entries with children and no page) and links with children collapse. Without JavaScript everything renders expanded
+ * and the toggle buttons stay hidden; the script below shows them and folds what the reader isn't in.
  */
 interface Props {
 	groups: NavGroup[];
-	/** The current route, for aria-current. */
+	/** The current route, for aria-current and for which sections start open. */
 	current: string;
 }
 const { groups, current } = Astro.props;
+const open = defaultOpen(groups, current);
+const ids = (key: string) => 'nav-' + key.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+
+const chevron = '<svg class="chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"></path></svg>';
 ---
 
-<div class="sidebar-nav">
+<div class="sidebar-nav" data-sidebar>
 	{
-		groups.map((group) => (
-			<section>
-				<h2 class="group">{group.label}</h2>
-				<ul>
-					{group.links.map((link) => (
-						<li>
-							<a href={link.href} aria-current={link.href === current ? 'page' : undefined}>
-								{link.label}
-							</a>
-							{link.children && (
-								<ul class="children">
-									{link.children.map((child) => (
-										<li>
-											<a href={child.href}>{child.label}</a>
-										</li>
-									))}
-								</ul>
-							)}
-						</li>
-					))}
-				</ul>
-			</section>
-		))
+		groups.map((group) => {
+			const key = sectionKey(group);
+			return (
+				<section data-section={key} data-default-open={open.has(key) ? '' : undefined}>
+					<h2 class="group">
+						<span data-label>{group.label}</span>
+						<button type="button" class="group-toggle" hidden data-toggle aria-expanded="true" aria-controls={ids(key)}>
+							<span>{group.label}</span>
+							<Fragment set:html={chevron} />
+						</button>
+					</h2>
+					<ul id={ids(key)} data-panel>
+						{group.links.map((link) => {
+							const linkKey = sectionKey(link);
+							return (
+								<li data-section={link.children ? linkKey : undefined} data-default-open={link.children && open.has(linkKey) ? '' : undefined}>
+									{link.href === undefined ? (
+										<div class="row heading">
+											<span class="heading-label" data-label>{link.label}</span>
+											<button type="button" class="heading-toggle" hidden data-toggle aria-expanded="true" aria-controls={ids(linkKey)}>
+												<Fragment set:html={chevron} />
+												<span>{link.label}</span>
+											</button>
+										</div>
+									) : (
+										<div class="row">
+											<a href={link.href} aria-current={link.href === current ? 'page' : undefined}>
+												{link.label}
+											</a>
+											{link.children && (
+												<button type="button" class="toggle" hidden data-toggle data-name={link.label} aria-expanded="true" aria-controls={ids(linkKey)} aria-label={`Collapse ${link.label}`}>
+													<Fragment set:html={chevron} />
+												</button>
+											)}
+										</div>
+									)}
+									{link.children && (
+										<ul class="children" id={ids(linkKey)} data-panel>
+											{link.children.map((child) => (
+												<li>
+													<a href={child.href} aria-current={child.href === current ? 'page' : undefined}>
+														{child.label}
+													</a>
+												</li>
+											))}
+										</ul>
+									)}
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			);
+		})
 	}
 </div>
+
+<script>
+	// Progressive enhancement: show the toggle buttons and fold sections. A section holding the
+	// current page is always open; other sections follow the reader's earlier choice this session.
+	const KEY = 'okb-nav-open';
+	let saved: Record<string, boolean> = {};
+	try {
+		saved = JSON.parse(sessionStorage.getItem(KEY) ?? '{}') ?? {};
+	} catch {
+		// Storage is unavailable or holds junk: use the defaults.
+	}
+	const remember = (key: string, isOpen: boolean) => {
+		saved[key] = isOpen;
+		try {
+			sessionStorage.setItem(KEY, JSON.stringify(saved));
+		} catch {
+			// Not remembered; the page still works.
+		}
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-sidebar] [data-section]').forEach((section) => {
+		const key = section.dataset.section!;
+		const button = section.querySelector<HTMLButtonElement>(':scope > * > [data-toggle], :scope > [data-toggle]')!;
+		const panel = document.getElementById(button.getAttribute('aria-controls')!)!;
+		const label = section.querySelector<HTMLElement>(':scope > h2 > [data-label], :scope > .heading > [data-label]');
+		const name = button.dataset.name;
+
+		const set = (isOpen: boolean) => {
+			panel.hidden = !isOpen;
+			button.setAttribute('aria-expanded', String(isOpen));
+			if (name) button.setAttribute('aria-label', `${isOpen ? 'Collapse' : 'Expand'} ${name}`);
+		};
+
+		button.hidden = false;
+		if (label) label.hidden = true;
+		set(section.hasAttribute('data-default-open') || saved[key] === true);
+		button.addEventListener('click', () => {
+			const next = button.getAttribute('aria-expanded') !== 'true';
+			set(next);
+			remember(key, next);
+		});
+	});
+</script>
 
 <style>
 	.sidebar-nav {
@@ -54,6 +135,90 @@ const { groups, current } = Astro.props;
 		font-size: var(--text-small);
 		font-weight: var(--weight-strong);
 		color: var(--color-text);
+	}
+
+	.group-toggle {
+		display: flex;
+		align-items: center;
+		gap: var(--space-tight);
+		width: 100%;
+		padding: 0.25rem 0;
+		border: 0;
+		background: none;
+		font: inherit;
+		font-weight: inherit;
+		color: inherit;
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.row {
+		display: flex;
+		align-items: stretch;
+	}
+
+	.row a {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.heading-label {
+		flex: 1;
+		padding: 0.25rem var(--space-sm);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+
+	.heading-toggle {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		gap: var(--space-tight);
+		padding: 0.25rem var(--space-sm);
+		border: 0;
+		border-radius: var(--radius-sm);
+		background: none;
+		font: inherit;
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.heading-toggle:hover {
+		background: var(--color-surface-hover);
+	}
+
+	.toggle {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 2rem;
+		border: 0;
+		border-radius: var(--radius-sm);
+		background: none;
+		color: var(--color-text-muted);
+		cursor: pointer;
+	}
+
+	.toggle:hover {
+		color: var(--color-text);
+		background: var(--color-surface-hover);
+	}
+
+	:global(.chevron) {
+		flex: none;
+		transition: transform var(--duration) ease;
+	}
+
+	[aria-expanded='true'] :global(.chevron) {
+		transform: rotate(90deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.chevron) {
+			transition: none;
+		}
 	}
 
 	ul {
@@ -99,6 +264,15 @@ const { groups, current } = Astro.props;
 		a {
 			display: flex;
 			align-items: center;
+			min-height: 2.75rem;
+		}
+
+		.toggle {
+			width: 2.75rem;
+		}
+
+		.group-toggle,
+		.heading-toggle {
 			min-height: 2.75rem;
 		}
 	}

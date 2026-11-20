@@ -14,15 +14,25 @@
  *     checked against meta-kb/data/manifest.json
  * Exit code 1 if anything is found. It can't judge prose; the skill covers that.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
+/** The tutorial sources (examples/<name>/tutorial-src/*.md); the generated pages next to them copy these. */
+const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
+  ? readdirSync(join(ROOT, "examples"), { withFileTypes: true }).flatMap((e) => {
+      const dir = `examples/${e.name}/tutorial-src`;
+      return e.isDirectory() && existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : [];
+    })
+  : [];
+/** Hand-written markdown directories (docs/getting-started, learn, build, reference): every .md file in each. */
+const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
+const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 const DEFAULT_DOCS = [
-  "README.md", "CLAUDE.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
-  "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md",
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", "meta-kb/README.md", "sources/README.md",
+  "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
 ];
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 
@@ -165,7 +175,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
 
 /** Paths that only exist after a command runs (PDFs are gitignored, examples are built). */
 function isGenerated(p: string): boolean {
-  return /^sources\/.*\.pdf$/.test(p) || /^examples\/wine\//.test(p);
+  return /^sources\/.*\.pdf$/.test(p) || /^examples\/(wine|espresso)\//.test(p);
 }
 
 // Main

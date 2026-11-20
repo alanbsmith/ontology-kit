@@ -1,0 +1,221 @@
+---
+// The home page: what okb is for, why it's worth a minute, and where to go next. No sidebar or
+// outline. The rule counts are read at build time (see ../lib/landing.ts).
+import { resolve } from 'node:path';
+import Base from '../layouts/Base.astro';
+import { LANDING_LINKS as link, ruleCounts } from '../lib/landing.ts';
+
+// The repo root: Astro runs from site/, as the content collection's `base: '..'` also assumes.
+const root = resolve(process.cwd(), '..');
+const rules = ruleCounts(root);
+---
+
+<Base description="Turn what your team knows into a structured, sourced knowledge graph that people and AI agents can rely on.">
+	<main id="main" class="home">
+		<section class="hero container-wide">
+			<div class="hero-text">
+				<h1>Transform your data into actionable knowledge</h1>
+				<p class="lede">
+					Keep your data in plain files you own. okb adds the guardrails: a guided method and sourced rules that turn docs and scattered facts into a knowledge graph that people and AI agents can act on.
+				</p>
+				<p class="actions">
+					<a class="button primary" href={link.start}>Get started</a>
+					<a class="button" href={link.learn}>Learn concepts</a>
+				</p>
+			</div>
+		</section>
+
+		<section class="container-wide explore" aria-labelledby="explore">
+			<h2 id="explore">Explore a knowledge graph</h2>
+			<p>
+				This is the knowledge graph used in the espresso tutorial for our fictitious café, Vertex Coffee. Click a node to read about it and see its connections. Drag a node to move it, drag the background to pan, and click the graph before you scroll to zoom. Want to build it? <a href={link.espresso}>Follow the espresso tutorial</a>!
+			</p>
+			<div class="graph">
+				<okb-graph src="/data/espresso.json" label="The espresso ontology for Vertex Coffee: drinks, what they contain and the kinds they belong to">
+					<p>The graph shows the espresso ontology for a made-up café, Vertex Coffee.</p>
+					<ul>
+						<li>Vertex breve is an instance of Breve. It contains Double shot, Steamed half-and-half and Milk foam.</li>
+						<li>Vertex cappuccino is an instance of Cappuccino. It contains Double shot, Steamed whole milk and Milk foam.</li>
+						<li>Breve is a kind of Latte and a kind of Cappuccino. Latte and Cappuccino are kinds of Milk drink, which is a kind of Espresso drink, which is a kind of Drink.</li>
+					</ul>
+				</okb-graph>
+			</div>
+		</section>
+
+		<section class="container-wide" aria-labelledby="why">
+			<h2 id="why">Build your graph with guardrails</h2>
+			<ul class="cards">
+				<li>
+					<h3>Guided</h3>
+					<p>
+						Ontology Kit walks you through building an ontology in eight steps. You can check your progress and ask for explanations at any point along the way.
+					</p>
+				</li>
+				<li>
+					<h3>Validated</h3>
+					<p>
+						The kit ships with its own meta-knowledge graph that validates your work as you build, so you get a quality graph on the first pass. Each finding is in plain language with a fix: {rules.errors} rules report errors, {rules.warnings} warnings and {rules.hints} hints.
+					</p>
+				</li>
+				<li>
+					<h3>Portable</h3>
+					<p>
+						Your ontology stays local, in plain JSON files you can read, diff and keep in git. You can export it for the graph tool of your choice: Cypher for Neo4j, Neptune and Memgraph.
+					</p>
+				</li>
+			</ul>
+		</section>
+
+		<section class="container-wide path" aria-labelledby="path">
+			<h2 id="path">Learn by building</h2>
+			<p>
+				Start with the ideas, then build a small ontology step by step. Every command in the tutorial shows its real output.
+			</p>
+			<ul class="steps">
+				<li>
+					<h3><a href={link.learn}>Learn concepts</a></h3>
+					<p>New to knowledge graphs and want to learn more? Read our beginner-friendly, interactive learning guides.</p>
+				</li>
+				<li>
+					<h3><a href={link.tutorial}>Follow the wine tutorial</a></h3>
+					<p>Ready to try it yourself? This hands-on tutorial walks you through building a small wine ontology in eight short steps, with real commands and real output. No experience needed.</p>
+				</li>
+				<li>
+					<h3><a href={link.build}>Pick a way to build</a></h3>
+					<p>Build with Claude, with the CLI, or from your own docs. Choose the path that fits what you have.</p>
+				</li>
+			</ul>
+		</section>
+	</main>
+</Base>
+
+<style>
+	.home {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3xl);
+	}
+
+	h1 {
+		font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+		line-height: var(--leading-heading);
+		margin: 0 0 var(--space-sm);
+		text-wrap: balance;
+	}
+
+	h2 {
+		font-size: var(--text-heading);
+		line-height: var(--leading-heading);
+		margin: 0 0 var(--space-sm);
+	}
+
+	h3 {
+		font-size: var(--text-subheading);
+		line-height: var(--leading-heading);
+		margin: 0 0 var(--space-xs);
+	}
+
+	p {
+		margin: 0 0 var(--space-sm);
+		color: var(--color-text-body);
+	}
+
+	.hero-text {
+		max-width: 48rem;
+	}
+
+	.lede {
+		font-size: var(--text-body);
+		line-height: 1.5;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-sm);
+		margin-block: var(--space-md);
+	}
+
+	.button {
+		display: inline-block;
+		padding: 0.6em 1.4em;
+		border: var(--border-width) solid var(--color-border-strong);
+		border-radius: var(--radius-full);
+		color: var(--color-text);
+		font-weight: var(--weight-strong);
+		text-decoration: none;
+	}
+
+	.button:hover {
+		background: var(--color-surface-hover);
+		color: var(--color-text);
+	}
+
+	.button.primary {
+		background: var(--color-link);
+		border-color: var(--color-link);
+		color: var(--color-surface);
+	}
+
+	.button.primary:hover {
+		background: var(--color-link-hover);
+		border-color: var(--color-link-hover);
+		color: var(--color-surface);
+	}
+
+	.graph :global(okb-graph) {
+		margin-block: 0;
+	}
+
+	/* With scripts on, hold the graph's space and keep the text fallback for screen readers only,
+	   until the element loads and replaces it. Without scripts the fallback shows as normal. */
+	:global([data-js]) .graph :global(okb-graph:not(:defined)) {
+		display: block;
+		min-height: clamp(20rem, 60vh, 32rem);
+		border: var(--border-width) solid var(--color-border);
+		border-radius: var(--radius-xl);
+	}
+
+	:global([data-js]) .graph :global(okb-graph:not(:defined) > *) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.cards,
+	.steps {
+		list-style: none;
+		margin: var(--space-md) 0 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-md);
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	@media (min-width: 48rem) {
+		.cards {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.steps {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.cards > li,
+	.steps > li {
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-md);
+		background: var(--color-surface-raised);
+		border: var(--border-width) solid var(--color-border);
+		border-radius: var(--radius-lg);
+	}
+
+	.explore > p,
+	.path > p {
+		max-width: var(--measure);
+	}
+</style>

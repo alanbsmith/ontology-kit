@@ -6,13 +6,14 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MetaKB } from "./metakb.ts";
+import { anchorId } from "./site.ts";
+import { renderCheatSheet, renderCliDocs } from "./clidocs.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const meta = MetaKB.get();
-/** A stable anchor id from a meta-KB id: `concept.class` → `concept-class`. Links use these, never heading slugs. */
-const anchorId = (id: string) => id.replace(/\./g, "-");
+// Anchor ids (`concept.class` → `concept-class`) come from src/site.ts. Links use these, never heading slugs.
 const anchorTag = (id: string) => `<a id="${anchorId(id)}"></a>`;
-const HEADER = (title: string) => [`# ${title}`, "", `> Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate.`, ""];
+const HEADER = (title: string) => [`# ${title}`, "", `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`, ""];
 
 function sources(id: string): string[] {
   return meta.citations(id).map((l) => `> “${l.quote}”  \n> — ${meta.citeLine(l)}`);
@@ -47,10 +48,17 @@ for (const s of meta.steps) {
 }
 
 // GLOSSARY.md
-const glossary = HEADER("Glossary");
-glossary.push("Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.", "");
+// The glossary page opens with a tip, not the generated-file notice or an A–Z index: readers
+// arrive from a link to one term. The notice stays as an HTML comment for people editing the file.
+const glossary = [
+  "# Glossary",
+  "",
+  `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`,
+  "",
+  "> **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.",
+  "",
+];
 const concepts = [...meta.ofType("Concept")].sort((a, b) => a.name.localeCompare(b.name));
-glossary.push(concepts.map((c) => `[${c.name}](#${anchorId(c.id)})`).join(" · "), "");
 for (const c of concepts) {
   glossary.push(anchorTag(c.id), `## ${c.name}`, "");
   if (c.aliases?.length) glossary.push(`*Also called:* ${c.aliases.join(", ")}`, "");
@@ -94,7 +102,7 @@ const decisions = HEADER("Decision guides");
 decisions.push("The recurring \"which way do I model this?\" questions, as short yes/no walkthroughs. Remember there's no single right answer; record what you chose with `okb decision add`.", "");
 for (const d of meta.ofType("Decision")) {
   // The second anchor is the old dot-less id (`decisionclass-or-value`), kept so existing links still land.
-  decisions.push(`${anchorTag(d.id)}<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "", ...flowchart(d.tests as DecisionTest[]), "");
+  decisions.push(`${anchorTag(d.id)}<a id="${d.id.replace(".", "")}"></a>`, `## ${d.name}`, "", `*When:* ${d.whenYouFaceIt}`, "", ...flowchart(d.name, d.tests as DecisionTest[]), "");
   (d.tests as any[]).forEach((t, i) => {
     const yes = t.ifYes === "continue" ? "go to the next question" : t.ifYes;
     const no = t.ifNo === "continue" ? "go to the next question" : t.ifNo;
@@ -115,8 +123,10 @@ interface DecisionTest {
  * A Mermaid flowchart of a decision guide's questions. "continue" leads to the next question
  * (or to "Done" after the last one). The numbered list under it stays as the accessible text.
  */
-function flowchart(tests: DecisionTest[]): string[] {
-  const lines = ["```mermaid", "flowchart TD"];
+function flowchart(name: string, tests: DecisionTest[]): string[] {
+  // accTitle and accDescr become the SVG's <title> and <desc> for screen readers (one line each).
+  const desc = `A flowchart of ${tests.length} yes or no questions, asked in order: ${tests.map((t, i) => `${i + 1}. ${t.ask}`).join(" ")} Each answer leads to an outcome or to the next question. The numbered list below gives the same steps as text.`;
+  const lines = ["```mermaid", "flowchart TD", `  accTitle: ${accText(name)}`, `  accDescr: ${accText(desc)}`];
   let done = false;
   tests.forEach((t, i) => {
     const q = `Q${i + 1}`;
@@ -141,11 +151,16 @@ function flowchart(tests: DecisionTest[]): string[] {
   return lines;
 }
 
+/** Mermaid reads accTitle and accDescr to the end of the line, so only line breaks and braces need care. */
+function accText(s: string): string {
+  return s.replace(/\s+/g, " ").replace(/[{}]/g, "").trim();
+}
+
 /** Escapes the characters Mermaid treats specially inside a quoted label, as Mermaid entity codes. */
 function mermaidText(s: string): string {
   return s.replace(/[#"()[\]{}<>|`;]/g, (c) => `#${c.charCodeAt(0)};`);
 }
 
-const out: [string, string[]][] = [["METHOD.md", method], ["GLOSSARY.md", glossary], ["RULES.md", rules], ["DECISIONS.md", decisions]];
+const out: [string, string[]][] = [["METHOD.md", method], ["GLOSSARY.md", glossary], ["RULES.md", rules], ["DECISIONS.md", decisions], ["CLI.md", renderCliDocs().split("\n")], ["CLI-CHEAT-SHEET.md", renderCheatSheet().split("\n")]];
 for (const [f, lines] of out) writeFileSync(join(ROOT, "docs", f), lines.join("\n") + "\n");
 console.log(`Wrote ${out.map(([f]) => "docs/" + f).join(", ")}`);

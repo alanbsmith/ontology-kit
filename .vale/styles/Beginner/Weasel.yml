@@ -1,0 +1,10 @@
+extends: existence
+message: "'%s' describes without explaining. Say what problem it solves or show it in use."
+level: suggestion
+ignorecase: true
+tokens:
+  - is defined as
+  - is a construct
+  - refers to
+  - is used to denote
+  - is the set of

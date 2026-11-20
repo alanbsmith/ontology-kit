@@ -104,8 +104,8 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 		hasContents && (
 			<div id="contents-sheet" class="panel contents-panel" popover>
 				<div class="panel-head">
-					<h2 class="panel-title">Contents</h2>
-					<button type="button" class="done" popovertarget="contents-sheet" popovertargetaction="hide">Done</button>
+					<h2 class="panel-title">On this page</h2>
+					<button type="button" class="done" popovertarget="contents-sheet" popovertargetaction="hide" aria-label="Close contents"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
 				</div>
 				<nav aria-label="Contents">
 					<ul class="toc" data-spy>
@@ -129,8 +129,8 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 
 	<div id="menu-sheet" class="panel menu-panel" popover>
 		<div class="panel-head">
-			<h2 class="panel-title">Menu</h2>
-			<button type="button" class="done" popovertarget="menu-sheet" popovertargetaction="hide">Done</button>
+			<h2 class="panel-title">Browse the docs</h2>
+			<button type="button" class="done" autofocus popovertarget="menu-sheet" popovertargetaction="hide" aria-label="Close menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
 		</div>
 		<nav aria-label="Docs">
 			<Sidebar groups={navGroups} current={current} />
@@ -140,7 +140,7 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 	<div id="search-sheet" class="panel search-panel" popover>
 		<div class="panel-head">
 			<h2 class="panel-title">Search the docs</h2>
-			<button type="button" class="done" popovertarget="search-sheet" popovertargetaction="hide">Done</button>
+			<button type="button" class="done" popovertarget="search-sheet" popovertargetaction="hide" aria-label="Close search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
 		</div>
 		<div id="search-ui" role="search"></div>
 		<p class="hint" data-search-unavailable hidden>Search works on the built site: run <code>npm run site</code>, then <code>npm --prefix site run preview</code>.</p>
@@ -150,7 +150,7 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 		<form>
 			<div class="panel-head">
 				<h2 class="panel-title">Reading settings</h2>
-				<button type="button" class="done" popovertarget="reading-settings" popovertargetaction="hide">Done</button>
+				<button type="button" class="done" popovertarget="reading-settings" popovertargetaction="hide" aria-label="Close reading settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
 			</div>
 			{
 				beforeSwitch.map((group) => (
@@ -571,7 +571,7 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 	}
 
 	/* Phones: a bottom sheet. It rises from the bottom edge over a dimmed page, takes the full
-	   width, and scrolls inside if the screen is short. Done, a tap outside, or Escape closes it. */
+	   width, and scrolls inside if the screen is short. The close button, a tap outside, or Escape closes it. */
 	@media (max-width: 47.99rem) {
 		.panel {
 			inset: auto 0 0 0;
@@ -652,21 +652,20 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 	.done {
 		display: none;
 		align-items: center;
-		min-height: 2.75rem;
-		padding: 0 var(--space-sm);
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		padding: 0;
 		border: 0;
 		border-radius: var(--radius-full);
 		background: none;
-		color: var(--color-link);
-		font: inherit;
-		font-size: var(--text-small);
-		font-weight: var(--weight-strong);
+		color: var(--color-text-muted);
 		cursor: pointer;
 	}
 
 	.done:hover {
 		background: var(--color-surface);
-		color: var(--color-link-hover);
+		color: var(--color-text);
 	}
 
 	@media (max-width: 47.99rem) {
@@ -860,7 +859,7 @@ const afterSwitch = groups.filter((g) => g.name === 'font' || g.name === 'size')
 	}
 
 	/* From 48rem the menu is a side panel: it slides in from the left edge over a dimmed page,
-	   and Escape, Done or a click outside closes it. Phones keep the bottom sheet. */
+	   and Escape, the close button or a click outside closes it. Phones keep the bottom sheet. */
 	@media (min-width: 48rem) {
 		.menu-panel {
 			inset: 0 auto 0 0;

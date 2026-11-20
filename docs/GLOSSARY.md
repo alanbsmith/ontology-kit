@@ -1,10 +1,8 @@
 # Glossary
 
-> Generated from the meta-KB (v2.4.0) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate.
+<!-- Generated from the meta-KB (v2.4.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
 
-Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.
-
-[Abstract class](#concept-abstract-class) · [Authored rule](#concept-authored-rule) · [Cardinality](#concept-cardinality) · [Class](#concept-class) · [Class hierarchy (taxonomy)](#concept-class-hierarchy) · [Competency question](#concept-competency-question) · [Conceptualization](#concept-conceptualization) · [Default value](#concept-default-value) · [Design decision (record)](#concept-design-decision) · [Direct subclass](#concept-direct-subclass) · [Disjoint classes](#concept-disjoint) · [Domain (of a slot)](#concept-domain) · [Edge property (relationship property)](#concept-edge-property) · [Facet](#concept-facet) · [Facet override (restriction on a subclass)](#concept-facet-override) · [Fixed (class-level) slot value](#concept-fixed-value) · [Fulfills (fact to Rule)](#concept-rule-fulfills) · [Instance](#concept-instance) · [Intrinsic vs. extrinsic property](#concept-intrinsic-extrinsic) · [Inverse slots](#concept-inverse-slots) · [Knowledge base](#concept-knowledge-base) · [Labeled property graph (LPG)](#concept-lpg) · [Modality (MUST / SHOULD / MAY)](#concept-modality) · [Multiple inheritance](#concept-multiple-inheritance) · [Naming convention](#concept-naming-convention) · [Ontology](#concept-ontology) · [Prescriptive vs descriptive statements (Rule vs fact)](#concept-prescriptive-vs-descriptive) · [Qualifier values on a Rule](#concept-rule-qualifier) · [Range (of a slot)](#concept-range) · [Refines (Rule to Rule)](#concept-rule-refines) · [Scope](#concept-scope) · [Siblings](#concept-sibling) · [Slot](#concept-slot) · [Slot inheritance](#concept-inheritance) · [Subclass / superclass (is-a)](#concept-subclass) · [Synonym](#concept-synonym) · [Terminological hierarchy](#concept-terminological-hierarchy) · [Top-down / bottom-up / combination](#concept-development-approach) · [Transitivity (of is-a)](#concept-transitivity) · [Value type](#concept-value-type)
+> **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.
 
 <a id="concept-abstract-class"></a>
 ## Abstract class

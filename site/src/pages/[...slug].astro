@@ -4,8 +4,12 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Band from '../components/Band.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import Outline from '../components/Outline.astro';
-import { PAGES, type Page } from '../nav.ts';
+import { PAGES, neighbors, type Page } from '../nav.ts';
+import { metaNodes } from '../lib/meta.ts';
+import { breadcrumbs } from '../lib/breadcrumbs.ts';
+import { timeLabel } from '../lib/reading-time.ts';
 
 export function getStaticPaths() {
 	return PAGES.map((page) => ({
@@ -22,13 +26,24 @@ const entry = await getEntry('docs', page.source);
 if (!entry) throw new Error(`No docs entry for ${page.source}`);
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const title: string = remarkPluginFrontmatter.title ?? page.label;
-const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.source}`;
+// The estimated time, from the page's markdown (and its siblings' for a total). Reference,
+// Contributing and the landing page get none.
+const bodies = new Map<string, string>();
+for (const p of PAGES) bodies.set(p.route, (await getEntry('docs', p.source))?.body ?? '');
+const time = timeLabel(page.route, (route) => bodies.get(route) ?? '');
+const trail = breadcrumbs(page.route);
+const { prev, next } = neighbors(metaNodes, page.route);
+// A generated tutorial page links to the hand-written source it was built from.
+const sourceFile = page.source.replace(/^(examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
+const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${sourceFile}`;
 ---
 
 <Base title={title} outline={headings}>
 	<Band seed={page.route}>
+		<Breadcrumb items={trail} />
 		<!-- Pagefind reads the page title from this h1, so it is indexed with the article. -->
 		<div data-pagefind-body><h1>{title}</h1></div>
+		{time && <p class="meta">{time}</p>}
 	</Band>
 	<div class="docs">
 		<main id="main">
@@ -37,11 +52,56 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 					<Content />
 				</div>
 			</article>
-			<p class="source muted"><a href={sourceUrl}>View this page's source on GitHub</a></p>
+			<nav class="pager" aria-label="Previous and next pages">
+				{prev ? <a class="prev" href={prev.href} rel="prev"><span class="direction">&larr; Previous</span><span class="label">{prev.label}</span></a> : <span />}
+				{next ? <a class="next" href={next.href} rel="next"><span class="direction">Next &rarr;</span><span class="label">{next.label}</span></a> : <span />}
+			</nav>
+			<p class="source muted"><a href={sourceUrl}>View page source</a></p>
 		</main>
 		<Outline headings={headings} />
 	</div>
 </Base>
+
+<script>
+	// A copy button on every block of shell commands (the tutorial's `bash` blocks), so a reader
+	// can copy the commands without selecting them. Output blocks are `text` and get none.
+	const COPY_ICON = `<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
+
+	document.querySelectorAll<HTMLElement>('pre[data-language="bash"], pre[data-language="sh"], pre[data-language="shell"], pre[data-language="zsh"]').forEach((pre) => {
+		const wrapper = document.createElement('div');
+		wrapper.className = 'code-block';
+		pre.replaceWith(wrapper);
+		wrapper.append(pre);
+
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'copy-button';
+		button.innerHTML = `${COPY_ICON}<span>Copy</span>`;
+		button.setAttribute('aria-label', 'Copy code to clipboard');
+		const label = button.querySelector('span')!;
+		let reset: number | undefined;
+
+		button.addEventListener('click', async () => {
+			const text = pre.textContent ?? '';
+			try {
+				await navigator.clipboard.writeText(text.replace(/\n$/, ''));
+				label.textContent = 'Copied';
+			} catch {
+				label.textContent = 'Press Ctrl+C';
+				const range = document.createRange();
+				range.selectNodeContents(pre);
+				getSelection()?.removeAllRanges();
+				getSelection()?.addRange(range);
+			}
+			clearTimeout(reset);
+			reset = window.setTimeout(() => (label.textContent = 'Copy'), 2000);
+		});
+
+		// Announced politely when the label changes.
+		label.setAttribute('role', 'status');
+		wrapper.append(button);
+	});
+</script>
 
 <script>
 	// Mermaid is heavy, so it only loads on pages that actually contain a diagram.
@@ -172,6 +232,71 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${page.s
 	h1 {
 		font-size: var(--text-title);
 		margin-block: 0;
+	}
+
+	/* The estimated time under the title, as in the blog: full-strength text over the art. */
+	.meta {
+		margin: var(--space-md) 0 0;
+		font-size: var(--text-body);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+
+	/* Two large cards side by side; they stack on narrow screens. */
+	.pager {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-md);
+		margin-block-start: var(--space-2xl);
+	}
+
+	.pager a {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2xs, 0.25rem);
+		padding: var(--space-md) var(--space-lg);
+		border: var(--border-width) solid var(--color-border);
+		border-radius: var(--radius-xl);
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.pager a:hover,
+	.pager a:focus-visible {
+		border-color: var(--color-border-strong);
+	}
+
+	.pager .next {
+		grid-column: 2;
+		text-align: end;
+	}
+
+	.pager .direction {
+		font-size: var(--text-small);
+		color: var(--color-text-muted);
+	}
+
+	.pager .label {
+		font-size: var(--text-subheading);
+		font-weight: 600;
+		line-height: 1.3;
+	}
+
+	/* On the widest screens the cards are large enough that body-size titles read better. */
+	@media (min-width: 80rem) {
+		.pager .label {
+			font-size: var(--text-body);
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.pager {
+			grid-template-columns: 1fr;
+		}
+
+		.pager .next {
+			grid-column: 1;
+		}
 	}
 
 	.source {

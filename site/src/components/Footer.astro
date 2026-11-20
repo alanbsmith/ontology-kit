@@ -5,8 +5,11 @@ const REPO = 'https://github.com/alanbsmith/ontology-kit';
 
 <footer>
 	<div class="inner">
-		<p><strong>Ontology Kit</strong> <span class="muted">· a guided way to build your first ontology</span></p>
-		<a href={REPO}>Source on GitHub</a>
+		<p><strong>Ontology Kit</strong> <span class="muted">· a toolkit for building knowledge graphs with guardrails</span></p>
+		<nav aria-label="Footer">
+			<a href="/contributing/">Contributing</a>
+			<a href={REPO}>GitHub</a>
+		</nav>
 	</div>
 </footer>
 
@@ -30,5 +33,11 @@ const REPO = 'https://github.com/alanbsmith/ontology-kit';
 
 	p {
 		margin: 0;
+	}
+
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-xs) var(--space-md);
 	}
 </style>

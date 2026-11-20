@@ -2,11 +2,13 @@
 //   - a markdown page in nav.ts      -> its route, keeping the #fragment
 //   - any other path in the repo     -> the file (blob) or folder (tree) on GitHub
 // A relative link to a markdown file that has no route fails the build, so no doc is unreachable.
+// The exceptions are root files that are for GitHub, not the site (README.md, CLAUDE.md); they link to GitHub.
 import { existsSync, statSync } from 'node:fs';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { routeFor } from '../nav.ts';
 
 const GITHUB = 'https://github.com/alanbsmith/ontology-kit';
+const NO_PAGE = new Set(['README.md', 'CLAUDE.md']);
 const EXTERNAL = /^([a-z][a-z0-9+.-]*:|\/\/|#|\/)/i;
 
 function visit(node, fn) {
@@ -27,7 +29,7 @@ export function remarkRepoLinks({ root }) {
 			const abs = resolve(dirname(from), decodeURI(path));
 			const target = relative(root, abs).split(sep).join('/');
 			if (target.startsWith('..')) throw new Error(`${source}: link "${node.url}" points outside the repo.`);
-			if (/\.md$/i.test(target)) {
+			if (/\.md$/i.test(target) && !NO_PAGE.has(target)) {
 				const route = routeFor(target);
 				if (!route) {
 					throw new Error(`${source}: link "${node.url}" goes to ${target}, which has no route. Add it to site/src/nav.ts.`);

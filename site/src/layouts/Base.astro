@@ -57,5 +57,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		<Nav outline={outline} />
 		<slot />
 		<Footer />
+		<script>import '../graph/lazy.ts';</script>
 	</body>
 </html>

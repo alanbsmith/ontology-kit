@@ -5,7 +5,7 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.4.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.4.1.** It should match the meta-KB version that `okb version` prints.
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `ontology-kit/meta-kb/` (usually `~/Projects/ontology-kit`) and the pipeline in `ontology-kit/docs/EXTRACTION-PIPELINE.md`.
 
@@ -13,7 +13,7 @@ The point of this skill is to be deterministic where possible and to stop for hu
 
 ## Step 0: Set up
 
-1. Find okb: `okb version`, or `node <ontology-kit>/src/cli.ts` (Node 24+). Compare the meta-KB version it prints with this skill's version (top of this file). If they differ, tell the user that the skill or okb is out of date (the README's "Updating" section explains how to update) before going on.
+1. Find okb: `okb version`, or `node <ontology-kit>/src/cli.ts` (Node 24+). Compare the meta-KB version it prints with this skill's version (top of this file). If they differ, tell the user that the skill or okb is out of date (the Installation page, <https://ontology-kit.dev/getting-started/installation/>, explains how to update) before going on. The docs are readable as plain markdown: <https://ontology-kit.dev/llms.txt> lists every page with a one-line summary, and each page has a `.md` version.
 2. The target ontology must exist and have a **scope and at least three competency questions** (`okb status`). If it doesn't, stop and do Step 1 of the method first, or hand off to the **ontology-coach** skill. Competency questions decide what's worth extracting; without them, extraction turns into copying the docs.
 3. Load the modeling rules: `okb explain` (list), and `okb explain <rule-id>` for any you're unsure of. Don't invent structural rules beyond the meta-KB. If a modeling question isn't answered by a meta-KB rule or decision guide, raise it as an open question in the output rather than deciding silently.
 4. Register the document, from a local copy (the markdown source, not the rendered website):

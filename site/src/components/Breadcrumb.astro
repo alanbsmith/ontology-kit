@@ -1,0 +1,80 @@
+---
+// The trail above a page title: `Learn › Things and kinds › Is a kind of`. Adapted from the blog's
+// Breadcrumb (~/Projects/writing/src/components/Breadcrumb.astro). The ancestors are links, the
+// last crumb is the page itself and is not. The trail comes from ../lib/breadcrumbs.ts.
+import type { Crumb } from '../lib/breadcrumbs.ts';
+
+interface Props {
+	items: Crumb[];
+}
+const { items } = Astro.props;
+---
+
+{
+	items.length > 0 && (
+		<nav class="crumbs" aria-label="Breadcrumb">
+			<ol>
+				{items.map((item, i) => (
+					<li>
+						{i > 0 && <span class="sep" aria-hidden="true">›</span>}
+						{item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+					</li>
+				))}
+			</ol>
+		</nav>
+	)
+}
+
+<style>
+	/* Muted ancestors with an underline, a bold current page and chevrons between them. Long labels
+	   wrap inside their crumb instead of overflowing. Colors come from tokens, so dark mode and the
+	   contrast setting follow; the focus ring is the global one. */
+	.crumbs {
+		margin-block-end: var(--space-xs);
+		font-size: var(--text-small);
+	}
+
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		column-gap: var(--space-xs);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		display: inline-flex;
+		align-items: center;
+		column-gap: var(--space-xs);
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		overflow-wrap: anywhere;
+	}
+
+	/* The separator belongs to the item after it, so it never ends a line on its own. */
+	.sep {
+		color: var(--color-text-muted);
+		user-select: none;
+	}
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		color: var(--color-text);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	a:hover {
+		color: var(--color-link-hover);
+	}
+
+	[aria-current='page'] {
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+</style>

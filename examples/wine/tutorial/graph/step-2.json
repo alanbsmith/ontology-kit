@@ -1,0 +1,76 @@
+{
+  "step": 2,
+  "nodes": [
+    {
+      "type": "Ontology",
+      "id": "ontology",
+      "name": "Wine and Food",
+      "domain": "Wines, foods, and which wines go well with which foods",
+      "purpose": "Suggest good wine and food combinations for a restaurant menu and answer diners' questions",
+      "users": [
+        "diners",
+        "waiters"
+      ],
+      "maintainers": [
+        "sommelier"
+      ],
+      "outOfScope": [
+        "winery inventory",
+        "restaurant staff"
+      ],
+      "kind": "application",
+      "reuseReviewed": true
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.1",
+      "text": "Which wine characteristics should I consider when choosing a wine?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.2",
+      "text": "Is Bordeaux a red or white wine?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.3",
+      "text": "Does Cabernet Sauvignon go well with seafood?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.4",
+      "text": "What is the best choice of wine for grilled meat?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.5",
+      "text": "Which characteristics of a wine affect its appropriateness for a dish?",
+      "status": "draft"
+    },
+    {
+      "type": "CompetencyQuestion",
+      "id": "cq.6",
+      "text": "Which wines does a given winery produce?",
+      "status": "draft"
+    },
+    {
+      "type": "DesignDecision",
+      "id": "d.1",
+      "title": "No existing ontology reused",
+      "decision": "Build from scratch.",
+      "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
+      "date": "2026-09-23"
+    }
+  ],
+  "edges": [
+    {
+      "from": "d.1",
+      "type": "ABOUT",
+      "to": "ontology"
+    }
+  ]
+}
