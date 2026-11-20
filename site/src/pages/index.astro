@@ -194,10 +194,10 @@ const rules = ruleCounts(root);
 		grid-template-columns: minmax(0, 1fr);
 	}
 
-	/* Three cards: one column, or three in a row. Never two and one. */
+	/* The "why" cards sit three in a row from 48rem. The "learn by building" steps have long link
+	   headings that wrap badly in columns, so they stay one column at every width. */
 	@media (min-width: 48rem) {
-		.cards,
-		.steps {
+		.cards {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
 	}
