@@ -1,23 +1,25 @@
 # Beginner pages say "kind" and "property" first, and introduce the formal term deliberately.
+# In a substitution rule the left side is what Vale flags, so each pair is "jargon term: plain word".
+# The message prints the plain word first and the matched text second, hence the %[n]s order.
 extends: substitution
-message: "Beginners may not know '%s'. Try '%s', or define the term on first use and link it."
+message: "Beginners may not know '%[2]s'. Try '%[1]s', or define the term on first use and link it."
 level: warning
 ignorecase: true
 swap:
-  kinds: classes
-  kind: class
-  properties: slots
-  property: slot
-  examples: instances
-  example: instance
-  family tree: taxonomy
-  is-a relationship: subsumption
-  no overlap: disjointness
-  how many values: cardinality
-  rules: axioms
-  rule: axiom
-  limits on values: facets
-  limit on values: facet
-  allowed values: range
-  where it applies: domain
-  vocabularies: ontologies
+  classes: kinds
+  class: kind
+  slots: properties
+  slot: property
+  instances: examples
+  instance: example
+  taxonomy: family tree
+  subsumption: is-a relationship
+  disjointness: no overlap
+  cardinality: how many values
+  axioms: rules
+  axiom: rule
+  facets: limits on values
+  facet: limit on values
+  range: allowed values
+  domain: where it applies
+  ontologies: vocabularies
