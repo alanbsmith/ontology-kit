@@ -141,8 +141,9 @@ class OkbGraph extends HTMLElement {
 		this.inspector = html('div', { className: 'og-inspector' });
 		this.inspector.setAttribute('aria-live', 'polite');
 		// The inspector is part of the same box as the graph, under it.
-		this.replaceChildren(html('div', { className: 'og-box' }, this.frameEl, this.inspector));
-		this.append(this.filters, this.legend(), this.fallback!);
+		// The legend sits at the top of the panel, above the text that changes.
+		this.replaceChildren(html('div', { className: 'og-box' }, this.frameEl, html('div', { className: 'og-panel' }, this.legend(), this.inspector)));
+		this.append(this.filters, this.fallback!);
 		this.buildFilters();
 		this.inspect();
 
