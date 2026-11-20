@@ -243,7 +243,9 @@ okb-graph .og-inspector ul {
 	align-items: flex-start;
 }
 
-okb-graph .og-inspector li {
+/* The page's `.prose li + li` adds a top margin; the pills must all sit on one line. */
+okb-graph .og-inspector ul > li,
+okb-graph .og-inspector ul > li + li {
 	display: flex;
 	margin: 0;
 }
