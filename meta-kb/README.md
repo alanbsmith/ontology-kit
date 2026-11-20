@@ -8,7 +8,7 @@ A knowledge base about building knowledge bases. It's the single source of truth
 - the **rules** `okb validate` enforces and the ontology-review skill asks about
 - the **file format** okb ontologies use (node/edge type registry)
 
-It's itself a labeled property graph (LPG), stored as `data/nodes.json` and `data/edges.json` (see [the file format](../docs/FORMAT.md)), so you can load it into the same graph database as your domain KBs.
+It's itself a labeled property graph (LPG). The files are `data/nodes.json` and `data/edges.json` ([file format](../docs/FORMAT.md)). You can load them into the same graph database as your domain KBs.
 
 ## Grounding
 
