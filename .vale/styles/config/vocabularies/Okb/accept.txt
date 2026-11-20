@@ -50,3 +50,4 @@ Margaux
 Beaujolais
 Sauternes
 Gamay
+Cortado

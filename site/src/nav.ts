@@ -19,6 +19,7 @@ export interface Page {
 export const PAGES: readonly Page[] = [
   { route: "/getting-started/", source: "docs/getting-started/introduction.md", label: "Introduction" },
   { route: "/getting-started/installation/", source: "docs/getting-started/installation.md", label: "Installation" },
+  { route: "/getting-started/quickstart/", source: "docs/getting-started/quickstart.md", label: "Quickstart" },
   { route: "/getting-started/tutorial/wine-ontology/", source: "examples/wine/tutorial/0-intro.md", label: "Tutorial: Wine ontology" },
   { route: "/getting-started/tutorial/wine-ontology/1-scope/", source: "examples/wine/tutorial/1-scope.md", label: "1. Scope" },
   { route: "/getting-started/tutorial/wine-ontology/2-reuse/", source: "examples/wine/tutorial/2-reuse.md", label: "2. Reuse" },
@@ -98,7 +99,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .filter((n) => n.type === "Decision")
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
-    { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/"))] },
+    { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/"))] },
     { label: "Learn", links: [] },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
