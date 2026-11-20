@@ -59,6 +59,12 @@ Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `d
 
 The beginner pages are `docs/getting-started/*.md`, `docs/learn/*.md`, `docs/build/*.md` and `examples/*/tutorial-src/*.md`. They're written for a developer who is new to ontologies and has a problem to solve, not a vocabulary to learn. `npm run lint:docs` applies extra Vale rules to these paths (the `Beginner` style in `.vale/styles/Beginner`). The reference docs (METHOD, RULES, FORMAT and so on) keep the normal rules.
 
+### Page format
+
+Every page on the docs site starts with its `# Title` heading, before any paragraph, callout or other content. The site takes the page title from that heading, and a consistent opening makes the pages read the same.
+
+Generated pages (METHOD, GLOSSARY, RULES, DECISIONS) keep their "Generated from … Don't edit by hand" warning as an HTML comment right after the heading. Never show it as a visible callout: readers of the site don't need it, and an invisible comment still warns anyone who opens the source. `tests/site.test.ts` enforces both rules for every page.
+
 ### Tutorials
 
 The wine tutorial is written in `examples/wine/tutorial-src/*.md`, one file per page (`0-intro.md`, `1-scope.md` and so on). A source is plain prose plus code blocks tagged `okb` that hold only commands, one per line, each starting with `okb`:

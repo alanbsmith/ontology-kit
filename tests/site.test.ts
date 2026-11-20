@@ -170,3 +170,16 @@ test("site: every <okb-graph> has a text fallback and a src that has a data endp
   }
   assert.ok(found > 0, "found no <okb-graph> embeds to check");
 });
+
+test("every page opens with its H1, with no visible 'Generated' callout", () => {
+  for (const p of PAGES) {
+    const text = readFileSync(join(ROOT, p.source), "utf8").replace(/<!--[\s\S]*?-->/g, "");
+    const lines = text.split("\n");
+    const first = lines.find((l) => l.trim() !== "");
+    assert.ok(first !== undefined && /^# \S/.test(first), `${p.source}: rule "a page starts with its # Title heading" is broken; the first content is ${JSON.stringify(first)}`);
+    const h2 = lines.findIndex((l) => /^## /.test(l));
+    const head = lines.slice(0, h2 === -1 ? lines.length : h2);
+    const callout = head.find((l) => /^>\s*(\*\*)?Generated/i.test(l));
+    assert.equal(callout, undefined, `${p.source}: rule "no visible 'Generated' callout" is broken; make it an HTML comment: ${callout}`);
+  }
+});

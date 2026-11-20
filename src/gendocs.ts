@@ -13,7 +13,7 @@ const meta = MetaKB.get();
 /** A stable anchor id from a meta-KB id: `concept.class` → `concept-class`. Links use these, never heading slugs. */
 const anchorId = (id: string) => id.replace(/\./g, "-");
 const anchorTag = (id: string) => `<a id="${anchorId(id)}"></a>`;
-const HEADER = (title: string) => [`# ${title}`, "", `> Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate.`, ""];
+const HEADER = (title: string) => [`# ${title}`, "", `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`, ""];
 
 function sources(id: string): string[] {
   return meta.citations(id).map((l) => `> “${l.quote}”  \n> — ${meta.citeLine(l)}`);
