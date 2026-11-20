@@ -183,3 +183,19 @@ test("every page opens with its H1, with no visible 'Generated' callout", () => 
     assert.equal(callout, undefined, `${p.source}: rule "no visible 'Generated' callout" is broken; make it an HTML comment: ${callout}`);
   }
 });
+
+test("site: every internal link on the landing page is a real route, and the rule counts come from the meta-KB", async () => {
+  const { LANDING_LINKS, ruleCounts } = await import("../site/src/lib/landing.ts");
+  const routes = new Set(PAGES.map((p) => p.route));
+  for (const [name, href] of Object.entries(LANDING_LINKS)) assert.ok(routes.has(href), `landing link ${name} → ${href} has no page`);
+
+  const rules = ruleCounts(ROOT);
+  assert.equal(rules.total, nodes.filter((n) => n.type === "Rule").length);
+  assert.equal(rules.grounded + rules.conventions, rules.total);
+  assert.equal(rules.errors + rules.warnings + rules.hints, rules.total);
+});
+
+test("site: the landing page has no hardcoded internal links", () => {
+  const page = readFileSync(join(ROOT, "site/src/pages/index.astro"), "utf8");
+  assert.ok(!/href="\//.test(page), "internal links come from LANDING_LINKS, which the test above checks");
+});
