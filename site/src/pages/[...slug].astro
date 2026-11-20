@@ -7,6 +7,7 @@ import Band from '../components/Band.astro';
 import Outline from '../components/Outline.astro';
 import { PAGES, neighbors, type Page } from '../nav.ts';
 import { metaNodes } from '../lib/meta.ts';
+import { timeLabel } from '../lib/reading-time.ts';
 
 export function getStaticPaths() {
 	return PAGES.map((page) => ({
@@ -23,6 +24,11 @@ const entry = await getEntry('docs', page.source);
 if (!entry) throw new Error(`No docs entry for ${page.source}`);
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const title: string = remarkPluginFrontmatter.title ?? page.label;
+// The estimated time, from the page's markdown (and its siblings' for a total). Reference,
+// Contributing and the landing page get none.
+const bodies = new Map<string, string>();
+for (const p of PAGES) bodies.set(p.route, (await getEntry('docs', p.source))?.body ?? '');
+const time = timeLabel(page.route, (route) => bodies.get(route) ?? '');
 const { prev, next } = neighbors(metaNodes, page.route);
 // A generated tutorial page links to the hand-written source it was built from.
 const sourceFile = page.source.replace(/^(examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
@@ -33,6 +39,7 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${source
 	<Band seed={page.route}>
 		<!-- Pagefind reads the page title from this h1, so it is indexed with the article. -->
 		<div data-pagefind-body><h1>{title}</h1></div>
+		{time && <p class="meta">{time}</p>}
 	</Band>
 	<div class="docs">
 		<main id="main">
@@ -221,6 +228,14 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${source
 	h1 {
 		font-size: var(--text-title);
 		margin-block: 0;
+	}
+
+	/* The estimated time under the title, as in the blog: full-strength text over the art. */
+	.meta {
+		margin: var(--space-md) 0 0;
+		font-size: var(--text-body);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
 	}
 
 	/* Two large cards side by side; they stack on narrow screens. */

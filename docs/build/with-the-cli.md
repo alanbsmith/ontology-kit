@@ -8,7 +8,7 @@ Install okb first. The [Installation](../getting-started/installation.md) page h
 
 ## Pick a way in
 
-- **[Quickstart](../getting-started/quickstart.md).** Five minutes, a tiny coffee menu, one rule broken on purpose. Start here if you want to feel the loop before you commit to a subject.
+- **[Quickstart](../getting-started/quickstart.md).** A tiny coffee menu, one rule broken on purpose. Start here if you want to feel the loop before you commit to a subject.
 - **[Wine tutorial](../../examples/wine/tutorial/0-intro.md).** Eight pages that build the wine ontology from _Ontology Development 101_, with every command and its real output.
 - **[Espresso tutorial](../../examples/espresso/tutorial/0-intro.md).** The same eight steps on a café menu, where you decide whether something is a class or an instance.
 

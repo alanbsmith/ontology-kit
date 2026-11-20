@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In about five minutes you'll build a tiny ontology for a coffee shop menu, break a rule on purpose, and run your first `okb validate`. You need okb installed first. See [Installation](installation.md) (it takes a minute, and `okb --help` is the check).
+You'll build a tiny ontology for a coffee shop menu, break a rule on purpose, and run your first `okb validate`. You need okb installed first. See [Installation](installation.md) (`okb --help` is the check).
 
 An [ontology](../GLOSSARY.md#concept-ontology) is a checked description of a subject: the kinds of things in it, what you can say about each kind, and examples. The point of okb is that it checks your description as you write it, so mistakes show up in seconds instead of in production. This page shows that loop on a small scale. The method behind okb comes from [_Ontology Development 101_](https://protege.stanford.edu/publications/ontology_development/ontology101.pdf) by Noy and McGuinness (PDF), which these docs call Ontology 101.
 

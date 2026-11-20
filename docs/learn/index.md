@@ -1,6 +1,6 @@
 # Learn what an ontology is
 
-This course is for developers whose team's knowledge lives in docs, wikis and heads, and who want a program to answer questions from it. You don't need to know anything about ontologies yet. Each page takes a few minutes to read and shows one idea with a picture and one real command.
+This course is for developers whose team's knowledge lives in docs, wikis and heads, and who want a program to answer questions from it. You don't need to know anything about ontologies yet. Each page shows one idea with a picture and one real command, and the top of the page says how long it takes.
 
 ## The chapters
 
