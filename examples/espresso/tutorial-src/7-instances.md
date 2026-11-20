@@ -58,7 +58,7 @@ okb show "Milk foam"
 ```
 
 - **Values you didn't type.** The breve has `espressoToMilkRatio` and `texture` from the defaults on Cappuccino, and `origin` from its own default, USA. `variationOf` lists both Latte and Cappuccino, from the class.
-- **One edge, two views.** "Milk foam" lists the drinks it goes into, though you only wrote `contains`. That's the inverse from step 6.
+- **[One edge, two views](../../../docs/learn/inverse-relationships.md).** "Milk foam" lists the drinks it goes into, though you only wrote `contains`. That's the inverse from step 6.
 
 ## Check your work
 

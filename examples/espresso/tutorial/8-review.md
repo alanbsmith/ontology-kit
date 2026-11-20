@@ -263,7 +263,7 @@ Record answers that needed thought (or that someone might question later): okb d
 
 ## Read the output
 
-- **No errors.** An error means something is wrong. okb found none.
+- **No errors.** An error means something is wrong. [How do I read and fix a finding?](../../../docs/learn/rules-and-findings.md) covers errors, warnings and hints. okb found none.
 - **One warning, left on purpose.** Question 6 asks "How much does each drink cost?", but nothing in the model answers it. Either add a `price` slot, or take the question out. In a real project, you'd decide now. Here it shows what a finding looks like.
 - **Hints.** Breve is the only child of Latte and of Cappuccino, so okb asks if a sibling is missing. Nothing needs the five pure espresso drinks. Those are prompts to think, not faults.
 - **The review list.** `okb review` asks questions no program can answer, like "Is every cortado, by definition, a milk drink?"

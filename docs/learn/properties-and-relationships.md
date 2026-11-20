@@ -65,7 +65,8 @@ Look at the `kind` line. `origin` is a property, so its facets say `String`. `co
 - [The espresso tutorial, step 5](../../examples/espresso/tutorial/5-slots.md) adds these slots one at a time.
 - [Choosing between a class and a value](../DECISIONS.md#decision-class-or-value) helps when a fact might be a thing.
 - [Choosing the range of a relationship](../DECISIONS.md#decision-range) covers what a link may point to.
-- [What is a knowledge graph?](knowledge-graphs.md) shows nodes and links on a smaller scale.
+- [What are classes and instances?](classes-and-instances.md) explains the things that these facts describe.
+- [What is slot inheritance?](slot-inheritance.md) is the next page: it shows how a fact on a class reaches everything below it.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

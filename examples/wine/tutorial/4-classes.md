@@ -199,8 +199,8 @@ It explains 1 current finding(s) from hier-single-child (they'll show as 'explai
 
 ## Read the output
 
-- **The follow-up questions.** After some `class add` commands, okb asked "Can anything be both…?". It nudges you to declare disjoint groups while the idea is fresh.
-- **Two parents.** Port and Sauternes each sit under two classes, which is [multiple inheritance](../../../docs/GLOSSARY.md#concept-multiple-inheritance). The tree shows them twice, with "also under" and "see above".
+- **The follow-up questions.** After some `class add` commands, okb asked "Can anything be both…?". It nudges you to declare disjoint groups while the idea is fresh. [Disjoint classes and multiple parents](../../../docs/learn/disjoint-and-multiple-parents.md) explains why.
+- **Two parents.** Port and Sauternes each sit under two classes, which is [multiple inheritance](../../../docs/GLOSSARY.md#concept-multiple-inheritance). The tree shows them twice, with "also under" and "see above". For how the tree works, see [Is a kind of](../../../docs/learn/hierarchy.md).
 - **Hints versus warnings.** The two hints at the end are suggestions. A warning you've explained with a decision moves to its own list instead of staying open.
 
 ## Check your work

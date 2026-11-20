@@ -60,7 +60,7 @@ Added cq.6.
 ## Read the output
 
 - okb numbers each question (`cq.1`, `cq.2` and so on). You'll use the numbers in step 8.
-- The questions mix kinds: one filters ("no milk"), one compares, one lists ingredients. Good questions pull different parts out of the model.
+- The questions mix kinds (see [Why start with questions?](../../../docs/learn/competency-questions.md)): one filters ("no milk"), one compares, one lists ingredients. Good questions pull different parts out of the model.
 
 ## Check your work
 

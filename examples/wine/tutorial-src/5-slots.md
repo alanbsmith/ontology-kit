@@ -48,9 +48,9 @@ okb show RedWine
 
 ## Read the output
 
-- **Inheritance.** RedWine lists `color`, `body`, `flavor` and `sugar` "from Wine". You added them once, and every class below RedWine [inherits](../../../docs/GLOSSARY.md#concept-inheritance) them too.
+- **[Inheritance](../../../docs/learn/slot-inheritance.md).** RedWine lists `color`, `body`, `flavor` and `sugar` "from Wine". You added them once, and every class below RedWine [inherits](../../../docs/GLOSSARY.md#concept-inheritance) them too.
 - **Tannin stays on RedWine.** Only red wines show `tanninLevel`. A white wine can't be given one by mistake.
-- **Properties versus relationships.** `maker` shows `→ Winery (:MAKER)`. The `:MAKER` is the name of the edge okb will store. `body` has no arrow, because it holds a plain value.
+- **[Properties versus relationships](../../../docs/learn/properties-and-relationships.md).** `maker` shows `→ Winery (:MAKER)`. The `:MAKER` is the name of the edge okb will store. `body` has no arrow, because it holds a plain value.
 - **Two slots for one fact.** `maker` and `produces` are the same fact seen from each side. Step 6 joins them.
 
 ## Check your work

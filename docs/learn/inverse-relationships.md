@@ -64,7 +64,8 @@ The phrase `reads :CONTAINS backwards` is the point. Nobody typed those eight dr
 
 - [The espresso tutorial, step 6](../../examples/espresso/tutorial/6-facets.md) declares this pair.
 - [Choosing the range of a relationship](../DECISIONS.md#decision-range) covers what each end may point to.
-- [What is a knowledge graph?](knowledge-graphs.md) explains nodes and links.
+- [Properties or relationships?](properties-and-relationships.md) explains the links that an inverse pairs up.
+- [How do I read and fix a finding?](rules-and-findings.md) is the next page: it starts the chapter on keeping an ontology honest.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

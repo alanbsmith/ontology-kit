@@ -93,7 +93,8 @@ Each indented line is one "is a" link, the same ones as in the graph. The `MilkD
 - [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) builds this tree one class at a time.
 - [The wine tutorial](../../examples/wine/tutorial/4-classes.md) builds a larger tree.
 - [Is it an "is a"?](../DECISIONS.md#decision-is-a) is the decision guide for each link.
-- [What is a knowledge graph?](knowledge-graphs.md) introduces the two kinds of link. The sibling pages are Classes and instances, and Disjoint classes and multiple parents.
+- [What are classes and instances?](classes-and-instances.md) explains the other kind of link, "instance of".
+- [Can a drink be two kinds at once?](disjoint-and-multiple-parents.md) is the next page: it covers siblings that can't overlap and classes with two parents.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

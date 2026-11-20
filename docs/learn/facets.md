@@ -55,7 +55,9 @@ okb refuses both, so nothing is saved. The first message names the allowed value
 
 - [The espresso tutorial, step 6](../../examples/espresso/tutorial/6-facets.md) sets these rules one by one.
 - [Choosing a range](../DECISIONS.md#decision-range) covers what a link may point to.
-- [What is a knowledge graph?](knowledge-graphs.md) is the place to start if the graph is new to you.
+- [What is slot inheritance?](slot-inheritance.md) explains how a slot, and its rules, reach the classes below.
+- [Can a drink be two kinds at once?](disjoint-and-multiple-parents.md) shows why a default is safer than a fixed value when two parents disagree.
+- [What is an inverse relationship?](inverse-relationships.md) is the next page: it pairs two slots that read one link from each side.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

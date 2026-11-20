@@ -119,7 +119,7 @@ Chateau Morgon  Instance · i.chateau-morgon
 
 - **Values you didn't type.** The wine has `color red (fixed by RedWine)` and `goesWellWith RedMeat (fixed by RedWine)`. They come from its class.
 - **A default in action.** The Sterling Vineyards Merlot has no `body` in the command. okb filled in `medium` from the [default](../../../docs/GLOSSARY.md#concept-default-value) you set in step 6. The Beaujolais said `body=light`, so it keeps that.
-- **One edge, two views.** Chateau Morgon `produces` the Beaujolais, yet you never wrote that. `produces` reads the `maker` edge backwards. That's what the [inverse](../../../docs/GLOSSARY.md#concept-inverse-slots) in step 6 does.
+- **[One edge, two views](../../../docs/learn/inverse-relationships.md).** Chateau Morgon `produces` the Beaujolais, yet you never wrote that. `produces` reads the `maker` edge backwards. That's what the [inverse](../../../docs/GLOSSARY.md#concept-inverse-slots) in step 6 does.
 
 ## Check your work
 

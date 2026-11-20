@@ -102,7 +102,8 @@ The first line holds the strength (`SHOULD NOT`) and the finding level it become
 - [The Rules page](../RULES.md) lists every rule with its strength, reason and source.
 - [Methodology](../METHOD.md) shows which step applies which rules.
 - [Glossary](../GLOSSARY.md) defines every term used here.
-- [What is a knowledge graph?](/learn/knowledge-graphs/) explains the nodes and edges that the meta-KB is made of. A page on reading findings comes before this one.
+- [How do I read and fix a finding?](rules-and-findings.md) comes before this page: it shows the findings that these rules produce.
+- [What is a knowledge graph?](knowledge-graphs.md) explains the nodes and edges that the meta-KB is made of.
 
 ## Sources
 

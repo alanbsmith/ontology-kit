@@ -74,7 +74,8 @@ This output is all plan, with no real drink values. It lists the slots a breve c
 
 - [The espresso tutorial](../../examples/espresso/tutorial/0-intro.md) builds the plan and then adds the real drinks.
 - [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows the same split with a larger ontology.
-- [What is a knowledge graph?](/learn/knowledge-graphs/) shows the links that both the plan and the data use.
+- [What is a knowledge graph?](knowledge-graphs.md) shows the links that both the plan and the data use.
+- [Why start with questions?](competency-questions.md) is the next page: it shows how to decide what the plan must cover.
 - [Choosing between a class and an instance](../DECISIONS.md#decision-instance-or-class) helps when you aren't sure which side a thing belongs on.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 

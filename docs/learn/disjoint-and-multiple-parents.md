@@ -61,7 +61,8 @@ Adding `--parent Latte --parent Cappuccino` is allowed, because those two aren't
 - [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) adds Breve with two parents and declares the disjoint groups.
 - [Step 6 of the espresso tutorial](../../examples/espresso/tutorial/6-facets.md) shows how defaults settle facts that two parents disagree on.
 - [Are these classes disjoint?](../DECISIONS.md#decision-disjoint) is the decision guide for each pair of siblings.
-- [What is a knowledge graph?](knowledge-graphs.md) introduces the graph itself. The sibling pages are Classes and instances, and Hierarchy.
+- [What does "is a kind of" mean?](hierarchy.md) explains the "is a" links that these rules build on.
+- [Properties or relationships?](properties-and-relationships.md) is the next page: it moves from kinds of thing to facts about them.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

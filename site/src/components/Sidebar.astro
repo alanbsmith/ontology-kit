@@ -5,7 +5,7 @@ import { defaultOpen, sectionKey, type NavGroup } from '../nav.ts';
  * The docs navigation: the sidebar on wide screens, and the menu sheet's contents on narrow
  * ones. Built from nav.ts and the meta-KB, so new steps and decision guides appear on their own.
  *
- * Group headings and links with children collapse. Without JavaScript everything renders expanded
+ * Group headings, chapter headings (entries with children and no page) and links with children collapse. Without JavaScript everything renders expanded
  * and the toggle buttons stay hidden; the script below shows them and folds what the reader isn't in.
  */
 interface Props {
@@ -38,16 +38,26 @@ const chevron = '<svg class="chevron" viewBox="0 0 24 24" width="16" height="16"
 							const linkKey = sectionKey(link);
 							return (
 								<li data-section={link.children ? linkKey : undefined} data-default-open={link.children && open.has(linkKey) ? '' : undefined}>
-									<div class="row">
-										<a href={link.href} aria-current={link.href === current ? 'page' : undefined}>
-											{link.label}
-										</a>
-										{link.children && (
-											<button type="button" class="toggle" hidden data-toggle data-name={link.label} aria-expanded="true" aria-controls={ids(linkKey)} aria-label={`Collapse ${link.label}`}>
+									{link.href === undefined ? (
+										<div class="row heading">
+											<span class="heading-label" data-label>{link.label}</span>
+											<button type="button" class="heading-toggle" hidden data-toggle aria-expanded="true" aria-controls={ids(linkKey)}>
 												<Fragment set:html={chevron} />
+												<span>{link.label}</span>
 											</button>
-										)}
-									</div>
+										</div>
+									) : (
+										<div class="row">
+											<a href={link.href} aria-current={link.href === current ? 'page' : undefined}>
+												{link.label}
+											</a>
+											{link.children && (
+												<button type="button" class="toggle" hidden data-toggle data-name={link.label} aria-expanded="true" aria-controls={ids(linkKey)} aria-label={`Collapse ${link.label}`}>
+													<Fragment set:html={chevron} />
+												</button>
+											)}
+										</div>
+									)}
 									{link.children && (
 										<ul class="children" id={ids(linkKey)} data-panel>
 											{link.children.map((child) => (
@@ -92,7 +102,7 @@ const chevron = '<svg class="chevron" viewBox="0 0 24 24" width="16" height="16"
 		const key = section.dataset.section!;
 		const button = section.querySelector<HTMLButtonElement>(':scope > * > [data-toggle], :scope > [data-toggle]')!;
 		const panel = document.getElementById(button.getAttribute('aria-controls')!)!;
-		const label = section.querySelector<HTMLElement>(':scope > h2 > [data-label]');
+		const label = section.querySelector<HTMLElement>(':scope > h2 > [data-label], :scope > .heading > [data-label]');
 		const name = button.dataset.name;
 
 		const set = (isOpen: boolean) => {
@@ -150,6 +160,33 @@ const chevron = '<svg class="chevron" viewBox="0 0 24 24" width="16" height="16"
 	.row a {
 		flex: 1;
 		min-width: 0;
+	}
+
+	.heading-label {
+		flex: 1;
+		padding: 0.25rem var(--space-sm);
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+	}
+
+	.heading-toggle {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		gap: var(--space-tight);
+		padding: 0.25rem var(--space-sm);
+		border: 0;
+		border-radius: var(--radius-sm);
+		background: none;
+		font: inherit;
+		font-weight: var(--weight-strong);
+		color: var(--color-text);
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.heading-toggle:hover {
+		background: var(--color-surface-hover);
 	}
 
 	.toggle {
@@ -234,7 +271,8 @@ const chevron = '<svg class="chevron" viewBox="0 0 24 24" width="16" height="16"
 			width: 2.75rem;
 		}
 
-		.group-toggle {
+		.group-toggle,
+		.heading-toggle {
 			min-height: 2.75rem;
 		}
 	}

@@ -8,13 +8,13 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { INSTALL_COMMAND } from "../site/src/lib/install.ts";
 import { graphNames, loadGraph } from "../site/src/graph/data.ts";
 import { buildGraph, defaultTypes, findNode } from "../site/src/graph/model.ts";
-import { PAGES, defaultOpen, sectionKey, sequence, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
+import { LEARN_CHAPTERS, PAGES, defaultOpen, sectionKey, neighbors, sequence, sequenceOf, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const nodes: MetaNode[] = JSON.parse(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"));
 
 /** A link's href and every href nested under it. */
-const withChildren = (l: NavLink): string[] => [l.href, ...(l.children ?? []).flatMap(withChildren)];
+const withChildren = (l: NavLink): string[] => [...(l.href === undefined ? [] : [l.href]), ...(l.children ?? []).flatMap(withChildren)];
 
 test("site: every page's source file exists", () => {
   for (const p of PAGES) assert.ok(existsSync(join(ROOT, p.source)), `${p.route} → ${p.source} is missing`);
@@ -198,4 +198,73 @@ test("site: every internal link on the landing page is a real route, and the rul
 test("site: the landing page has no hardcoded internal links", () => {
   const page = readFileSync(join(ROOT, "site/src/pages/index.astro"), "utf8");
   assert.ok(!/href="\//.test(page), "internal links come from LANDING_LINKS, which the test above checks");
+});
+
+const CHAPTERS: [string, string[]][] = [
+  ["The big picture", ["knowledge-graphs", "ontologies", "competency-questions"]],
+  ["Things and kinds", ["classes-and-instances", "hierarchy", "disjoint-and-multiple-parents"]],
+  ["Describing things", ["properties-and-relationships", "slot-inheritance", "facets", "inverse-relationships"]],
+  ["Staying honest", ["rules-and-findings", "meta-kb"]],
+];
+
+test("site: the Learn group has four chapter headings with no page, over every Learn page in course order", () => {
+  const learn = sidebar(nodes).find((g) => g.label === "Learn")!;
+  assert.deepEqual(learn.links.map((l) => l.label), CHAPTERS.map(([label]) => label));
+  for (const [i, [, slugs]] of CHAPTERS.entries()) {
+    assert.equal(learn.links[i].href, undefined, "a chapter heading has no page of its own");
+    assert.deepEqual((learn.links[i].children ?? []).map((c) => c.href), slugs.map((s) => `/learn/${s}/`));
+  }
+  const learnPages = PAGES.filter((p) => p.route.startsWith("/learn/")).map((p) => p.route);
+  assert.deepEqual(learn.links.flatMap(withChildren), learnPages.length === 12 ? CHAPTERS.flatMap(([, s]) => s.map((x) => `/learn/${x}/`)) : [], "every Learn page is in a chapter");
+  assert.equal(learnPages.length, 12);
+});
+
+test("site: previous/next skips chapter headings and follows the course order", () => {
+  const seq = sequence(nodes);
+  assert.ok(seq.every((l) => typeof l.href === "string" && l.href.startsWith("/")), "headings must not appear in the sequence");
+  const course = CHAPTERS.flatMap(([, s]) => s.map((x) => `/learn/${x}/`));
+  const hrefs = seq.map((l) => l.href);
+  const start = hrefs.indexOf(course[0]);
+  assert.deepEqual(hrefs.slice(start, start + course.length), course);
+  // The last page of one chapter is followed by the first page of the next.
+  assert.equal(neighbors(nodes, "/learn/competency-questions/").next?.href, "/learn/classes-and-instances/");
+  assert.equal(neighbors(nodes, "/learn/classes-and-instances/").prev?.href, "/learn/competency-questions/");
+  assert.equal(neighbors(nodes, "/learn/knowledge-graphs/").prev?.href, "/getting-started/tutorial/espresso-ontology/8-review/");
+});
+
+test("site: a Learn chapter opens when it holds the page being read, and only then", () => {
+  const groups = sidebar(nodes);
+  const open = (route: string) => [...defaultOpen(groups, route)].sort();
+  assert.deepEqual(open("/learn/facets/"), ["group:Learn", "heading:Describing things"].sort());
+  assert.deepEqual(open("/learn/meta-kb/"), ["group:Learn", "heading:Staying honest"].sort());
+  // Section keys stay distinct, so one chapter's saved state can't open another.
+  const learn = groups.find((g) => g.label === "Learn")!;
+  const keys = learn.links.map(sectionKey);
+  assert.equal(new Set(keys).size, keys.length);
+  assert.ok(keys.every((k) => k.startsWith("heading:")));
+});
+
+test("site: every Learn page belongs to exactly one chapter", () => {
+  const listed = LEARN_CHAPTERS.flatMap((c) => c.pages);
+  assert.equal(new Set(listed).size, listed.length, "a page is in two chapters");
+  const learn = PAGES.filter((p) => p.route.startsWith("/learn/") && !LEARN_CHAPTERS.some((c) => c.route === p.route)).map((p) => p.route);
+  assert.deepEqual([...listed].sort(), learn.sort());
+});
+
+test("site: a chapter with a page is a link before its children in previous/next, and one without is skipped", () => {
+  const chapters: typeof LEARN_CHAPTERS = [
+    { title: "Opened", route: "/learn/ontologies/", pages: ["/learn/facets/"] },
+    { title: "Bare", pages: ["/learn/hierarchy/"] },
+  ];
+  const [opened, bare] = chapters.map((c) => {
+    const children = c.pages.map((r) => ({ label: r, href: r }));
+    return c.route ? { label: c.title, href: c.route, children } : { label: c.title, children };
+  });
+  const groups = [{ label: "Learn", links: [opened, bare] }];
+  // The opener is its own entry and counts as the open chapter when read, as do its children.
+  assert.deepEqual([...defaultOpen(groups, "/learn/ontologies/")].sort(), ["group:Learn", "link:/learn/ontologies/"]);
+  assert.deepEqual([...defaultOpen(groups, "/learn/facets/")].sort(), ["group:Learn", "link:/learn/ontologies/"]);
+  assert.deepEqual([...defaultOpen(groups, "/learn/hierarchy/")].sort(), ["group:Learn", "heading:Bare"]);
+  assert.equal(sectionKey(bare), "heading:Bare");
+  assert.deepEqual(sequenceOf(groups).map((l) => l.href), ["/learn/ontologies/", "/learn/facets/", "/learn/hierarchy/"]);
 });

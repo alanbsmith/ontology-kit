@@ -79,7 +79,8 @@ The `instances` line lists Vertex cortado, the dot in the graph. The `fixed` lin
 
 - [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) adds Cortado as a class, and [step 7](../../examples/espresso/tutorial/7-instances.md) adds Vertex cortado.
 - [Instance or class?](../DECISIONS.md#decision-instance-or-class) is the decision guide for choosing.
-- [What is a knowledge graph?](knowledge-graphs.md) shows why links between things matter. The next pages are Hierarchy and Disjoint classes and multiple parents.
+- [What does "is a kind of" mean?](hierarchy.md) is the next page: it arranges classes into a tree.
+- [Why start with questions?](competency-questions.md) shows where the classes you need come from.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

@@ -44,7 +44,7 @@ okb class default Wine body=medium
 
 ## Read the output
 
-- **Fixed versus default.** A fixed value can't change: no red wine is white. A default is a starting guess that any wine can override.
+- **[Fixed versus default](../../../docs/learn/facets.md).** A fixed value can't change: no red wine is white. A default is a starting guess that any wine can override.
 - **Facts about classes.** `goesWellWith=RedMeat` is on the class, so it covers every red wine, including ones you add later.
 - **Why strength is an edge property.** "Classic" isn't true of red wine or of red meat. It's true of the pairing. Run `okb explain decision.edge-or-class` to see how okb helps you choose.
 

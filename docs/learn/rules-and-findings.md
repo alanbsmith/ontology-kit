@@ -95,9 +95,10 @@ The warning count drops to 0 and the finding moves to an "EXPLAINED by design de
 ## Related pages
 
 - [Step 8 of the espresso tutorial](../../examples/espresso/tutorial/8-review.md) shows this finding and the decision at full size.
-- [The Rules page](../RULES.md) lists every rule, its strength and the reason for it. A Learn page on where the rules come from follows this one.
+- [The Rules page](../RULES.md) lists every rule, its strength and the reason for it.
 - [Glossary](../GLOSSARY.md) defines every term used here.
-- [What is a knowledge graph?](/learn/knowledge-graphs/) explains the nodes and edges that the rules check.
+- [What are facets?](facets.md) covers the rules you set on a slot, which several findings check.
+- [Where do the rules come from?](meta-kb.md) is the next page: it shows where each rule and its reason are kept.
 
 ## Sources
 

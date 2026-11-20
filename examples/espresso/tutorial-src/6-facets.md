@@ -72,8 +72,8 @@ okb class disjoint WholeMilk HalfAndHalf CondensedMilk
 
 ## Read the output
 
-- **Fixed versus default.** A fixed value can't change below the class. A default is a starting guess that a subclass or instance can override.
-- **Why defaults for latte and cappuccino.** Breve is a kind of both. If each fixed a different ratio, okb couldn't tell which one a breve gets. A default lets Breve pick its own.
+- **[Fixed versus default](../../../docs/learn/facets.md).** A fixed value can't change below the class. A default is a starting guess that a subclass or instance can override.
+- **[Why defaults](../../../docs/learn/disjoint-and-multiple-parents.md) for latte and cappuccino.** Breve is a kind of both. If each fixed a different ratio, okb couldn't tell which one a breve gets. A default lets Breve pick its own.
 - **No disjoint group for the milk drinks.** Breve is a latte and a cappuccino, so those two can't be disjoint. okb's hint later is fair, and you'll leave it.
 
 ## Check your work

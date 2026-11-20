@@ -82,10 +82,20 @@ export interface MetaNode {
   order?: number;
 }
 
+/**
+ * A sidebar entry: a page link, or a chapter heading. A heading has `children` and no `href`, so it
+ * has no page of its own and is skipped by previous/next.
+ */
 export interface NavLink {
   label: string;
-  href: string;
+  href?: string;
   children?: NavLink[];
+}
+
+/** An entry that goes somewhere: what previous/next walks. */
+export interface NavPage {
+  label: string;
+  href: string;
 }
 
 export interface NavGroup {
@@ -99,6 +109,28 @@ export const anchorId = (id: string) => id.replace(/\./g, "-");
 /** The pages below a route, as sidebar children: `/getting-started/tutorial/wine-ontology/` → its steps. */
 function childrenOf(route: string): NavLink[] {
   return PAGES.filter((p) => p.route.startsWith(route) && p.route !== route).map((p) => ({ label: p.label, href: p.route }));
+}
+
+/** A Learn chapter: a title, an optional opener page, and its pages in course order. */
+export interface Chapter {
+  title: string;
+  /** The chapter's own page, if it has one. Without it the heading only toggles. */
+  route?: string;
+  pages: string[];
+}
+
+/** The Learn course. Add a chapter here and list its pages; the sidebar and previous/next follow. */
+export const LEARN_CHAPTERS: readonly Chapter[] = [
+  { title: "The big picture", pages: ["/learn/knowledge-graphs/", "/learn/ontologies/", "/learn/competency-questions/"] },
+  { title: "Things and kinds", pages: ["/learn/classes-and-instances/", "/learn/hierarchy/", "/learn/disjoint-and-multiple-parents/"] },
+  { title: "Describing things", pages: ["/learn/properties-and-relationships/", "/learn/slot-inheritance/", "/learn/facets/", "/learn/inverse-relationships/"] },
+  { title: "Staying honest", pages: ["/learn/rules-and-findings/", "/learn/meta-kb/"] },
+];
+
+/** A chapter as a sidebar entry: a heading, or a link when it has a page. */
+function chapter(c: Chapter): NavLink {
+  const children = c.pages.map((r) => link(r));
+  return c.route ? { label: pageAt(c.route)?.label ?? c.title, href: c.route, children } : { label: c.title, children };
 }
 
 function link(route: string, children?: NavLink[]): NavLink {
@@ -121,7 +153,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
-    { label: "Learn", links: [link("/learn/knowledge-graphs/"), link("/learn/ontologies/"), link("/learn/competency-questions/"), link("/learn/classes-and-instances/"), link("/learn/hierarchy/"), link("/learn/disjoint-and-multiple-parents/"), link("/learn/properties-and-relationships/"), link("/learn/slot-inheritance/"), link("/learn/facets/"), link("/learn/inverse-relationships/"), link("/learn/rules-and-findings/"), link("/learn/meta-kb/")] },
+    { label: "Learn", links: LEARN_CHAPTERS.map(chapter) },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
@@ -132,18 +164,24 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
   return groups.filter((g) => g.links.length > 0);
 }
 
-/** A link and everything nested under it, in reading order. */
-function flatten(l: NavLink): NavLink[] {
-  return [{ label: l.label, href: l.href }, ...(l.children ?? []).flatMap(flatten)];
+/** A link and everything nested under it, in reading order. A heading adds nothing of its own. */
+function flatten(l: NavLink): NavPage[] {
+  const self = l.href === undefined ? [] : [{ label: l.label, href: l.href }];
+  return [...self, ...(l.children ?? []).flatMap(flatten)];
 }
 
 /** Every sidebar entry in reading order: each page, then its children. Drives previous/next. */
-export function sequence(nodes: readonly MetaNode[]): NavLink[] {
-  return sidebar(nodes).flatMap((g) => g.links.flatMap(flatten));
+export function sequence(nodes: readonly MetaNode[]): NavPage[] {
+  return sequenceOf(sidebar(nodes));
+}
+
+/** The reading order of any set of groups. A chapter with a page comes before its children. */
+export function sequenceOf(groups: readonly NavGroup[]): NavPage[] {
+  return groups.flatMap((g) => g.links.flatMap(flatten));
 }
 
 /** The entries before and after a page in the sequence; either is undefined at the ends. */
-export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: NavLink; next?: NavLink } {
+export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: NavPage; next?: NavPage } {
   const seq = sequence(nodes);
   const i = seq.findIndex((l) => l.href === route);
   return i < 0 ? {} : { prev: seq[i - 1], next: seq[i + 1] };
@@ -152,19 +190,23 @@ export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: N
 /** A link's path without its `#anchor`: the methodology steps and decision guides share their page's path. */
 const pathOf = (href: string) => href.split("#")[0];
 
-/** The key of a collapsible sidebar section: a group's label, or the href of a link that has children. */
-export const sectionKey = (x: NavGroup | NavLink): string => ("links" in x ? `group:${x.label}` : `link:${x.href}`);
+/**
+ * The key of a collapsible sidebar section: a group's label, a heading's label, or the href of a
+ * link that has children.
+ */
+export const sectionKey = (x: NavGroup | NavLink): string =>
+  "links" in x ? `group:${x.label}` : x.href === undefined ? `heading:${x.label}` : `link:${x.href}`;
 
 /**
- * The sidebar sections that start open for a route: the group that holds the page, and a link with
- * children when the page is that link or one of its children. Everything else starts collapsed.
- * A reader's saved choices never close these.
+ * The sidebar sections that start open for a route: the group that holds the page, and a link or
+ * heading with children when the page is that link or one of its children. Everything else starts
+ * collapsed. A reader's saved choices never close these.
  */
 export function defaultOpen(groups: readonly NavGroup[], route: string): Set<string> {
   const open = new Set<string>();
   for (const group of groups) {
     for (const l of group.links) {
-      const here = [l, ...(l.children ?? [])].some((x) => pathOf(x.href) === route);
+      const here = [l, ...(l.children ?? [])].some((x) => x.href !== undefined && pathOf(x.href) === route);
       if (!here) continue;
       open.add(sectionKey(group));
       if (l.children?.length) open.add(sectionKey(l));

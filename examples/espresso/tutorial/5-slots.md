@@ -92,8 +92,8 @@ Linked to Slot 'pullVolumeMl'.
 
 ## Read the output
 
-- **Inherited slots.** `okb show MilkDrink` lists slots from EspressoDrink and Drink as well as its own.
-- **Properties versus relationships.** `contains` shows an arrow and a type like `:CONTAINS`, the name of the edge okb will store. `texture` has no arrow, because it holds a plain value.
+- **[Inherited slots](../../../docs/learn/slot-inheritance.md).** `okb show MilkDrink` lists slots from EspressoDrink and Drink as well as its own.
+- **[Properties versus relationships](../../../docs/learn/properties-and-relationships.md).** `contains` shows an arrow and a type like `:CONTAINS`, the name of the edge okb will store. `texture` has no arrow, because it holds a plain value.
 
 ## Check your work
 

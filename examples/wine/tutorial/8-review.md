@@ -109,7 +109,7 @@ Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sou
 ## Read the output
 
 - **The tips after `cq link`.** okb suggests related questions. If you ask about one wine's characteristics, you may also want them for white wines.
-- **No errors.** An error means something is wrong. okb found none, so the ontology is valid.
+- **No errors.** An error means something is wrong. [How do I read and fix a finding?](../../../docs/learn/rules-and-findings.md) covers errors, warnings and hints. okb found none, so the ontology is valid.
 - **Four hints, left on purpose.** `WineRegion`, `region` and `location` aren't needed by any question. Either add a question like "Where does this wine come from?", or remove them.
 - **Two groups with no [disjoint](../../../docs/GLOSSARY.md#concept-disjoint) declaration.** This is worth a real conversation. A Bordeaux blend usually contains Merlot grapes. Are the classes Merlot and Bordeaux disjoint, then? It depends on whether Merlot means "varietal Merlot wine". Record your answer as a [design decision](../../../docs/GLOSSARY.md#concept-design-decision).
 

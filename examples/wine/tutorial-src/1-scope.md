@@ -33,7 +33,7 @@ okb cq add "Which wines does a given winery produce?"
 
 - okb numbers each question (`cq.1`, `cq.2` and so on). You'll use those numbers in step 8 to link each question to the parts of the ontology that answer it.
 - The out-of-scope list matters as much as the scope. When someone asks "is the vintage year in scope?" later, you can point at the list.
-- Look at what the questions ask for. "Is Bordeaux a red or white wine?" needs a [class](../../../docs/GLOSSARY.md#concept-class) called Bordeaux. "Which wines does a winery produce?" needs a link between wines and wineries. The questions already hint at the model.
+- Look at what the questions ask for. They're [competency questions](../../../docs/learn/competency-questions.md), and each one names a part the ontology needs. "Is Bordeaux a red or white wine?" needs a [class](../../../docs/GLOSSARY.md#concept-class) called Bordeaux. "Which wines does a winery produce?" needs a link between wines and wineries. The questions already hint at the model.
 
 ## Check your work
 

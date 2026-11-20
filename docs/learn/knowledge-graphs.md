@@ -84,6 +84,8 @@ Here is the whole espresso ontology: 31 classes and 16 instances. Use the checkb
 
 - [The espresso tutorial](../../examples/espresso/tutorial/0-intro.md) builds this graph from nothing, one step at a time.
 - [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows the same idea with a larger ontology.
+- [What is an ontology?](ontologies.md) is the next page: it shows how a plan keeps a graph like this one consistent.
+- [Why start with questions?](competency-questions.md) shows how to decide what your graph needs to answer.
 - [Choosing between a class and an instance](../DECISIONS.md#decision-instance-or-class) helps when you aren't sure which one a thing is.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 

@@ -26,7 +26,7 @@ Naming convention: classes PascalCase (singular) · slots camelCase · instances
 
 ## Add the drinks
 
-Say each link out loud before you add it: "Every latte is a milk drink." The top classes are [abstract](../../../docs/GLOSSARY.md#concept-abstract-class), because you never serve "a drink" without saying which. Then declare the three groups [disjoint](../../../docs/GLOSSARY.md#concept-disjoint): a drink can't be both pure espresso and a milk drink.
+Say each link out loud before you add it: "Every latte is a milk drink." That's an ["is a" link](../../../docs/learn/hierarchy.md). The top classes are [abstract](../../../docs/GLOSSARY.md#concept-abstract-class), because you never serve "a drink" without saying which. Then declare the three groups [disjoint](../../../docs/GLOSSARY.md#concept-disjoint): a drink can't be both pure espresso and a milk drink.
 
 ```bash
 okb class add Drink --abstract --desc "Any coffee drink on the menu."
@@ -212,7 +212,7 @@ It explains 1 current finding(s) from naming-subclass-names-consistent (they'll 
 
 ## Class or instance
 
-Is a cortado a class or an instance? It depends on your questions. Run `okb explain decision.instance-or-class` and answer each of its questions. Here, the questions compare kinds of drinks, and each kind has its own facts. Every drink type is a class, and one cortado on today's menu is an instance. A café that only listed menu items could choose differently. Record your choice:
+Is a cortado a class or an instance? ([Classes and instances](../../../docs/learn/classes-and-instances.md) explains the difference.) It depends on your questions. Run `okb explain decision.instance-or-class` and answer each of its questions. Here, the questions compare kinds of drinks, and each kind has its own facts. Every drink type is a class, and one cortado on today's menu is an instance. A café that only listed menu items could choose differently. Record your choice:
 
 ```bash
 okb decision add --title "Cortado is a class" --decision "Every drink type, Cortado included, is a class. Items on the menu are instances." --why "The questions compare kinds of drinks, and each kind has its own facts. A café that only listed menu items would model them as instances." --about Cortado

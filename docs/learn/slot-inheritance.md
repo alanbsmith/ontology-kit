@@ -74,7 +74,8 @@ Cortado has no slots attached directly. Every line says where it came from: `fro
 
 - [The espresso tutorial, step 5](../../examples/espresso/tutorial/5-slots.md) attaches these slots to the hierarchy.
 - [Where to attach a slot](../DECISIONS.md#decision-slot-placement) walks through the choice.
-- [What is a knowledge graph?](knowledge-graphs.md) introduces the kinds and "is a" links used here.
+- [What does "is a kind of" mean?](hierarchy.md) explains the "is a" links that carry slots down.
+- [What are facets?](facets.md) is the next page: it sets rules on a slot, such as a default value.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
 ## Sources

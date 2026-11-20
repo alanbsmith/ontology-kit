@@ -66,7 +66,8 @@ The `cq.3` line is the graph above: its two needs are the two links out of the q
 
 - [The espresso tutorial](../../examples/espresso/tutorial/1-scope.md) writes these questions in its scope step.
 - [The wine tutorial](../../examples/wine/tutorial/1-scope.md) does the same with wine questions.
-- [What is a knowledge graph?](/learn/knowledge-graphs/) covers the nodes and links that the questions point at.
+- [What is a knowledge graph?](knowledge-graphs.md) covers the nodes and links that the questions point at.
+- [What are classes and instances?](classes-and-instances.md) is the next page: it turns the kinds of thing in your questions into classes.
 - [Choosing a new class](../DECISIONS.md#decision-new-class) helps when a question needs a kind you don't have.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 
