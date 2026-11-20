@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { INSTALL_COMMAND } from "../site/src/lib/install.ts";
-import { PAGES, sequence, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
+import { PAGES, defaultOpen, sectionKey, sequence, sidebar, type MetaNode, type NavLink } from "../site/src/nav.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const nodes: MetaNode[] = JSON.parse(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"));
@@ -123,4 +123,23 @@ test("site: every Mermaid diagram on a page has accTitle and accDescr", () => {
     }
   }
   assert.ok(found > 0, "found no Mermaid blocks to check");
+});
+
+test("site: sidebar sections open for the page being read, and only those", () => {
+  const groups = sidebar(nodes);
+  const tutorial = "/getting-started/tutorial/wine-ontology/";
+  const open = (route: string) => [...defaultOpen(groups, route)];
+
+  // A child page opens its parent link and its group, and nothing else.
+  assert.deepEqual(open(`${tutorial}3-terms/`).sort(), ["group:Getting started", `link:${tutorial}`].sort());
+  // A link with children opens when it is the page itself; its siblings and other groups stay shut.
+  assert.deepEqual(open("/build/methodology/").sort(), ["group:Build", "link:/build/methodology/"].sort());
+  // A page without children opens its group only.
+  assert.deepEqual(open("/reference/glossary/"), ["group:Reference"]);
+  // Routes outside the sidebar open nothing.
+  assert.deepEqual(open("/nowhere/"), []);
+
+  // Every group and every link with children has a distinct key.
+  const keys = groups.flatMap((g) => [sectionKey(g), ...g.links.filter((l) => l.children).map(sectionKey)]);
+  assert.equal(new Set(keys).size, keys.length);
 });

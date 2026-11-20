@@ -127,3 +127,27 @@ export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: N
   const i = seq.findIndex((l) => l.href === route);
   return i < 0 ? {} : { prev: seq[i - 1], next: seq[i + 1] };
 }
+
+/** A link's path without its `#anchor`: the methodology steps and decision guides share their page's path. */
+const pathOf = (href: string) => href.split("#")[0];
+
+/** The key of a collapsible sidebar section: a group's label, or the href of a link that has children. */
+export const sectionKey = (x: NavGroup | NavLink): string => ("links" in x ? `group:${x.label}` : `link:${x.href}`);
+
+/**
+ * The sidebar sections that start open for a route: the group that holds the page, and a link with
+ * children when the page is that link or one of its children. Everything else starts collapsed.
+ * A reader's saved choices never close these.
+ */
+export function defaultOpen(groups: readonly NavGroup[], route: string): Set<string> {
+  const open = new Set<string>();
+  for (const group of groups) {
+    for (const l of group.links) {
+      const here = [l, ...(l.children ?? [])].some((x) => pathOf(x.href) === route);
+      if (!here) continue;
+      open.add(sectionKey(group));
+      if (l.children?.length) open.add(sectionKey(l));
+    }
+  }
+  return open;
+}
