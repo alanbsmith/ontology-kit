@@ -48,10 +48,17 @@ for (const s of meta.steps) {
 }
 
 // GLOSSARY.md
-const glossary = HEADER("Glossary");
-glossary.push("Every term a beginner meets while building an ontology, in plain language first. `okb explain <term>` shows the same entry in the terminal.", "");
+// The glossary page opens with a tip, not the generated-file notice or an A–Z index: readers
+// arrive from a link to one term. The notice stays as an HTML comment for people editing the file.
+const glossary = [
+  "# Glossary",
+  "",
+  `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`,
+  "",
+  "> **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.",
+  "",
+];
 const concepts = [...meta.ofType("Concept")].sort((a, b) => a.name.localeCompare(b.name));
-glossary.push(concepts.map((c) => `[${c.name}](#${anchorId(c.id)})`).join(" · "), "");
 for (const c of concepts) {
   glossary.push(anchorTag(c.id), `## ${c.name}`, "");
   if (c.aliases?.length) glossary.push(`*Also called:* ${c.aliases.join(", ")}`, "");
