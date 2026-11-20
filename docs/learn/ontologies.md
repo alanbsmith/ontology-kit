@@ -18,7 +18,7 @@ Think of a database. A table definition says a drink has a name and a list of in
 
 ## See it
 
-This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee sells the drinks. "Vertex breve" is that café's breve. A ring is a kind of thing, and a dot is one real example of it. The dashed outline marks the kind this page is about. The `contains` node is a [slot](../GLOSSARY.md#concept-slot), a named link that a kind of thing can have. It is a dot too, but it belongs to the plan.
+This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The dashed outline marks the kind this page is about. The `contains` node is a [slot](../GLOSSARY.md#concept-slot), a named link that a kind of thing can have. It is a dot too, but it belongs to the plan.
 
 <okb-graph src="/data/espresso.json" focus="Vertex breve, Breve, contains" show="Slot" highlight="Breve" label="The plan and the data in the espresso ontology: the kind Breve and its slot contains, and one real drink, Vertex breve">
 <p>The graph shows the plan and the data for one drink in the espresso ontology.</p>

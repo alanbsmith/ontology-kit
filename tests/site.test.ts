@@ -200,55 +200,93 @@ test("site: the landing page has no hardcoded internal links", () => {
   assert.ok(!/href="\//.test(page), "internal links come from LANDING_LINKS, which the test above checks");
 });
 
-const CHAPTERS: [string, string[]][] = [
-  ["The big picture", ["knowledge-graphs", "ontologies", "competency-questions"]],
-  ["Things and kinds", ["classes-and-instances", "hierarchy", "disjoint-and-multiple-parents"]],
-  ["Describing things", ["properties-and-relationships", "slot-inheritance", "facets", "inverse-relationships"]],
-  ["Staying honest", ["rules-and-findings", "meta-kb"]],
+const CHAPTERS: [string, string, string[]][] = [
+  ["The big picture", "big-picture", ["knowledge-graphs", "ontologies", "competency-questions"]],
+  ["Things and kinds", "things-and-kinds", ["classes-and-instances", "hierarchy", "disjoint-and-multiple-parents"]],
+  ["Describing things", "describing-things", ["properties-and-relationships", "slot-inheritance", "facets", "inverse-relationships"]],
+  ["Staying honest", "staying-honest", ["rules-and-findings", "meta-kb"]],
 ];
+const learnRoute = (s: string) => `/learn/${s}/`;
+const learnRoutes = () => PAGES.filter((p) => p.route.startsWith("/learn/")).map((p) => p.route);
 
-test("site: the Learn group has four chapter headings with no page, over every Learn page in course order", () => {
+test("site: the Learn group is the overview, four chapters that each open on a page, then the closing page", () => {
   const learn = sidebar(nodes).find((g) => g.label === "Learn")!;
-  assert.deepEqual(learn.links.map((l) => l.label), CHAPTERS.map(([label]) => label));
-  for (const [i, [, slugs]] of CHAPTERS.entries()) {
-    assert.equal(learn.links[i].href, undefined, "a chapter heading has no page of its own");
-    assert.deepEqual((learn.links[i].children ?? []).map((c) => c.href), slugs.map((s) => `/learn/${s}/`));
+  assert.deepEqual(learn.links.map((l) => l.label), ["Overview", ...CHAPTERS.map(([label]) => label), "Where next"]);
+  assert.equal(learn.links[0].href, "/learn/");
+  assert.equal(learn.links.at(-1)!.href, "/learn/where-next/");
+  for (const [i, [, opener, slugs]] of CHAPTERS.entries()) {
+    const chapter = learn.links[i + 1];
+    assert.equal(chapter.href, learnRoute(opener), "a chapter heading links to its opener");
+    assert.deepEqual((chapter.children ?? []).map((c) => c.href), slugs.map(learnRoute));
   }
-  const learnPages = PAGES.filter((p) => p.route.startsWith("/learn/")).map((p) => p.route);
-  assert.deepEqual(learn.links.flatMap(withChildren), learnPages.length === 12 ? CHAPTERS.flatMap(([, s]) => s.map((x) => `/learn/${x}/`)) : [], "every Learn page is in a chapter");
-  assert.equal(learnPages.length, 12);
+  assert.equal(learnRoutes().length, 18);
 });
 
-test("site: previous/next skips chapter headings and follows the course order", () => {
+test("site: every chapter has an opener page, and the openers are in the data", () => {
+  for (const c of LEARN_CHAPTERS) {
+    assert.ok(c.route, `chapter "${c.title}" has no opener route`);
+    assert.ok(PAGES.some((p) => p.route === c.route), `${c.route} is not a page`);
+  }
+});
+
+test("site: previous/next runs overview, each opener before its pages, then the closing page", () => {
   const seq = sequence(nodes);
-  assert.ok(seq.every((l) => typeof l.href === "string" && l.href.startsWith("/")), "headings must not appear in the sequence");
-  const course = CHAPTERS.flatMap(([, s]) => s.map((x) => `/learn/${x}/`));
+  assert.ok(seq.every((l) => typeof l.href === "string" && l.href.startsWith("/")));
+  const course = ["/learn/", ...CHAPTERS.flatMap(([, o, s]) => [learnRoute(o), ...s.map(learnRoute)]), "/learn/where-next/"];
   const hrefs = seq.map((l) => l.href);
-  const start = hrefs.indexOf(course[0]);
+  const start = hrefs.indexOf("/learn/");
   assert.deepEqual(hrefs.slice(start, start + course.length), course);
-  // The last page of one chapter is followed by the first page of the next.
-  assert.equal(neighbors(nodes, "/learn/competency-questions/").next?.href, "/learn/classes-and-instances/");
-  assert.equal(neighbors(nodes, "/learn/classes-and-instances/").prev?.href, "/learn/competency-questions/");
-  assert.equal(neighbors(nodes, "/learn/knowledge-graphs/").prev?.href, "/getting-started/tutorial/espresso-ontology/8-review/");
+  assert.equal(neighbors(nodes, "/learn/competency-questions/").next?.href, "/learn/things-and-kinds/");
+  assert.equal(neighbors(nodes, "/learn/classes-and-instances/").prev?.href, "/learn/things-and-kinds/");
+  assert.equal(neighbors(nodes, "/learn/").prev?.href, "/getting-started/tutorial/espresso-ontology/8-review/");
+  assert.equal(neighbors(nodes, "/learn/where-next/").prev?.href, "/learn/meta-kb/");
+  assert.equal(neighbors(nodes, "/learn/where-next/").next?.href, "/build/");
 });
 
 test("site: a Learn chapter opens when it holds the page being read, and only then", () => {
   const groups = sidebar(nodes);
   const open = (route: string) => [...defaultOpen(groups, route)].sort();
-  assert.deepEqual(open("/learn/facets/"), ["group:Learn", "heading:Describing things"].sort());
-  assert.deepEqual(open("/learn/meta-kb/"), ["group:Learn", "heading:Staying honest"].sort());
+  assert.deepEqual(open("/learn/facets/"), ["group:Learn", "link:/learn/describing-things/"].sort());
+  assert.deepEqual(open("/learn/staying-honest/"), ["group:Learn", "link:/learn/staying-honest/"].sort());
+  assert.deepEqual(open("/learn/meta-kb/"), ["group:Learn", "link:/learn/staying-honest/"].sort());
+  assert.deepEqual(open("/learn/"), ["group:Learn"]);
+  assert.deepEqual(open("/learn/where-next/"), ["group:Learn"]);
   // Section keys stay distinct, so one chapter's saved state can't open another.
   const learn = groups.find((g) => g.label === "Learn")!;
-  const keys = learn.links.map(sectionKey);
+  const keys = learn.links.flatMap((l) => (l.children ? [sectionKey(l)] : []));
+  assert.equal(keys.length, CHAPTERS.length);
   assert.equal(new Set(keys).size, keys.length);
-  assert.ok(keys.every((k) => k.startsWith("heading:")));
 });
 
-test("site: every Learn page belongs to exactly one chapter", () => {
+test("site: every Learn page belongs to exactly one chapter, apart from the overview and the closing page", () => {
   const listed = LEARN_CHAPTERS.flatMap((c) => c.pages);
   assert.equal(new Set(listed).size, listed.length, "a page is in two chapters");
-  const learn = PAGES.filter((p) => p.route.startsWith("/learn/") && !LEARN_CHAPTERS.some((c) => c.route === p.route)).map((p) => p.route);
-  assert.deepEqual([...listed].sort(), learn.sort());
+  const openers = LEARN_CHAPTERS.flatMap((c) => (c.route ? [c.route] : []));
+  const loose = learnRoutes().filter((r) => !openers.includes(r) && r !== "/learn/" && r !== "/learn/where-next/");
+  assert.deepEqual([...listed].sort(), loose.sort(), "a Learn page is in no chapter, or a chapter lists a page that doesn't exist");
+});
+
+test("site: every glossary anchor a Learn page links to exists", () => {
+  const glossary = readFileSync(join(ROOT, "docs/GLOSSARY.md"), "utf8");
+  const anchors = new Set([...glossary.matchAll(/<a id="([^"]+)">/g)].map((m) => m[1]));
+  let found = 0;
+  for (const route of learnRoutes()) {
+    const source = PAGES.find((p) => p.route === route)!.source;
+    for (const [, anchor] of readFileSync(join(ROOT, source), "utf8").matchAll(/GLOSSARY\.md#([\w-]+)/g)) {
+      found++;
+      assert.ok(anchors.has(anchor), `${source} links to GLOSSARY.md#${anchor}, which doesn't exist`);
+    }
+  }
+  assert.ok(found > 0);
+});
+
+test("site: the Learn pages that link to the overview's graph guide point at a heading that exists", () => {
+  const overview = readFileSync(join(ROOT, "docs/learn/index.md"), "utf8");
+  assert.ok(/^## How to read the graphs$/m.test(overview));
+  for (const route of learnRoutes()) {
+    const text = readFileSync(join(ROOT, PAGES.find((p) => p.route === route)!.source), "utf8");
+    if (text.includes("index.md#")) assert.ok(text.includes("index.md#how-to-read-the-graphs"), `${route} links to an overview anchor that isn't there`);
+  }
 });
 
 test("site: a chapter with a page is a link before its children in previous/next, and one without is skipped", () => {

@@ -18,7 +18,7 @@ Say a café, Vertex Coffee, wants to answer "which drinks have no milk?" A list 
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). In that tutorial, a made-up café called Vertex Coffee serves the drinks, so "Vertex breve" is that café's breve, one real drink on its menu. Click a node to read about it. Drag a node to move it, drag the background to pan, and click the graph before you scroll to zoom. A ring is a kind of thing, and a dot is one real example of it. The dashed outline marks the drink this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). Vertex Coffee is the made-up café in that tutorial, so "Vertex breve" is its breve, one real drink on its menu. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings, dots and the controls. The dashed outline marks the drink this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Vertex breve, Vertex cappuccino" highlight="Vertex breve" label="Part of the espresso ontology: two drinks, what they contain and the kinds they belong to">
 <p>The graph shows two drinks from the Vertex Coffee menu in the espresso ontology.</p>

@@ -17,7 +17,7 @@ Say you add the question "How much does each drink cost?" to the Vertex Coffee o
 
 ## See it
 
-The graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks. A dot is a competency question or a slot, and a ring is a kind of thing. Click a node to read about it. The dashed outline marks the question that `okb validate` complains about.
+The graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Here a dot can also be a competency question or a slot. Click a node to read about it. The dashed outline marks the question that `okb validate` complains about.
 
 <okb-graph src="/data/espresso.json" focus="cq.3, cq.6" highlight="cq.6" show="CompetencyQuestion,Slot" label="Two competency questions: one linked to the classes and slots that answer it, and one linked to nothing">
 <p>The graph shows two competency questions from the espresso ontology.</p>
@@ -62,7 +62,7 @@ HINTS: worth a look
 
 The bracketed key names the rule. Its page on the Rules site is [`scope-cq-coverage`](../RULES.md#rule-scope-cq-coverage), and the hint is [`hier-single-child`](../RULES.md#rule-hier-single-child). Run [`okb explain`](../CLI.md#cmd-explain) with a key to read the rule in plain words, and add `--why` to `okb validate` to see the reason and source under each finding. An error (`✗`) must be fixed. A warning (`!`) should be fixed or explained. A hint (`i`) is worth a look.
 
-To fix this warning, give the question something to point at. Add a price slot, then link the question to it ([`okb cq link`](../CLI.md#cmd-cq-link)):
+To fix this warning, give the question something to point at. Add a price [slot](../GLOSSARY.md#concept-slot), a named field on Drink, then link the question to it ([`okb cq link`](../CLI.md#cmd-cq-link)):
 
 ```bash
 okb property add priceUsd --on Drink --type Float --card single --desc "What the café charges for the drink, in US dollars."

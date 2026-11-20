@@ -2,7 +2,7 @@
 
 ## In short
 
-A facet is a rule about the values a slot may hold, such as the type, the allowed words or how many values it takes.
+A facet is a rule about the values a [slot](../GLOSSARY.md#concept-slot) (a named field on a kind of thing) may hold, such as the type, the allowed words or how many values it takes.
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ Say a barista types "crunchy" for the texture of a latte. A slot with no rules a
 
 ## See it
 
-This slot comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks. A ring is a kind of thing. The graph shows slots too, so you can see the slot `texture` next to the kind it belongs to. Click the slot to read its rules.
+This slot comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The graph shows slots too, so you can see the slot `texture` next to the kind it belongs to. Click the slot to read its rules.
 
 <okb-graph src="/data/espresso.json" focus="MilkDrink, texture, contains" highlight="texture" show="Slot" label="The texture slot on Milk drink and the contains slot on Drink, with their rules">
 <p>The graph shows slots and the rules on them.</p>

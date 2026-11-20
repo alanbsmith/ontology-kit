@@ -16,7 +16,7 @@ Say Vertex Coffee wants to know where a cortado comes from and what goes in it. 
 
 ## See it
 
-This graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks, so "Vertex cortado" is that café's cortado. A ring is a kind of thing, and a dot is one real example of it. Slots are switched on here so you can see the fields. Click a node to read about it.
+This graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots are switched on here so you can see the fields. Click a node to read about it.
 
 <okb-graph src="/data/espresso.json" focus="Vertex cortado, Double shot" highlight="Vertex cortado" show="Slot" label="Vertex cortado, the drinks and ingredients it links to, and the slots that describe it">
 <p>The graph shows one drink from the Vertex Coffee menu, with the slots that describe drinks.</p>
@@ -52,7 +52,7 @@ contains  Slot · s.contains
   attached to    Drink
 ```
 
-Look at the `kind` line. `origin` is a property, so its facets say `String`. `contains` is a relationship, so its facets say `Instance`, and the arrow names the kind of thing it points to: `Ingredient`.
+Look at the `kind` line. `origin` is a property, so its [facets](../GLOSSARY.md#concept-facet), the rules on its values, say `String`. `contains` is a relationship, so its facets say `Instance`, and the arrow names the kind of thing it points to: `Ingredient`.
 
 > **Common mistakes**
 >

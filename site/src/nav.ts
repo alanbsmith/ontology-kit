@@ -38,18 +38,24 @@ export const PAGES: readonly Page[] = [
   { route: "/getting-started/tutorial/espresso-ontology/6-facets/", source: "examples/espresso/tutorial/6-facets.md", label: "6. Facets" },
   { route: "/getting-started/tutorial/espresso-ontology/7-instances/", source: "examples/espresso/tutorial/7-instances.md", label: "7. Instances" },
   { route: "/getting-started/tutorial/espresso-ontology/8-review/", source: "examples/espresso/tutorial/8-review.md", label: "8. Review" },
+  { route: "/learn/", source: "docs/learn/index.md", label: "Overview" },
+  { route: "/learn/big-picture/", source: "docs/learn/big-picture.md", label: "The big picture" },
   { route: "/learn/knowledge-graphs/", source: "docs/learn/knowledge-graphs.md", label: "What is a knowledge graph?" },
   { route: "/learn/ontologies/", source: "docs/learn/ontologies.md", label: "What is an ontology?" },
   { route: "/learn/competency-questions/", source: "docs/learn/competency-questions.md", label: "Why start with questions?" },
+  { route: "/learn/things-and-kinds/", source: "docs/learn/things-and-kinds.md", label: "Things and kinds" },
   { route: "/learn/classes-and-instances/", source: "docs/learn/classes-and-instances.md", label: "Classes and instances" },
   { route: "/learn/hierarchy/", source: "docs/learn/hierarchy.md", label: "Is a kind of" },
   { route: "/learn/disjoint-and-multiple-parents/", source: "docs/learn/disjoint-and-multiple-parents.md", label: "Disjoint and multiple parents" },
+  { route: "/learn/describing-things/", source: "docs/learn/describing-things.md", label: "Describing things" },
   { route: "/learn/properties-and-relationships/", source: "docs/learn/properties-and-relationships.md", label: "Properties or relationships?" },
   { route: "/learn/slot-inheritance/", source: "docs/learn/slot-inheritance.md", label: "What is slot inheritance?" },
   { route: "/learn/facets/", source: "docs/learn/facets.md", label: "What are facets?" },
   { route: "/learn/inverse-relationships/", source: "docs/learn/inverse-relationships.md", label: "What is an inverse relationship?" },
+  { route: "/learn/staying-honest/", source: "docs/learn/staying-honest.md", label: "Staying honest" },
   { route: "/learn/rules-and-findings/", source: "docs/learn/rules-and-findings.md", label: "How do I read and fix a finding?" },
   { route: "/learn/meta-kb/", source: "docs/learn/meta-kb.md", label: "Where do the rules come from?" },
+  { route: "/learn/where-next/", source: "docs/learn/where-next.md", label: "Where next" },
   { route: "/build/", source: "docs/build/index.md", label: "Ways to build" },
   { route: "/build/with-claude/", source: "docs/build/with-claude.md", label: "With Claude" },
   { route: "/build/with-the-cli/", source: "docs/build/with-the-cli.md", label: "With the CLI" },
@@ -125,13 +131,20 @@ export interface Chapter {
   pages: string[];
 }
 
-/** The Learn course. Add a chapter here and list its pages; the sidebar and previous/next follow. */
+/**
+ * The Learn course: an overview (`/learn/`), then the chapters, then the closing page. Add a chapter
+ * here with its opener's route and its pages; the sidebar and previous/next follow.
+ */
 export const LEARN_CHAPTERS: readonly Chapter[] = [
-  { title: "The big picture", pages: ["/learn/knowledge-graphs/", "/learn/ontologies/", "/learn/competency-questions/"] },
-  { title: "Things and kinds", pages: ["/learn/classes-and-instances/", "/learn/hierarchy/", "/learn/disjoint-and-multiple-parents/"] },
-  { title: "Describing things", pages: ["/learn/properties-and-relationships/", "/learn/slot-inheritance/", "/learn/facets/", "/learn/inverse-relationships/"] },
-  { title: "Staying honest", pages: ["/learn/rules-and-findings/", "/learn/meta-kb/"] },
+  { title: "The big picture", route: "/learn/big-picture/", pages: ["/learn/knowledge-graphs/", "/learn/ontologies/", "/learn/competency-questions/"] },
+  { title: "Things and kinds", route: "/learn/things-and-kinds/", pages: ["/learn/classes-and-instances/", "/learn/hierarchy/", "/learn/disjoint-and-multiple-parents/"] },
+  { title: "Describing things", route: "/learn/describing-things/", pages: ["/learn/properties-and-relationships/", "/learn/slot-inheritance/", "/learn/facets/", "/learn/inverse-relationships/"] },
+  { title: "Staying honest", route: "/learn/staying-honest/", pages: ["/learn/rules-and-findings/", "/learn/meta-kb/"] },
 ];
+
+/** The overview comes first in the Learn group and the closing page last. They belong to no chapter. */
+export const LEARN_OVERVIEW = "/learn/";
+export const LEARN_CLOSING = "/learn/where-next/";
 
 /** A chapter as a sidebar entry: a heading, or a link when it has a page. */
 function chapter(c: Chapter): NavLink {
@@ -159,7 +172,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
-    { label: "Learn", links: LEARN_CHAPTERS.map(chapter) },
+    { label: "Learn", links: [link(LEARN_OVERVIEW), ...LEARN_CHAPTERS.map(chapter), link(LEARN_CLOSING)] },
     { label: "Build", links: [link("/build/"), link("/build/with-claude/"), link("/build/with-the-cli/"), link("/build/from-docs/"), link("/build/methodology/", steps), link("/build/review/"), link("/build/export/")] },
     {
       label: "Reference",

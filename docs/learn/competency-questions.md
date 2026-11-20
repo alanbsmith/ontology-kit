@@ -18,7 +18,7 @@ Without questions, you may model everything you can think of about coffee and ne
 
 ## See it
 
-This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). A ring is a kind of thing, and a dot is one real example of it. The question is a node too. It points at what it needs, and the dashed outline marks it. The slot `contains` is a dot as well, but it is part of the plan, not a real drink.
+This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The question is a node too. It points at what it needs, and the dashed outline marks it. The slot `contains` is a dot as well, but it is part of the plan, not a real drink.
 
 <okb-graph src="/data/espresso.json" focus="cq.3, Cappuccino, contains, Vertex cappuccino" show="CompetencyQuestion, Slot" highlight="cq.3" label="The question 'What goes into a cappuccino?' linked to the class and slot that answer it, with the real drink Vertex cappuccino">
 <p>The graph shows the question "What goes into a cappuccino?" and the parts of the espresso ontology that answer it.</p>

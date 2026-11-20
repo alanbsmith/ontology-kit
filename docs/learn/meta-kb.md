@@ -14,11 +14,11 @@ flowchart LR
   rationale -->|cites| quote["Quote from Ontology 101"]
 ```
 
-Say okb tells you a class loop is an error. Why should you believe it? Because the rule isn't a hunch in the code. It's a node in a graph, and you can follow its links to the sentence in the paper that it comes from. A rule you can trace is one you can argue with.
+Say okb tells you a loop in the [class hierarchy](../GLOSSARY.md#concept-class-hierarchy), where kinds stack by "is a kind of", is an error. Why should you believe it? Because the rule isn't a hunch in the code. It's a node in a graph, and you can follow its links to the sentence in the paper that it comes from. A rule you can trace is one you can argue with.
 
 ## See it
 
-This graph is not from the espresso ontology. It's a small piece of the meta-KB: one rule, the step that applies it, the idea it governs, and the quote behind it. Click a node to read about it. A ring is a kind of thing or an idea, and a dot is one example. The dashed outline marks the rule.
+This graph is not from the espresso ontology. It's a small piece of the meta-KB: one rule, the [step](../METHOD.md#step-4-classes) of the method that applies it, the idea it governs, and the quote behind it. Click a node to read about it. A ring is a kind of thing or an idea, and a dot is one example. The dashed outline marks the rule.
 
 <okb-graph src="/data/meta-kb.json" focus="rule.hier-no-cycles, rat.hier-no-cycles" highlight="rule.hier-no-cycles" show="Rule,Rationale,SourceLocation" label="The rule hier-no-cycles, the step that applies it, the idea it governs, and the quote that justifies it">
 <p>The graph shows one rule from the meta-KB, hier-no-cycles.</p>

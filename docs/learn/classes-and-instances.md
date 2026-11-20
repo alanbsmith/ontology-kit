@@ -16,7 +16,7 @@ Say Vertex Coffee sells a drink called a cortado. "Cortado" is the kind: you can
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). A made-up café called Vertex Coffee serves the drinks, so "Vertex cortado" is that café's cortado. A ring is a class, and a dot is an instance. The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). The tutorial's made-up café, Vertex Coffee, serves the drinks, so "Vertex cortado" is that café's cortado ([how to read the graphs](index.md#how-to-read-the-graphs)). A ring is a class, and a dot is an instance. The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Cortado, Latte, Vertex cortado" highlight="Cortado" label="The Cortado class, its place under MilkDrink, and Vertex cortado, one cortado on the menu">
 <p>The graph shows the Cortado class and one real cortado from the Vertex Coffee menu.</p>
@@ -30,7 +30,7 @@ Notice that the ring, Cortado, sits inside a hierarchy and the dot, Vertex corta
 
 ## Class or instance?
 
-Is Cortado a class or an instance? It depends on your questions. Vertex Coffee's [competency questions](../GLOSSARY.md#concept-competency-question) include "What's the difference between a cortado and a latte?" That compares kinds of drinks, and each kind has its own facts, so Cortado is a class. The ontology records this as a [design decision](../GLOSSARY.md#concept-design-decision), "Cortado is a class".
+Is Cortado a class or an instance? It depends on your questions. Vertex Coffee's [competency questions](../GLOSSARY.md#concept-competency-question), the questions its ontology must answer, include "What's the difference between a cortado and a latte?" That compares kinds of drinks, and each kind has its own facts, so Cortado is a class. The ontology records this as a [design decision](../GLOSSARY.md#concept-design-decision), a written reason for a choice: "Cortado is a class".
 
 A café that only listed menu items, with no need to compare kinds, could make every drink an instance. Neither answer is wrong. The test is what your questions need. The [instance or class decision guide](../DECISIONS.md#decision-instance-or-class) walks through it.
 

@@ -19,7 +19,7 @@ A drink with milk can't be a drink with only coffee and water. That's a rule you
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks. A ring is a kind, and a dot is one real drink. The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Breve, PureEspresso" highlight="Breve" label="Breve with its two parents, and PureEspresso, which is disjoint with MilkDrink">
 <p>The graph shows Breve with two parents, and the groups of drinks that can't overlap.</p>
@@ -31,7 +31,7 @@ This is a small part of the ontology you build in the [espresso tutorial](../../
 </ul>
 </okb-graph>
 
-Notice that Breve has two "is a" links up, which is [multiple inheritance](../GLOSSARY.md#concept-multiple-inheritance). It gets slots from both parents. Latte and Cappuccino are not disjoint, because a breve is both. MilkDrink and PureEspresso are [disjoint](../GLOSSARY.md#concept-disjoint): a drink with milk isn't a pure espresso. Declare disjoint groups wherever nothing could belong to two siblings. The [disjoint decision guide](../DECISIONS.md#decision-disjoint) has one question for it.
+Notice that Breve has two "is a" links up, which is [multiple inheritance](../GLOSSARY.md#concept-multiple-inheritance). It gets the [slots](../GLOSSARY.md#concept-slot), the named fields such as `origin`, from both parents. Latte and Cappuccino are not disjoint, because a breve is both. MilkDrink and PureEspresso are [disjoint](../GLOSSARY.md#concept-disjoint): a drink with milk isn't a pure espresso. Declare disjoint groups wherever nothing could belong to two siblings. The [disjoint decision guide](../DECISIONS.md#decision-disjoint) has one question for it.
 
 ## In okb
 

@@ -17,7 +17,7 @@ Every cortado is a milk drink. Every milk drink is an espresso drink. Every espr
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks. Every node here is a ring, a kind of drink. The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Every node here is a ring, a kind of drink. The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="MilkDrink" highlight="MilkDrink" label="MilkDrink in the Drink hierarchy: its parents, its five subclasses and the kinds it can't overlap with">
 <p>The graph shows MilkDrink and the kinds around it in the Vertex Coffee drink hierarchy.</p>
@@ -28,7 +28,7 @@ This is a small part of the ontology you build in the [espresso tutorial](../../
 </ul>
 </okb-graph>
 
-Read each "is a" link upward: Cortado is a MilkDrink. The class above is the [superclass](../GLOSSARY.md#concept-subclass), and the one below is the subclass. A subclass [inherits](../GLOSSARY.md#concept-inheritance) every slot of its parents, so a Cortado has `origin` without anyone adding it there. The whole structure is the [class hierarchy](../GLOSSARY.md#concept-class-hierarchy). Drink, EspressoDrink and MilkDrink are [abstract classes](../GLOSSARY.md#concept-abstract-class): they group other kinds, and no one orders "a milk drink".
+Read each "is a" link upward: Cortado is a MilkDrink. The class above is the [superclass](../GLOSSARY.md#concept-subclass), and the one below is the subclass. A subclass [inherits](../GLOSSARY.md#concept-inheritance) every [slot](../GLOSSARY.md#concept-slot) of its parents (a slot is a named field, such as `origin`), so a Cortado has `origin` without anyone adding it there. The whole structure is the [class hierarchy](../GLOSSARY.md#concept-class-hierarchy). Drink, EspressoDrink and MilkDrink are [abstract classes](../GLOSSARY.md#concept-abstract-class): they group other kinds, and no one orders "a milk drink".
 
 ## Test each link
 

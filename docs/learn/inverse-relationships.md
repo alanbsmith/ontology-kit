@@ -16,7 +16,7 @@ Say you record that Vertex cortado contains a Double shot. Someone later asks wh
 
 ## See it
 
-This is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), where a made-up café called Vertex Coffee serves the drinks. A dot is one real example, and a ring is a kind of thing. Slots are switched on so you can see the pair of them.
+This is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots, the named fields on a kind of thing, are switched on so you can see the pair of them.
 
 <okb-graph src="/data/espresso.json" focus="Vertex cortado, Double shot, contains, usedIn" highlight="usedIn" show="Slot" label="Vertex cortado, Double shot and the contains and <code>usedIn</code> slots that are inverses">
 <p>The graph shows Double shot, the drinks that contain it and the two slots that describe the link. Vertex cortado is the one to follow.</p>
