@@ -4,19 +4,19 @@ Ontology Kit helps you turn knowledge that lives in documents into a structured,
 
 It's written for a developer whose team's knowledge sits in docs (component guidelines, API references, how-to guides) and who wants it structured, checked and traceable to its source. You don't need to know what an ontology is yet.
 
-## What's in the kit
+## What's inside
 
-It has three parts:
+The kit has three parts:
 
-| Part                     | What it is                                                                                                                                                                                                                                                                                   |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **meta-KB** (`meta-kb/`) | A knowledge base _about building knowledge bases_: the 8-step method, 40 glossary concepts, 7 principles, 10 decision guides and 57 rules. Every rule cites a verbatim, page-checked quote from the paper (or Gruber 1993), or says plainly that it's a toolkit convention.                  |
-| **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                       |
-| **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate). |
+| Part                     | What it is                                                                                                                                                                                                                                                                                                           |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **meta-KB** (`meta-kb/`) | A knowledge base _about building knowledge bases_ ([what that means](../learn/meta-kb.md)): the 8-step method, 40 glossary concepts, 7 principles, 10 decision guides and 57 rules. Every rule cites a verbatim, page-checked quote from the paper (or Gruber 1993), or says plainly that it's a toolkit convention. |
+| **okb** (`src/`)         | A command-line tool that creates the ontology one step at a time, refuses common mistakes as you make them, checks everything against the meta-KB rules, and explains every finding in plain language.                                                                                                               |
+| **Skills** (`skills/`)   | Instructions for Claude: **ontology-coach** (hand-holding from a blank page), **ontology-review** (a second opinion on the judgment rules a script can't check) and **build-domain-kb-from-docs** (extracting an ontology from existing documentation with a quote-first verification gate).                         |
 
-## The path from here
+## Your path
 
-1. **Learn the method.** An ontology is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist (classes), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them (slots like `body` or `maker`), and the rules for filling those in (facets). Add real examples (instances) and you have a knowledge base. The [wine tutorial](../../examples/wine/tutorial/0-intro.md) builds the paper's wine ontology command by command, with real output.
+1. **Learn the method.** An [ontology](../learn/ontologies.md) is a precise, shared vocabulary for one subject. It says what _kinds_ of things exist ([classes](../learn/classes-and-instances.md)), how they're organized ("a Red Wine is a kind of Wine"), what you can say about them ([slots](../learn/properties-and-relationships.md) like `body` or `maker`), and the rules for filling those in ([facets](../learn/facets.md)). Add real examples (instances) and you have a knowledge base. The [wine tutorial](../../examples/wine/tutorial/0-intro.md) builds the paper's wine ontology command by command, with real output.
 2. **Install okb.** See [Installation](installation.md).
 3. **Build your first ontology.** Ask Claude to `coach me through building an ontology` (this uses the ontology-coach skill), or run the commands yourself:
 
@@ -33,7 +33,7 @@ It has three parts:
 
 The full guide is [Methodology](../METHOD.md). The reference pages are the [glossary](../GLOSSARY.md), [every rule and its source](../RULES.md), [modeling choices](../DECISIONS.md) and the [file format](../FORMAT.md).
 
-## The method at a glance
+## The method
 
 | Step         | You'll produce                                                                            | Key commands                                                                                         |
 | ------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |

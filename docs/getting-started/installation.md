@@ -36,7 +36,7 @@ Check which version you have:
 okb version          # okb 1.0.0 · meta-KB 2.4.1
 ```
 
-The meta-KB version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).
+The [meta-KB](../learn/meta-kb.md) version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).
 
 To update:
 

@@ -27,8 +27,11 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
       return e.isDirectory() && existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : [];
     })
   : [];
+/** Hand-written markdown directories (docs/getting-started, learn, build, reference): every .md file in each. */
+const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
+const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 const DEFAULT_DOCS = [
-  "README.md", "CONTRIBUTING.md", "CLAUDE.md", "docs/getting-started/introduction.md", "docs/getting-started/installation.md", "docs/getting-started/quickstart.md", "docs/build/index.md", "docs/build/with-claude.md", "docs/build/with-the-cli.md", "docs/build/review.md", "docs/build/export.md", "docs/reference/skills.md", "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "meta-kb/README.md", "sources/README.md",
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", "meta-kb/README.md", "sources/README.md",
   "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
 ];
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");

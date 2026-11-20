@@ -4,7 +4,7 @@
 
 ## Introduction
 
-In this tutorial, you'll build a small knowledge base about wine and food using the okb CLI. You'll do it one step at a time, and end with an ontology that passes every check. It takes about an hour.
+In this tutorial, you'll build a small knowledge base about wine and food using the okb CLI. You'll do it one step at a time, and end with an ontology that passes every check.
 
 You don't need to know what an [ontology](../../../docs/GLOSSARY.md#concept-ontology) is yet. It's a shared, precise vocabulary for one subject. Say you run a restaurant and want software to suggest a wine for each dish. The software has to know that Bordeaux is a red wine, and that red wine goes well with grilled meat. An ontology is where you write that down so a program can check it. The Learn page [What is an ontology?](../../../docs/learn/ontologies.md) explains the idea in a few minutes.
 

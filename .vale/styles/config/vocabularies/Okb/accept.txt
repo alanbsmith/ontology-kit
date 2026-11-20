@@ -64,3 +64,4 @@ CafeBombon
 [Ll]atte
 [Mm]ocha
 [Gg]elato
+READMEs

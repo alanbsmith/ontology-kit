@@ -8,7 +8,7 @@ An ontology built with okb is a folder with three JSON files:
 | `nodes.json` | A list of nodes. Each has `id`, `type` and type-specific properties.                      |
 | `edges.json` | A list of edges. Each has `from`, `type`, `to` and sometimes properties.                  |
 
-It's a labeled property graph (LPG). In this file the **schema is data**: classes and slots are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
+It's a labeled property graph (LPG). In this file the **schema is data**: [classes](GLOSSARY.md#concept-class) and [slots](GLOSSARY.md#concept-slot) are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
 
 ## Vocabulary: slots, properties, relationships
 

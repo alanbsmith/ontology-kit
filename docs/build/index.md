@@ -10,7 +10,7 @@ You can build an ontology three ways. They all produce the same three JSON files
 
 ## Which one first?
 
-Start from a blank page, even if you have docs. Extraction works best once you know the method, because the questions you want answered decide what's worth quoting. A first ontology from scratch takes about an hour, and it teaches you what to look for in your own docs.
+Start from a blank page, even if you have docs. Extraction works best once you know the method, because the questions you want answered decide what's worth quoting. A first ontology from scratch teaches you what to look for in your own docs.
 
 - **Never built an ontology?** Use [With Claude](with-claude.md) if you have Claude, or [With the CLI](with-the-cli.md) if you don't. The [Quickstart](../getting-started/quickstart.md) is the short version of the CLI path.
 - **Built one and want to scale up?** Go to [From existing docs](../EXTRACTION-PIPELINE.md). It needs a scope and at least three competency questions first, so it builds on either of the other two.

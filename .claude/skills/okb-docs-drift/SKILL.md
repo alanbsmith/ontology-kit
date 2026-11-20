@@ -1,6 +1,6 @@
 ---
 name: okb-docs-drift
-description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md, CLAUDE.md, docs/getting-started/*.md, docs/CHANGELOG.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, the meta-KB README and the SKILL.md files under skills/) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches src/cli.ts, src/ops/, the meta-KB YAML or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
+description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md, CLAUDE.md, docs/getting-started/, docs/learn/, docs/build/ and docs/reference/ (every .md in them), the tutorial sources in examples/*/tutorial-src/, docs/CHANGELOG.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, docs/CODE-REVIEW.md, the meta-KB and sources READMEs and the SKILL.md files under skills/) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches src/cli.ts, src/ops/, the meta-KB YAML or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
 ---
 
 # okb docs drift check
@@ -17,7 +17,7 @@ node .claude/skills/okb-docs-drift/scripts/check-docs.ts --json   # machine-read
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts README.md skills/ontology-coach/SKILL.md
 ```
 
-It reports, with file and line:
+It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB and sources READMEs and the shipped skills. The generated pages (including the tutorial pages under `examples/*/tutorial/`) are left out. It reports, with file and line:
 
 - **command / flag**: an `okb ...` in code (inline backticks or a fenced block) naming a command, subcommand or `--flag` that `src/cli.ts` doesn't accept. It knows the `property` / `relationship` aliases and their `--from` / `--to` flags.
 - **npm-script**: `npm run x` with no `x` in package.json.

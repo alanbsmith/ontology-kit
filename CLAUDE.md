@@ -64,7 +64,18 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 
 ## Docs site
 
-`site/` is a plain Astro site with its own `package.json` and lock file (never add Astro to the root package). It reads the repo's markdown in place through a content collection; a page's title is its first level-1 heading. `site/src/nav.ts` (plain TypeScript, checked by `tests/site.test.ts`) maps routes to source files and builds the sidebar from `meta-kb/data/nodes.json`. A remark plugin rewrites relative links: to a route for a page, to GitHub for anything else, and it fails the build on a link to a `.md` file with no route. The layout, styles and reader features are copied from the owner's Astro blog. `site/src/graph/` holds the explore-only graph: `model.ts` (pure, tested in `tests/graph-model.test.ts`), `data.ts` and `pages/data/[name].json.ts` (the `/data/<name>.json` endpoints), and the lazily loaded `<okb-graph>` element, which a page embeds as raw HTML with a text fallback inside (`tests/site.test.ts` checks both).
+`site/` is a plain Astro site with its own `package.json` and lock file (never add Astro to the root package). It reads the repo's markdown in place through a content collection; a page's title is its first level-1 heading. The landing page (`/`) is the custom `site/src/pages/index.astro`; every other page is markdown.
+
+- `site/src/nav.ts` (plain TypeScript, checked by `tests/site.test.ts`) maps routes to source files, holds each page's one-sentence `summary`, builds the collapsible sidebar and the `sequence()` behind previous/next links, and builds the sidebar's Learn group from `LEARN_CHAPTERS` (chapter opener plus its pages) and `meta-kb/data/nodes.json`. Add a page by adding its route there.
+- A remark plugin rewrites relative links: to a route for a page, to GitHub for anything else, and it fails the build on a link to a `.md` file with no route.
+- `site/src/lib/reading-time.ts` estimates reading time (and hands-on time for tutorial steps) for the page header. `site/src/lib/breadcrumbs.ts` builds breadcrumbs for tutorial steps and Learn chapters.
+- `site/src/graph/` holds the explore-only graph: `model.ts` (pure, tested in `tests/graph-model.test.ts`), `data.ts` and `pages/data/[name].json.ts` (the `/data/<name>.json` endpoints), and the lazily loaded `<okb-graph>` element, which a page embeds as raw HTML with a text fallback inside (`tests/site.test.ts` checks both).
+- For agents, `/llms.txt`, `/llms-full.txt` and a `.md` version of every page (`<route>.md`) are generated from `nav.ts` (`site/src/lib/llms.ts`, `pages/llms*.txt.ts`, `pages/[...slug].md.ts`).
+- The layout, styles and reader features are copied from the owner's Astro blog.
+
+## Hand-written and generated docs
+
+Hand-written (the drift check covers all but the generated tutorial pages): `README.md`, `CONTRIBUTING.md`, `docs/getting-started/`, `docs/learn/` (the Learn course), `docs/build/`, `docs/reference/`, `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md`, `docs/CODE-REVIEW.md`, `meta-kb/README.md`, `sources/README.md` and the tutorial sources `examples/*/tutorial-src/*.md`. Generated (never edit): `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md`, `CLI-CHEAT-SHEET.md`, and everything in `examples/<name>/` except `tutorial-src/`. Pages under `docs/getting-started/`, `docs/learn/`, `docs/build/`, `docs/reference/skills.md` and `tutorial-src/` are beginner pages that get the extra `Beginner` Vale rules (`.vale.ini`). The matching development skills are `.claude/skills/write-learn-page` (`docs/learn/*.md`) and `.claude/skills/write-tutorial`.
 
 ## Tutorials
 

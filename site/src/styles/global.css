@@ -280,7 +280,8 @@ h4 {
 }
 
 .prose pre.astro-code span {
-	color: light-dark(var(--shiki-light), var(--shiki-dark));
+	/* Night Owl Light's blue and red tokens fall under 4.5:1 on the code background, so darken the light tokens a little. */
+	color: light-dark(color-mix(in srgb, var(--shiki-light) 80%, black), var(--shiki-dark));
 	font-style: light-dark(var(--shiki-light-font-style, normal), var(--shiki-dark-font-style, normal));
 }
 

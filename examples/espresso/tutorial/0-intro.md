@@ -4,7 +4,7 @@
 
 ## Introduction
 
-In this tutorial, you'll build a small knowledge base about coffee drinks using the okb CLI. It goes one step at a time and ends with an ontology that passes every check. It takes about an hour.
+In this tutorial, you'll build a small knowledge base about coffee drinks using the okb CLI. It goes one step at a time and ends with an ontology that passes every check.
 
 An [ontology](../../../docs/GLOSSARY.md#concept-ontology) is a shared, precise vocabulary for one subject. Say a café wants software that answers "what's the difference between a cortado and a latte?" The software has to know that both are milk drinks, and that one has twice the milk. An ontology is where you write that down so a program can check it. The Learn page [What is an ontology?](../../../docs/learn/ontologies.md) explains the idea in a few minutes.
 
