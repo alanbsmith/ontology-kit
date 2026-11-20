@@ -1,4 +1,5 @@
 /** Human-readable output: findings, explanations, trees, node details, Mermaid diagrams. */
+import { ruleUrl } from "./site.ts";
 import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
 import { edgeProps, nodeLabel, type Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
@@ -45,6 +46,7 @@ export function formatFindings(findings: Finding[], ont: Ontology, opts: { all?:
         out.push(c.dim(indent(`Why: ${rule.plainLanguage}`, "      ")));
         const cites = meta.citations(rule.id);
         if (cites.length) out.push(c.dim(`      Source: ${meta.citeLine(cites[0])}`));
+        out.push(c.dim(`      Read more: ${ruleUrl(rule.id)}`));
       }
     }
   }
@@ -87,6 +89,7 @@ export function explain(node: Explainable): string {
         out.push(...q);
       } else out.push("", c.dim("  (Toolkit rule: no source passage. See basis above.)"));
       out.push("", c.dim(`  Applies from step ${node.fromStep}.`));
+      out.push(c.dim(`  Read more: ${ruleUrl(node.id)}`));
       break;
     }
     case "Concept": {

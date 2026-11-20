@@ -6,12 +6,12 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MetaKB } from "./metakb.ts";
+import { anchorId } from "./site.ts";
 import { renderCheatSheet, renderCliDocs } from "./clidocs.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const meta = MetaKB.get();
-/** A stable anchor id from a meta-KB id: `concept.class` → `concept-class`. Links use these, never heading slugs. */
-const anchorId = (id: string) => id.replace(/\./g, "-");
+// Anchor ids (`concept.class` → `concept-class`) come from src/site.ts. Links use these, never heading slugs.
 const anchorTag = (id: string) => `<a id="${anchorId(id)}"></a>`;
 const HEADER = (title: string) => [`# ${title}`, "", `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`, ""];
 

@@ -9,6 +9,7 @@ import { cmdAnchor, renderCheatSheet, renderCliDocs, undocumentedFlags } from ".
 import { CHEAT_SHEET, COMMANDS } from "../src/commands.ts";
 import { HELP } from "../src/help.ts";
 import { MetaKB } from "../src/metakb.ts";
+import { SITE_URL, ruleUrl } from "../src/site.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
 import { Ontology } from "../src/model.ts";
@@ -246,5 +247,15 @@ describe("docs/CLI.md", () => {
   });
   it("documents every flag the help text shows", () => {
     assert.deepEqual(undocumentedFlags(HELP), []);
+  });
+});
+
+describe("site links", () => {
+  const rulesPage = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "docs", "RULES.md"), "utf8");
+  it("has a rule-<key> anchor on the Rules page for every rule", () => {
+    for (const r of MetaKB.get().ofType("Rule")) {
+      assert.equal(ruleUrl(r.id), `${SITE_URL}/reference/rules/#rule-${r.key}`);
+      assert.ok(rulesPage.includes(`<a id="rule-${r.key}"></a>`), `no anchor for ${r.key}`);
+    }
   });
 });
