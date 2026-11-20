@@ -48,6 +48,8 @@ export const PAGES: readonly Page[] = [
   { route: "/learn/slot-inheritance/", source: "docs/learn/slot-inheritance.md", label: "What is slot inheritance?" },
   { route: "/learn/facets/", source: "docs/learn/facets.md", label: "What are facets?" },
   { route: "/learn/inverse-relationships/", source: "docs/learn/inverse-relationships.md", label: "What is an inverse relationship?" },
+  { route: "/learn/rules-and-findings/", source: "docs/learn/rules-and-findings.md", label: "How do I read and fix a finding?" },
+  { route: "/learn/meta-kb/", source: "docs/learn/meta-kb.md", label: "Where do the rules come from?" },
   { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology" },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs" },
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary" },
@@ -119,7 +121,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
-    { label: "Learn", links: [link("/learn/knowledge-graphs/"), link("/learn/ontologies/"), link("/learn/competency-questions/"), link("/learn/classes-and-instances/"), link("/learn/hierarchy/"), link("/learn/disjoint-and-multiple-parents/"), link("/learn/properties-and-relationships/"), link("/learn/slot-inheritance/"), link("/learn/facets/"), link("/learn/inverse-relationships/")] },
+    { label: "Learn", links: [link("/learn/knowledge-graphs/"), link("/learn/ontologies/"), link("/learn/competency-questions/"), link("/learn/classes-and-instances/"), link("/learn/hierarchy/"), link("/learn/disjoint-and-multiple-parents/"), link("/learn/properties-and-relationships/"), link("/learn/slot-inheritance/"), link("/learn/facets/"), link("/learn/inverse-relationships/"), link("/learn/rules-and-findings/"), link("/learn/meta-kb/")] },
     { label: "Build", links: [link("/build/methodology/", steps), link("/build/from-docs/")] },
     {
       label: "Reference",
