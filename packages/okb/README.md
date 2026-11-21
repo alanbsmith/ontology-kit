@@ -1,8 +1,10 @@
 # @ontology-kit/okb
 
-The `okb` command-line tool from [Ontology Kit](https://ontology-kit.dev): a toolkit that walks you through building your first ontology, a precise, shared vocabulary for one subject. It follows the method in **Ontology Development 101** (Noy & McGuinness, 2001).
+The `okb` command-line tool from [Ontology Kit](https://ontology-kit.dev), a toolkit for building knowledge graphs with guardrails. You keep your knowledge in plain files you own, and okb checks them as you work: a checked file format, rules from a meta-KB, provenance down to verbatim quotes, and skills that let Claude drive it.
 
-It ships the `okb` command, the meta-KB (a knowledge base about building knowledge bases, which holds the method and its checks), and skills that let Claude coach you.
+It's for a team that keeps a knowledge base and wants every fact to point back to its source. It's also for someone building their first: the Ontology 101 method (Noy & McGuinness, 2001), the Learn course and the tutorials walk you through it step by step.
+
+The package ships the `okb` command, the meta-KB (a knowledge base about building knowledge bases, which holds the method and its rules), and skills that let Claude coach you, review your work, and extract a knowledge base from documents. Other tools can read and write the file format through `@ontology-kit/okb/format`.
 
 ## Install
 

@@ -2,7 +2,7 @@
   "name": "ontology-kit",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "Installs the okb command from Ontology Kit, a toolkit for building ontologies the Ontology 101 way. Same as @ontology-kit/okb.",
+  "description": "Installs the okb command from Ontology Kit, a toolkit for building knowledge graphs with guardrails. Same as @ontology-kit/okb.",
   "homepage": "https://ontology-kit.dev",
   "repository": {
     "type": "git",
@@ -16,7 +16,10 @@
     "ontology",
     "knowledge-graph",
     "knowledge-base",
+    "provenance",
+    "validation",
     "ontology-101",
+    "claude-skills",
     "cli",
     "okb"
   ],
