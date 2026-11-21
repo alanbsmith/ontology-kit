@@ -2,7 +2,7 @@
 
 <!-- Generated from the meta-KB (v2.4.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
 
-Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an eighth, **Review and iterate**, which makes explicit the paper's instruction to stand back, test the ontology against its competency questions, and revise it.
+Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an eighth, **Review and iterate**, which makes explicit Ontology 101's instruction to stand back, test the ontology against its competency questions, and revise it.
 
 ## Principles to keep in mind throughout
 
@@ -91,7 +91,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 - For design systems: WAI-ARIA roles (https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The W3C Design Tokens format (https://www.designtokens.org) is the standard for tokens. DSDS, the Design System Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes.
 - You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough: okb reuse add --name ... --url ... --decision reference.
 
-**Wine example:** The paper notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes.
+**Wine example:** Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes.
 
 **Rules checked from this step:** [`reuse-considered`](RULES.md#rule-reuse-considered), [`reuse-recorded`](RULES.md#rule-reuse-recorded)
 
@@ -378,7 +378,7 @@ Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an
 - Iteration is part of the method, not a sign you went wrong.
 - Use the ontology-review skill for the judgment rules a script can't check.
 
-**Wine example:** The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel.
+**Wine example:** Ontology 101's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel.
 
 **Rules checked from this step:** [`scope-cq-coverage`](RULES.md#rule-scope-cq-coverage), [`scope-cq-families`](RULES.md#rule-scope-cq-families), [`scope-no-unneeded`](RULES.md#rule-scope-no-unneeded), [`doc-record-decisions`](RULES.md#rule-doc-record-decisions)
 

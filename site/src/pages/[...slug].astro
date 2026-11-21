@@ -104,6 +104,88 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${source
 </script>
 
 <script>
+	// Pages of reference entries (glossary, rules) get a filter box: type to hide entries that
+	// don't match. The generated markdown leaves an empty `.entry-filter` placeholder for it.
+	const host = document.querySelector<HTMLElement>('.entry-filter');
+	const entries = Array.from(document.querySelectorAll<HTMLElement>('.prose .entry'));
+	if (host && entries.length) {
+		const label = host.dataset.label ?? 'Filter';
+		const input = document.createElement('input');
+		input.type = 'search';
+		input.placeholder = label;
+		input.setAttribute('aria-label', label);
+		const count = document.createElement('p');
+		count.className = 'count';
+		count.setAttribute('aria-live', 'polite');
+		host.append(input, count);
+
+		const text = entries.map((e) => (e.textContent ?? '').toLowerCase());
+		const apply = () => {
+			const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+			let shown = 0;
+			entries.forEach((e, i) => {
+				const match = words.every((w) => text[i].includes(w));
+				e.hidden = !match;
+				if (match) shown++;
+			});
+			count.textContent = words.length ? `${shown} of ${entries.length} match` : '';
+		};
+		input.addEventListener('input', apply);
+	}
+</script>
+
+<script>
+	// Each decision guide can be read as a flowchart or as text. A segmented control switches
+	// between the two and the choice is remembered, so it applies to every guide. Without this
+	// script both views are shown. The hidden view stays in the layout (see `.view.off`) because
+	// Mermaid can't measure a chart that is display:none.
+	const guides = Array.from(document.querySelectorAll<HTMLElement>('.views'));
+	if (guides.length) {
+		type Mode = 'chart' | 'text';
+		const KEY = 'decision-view';
+		let saved: string | null = null;
+		try {
+			saved = localStorage.getItem(KEY);
+		} catch {}
+		let mode: Mode = saved === 'chart' || saved === 'text' ? saved : matchMedia('(max-width: 36rem)').matches ? 'text' : 'chart';
+
+		const buttons: { button: HTMLButtonElement; mode: Mode }[] = [];
+		const apply = () => {
+			for (const g of guides) {
+				g.querySelectorAll<HTMLElement>('.view').forEach((v) => {
+					const off = v.dataset.view !== mode;
+					v.classList.toggle('off', off);
+					v.toggleAttribute('inert', off);
+				});
+			}
+			buttons.forEach((b) => b.button.setAttribute('aria-pressed', String(b.mode === mode)));
+		};
+		for (const g of guides) {
+			const bar = document.createElement('div');
+			bar.className = 'segmented';
+			bar.setAttribute('role', 'group');
+			bar.setAttribute('aria-label', 'Show this guide as');
+			for (const [m, label] of [['chart', 'Chart'], ['text', 'Text']] as const) {
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.textContent = label;
+				button.addEventListener('click', () => {
+					mode = m;
+					try {
+						localStorage.setItem(KEY, m);
+					} catch {}
+					apply();
+				});
+				bar.append(button);
+				buttons.push({ button, mode: m });
+			}
+			g.before(bar);
+		}
+		apply();
+	}
+</script>
+
+<script>
 	// Mermaid is heavy, so it only loads on pages that actually contain a diagram.
 	const blocks = Array.from(document.querySelectorAll<HTMLElement>('pre.mermaid'));
 
@@ -168,8 +250,8 @@ const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${source
 						clusterBkg: raised,
 						clusterBorder: border,
 					},
-					// The decision guides' boxes hold whole sentences: wrap them a little wider.
-					flowchart: { padding: 16, nodeSpacing: 40, rankSpacing: 40, wrappingWidth: 280 },
+					// The decision guides' boxes hold whole sentences: wrap them narrow enough that the chart isn't scaled down to tiny text in the card.
+					flowchart: { padding: 16, nodeSpacing: 40, rankSpacing: 40, wrappingWidth: 200 },
 				});
 				blocks.forEach((block, i) => {
 					block.removeAttribute('data-processed');
