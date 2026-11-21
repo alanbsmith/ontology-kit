@@ -75,3 +75,4 @@ unscoped
 allowlist
 semver
 subpath
+Typecheck

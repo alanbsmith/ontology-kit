@@ -138,6 +138,21 @@ Beginner pages say "kind" before "class" and "property" before "slot", and intro
 
 Add new project terms to `.vale/styles/config/vocabularies/Okb/accept.txt` (it's case-sensitive).
 
+## Checks that run on every PR
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and every push to `main`. Each job is a separate status check:
+
+| Check           | What it runs                                                                                     | Run it locally                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Typecheck       | `pnpm tsc`                                                                                       | `pnpm tsc`                                                                   |
+| Build and test  | `pnpm build`, then `pnpm test`                                                                   | `pnpm build && pnpm test`                                                    |
+| Generated files | Regenerates everything, then fails if `git status` shows a change                                | `pnpm build:meta && pnpm run docs && pnpm example`, then `git status`        |
+| Docs            | The docs drift check, then `pnpm lint:docs` (Vale errors fail; warnings and suggestions don't)   | `node .claude/skills/okb-docs-drift/scripts/check-docs.ts && pnpm lint:docs` |
+| Site            | `pnpm site`                                                                                      | `pnpm site`                                                                  |
+| Node 24 runtime | Packs both packages, installs them on Node 24, runs `okb version`, `okb init` and `okb validate` | `pnpm test` runs the same on your Node; use `nvm use 24` to try the floor    |
+
+The Generated files check catches a rule, command or tutorial change that you didn't regenerate. The release workflow reuses the whole workflow (it has a `workflow_call` trigger), so a release only publishes after these checks pass. Local runs don't need Vale installed for the other checks, but `pnpm lint:docs` does (`brew install vale`).
+
 ## Before you commit
 
 Run these after every change. All of them must pass:
