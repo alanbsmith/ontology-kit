@@ -3,8 +3,44 @@
   "version": "1.0.0",
   "license": "MIT",
   "description": "A beginner-friendly toolkit for building ontologies the Ontology 101 way: guided method, meta-knowledge base of rules, and the okb CLI.",
+  "homepage": "https://ontology-kit.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanbsmith/ontology-kit.git",
+    "directory": "packages/okb"
+  },
+  "bugs": {
+    "url": "https://github.com/alanbsmith/ontology-kit/issues"
+  },
+  "keywords": [
+    "ontology",
+    "knowledge-graph",
+    "knowledge-base",
+    "ontology-101",
+    "cli",
+    "okb"
+  ],
   "type": "module",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "meta-kb/data",
+    "!meta-kb/README.md",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./bin": "./bin/okb.js",
+    "./cli": {
+      "development": "./src/cli.ts",
+      "default": "./dist/cli.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "okb": "bin/okb.js"
   },
@@ -18,7 +54,9 @@
     "docs": "node src/gendocs.ts",
     "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
-    "test": "node --test \"tests/*.test.ts\""
+    "test": "node --test \"tests/*.test.ts\"",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepack": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

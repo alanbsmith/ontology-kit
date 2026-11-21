@@ -18,13 +18,14 @@ Check again, and bring the branch up to date, before you commit or open a PR, an
 
 Requires **Node 26** for development (see `.nvmrc`); okb itself runs on Node 24 or newer. No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `packages/okb/tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension. Install dependencies with `pnpm install` (pnpm is pinned in the root `package.json`; install it with `npm i -g pnpm`, since Node 26 doesn't bundle Corepack). One install covers the whole workspace: the root, `packages/okb` and `site/`.
 
-The repo is a pnpm workspace (`pnpm-workspace.yaml`): `packages/okb` is `@ontology-kit/okb` (the CLI and library, with its `src/`, `bin/`, `meta-kb/`, `skills/`, `examples/` and `tests/`), `site/` is the private docs site, and the root holds repo-wide tooling and the docs (`docs/`, `sources/`, `README.md`, `CONTRIBUTING.md`, `.claude/`, Prettier, `markdownlint-cli2`, Vale, `netlify.toml`). The root scripts below run the package's scripts through `pnpm --filter` or `pnpm -r`, so they work from the root; run a package's own scripts from `packages/okb`. All paths in this file are relative to the repo root.
+The repo is a pnpm workspace (`pnpm-workspace.yaml`): `packages/okb` is `@ontology-kit/okb` (the CLI and library, with its `src/`, `bin/`, `meta-kb/`, `skills/`, `examples/` and `tests/`), `packages/ontology-kit` is the unscoped `ontology-kit` wrapper (a bin that forwards to okb), `site/` is the private docs site, and the root holds repo-wide tooling and the docs (`docs/`, `sources/`, `README.md`, `CONTRIBUTING.md`, `.claude/`, Prettier, `markdownlint-cli2`, Vale, `netlify.toml`). The root scripts below run the package's scripts through `pnpm --filter` or `pnpm -r`, so they work from the root; run a package's own scripts from `packages/okb`. All paths in this file are relative to the repo root.
 
 ```bash
 pnpm test                                  # all suites (node:test)
 node --test packages/okb/tests/checks.test.ts           # one file
 node --test --test-name-pattern="hier-no-cycles" packages/okb/tests/checks.test.ts   # one test
 pnpm tsc                                   # typecheck (noEmit)
+pnpm build                                 # compile packages/okb/src -> packages/okb/dist (published package only; tests don't need it)
 node packages/okb/src/cli.ts <command>                  # run okb without pnpm link
 pnpm build:meta                            # compile packages/okb/meta-kb/src/*.yaml -> packages/okb/meta-kb/data/*.json
 pnpm run docs                              # regenerate docs/METHOD|GLOSSARY|RULES|DECISIONS|CLI|CLI-CHEAT-SHEET.md (pnpm has its own docs command, so keep `run`)
@@ -38,6 +39,10 @@ pnpm lint:docs                             # Prettier check + markdownlint + Val
 Run `pnpm tsc` and `pnpm test` after every change. There's no code linter. `pnpm lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
 
 **Tests regenerate tracked files.** `packages/okb/tests/misc.test.ts` runs `packages/okb/meta-kb/build.ts` and `packages/okb/examples/build-wine.ts`, which rewrite `packages/okb/meta-kb/data/*.json` and everything in `packages/okb/examples/wine/` (except `tutorial-src/`, which is hand-written). A diff in `packages/okb/examples/wine/` after a refactor means CLI output changed, so treat it as a behavior change and check it. The example pins its dates with `SOURCE_DATE_EPOCH` (see `packages/okb/src/clock.ts`), so it rebuilds identically on any day.
+
+## Publishing layout
+
+`packages/okb` is publishable: `pnpm build` compiles `src/` to a gitignored `dist/` with `tsconfig.build.json` (`rewriteRelativeImportExtensions`). In development nothing needs `dist/`: tests import `src/*.ts`, and `bin/okb.js` runs `src/cli.ts` when `src/` exists and `dist/cli.js` otherwise (the package ships no `src/`). The `exports` map has a `development` condition for the sources. The `files` allowlist keeps YAML sources, docs, tests, examples and PDFs out. Any code that reads a file from the package (like `META_DIR`) must resolve it from the package root so it works in `src/`, `dist/` and an installed copy. `packages/okb/tests/package.test.ts` packs both packages, installs the tarballs in a temp folder and runs `okb` there. Keep `packages/okb` and `packages/ontology-kit` at the same version.
 
 ## Architecture
 

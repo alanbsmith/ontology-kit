@@ -39,7 +39,7 @@ const DEFAULT_DOCS = [
   ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
 ];
 /** pnpm commands and tool names that aren't package.json scripts. */
-const PNPM_BUILTINS = new Set(["install", "i", "add", "remove", "update", "link", "unlink", "exec", "dlx", "run", "store", "list", "why", "tsc", "prettier", "ignored-builds", "approve-builds"]);
+const PNPM_BUILTINS = new Set(["install", "i", "add", "remove", "update", "link", "unlink", "exec", "dlx", "run", "store", "list", "why", "tsc", "prettier", "ignored-builds", "approve-builds", "pack"]);
 /** npm commands that contributors run, which should be pnpm. An `npm i -g` end-user install is fine. */
 const NPM_CONTRIBUTOR = /\bnpm (?:run|ci|link|test|install|i|--prefix|exec)\b[^\n`]*|\bnpx\b[^\n`]*/g;
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");

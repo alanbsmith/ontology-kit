@@ -71,3 +71,5 @@ PR's
 pnpm
 Corepack
 npm
+unscoped
+allowlist

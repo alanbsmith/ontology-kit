@@ -1,0 +1,41 @@
+{
+  "name": "ontology-kit",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Installs the okb command from Ontology Kit, a toolkit for building ontologies the Ontology 101 way. Same as @ontology-kit/okb.",
+  "homepage": "https://ontology-kit.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanbsmith/ontology-kit.git",
+    "directory": "packages/ontology-kit"
+  },
+  "bugs": {
+    "url": "https://github.com/alanbsmith/ontology-kit/issues"
+  },
+  "keywords": [
+    "ontology",
+    "knowledge-graph",
+    "knowledge-base",
+    "ontology-101",
+    "cli",
+    "okb"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "okb": "bin/okb.js"
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@ontology-kit/okb": "workspace:*"
+  }
+}

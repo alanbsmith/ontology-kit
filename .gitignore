@@ -13,3 +13,6 @@ sources/*.pdf
 site/node_modules/
 site/dist/
 site/.astro/
+
+# Compiled okb (pnpm build); published, never committed
+dist/

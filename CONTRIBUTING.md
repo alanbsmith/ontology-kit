@@ -10,7 +10,9 @@ You need Node.js 26 (see [Installation](docs/getting-started/installation.md)). 
 
 ```text
 packages/okb/           @ontology-kit/okb: the CLI and library (a pnpm workspace package)
-  bin/okb.js            launcher (pnpm add --global link:./packages/okb target)
+  bin/okb.js            launcher (pnpm add --global link:./packages/okb target): runs src/ in a checkout, dist/ when installed
+  tsconfig.build.json   compiles src/ to dist/ (gitignored; pnpm build)
+  README.md LICENSE     the package's npm page
   src/                  okb source (TypeScript, Node type stripping)
     cli.ts ops.ts ops/  commands and the operations behind them (ops/ split by reason to change)
     checks.ts status.ts validator (one check per rule) and step progress
@@ -27,6 +29,7 @@ packages/okb/           @ontology-kit/okb: the CLI and library (a pnpm workspace
   examples/             build-wine.ts, lib/tutorial.ts → examples/wine/ (pnpm example)
   skills/               SKILL.md files for Claude
   tests/                node:test suites (also the docs site's tests)
+packages/ontology-kit/  ontology-kit: the unscoped wrapper, just a bin that forwards to @ontology-kit/okb
 site/                   the docs site (Astro; a private workspace package, reads the markdown in place)
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (pnpm run docs)
 sources/                the source PDFs (gitignored; see sources/README.md)
@@ -35,6 +38,12 @@ scripts/                repo-wide tooling (vale.sh)
 ```
 
 The root `package.json` is a private workspace root that holds the repo-wide tooling (Prettier, `markdownlint-cli2`, Vale) and scripts that run across the packages. The `docs/` folder and `sources/` stay at the root because they describe the whole kit, not one package. New packages go under `packages/`.
+
+## Build and pack
+
+Development runs the TypeScript sources, so `pnpm test` needs no build. The published package ships compiled JavaScript, because Node won't strip types from files under `node_modules`. `pnpm build` compiles `packages/okb/src/` to `packages/okb/dist/` (`tsconfig.build.json`; `dist/` is gitignored). `bin/okb.js` runs `src/cli.ts` when `src/` exists (a clone) and `dist/cli.js` otherwise (an installed package). The `development` condition in the `exports` map points at the sources and the default condition at `dist/`, so tools that run with `--conditions=development` stay on the sources.
+
+The `files` allowlist in `packages/okb/package.json` holds `bin`, `dist`, `meta-kb/data`, `skills`, the README and LICENSE; it leaves out the YAML sources, docs, site, tests, examples and PDFs. Code that reads the package's own files resolves them from the package root, so it works in a clone and in an installed package (`META_DIR` in `metakb.ts`). `packages/okb/tests/package.test.ts` runs `pnpm pack` on both packages, installs the tarballs into a temp folder and runs the installed `okb` (a few seconds; set `OKB_SKIP_PACKAGE_TEST=1` to skip it). Both packages keep the same version. Nothing here publishes; release automation comes later.
 
 ## Changing rules
 
