@@ -1,18 +1,18 @@
 # Installation
 
-okb needs **Node.js 24 or newer**. It runs its TypeScript source directly, so there's no build step.
+okb needs **Node.js 24 or newer**. It runs its TypeScript source directly, so there's no build step. Install from source with [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack).
 
 ```bash
 git clone https://github.com/alanbsmith/ontology-kit
 cd ontology-kit
-npm install
-npm link
+pnpm install
+pnpm link --global
 ```
 
-`npm install` fetches one runtime dependency (`yaml`, for markdown frontmatter); the rest are development tools. `npm link` puts `okb` on your PATH (or skip it and run `node src/cli.ts ...`). To check the install, run the test suite, which builds the wine example end to end:
+`pnpm install` fetches one runtime dependency (`yaml`, for markdown frontmatter); the rest are development tools. `pnpm link --global` puts `okb` on your PATH (or skip it and run `node src/cli.ts ...`). To check the install, run the test suite, which builds the wine example end to end:
 
 ```bash
-npm test
+pnpm test
 ```
 
 `pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
@@ -43,11 +43,11 @@ To update:
 ```bash
 cd ontology-kit
 git pull
-npm install          # dependencies can change between versions
+pnpm install         # dependencies can change between versions
 okb version
 ```
 
-You don't need to run `npm link` again. It points at this folder, so `okb` runs the new code right away. Link again only if you switch Node versions or move the folder.
+You don't need to run `pnpm link --global` again. It points at this folder, so `okb` runs the new code right away. Link again only if you switch Node versions or move the folder.
 
 Skills you linked into `~/.claude/skills/` update with the repo. If you copied or uploaded them instead, replace the old copies with the new ones from `skills/`. Either way, start a new Claude session so it loads the new version.
 

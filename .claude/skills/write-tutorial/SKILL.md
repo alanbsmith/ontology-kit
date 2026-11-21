@@ -14,7 +14,7 @@ This skill covers the writing. The mechanics (how the engine runs commands, what
 - One file per page: `0-intro.md`, then `1-scope.md` to `8-review.md`. The names are `N-slug.md`, and the number is the order.
 - Page titles: the intro is `# Tutorial: <Name>` (for example `# Tutorial: Wine ontology`). Each step is `# Step N: <Word>` (`# Step 4: Classes`). Use the word the Method step uses.
 - Routes live in `site/src/nav.ts`: the intro at `/getting-started/tutorial/<name>/` and the steps at `/getting-started/tutorial/<name>/N-slug/`. The sidebar label for the intro is the page title. The labels for the steps are `1. Scope`, `2. Reuse` and so on. Add every generated page there, or `tests/site.test.ts` fails.
-- Never edit `examples/<name>/tutorial/` or `TRANSCRIPT.md`. They're generated. Edit the sources and run `npm run example`.
+- Never edit `examples/<name>/tutorial/` or `TRANSCRIPT.md`. They're generated. Edit the sources and run `pnpm example`.
 
 ## Page layout
 
@@ -93,16 +93,16 @@ The commands in the sources create the ontology files. Reordering a command, cha
 Run all of these. They're the same ones every docs issue needs:
 
 ```bash
-npm run example
-npx tsc
-npm test
-npm run lint:docs
+pnpm example
+pnpm tsc
+pnpm test
+pnpm lint:docs
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts
-npm run site
+pnpm site
 ```
 
 - `lint:docs` must report 0 errors. Weigh the warnings. The "Beginners may not know" jargon warning fires on the very terms the tutorial teaches, so it's expected. Add new proper nouns (wine names, drink names) to `.vale/styles/config/vocabularies/Okb/accept.txt`.
-- Open the built pages (`npm run site:dev`) and read them as a newcomer. Check that the Previous and Next buttons follow the step order, the callouts read well, and every link goes somewhere.
+- Open the built pages (`pnpm site:dev`) and read them as a newcomer. Check that the Previous and Next buttons follow the step order, the callouts read well, and every link goes somewhere.
 - Read the generated page for each step, not just the source. The real output is what the reader sees.
 
 ## Review list

@@ -1,6 +1,6 @@
 /**
  * Generates the reference docs in docs/ from the meta-KB, so the docs can never
- * disagree with what okb enforces. Run: npm run docs
+ * disagree with what okb enforces. Run: pnpm run docs
  */
 import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -13,7 +13,7 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const meta = MetaKB.get();
 // Anchor ids (`concept.class` → `concept-class`) come from src/site.ts. Links use these, never heading slugs.
 const anchorTag = (id: string) => `<a id="${anchorId(id)}"></a>`;
-const HEADER = (title: string) => [`# ${title}`, "", `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`, ""];
+const HEADER = (title: string) => [`# ${title}`, "", `<!-- Generated from the meta-KB (v${meta.version}) by \`pnpm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`, ""];
 
 function sources(id: string): string[] {
   return meta.citations(id).map((l) => `> “${l.quote}”  \n> — ${meta.citeLine(l)}`);
@@ -92,7 +92,7 @@ for (const s of meta.steps) {
 const glossary = [
   "# Glossary",
   "",
-  `<!-- Generated from the meta-KB (v${meta.version}) by \`npm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`,
+  `<!-- Generated from the meta-KB (v${meta.version}) by \`pnpm run docs\`. Don't edit by hand: change \`meta-kb/src/*.yaml\` and regenerate. -->`,
   "",
   "> **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.",
   "",

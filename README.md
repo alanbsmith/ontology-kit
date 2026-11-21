@@ -12,13 +12,13 @@ It has three parts:
 
 ## Install
 
-Needs **Node.js 24+**.
+Needs **Node.js 24+** and [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`).
 
 ```bash
 git clone https://github.com/alanbsmith/ontology-kit
 cd ontology-kit
-npm install
-npm link
+pnpm install
+pnpm link --global
 ```
 
 Then `okb init my-ontology` starts one. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.

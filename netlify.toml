@@ -1,9 +1,12 @@
-# The Ontology Kit docs site (site/). Netlify installs the root package (it has a lockfile) before
-# this runs; the site is its own npm package, so it's installed here. `npm run site` regenerates
-# the docs from the meta-KB first, so the deployed pages are never stale.
+# The Ontology Kit docs site (site/). Node 26's build image has no pnpm pinned to our version, so
+# the command installs the one named in package.json's `packageManager` (and PNPM_VERSION makes
+# Netlify's own dependency install use the same one). One `pnpm install` covers the root and site/
+# (see pnpm-workspace.yaml). `pnpm site` regenerates the docs from the meta-KB first, so the
+# deployed pages are never stale.
 [build]
-  command = "npm ci --prefix site && npm run site"
+  command = "npm i -g pnpm@12.21.0 && pnpm install --frozen-lockfile && pnpm site"
   publish = "site/dist"
 
 [build.environment]
   NODE_VERSION = "26"
+  PNPM_VERSION = "12.21.0"

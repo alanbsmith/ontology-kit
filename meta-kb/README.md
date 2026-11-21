@@ -12,7 +12,7 @@ It's itself a labeled property graph (LPG). The files are `data/nodes.json` and 
 
 ## Grounding
 
-Every non-toolkit claim is tied to a `SourceLocation`: a **verbatim** quote with section and PDF page number, checked word-for-word against the PDF by `npm run verify:quotes`.
+Every non-toolkit claim is tied to a `SourceLocation`: a **verbatim** quote with section and PDF page number, checked word-for-word against the PDF by `pnpm verify:quotes`.
 
 - **Ontology 101**: Noy, N.F. & McGuinness, D.L. (2001). _Ontology Development 101: A Guide to Creating Your First Ontology._ Stanford. The method, rules and wine examples.
 - **Gruber 1993**: Gruber, T.R. _A Translation Approach to Portable Ontology Specifications._ Knowledge Acquisition 5(2). The definition of an ontology, the "knowledge level" principle, and documentation strings. Page numbers are PDF pages (the PDF has a cover page, so they're one more than the printed numbers).
@@ -43,9 +43,9 @@ Each rule states its **basis**:
 ## Editing
 
 1. Edit `src/*.yaml`. Quotes must be copied exactly; use `...` for a deliberate gap.
-2. `npm run verify:quotes`: compiles `data/`, re-checks every quote against `sources/*.pdf`, and fails on any inconsistency (see the header of `build.ts` for the full list).
+2. `pnpm verify:quotes`: compiles `data/`, re-checks every quote against `sources/*.pdf`, and fails on any inconsistency (see the header of `build.ts` for the full list).
 3. If you added a mechanical/heuristic rule, add a check with the same id to `src/checks.ts` and a fixture to `tests/checks.test.ts`. The build and the test suite both fail until you do.
-4. `npm run docs && npm test`.
+4. `pnpm run docs && pnpm test`.
 5. Bump `VERSION` in `build.ts` when rules change meaning or a shipped skill's instructions change (a patch version for skill-only changes), and update the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. Add an entry to the [changelog](../docs/CHANGELOG.md). Ontologies record the meta-KB version they were created with (`okb.json`).
 
 ## Changelog

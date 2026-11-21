@@ -33,7 +33,7 @@ The overview (`index.md`), each chapter opener and the closing page (`where-next
 2. Add its pages (see "Files and routes" and "Page layout").
 3. Add every new page to `PAGES` in `site/src/nav.ts`, and one entry to `LEARN_CHAPTERS` with the title, the opener's `route` and its page routes in order.
 4. Audit each page against "Standalone chapters", and link the new chapter from the overview's table and the previous chapter's "Next" line.
-5. Run `npm test`: it fails on a page that is in no chapter or two, an opener with no page, or a missing glossary anchor.
+5. Run `pnpm test`: it fails on a page that is in no chapter or two, an opener with no page, or a missing glossary anchor.
 
 ## Page layout
 
@@ -104,15 +104,15 @@ A quote block with a bold lead and two to four items. Each names a mistake a beg
 ## Checks before you commit
 
 ```bash
-npx tsc
-npm test
-npm run lint:docs
+pnpm tsc
+pnpm test
+pnpm lint:docs
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts
-npm run site
+pnpm site
 ```
 
 - `lint:docs` must report 0 errors. The "Beginners may not know" warning fires on terms the page links on purpose. Weigh the others.
-- Open the page (`npm run site:dev`) and check the graph: it loads only when scrolled to, the nodes you focused are there, Tab reaches them, and the fallback reads well on its own (open "Text version of this graph").
+- Open the page (`pnpm site:dev`) and check the graph: it loads only when scrolled to, the nodes you focused are there, Tab reaches them, and the fallback reads well on its own (open "Text version of this graph").
 
 ## Review list
 

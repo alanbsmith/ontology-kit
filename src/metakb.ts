@@ -204,7 +204,7 @@ export class MetaKB {
   /** A node the build guarantees exists (meta-kb/build.ts checks referential integrity). */
   node<T extends MetaType>(id: string, type: T): MetaOf<T> {
     const n = this.byId.get(id);
-    if (n?.type !== type) throw new Error(`meta-KB: expected ${type} '${id}'. Rebuild it with npm run build:meta.`);
+    if (n?.type !== type) throw new Error(`meta-KB: expected ${type} '${id}'. Rebuild it with pnpm build:meta.`);
     return n as MetaOf<T>;
   }
 

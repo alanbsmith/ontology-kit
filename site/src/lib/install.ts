@@ -5,5 +5,5 @@
  */
 export const INSTALL_COMMAND = `git clone https://github.com/alanbsmith/ontology-kit
 cd ontology-kit
-npm install
-npm link`;
+pnpm install
+pnpm link --global`;

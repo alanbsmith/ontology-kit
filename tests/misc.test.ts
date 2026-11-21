@@ -63,7 +63,7 @@ describe("meta-KB", () => {
     const def: Record<string, string> = { MUST: "error", MUST_NOT: "error", SHOULD: "warning", SHOULD_NOT: "warning", MAY: "info" };
     for (const r of meta.ofType("Rule")) if (r.severity !== def[r.modality]) assert.ok(r.severityReason, r.key);
   });
-  it("was built from the current YAML (run npm run build:meta if this fails)", () => {
+  it("was built from the current YAML (run pnpm build:meta if this fails)", () => {
     const before = readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8");
     execFileSync(process.execPath, [join(ROOT, "meta-kb/build.ts")], { stdio: "ignore" });
     assert.equal(readFileSync(join(ROOT, "meta-kb/data/nodes.json"), "utf8"), before);
@@ -232,7 +232,7 @@ describe("worked example", () => {
 describe("docs/CLI.md", () => {
   it("is generated from src/commands.ts and covers every command", () => {
     const page = readFileSync(join(ROOT, "docs/CLI.md"), "utf8");
-    assert.equal(page, renderCliDocs() + "\n", "docs/CLI.md is stale: run npm run docs");
+    assert.equal(page, renderCliDocs() + "\n", "docs/CLI.md is stale: run pnpm run docs");
     // `edgeprop` is the internal target of `relationship property`, not a command people type.
     const src = readFileSync(join(ROOT, "src/cli.ts"), "utf8");
     const dispatch = [...src.matchAll(/^    case "([a-z][a-z-]*)":/gm)].map((m) => m[1]).filter((c) => c !== "edgeprop");
@@ -241,7 +241,7 @@ describe("docs/CLI.md", () => {
     for (const cmd of documented) assert.ok(page.includes(`<a id="${cmdAnchor(cmd)}"></a>`), cmd);
   });
   it("has a cheat sheet that is current and uses real commands", () => {
-    assert.equal(readFileSync(join(ROOT, "docs/CLI-CHEAT-SHEET.md"), "utf8"), renderCheatSheet() + "\n", "docs/CLI-CHEAT-SHEET.md is stale: run npm run docs");
+    assert.equal(readFileSync(join(ROOT, "docs/CLI-CHEAT-SHEET.md"), "utf8"), renderCheatSheet() + "\n", "docs/CLI-CHEAT-SHEET.md is stale: run pnpm run docs");
     const names = new Set(COMMANDS.map((c) => c.name));
     for (const c of CHEAT_SHEET) assert.ok(names.has(c.example.split(" ")[1]), c.example);
   });

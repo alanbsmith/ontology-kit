@@ -16,24 +16,24 @@ Check again, and bring the branch up to date, before you commit or open a PR, an
 
 ## Commands
 
-Requires **Node 26** for development (see `.nvmrc`); okb itself runs on Node 24 or newer. No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
+Requires **Node 26** for development (see `.nvmrc`); okb itself runs on Node 24 or newer. No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension. Install dependencies with `pnpm install` (pnpm is pinned in `package.json`; install it with `npm i -g pnpm`, since Node 26 doesn't bundle Corepack). One install covers the root and `site/`.
 
 ```bash
-npm test                                   # all suites (node:test)
+pnpm test                                  # all suites (node:test)
 node --test tests/checks.test.ts           # one file
 node --test --test-name-pattern="hier-no-cycles" tests/checks.test.ts   # one test
-npx tsc                                    # typecheck (noEmit)
-node src/cli.ts <command>                  # run okb without npm link
-npm run build:meta                         # compile meta-kb/src/*.yaml -> meta-kb/data/*.json
-npm run docs                               # regenerate docs/METHOD|GLOSSARY|RULES|DECISIONS|CLI|CLI-CHEAT-SHEET.md
-npm run site                               # docs + build the docs site into site/dist (npm ci --prefix site first)
-npm run site:dev                           # docs + the site's dev server
-npm run example                            # rebuild examples/wine/ from its tutorial-src/ (also run by npm test and npm run site)
-npm run format:docs                        # Prettier on the hand-written docs
-npm run lint:docs                          # Prettier check + markdownlint + Vale (brew install vale; it runs `vale sync` itself in a fresh checkout or worktree)
+pnpm tsc                                   # typecheck (noEmit)
+node src/cli.ts <command>                  # run okb without pnpm link
+pnpm build:meta                            # compile meta-kb/src/*.yaml -> meta-kb/data/*.json
+pnpm run docs                              # regenerate docs/METHOD|GLOSSARY|RULES|DECISIONS|CLI|CLI-CHEAT-SHEET.md (pnpm has its own docs command, so keep `run`)
+pnpm site                                  # docs + build the docs site into site/dist
+pnpm site:dev                              # docs + the site's dev server
+pnpm example                               # rebuild examples/wine/ from its tutorial-src/ (also run by pnpm test and pnpm site)
+pnpm format:docs                           # Prettier on the hand-written docs
+pnpm lint:docs                             # Prettier check + markdownlint + Vale (brew install vale; it runs `vale sync` itself in a fresh checkout or worktree)
 ```
 
-Run `npx tsc` and `npm test` after every change. There's no code linter. `npm run lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
+Run `pnpm tsc` and `pnpm test` after every change. There's no code linter. `pnpm lint:docs` fails on Vale errors (spelling, `e.g.`, wrong-case terms) and shows its warnings (passive voice, wordiness) as suggestions to weigh, not rules. Add project terms to `.vale/styles/config/vocabularies/Okb/accept.txt`; it's case-sensitive.
 
 **Tests regenerate tracked files.** `tests/misc.test.ts` runs `meta-kb/build.ts` and `examples/build-wine.ts`, which rewrite `meta-kb/data/*.json` and everything in `examples/wine/` (except `tutorial-src/`, which is hand-written). A diff in `examples/wine/` after a refactor means CLI output changed, so treat it as a behavior change and check it. The example pins its dates with `SOURCE_DATE_EPOCH` (see `src/clock.ts`), so it rebuilds identically on any day.
 
@@ -49,7 +49,7 @@ okb is a CLI that guides a beginner through the 8-step Ontology 101 method. It h
 - Every mechanical or heuristic rule in `meta-kb/src/rules.yaml` must have exactly one check with the same key in `CHECKS` in `src/checks.ts`, and the reverse. `meta-kb/build.ts` fails if they drift apart. The `tests/checks.test.ts` suite fails if any key in `CHECKS` has no fixture that triggers it (via `fires()`).
 - Each step's `doneWhen[].check` key in `steps.yaml` must exist in `STEP_CHECKS` in `src/status.ts`.
 - A rule's severity comes from its modality (MUST → error, SHOULD → warning, MAY → info). An override needs a written `severityReason`. `fromStep` hides non-error findings until the user reaches that step.
-- Adding or changing a rule: edit the YAML, add or adjust the check and its fixture, then run `npm run build:meta && npm run docs && npm test`. Bump `VERSION` in `meta-kb/build.ts` when a rule's meaning changes or a shipped skill's instructions change, and set the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. That line is how an agent (and the user) can tell which skill version is loaded, and the docs drift check fails if it lags.
+- Adding or changing a rule: edit the YAML, add or adjust the check and its fixture, then run `pnpm build:meta && pnpm run docs && pnpm test`. Bump `VERSION` in `meta-kb/build.ts` when a rule's meaning changes or a shipped skill's instructions change, and set the `**Version X.Y.Z.**` line at the top of each `skills/*/SKILL.md` to match. That line is how an agent (and the user) can tell which skill version is loaded, and the docs drift check fails if it lags.
 - `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md` and `CLI-CHEAT-SHEET.md` are generated by `src/gendocs.ts` (`CLI.md` and `CLI-CHEAT-SHEET.md` carry no "generated" banner; they come from the command reference in `src/commands.ts`, rendered by `src/clidocs.ts`; when you change a command or its flags, update that file and the `HELP` text in `src/help.ts`), so never edit them by hand. `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md` (the meta-KB changelog) and `docs/getting-started/*.md` are hand-written, as are `README.md` (the GitHub front page, which is not a site page) and `CONTRIBUTING.md` (the contributor guide, at `/contributing/`).
 - `gendocs.ts` writes an `<a id>` before every step, term, rule and decision, from the meta-KB id with `.` replaced by `-` (`concept-class`, `rule-hier-no-cycles`, `step-2-reuse`, `decision-is-a`), and every link it generates uses those. Link to them from hand-written docs instead of heading slugs. Each decision guide also gets a Mermaid flowchart.
 - `meta-kb/src/format.yaml` is the registry of node and edge types that `struct-well-formed` validates against.
@@ -72,7 +72,7 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 
 ## Refactoring in progress
 
-`docs/CODE-REVIEW.md` is a worklist of quality issues with a suggested order and a status for each item. When working through it, make each item its own commit, don't mix a refactor with a behavior change, and run `npx tsc` and `npm test` after every step.
+`docs/CODE-REVIEW.md` is a worklist of quality issues with a suggested order and a status for each item. When working through it, make each item its own commit, don't mix a refactor with a behavior change, and run `pnpm tsc` and `pnpm test` after every step.
 
 ## Docs site
 

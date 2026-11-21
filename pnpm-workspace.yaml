@@ -1,0 +1,4 @@
+# Keeps site/ (the docs site) installable with one `pnpm install` and one lockfile.
+# Issue #55 replaces this with the real workspace layout.
+packages:
+  - site

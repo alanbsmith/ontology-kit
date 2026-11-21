@@ -6,7 +6,8 @@
  * Reads the docs (default: every hand-written markdown file) and reports anything
  * that names something that doesn't exist:
  *   - okb commands/subcommands and their --flags, checked against src/cli.ts
- *   - `npm run <script>`, checked against package.json
+ *   - `pnpm <script>`, checked against package.json
+ *   - contributor commands that use npm (`npm run`, `npm ci`, `npm link`, `npm test`, `npm install`, `npx`): contributors use pnpm
  *   - repo paths (src/..., docs/..., meta-kb/..., tests/..., examples/..., skills/...)
  *   - rule ids (hier-*, slot-*, naming-*, ...), checked against the compiled meta-KB
  *   - node and edge types in docs/FORMAT.md tables, checked against meta-kb/src/format.yaml
@@ -33,7 +34,12 @@ const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdi
 const DEFAULT_DOCS = [
   "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", "meta-kb/README.md", "sources/README.md",
   "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
+  ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
 ];
+/** pnpm commands and tool names that aren't package.json scripts. */
+const PNPM_BUILTINS = new Set(["install", "i", "add", "remove", "update", "link", "unlink", "exec", "dlx", "run", "store", "list", "why", "tsc", "prettier", "ignored-builds", "approve-builds"]);
+/** npm commands that contributors run, which should be pnpm. An `npm i -g` end-user install is fine. */
+const NPM_CONTRIBUTOR = /\bnpm (?:run|ci|link|test|install|i|--prefix|exec)\b[^\n`]*|\bnpx\b[^\n`]*/g;
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 
 interface Problem {
@@ -135,8 +141,12 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
     for (const m of text.matchAll(/meta-KB (\d+\.\d+\.\d+)/g)) {
       if (m[1] !== META_VERSION) problems.push({ file, line, kind: "version", message: `Says meta-KB ${m[1]}; it's ${META_VERSION}.` });
     }
-    for (const m of text.matchAll(/npm run ([\w:-]+)/g)) {
-      if (!scripts.has(m[1])) problems.push({ file, line, kind: "npm-script", message: `package.json has no '${m[1]}' script.` });
+    for (const m of text.matchAll(/(?:^|`)\s*pnpm (?:run )?([a-z][\w:-]*)/g)) {
+      if (!scripts.has(m[1]) && !PNPM_BUILTINS.has(m[1])) problems.push({ file, line, kind: "pnpm-script", message: `package.json has no '${m[1]}' script.` });
+    }
+    if (/(?:^|`)\s*pnpm docs\b(?!:)/.test(text)) problems.push({ file, line, kind: "pnpm-script", message: "'pnpm docs' is pnpm's own docs command, not our script; write 'pnpm run docs'." });
+    for (const m of text.matchAll(NPM_CONTRIBUTOR)) {
+      if (!/npm (i|install|add) (-g|--global)\b/.test(m[0])) problems.push({ file, line, kind: "npm-command", message: `'${m[0]}': contributors use pnpm here (end-user installs may say 'npm i -g').` });
     }
     for (const m of text.matchAll(RULE_ID)) {
       if (!rules.has(m[1])) problems.push({ file, line, kind: "rule", message: `No meta-KB rule '${m[1]}'.` });

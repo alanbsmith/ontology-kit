@@ -1,6 +1,6 @@
 # Rules
 
-<!-- Generated from the meta-KB (v2.4.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.4.1) by `pnpm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
 
 A rule is one thing okb checks about your ontology, such as "a class can't be its own ancestor" or "every slot says what kind of value it holds". `okb validate` runs them and reports the ones your ontology breaks. The ontology-review skill asks about the ones only a person can judge.
 

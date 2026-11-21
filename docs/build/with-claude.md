@@ -54,5 +54,5 @@ In step 8, the coach links each competency question to what answers it, runs `ok
 ## If it doesn't work
 
 - **Claude doesn't offer the coach.** Check that `~/.claude/skills/ontology-coach/SKILL.md` exists, and start a new session.
-- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works, run `npm link` again in the kit folder. If Claude runs in a different environment, give it the path to the kit and it runs `node <kit>/src/cli.ts`.
+- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works, run `pnpm link --global` again in the kit folder. If Claude runs in a different environment, give it the path to the kit and it runs `node <kit>/src/cli.ts`.
 - **You want to see what Claude did.** Everything it ran is a plain `okb` command. Read the history with `okb status`, `okb tree` and `okb decision list`.

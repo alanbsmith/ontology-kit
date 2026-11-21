@@ -5,6 +5,7 @@
   "description": "A beginner-friendly toolkit for building ontologies the Ontology 101 way: guided method, meta-knowledge base of rules, and the okb CLI.",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@12.21.0",
   "bin": {
     "okb": "bin/okb.js"
   },
@@ -16,8 +17,8 @@
     "build:meta": "node meta-kb/build.ts",
     "verify:quotes": "node meta-kb/build.ts --pdf src.o101=sources/ontology101.pdf --pdf src.g93=sources/ontolingua-kaj-1993.pdf",
     "docs": "node src/gendocs.ts",
-    "site": "npm run docs && npm run example && npm --prefix site run build",
-    "site:dev": "npm run docs && npm run example && npm --prefix site run dev",
+    "site": "pnpm run docs && pnpm example && pnpm --dir site build",
+    "site:dev": "pnpm run docs && pnpm example && pnpm --dir site dev",
     "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",

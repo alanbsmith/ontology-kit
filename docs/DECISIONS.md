@@ -1,6 +1,6 @@
 # Decision guides
 
-<!-- Generated from the meta-KB (v2.4.1) by `npm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.4.1) by `pnpm run docs`. Don't edit by hand: change `meta-kb/src/*.yaml` and regenerate. -->
 
 ## What decision guides are
 

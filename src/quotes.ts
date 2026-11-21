@@ -47,7 +47,7 @@ export async function loadPages(path: string): Promise<string[]> {
     pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs" as string);
   } catch {
     throw new Error(
-      "Reading PDFs needs either the `pdftotext` command (brew install poppler) or the pdfjs-dist package (npm install).",
+      "Reading PDFs needs either the `pdftotext` command (brew install poppler) or the pdfjs-dist package (pnpm install).",
     );
   }
   const doc = await pdfjs.getDocument({ data: new Uint8Array(readFileSync(path)), verbosity: 0 }).promise;

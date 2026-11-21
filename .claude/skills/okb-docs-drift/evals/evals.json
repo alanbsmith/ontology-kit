@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "I added a new rule `slot-no-orphans` to rules.yaml with a check and a fixture. Anything else I need to update?",
-      "expected_output": "Points to npm run build:meta && npm run docs for the generated docs, runs the drift check (rule counts in README.md change), and fixes the README count rather than hand-editing RULES.md.",
+      "expected_output": "Points to pnpm build:meta && pnpm run docs for the generated docs, runs the drift check (rule counts in README.md change), and fixes the README count rather than hand-editing RULES.md.",
       "files": []
     }
   ]

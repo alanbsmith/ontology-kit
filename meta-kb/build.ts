@@ -1,9 +1,9 @@
 /**
  * Compile the meta-KB from meta-kb/src/*.yaml into meta-kb/data/{nodes,edges,manifest}.json.
  *
- *   npm run build:meta
+ *   pnpm build:meta
  *   node meta-kb/build.ts --pdf src.o101=path/to/ontology101.pdf --pdf src.g93=path/to/gruber.pdf
- *       ...also re-verifies every quote, word for word, against the PDFs (npm run verify:quotes)
+ *       ...also re-verifies every quote, word for word, against the PDFs (pnpm verify:quotes)
  *
  * Only people editing the meta-KB run this; the compiled JSON is committed, so okb
  * itself has no dependencies. The build fails (exit 1) if anything is inconsistent:

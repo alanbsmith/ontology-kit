@@ -5,7 +5,7 @@ description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md,
 
 # okb docs drift check
 
-ontology-kit already keeps some docs honest by generating them (`npm run docs` writes METHOD, GLOSSARY, RULES and DECISIONS from the meta-KB, and CLI and CLI-CHEAT-SHEET from `src/commands.ts`). The rest are hand-written, and they drift silently. Beginners follow them literally: a README that shows a flag that no longer exists teaches the wrong thing, and a skill that tells Claude to run a renamed command fails on someone's first ontology. This skill finds that drift and fixes it.
+ontology-kit already keeps some docs honest by generating them (`pnpm run docs` writes METHOD, GLOSSARY, RULES and DECISIONS from the meta-KB, and CLI and CLI-CHEAT-SHEET from `src/commands.ts`). The rest are hand-written, and they drift silently. Beginners follow them literally: a README that shows a flag that no longer exists teaches the wrong thing, and a skill that tells Claude to run a renamed command fails on someone's first ontology. This skill finds that drift and fixes it.
 
 It has two layers: a script for what can be checked mechanically, and a read-through for what only a person (or you) can judge.
 
@@ -20,7 +20,7 @@ node .claude/skills/okb-docs-drift/scripts/check-docs.ts README.md skills/ontolo
 It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB and sources READMEs and the shipped skills. The generated pages (including the tutorial pages under `examples/*/tutorial/`) are left out. It reports, with file and line:
 
 - **command / flag**: an `okb ...` in code (inline backticks or a fenced block) naming a command, subcommand or `--flag` that `src/cli.ts` doesn't accept. It knows the `property` / `relationship` aliases and their `--from` / `--to` flags.
-- **npm-script**: `npm run x` with no `x` in package.json.
+- **pnpm-script**: `pnpm x` with no `x` in package.json, and **npm-command**: a contributor command that uses npm where pnpm belongs (running a script, installing or linking the repo, or `npx`). An end-user `npm i -g` is fine.
 - **path**: a repo path (`src/...`, `docs/...`, `meta-kb/...`) that doesn't exist. Paths given as arguments to okb commands are skipped, because they're the user's own files.
 - **rule**: a backticked rule id that isn't in the meta-KB.
 - **format-type**: a node or edge type in docs/FORMAT.md's tables that isn't in `meta-kb/src/format.yaml`, or a registered type the doc leaves out.
@@ -38,7 +38,7 @@ The script knows that names exist, not that the docs say true things about them.
 - **The file format.** docs/FORMAT.md's property lists should match the interfaces in `src/types.ts` (`ClassNode`, `SlotNode`, ...), because those are what okb actually reads and writes.
 - **Versions.** `docs/CHANGELOG.md` should cover `VERSION` in `meta-kb/build.ts`.
 
-Leave generated docs alone (METHOD, GLOSSARY, RULES, and DECISIONS say "Generated from" at the top; CLI and CLI-CHEAT-SHEET come from `src/commands.ts`). If one of them is wrong, the fix is in `meta-kb/src/*.yaml` followed by `npm run build:meta && npm run docs`.
+Leave generated docs alone (METHOD, GLOSSARY, RULES, and DECISIONS say "Generated from" at the top; CLI and CLI-CHEAT-SHEET come from `src/commands.ts`). If one of them is wrong, the fix is in `meta-kb/src/*.yaml` followed by `pnpm build:meta && pnpm run docs`.
 
 ## 3. Report, then fix
 

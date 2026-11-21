@@ -68,3 +68,6 @@ READMEs
 [Ww]orktrees?
 PR's
 [Rr]ebase
+pnpm
+Corepack
+npm

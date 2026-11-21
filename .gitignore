@@ -9,7 +9,7 @@ sources/*.pdf
 !.vale/styles/Okb/
 !.vale/styles/Beginner/
 
-# Docs site (site/ is its own npm package)
+# Docs site (site/ is its own package)
 site/node_modules/
 site/dist/
 site/.astro/

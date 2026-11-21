@@ -2,7 +2,7 @@
 
 A review against the js-code-quality skill (Fowler's Refactoring, Clean Code, Ousterhout, Beck's Tidy First?, Effective TypeScript), written as a worklist for refactoring in Claude Code. It's a critique only; nothing below has been applied.
 
-**Safety net:** `npm test` (77 tests, including an end-to-end build of the wine example and the Button markdown fixture) and `npx tsc`. Run both after every step. Make each item its own commit, and never mix a refactor with a behavior change.
+**Safety net:** `pnpm test` (77 tests, including an end-to-end build of the wine example and the Button markdown fixture) and `pnpm tsc`. Run both after every step. Make each item its own commit, and never mix a refactor with a behavior change.
 
 **Before starting:** `git init && git add -A && git commit -m "v1"`.
 
@@ -72,7 +72,7 @@ Per Beck, items 6–7 are "tidy when you're about to change it," not urgent. Ite
 
 ## Status (2026-09-23)
 
-Worked through on the `refactor/code-review-worklist` branch, one commit per item. After each step, `npx tsc` and `npm test` passed, and CLI output (human and `--json`) was compared against the previous commit on the wine example, a markdown source fixture and a deliberately malformed ontology.
+Worked through on the `refactor/code-review-worklist` branch, one commit per item. After each step, `pnpm tsc` and `pnpm test` passed, and CLI output (human and `--json`) was compared against the previous commit on the wine example, a markdown source fixture and a deliberately malformed ontology.
 
 | Item                                                                                        | Status                                                                                                                                                                                                                                                                   | Commit                          |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
