@@ -100,6 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the previous tag, for the release notes' comparison link
           persist-credentials: false
       - uses: ./.github/actions/setup
         with:
@@ -113,6 +114,8 @@ jobs:
           pnpm --filter ontology-kit pack --pack-destination tarballs
           ls -l tarballs
       - name: Write the release notes from the changelog
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: node scripts/release.ts notes "$TAG" > tarballs/release-notes.md
       # A dry run stops here. It needs no identity token and no `release` environment, so it can run from
       # any branch while that environment stays limited to version tags. It checks what npm would publish.

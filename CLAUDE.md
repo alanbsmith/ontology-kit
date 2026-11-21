@@ -14,6 +14,10 @@ Before reading, editing or generating anything, make sure the work sits on an up
 
 Check again, and bring the branch up to date, before you commit or open a PR, and whenever the user says the base has moved. A long session drifts too.
 
+## Commits and pull requests
+
+Commit messages and PR titles are Conventional Commits with a capitalized subject and an optional scope from `scripts/conventions.ts` (`feat(format): Add better formatting`; `!` after the type or scope marks a breaking change). commitlint checks them (`commitlint.config.js`, `.github/workflows/pr.yml`). Every PR description follows `.github/pull_request_template.md`: a `## Release Category` (one of the categories in `scripts/conventions.ts`) and a `## Release Notes` section (required for `feat`, `fix` and `perf`; `None` otherwise), plus `## Breaking Changes` when the title has a `!`. `node scripts/changelog.ts --write` writes a release's `docs/CHANGELOG.md` entry from the merged PRs, grouped by category, quoting those sections. CONTRIBUTING.md ("Commits and pull requests") has the details; when you open a PR, fill the template in.
+
 ## Commands
 
 Requires **Node 26** for development (see `.nvmrc`); okb itself runs on Node 24 or newer. No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `packages/okb/tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension. Install dependencies with `pnpm install` (pnpm is pinned in the root `package.json`; install it with `npm i -g pnpm`, since Node 26 doesn't bundle Corepack). One install covers the whole workspace: the root, `packages/okb` and `site/`.

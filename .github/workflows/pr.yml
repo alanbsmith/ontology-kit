@@ -1,0 +1,65 @@
+# Checks a pull request's commits, title and description against the conventions in CONTRIBUTING.md
+# ("Commits and pull requests"). It is separate from ci.yml because it also reruns when the description
+# is edited, and the release workflow doesn't need it. The jobs' names are the status checks to require on `main`:
+#   Commit messages, PR title, PR description
+name: Pull request
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  commits:
+    name: Commit messages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # Only this PR's commits: the history before the convention isn't rewritten. Merge commits are skipped.
+      - name: Lint the commits in this PR
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: pnpm exec commitlint --from "$BASE" --to "$HEAD" --verbose
+
+  title:
+    name: PR title
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # The title is the line the release notes use for this PR, so it follows the same rules as a commit.
+      - name: Lint the title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$TITLE" | pnpm exec commitlint --verbose
+
+  description:
+    name: PR description
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # The script has no dependencies, so it needs Node only. It reads the title and body from the event file.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Check the Release Category, Release Notes and Breaking Changes sections
+        run: node scripts/pr.ts check

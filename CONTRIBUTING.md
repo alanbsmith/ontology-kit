@@ -156,7 +156,67 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and every
 | Site            | `pnpm site`                                                                                           | `pnpm site`                                                                  |
 | Node 24 runtime | Packs the three packages, installs them on Node 24, runs `okb version`, `okb init` and `okb validate` | `pnpm test` runs the same on your Node; use `nvm use 24` to try the floor    |
 
+A second workflow, `.github/workflows/pr.yml`, checks the pull request itself: **Commit messages**, **PR title** and **PR description**. It also reruns when you edit the description. [Commits and pull requests](#commits-and-pull-requests) says what it expects.
+
 The Generated files check catches a rule, command or tutorial change that you didn't regenerate. The release workflow reuses the whole workflow (it has a `workflow_call` trigger), so a release only publishes after these checks pass. Local runs don't need Vale installed for the other checks, but `pnpm lint:docs` does (`brew install vale`).
+
+## Commits and pull requests
+
+Every commit message and every PR title is a [Conventional Commit](https://www.conventionalcommits.org): `type(scope): Subject`. The subject starts with a capital letter and has no final period. The scope is optional.
+
+```text
+feat(format): Add better formatting
+fix(okb)!: Drop the --legacy flag
+docs: Explain inverse slots
+```
+
+[commitlint](https://commitlint.js.org) checks this (`commitlint.config.js`). A [husky](https://typicode.github.io/husky) `commit-msg` hook (`.husky/commit-msg`) runs it on every commit, and `pnpm install` sets the hook up (the `prepare` script), so a bad message is rejected before the PR. `git commit --no-verify` skips the hook once; the PR check still runs. To check a message without committing:
+
+```bash
+echo "feat(format): Add better formatting" | pnpm exec commitlint
+```
+
+**Types** are the Conventional Commits set: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `style` and `revert`. A `!` after the type or scope (`feat(okb)!:`) marks a [breaking change](#what-the-versions-mean).
+
+**Scopes** say which package or part of the repo a change belongs to, so the history shows what goes into each package release. They live in `scripts/conventions.ts`:
+
+| Scope          | Covers                                                         |
+| -------------- | -------------------------------------------------------------- |
+| `format`       | `@ontology-kit/format`, the file-format reader                 |
+| `okb`          | `@ontology-kit/okb`, the CLI                                   |
+| `ontology-kit` | the unscoped wrapper package                                   |
+| `meta-kb`      | the method, rules, glossary and decision guides                |
+| `skills`       | the skills that ship with okb                                  |
+| `examples`     | the tutorials and example ontologies                           |
+| `site`         | the docs site                                                  |
+| `release`      | the release workflow and scripts                               |
+| `deps`         | dependency updates (Dependabot uses `chore(deps)`, `ci(deps)`) |
+
+A change that touches several packages can leave the scope out or name the main one.
+
+### The PR description
+
+The PR template (`.github/pull_request_template.md`) has these sections. The **PR description** check enforces the second to fourth:
+
+- **Summary**: what changed and why, and `Fixes #123` for the issue it closes.
+- **Release Category**: one of the categories below. The changelog groups PRs under it.
+- **Release Notes**: what a person using okb or the format package should know, in the words you'd want to read in the release notes: what's new or fixed, and how to use it. It's required for `feat`, `fix` and `perf` PRs and for breaking changes. For anything else, write `None`.
+- **Breaking Changes**: what breaks and how to upgrade. Required when the title has a `!`, and only then.
+- **Checklist**: the checks from [Before you commit](#before-you-commit).
+
+| Release Category | Use it for                                              |
+| ---------------- | ------------------------------------------------------- |
+| `CLI`            | `okb` commands, flags, output and behavior              |
+| `Format`         | the `okb-lpg` file format and `@ontology-kit/format`    |
+| `Method`         | the meta-KB: steps, rules, glossary and decision guides |
+| `Skills`         | the skills that ship with okb                           |
+| `Documentation`  | the docs, tutorials and docs site                       |
+| `Infrastructure` | CI, the release workflow, build and repo tooling, tests |
+| `Dependencies`   | dependency updates                                      |
+
+The category comes from what a user would notice, not from the folder. A `fix(okb)` that corrects a rule's wording is `Method`. The type says what kind of change it is (`feat`, `docs`), and the category says which part of the product it's in. The lists are in `scripts/conventions.ts`; change them there, in the PR template and in this section together (`packages/okb/tests/changelog.test.ts` checks that the template and the code agree).
+
+Dependabot PRs have no template and aren't checked; the changelog files them under Dependencies. Any merge method works: the changelog reads the PR's title and description, not the merge commit.
 
 ## Releases
 
@@ -189,12 +249,16 @@ Versions before 1.0 promise nothing: any release may change the CLI, the file fo
 
 ### The changelog
 
-[`docs/CHANGELOG.md`](docs/CHANGELOG.md) holds both histories: package releases first, newest first, then the meta-KB versions. Each release has a `### X.Y.Z (YYYY-MM-DD)` entry, and the workflow publishes that entry as the GitHub release notes.
+[`docs/CHANGELOG.md`](docs/CHANGELOG.md) holds both histories: package releases first, newest first, then the meta-KB versions. Each release has a `### X.Y.Z (YYYY-MM-DD)` entry, and the workflow publishes that entry as the GitHub release notes, so someone who wants to know what went out in a version can read it on that release's page. For the page it promotes the `####` sections to `###`, turns relative links into links to the files at that tag, and ends with a link comparing the release to the previous one (`node scripts/release.ts notes vX.Y.Z` prints the result).
+
+A script writes the package entries from the pull requests (`scripts/changelog.ts`). It lists every PR merged since the previous release tag, grouped under a `####` heading for its Release Category (CLI, Format, Method and so on, with **Breaking changes** first). Each PR gets one line with its title, number and author, and its Release Notes underneath. A PR's title and its Release Notes section are therefore its changelog line: write them for the reader.
+
+The entry is ordinary Markdown in the release PR, so edit it before you merge: fix a title that reads badly, merge two lines, add a sentence of context at the top. The script never touches an entry that already has a date. The first release (0.1.0) has no earlier tag and was written by hand, and the meta-KB history stays hand-written.
 
 ### Cutting a release
 
 1. On a branch from `main`, set the same `version` in `packages/format/package.json`, `packages/okb/package.json` and `packages/ontology-kit/package.json`.
-2. In `docs/CHANGELOG.md`, add the entry under `## Package releases` (or change `(unreleased)` in the existing heading to the date) and write what changed.
+2. Write the changelog entry: run `node scripts/changelog.ts --write` (needs the GitHub CLI, signed in). It adds `### X.Y.Z (today's date)` to `docs/CHANGELOG.md` from the PRs merged since the last tag, or fills in an `(unreleased)` heading. Without `--write` it prints the entry instead. Read it and edit it as above. A change to the meta-KB also gets its entry under `## Changes to the meta-KB`.
 3. Run `node scripts/release.ts check`. It fails if the versions differ or the entry is missing, empty or undated. Then run the [usual checks](#before-you-commit), and merge the change to `main`.
 4. Tag the merged commit and push the tag:
 
