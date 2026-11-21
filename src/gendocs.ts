@@ -55,6 +55,9 @@ function card(c: {
   return out;
 }
 
+/** A bold label that sits above a block (a paragraph or a list). The docs site tightens the gap below it; GitHub shows plain bold. */
+const blockLabel = (text: string) => `<p class="block-label"><strong>${text}</strong></p>`;
+
 // METHOD.md
 const method = HEADER("The method: eight steps");
 method.push(
@@ -63,23 +66,23 @@ method.push(
   "## Principles to keep in mind throughout",
   "",
 );
-for (const p of meta.ofType("Principle")) method.push(`- **${p.name}.** ${p.plainLanguage}`);
-method.push("");
+for (const p of meta.ofType("Principle")) method.push(`### ${p.name}`, "", p.plainLanguage, "");
 for (const s of meta.steps) {
-  method.push(anchorTag(s.id), `## Step ${s.order}: ${s.name}`, "", `**Goal:** ${s.goal}`, "", `**Why it matters:** ${s.whyItMatters}`, "", "**Questions to answer**", "");
+  method.push(anchorTag(s.id), `## Step ${s.order}: ${s.name}`, "", blockLabel("Goal"), "", s.goal, "", blockLabel("Why it matters"), "", s.whyItMatters, "", blockLabel("Questions to answer"), "");
   for (const q of s.guidingQuestions) method.push(`- ${q}`);
-  method.push("", "**You're done when**", "");
+  method.push("", blockLabel("You're done when"), "");
   for (const d of s.doneWhen) method.push(`- [ ] ${d.text}${d.check ? "" : " *(your judgment)*"}`);
   if (s.tips?.length) {
-    method.push("", "**Tips**", "");
+    method.push("", blockLabel("Tips"), "");
     for (const t of s.tips) method.push(`- ${t}`);
   }
-  if (s.wine) method.push("", `**Wine example:** ${s.wine}`);
+  if (s.wine) {
+    // One line is a sentence; several lines are a list. A callout, like the "Good to know" notes on the decision guides.
+    const lines = s.wine.split("\n");
+    method.push("", `> ${blockLabel("In the wine example")}`, ">", ...(lines.length > 1 ? lines.map((l) => `> - ${l}`) : [`> ${lines[0]}`]));
+  }
   const decisions = meta.targets(s.id, "USES").map((d) => meta.node(d, "Decision"));
-  if (decisions.length) method.push("", `**Decision guides:** ${decisions.map((d) => `[${d.name}](DECISIONS.md#${anchorId(d.id)})`).join(" · ")}`);
-  const rules = meta.targets(s.id, "APPLIES").map((r) => meta.node(r, "Rule"));
-  if (rules.length) method.push("", `**Rules checked from this step:** ${rules.map((r) => `[\`${r.key}\`](RULES.md#${anchorId(r.id)})`).join(", ")}`);
-  if (s.commands?.length) method.push("", `**Commands:** ${s.commands.map((x) => `\`${x}\``).join(", ")}`);
+  if (decisions.length) method.push("", blockLabel("Decision guides"), "", ...decisions.map((d) => `- [${d.name}](DECISIONS.md#${anchorId(d.id)})`));
   method.push("", "<details><summary>Source passages</summary>", "", ...sources(s.id).flatMap((x) => [x, ""]), "</details>", "");
 }
 
