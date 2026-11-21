@@ -6,7 +6,7 @@
 
 Check whether someone has already modeled your subject, and record what you found.
 
-Reuse saves you work, and it makes your ontology easier to share. Even a "we looked and found nothing" is worth a note, because someone will ask later. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-2-reuse).
+Reuse saves you work, and it makes your ontology easier to share. Even a "we looked and found nothing" is worth a note, because someone will ask later. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-2-reuse).
 
 ## What you'll make
 

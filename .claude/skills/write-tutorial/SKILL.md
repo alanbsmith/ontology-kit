@@ -12,7 +12,7 @@ This skill covers the writing. The mechanics (how the engine runs commands, what
 ## Files and routes
 
 - One file per page: `0-intro.md`, then `1-scope.md` to `8-review.md`. The names are `N-slug.md`, and the number is the order.
-- Page titles: the intro is `# Tutorial: <Name>` (for example `# Tutorial: Wine ontology`). Each step is `# Step N: <Word>` (`# Step 4: Classes`). Use the word the Methodology step uses.
+- Page titles: the intro is `# Tutorial: <Name>` (for example `# Tutorial: Wine ontology`). Each step is `# Step N: <Word>` (`# Step 4: Classes`). Use the word the Method step uses.
 - Routes live in `site/src/nav.ts`: the intro at `/getting-started/tutorial/<name>/` and the steps at `/getting-started/tutorial/<name>/N-slug/`. The sidebar label for the intro is the page title. The labels for the steps are `1. Scope`, `2. Reuse` and so on. Add every generated page there, or `tests/site.test.ts` fails.
 - Never edit `examples/<name>/tutorial/` or `TRANSCRIPT.md`. They're generated. Edit the sources and run `npm run example`.
 
@@ -22,7 +22,7 @@ Keep these sections in this order, with these names. The same names on every pag
 
 ### A step page
 
-1. `## Introduction`: one sentence that says the goal, then a short paragraph on why it matters, using a concrete problem ("without this, you can't tell when you're done"). Define the step's key term here, once, with a glossary link and an example ("A class is a kind of thing, like Wine or Winery."). End the section with the sentence "You can read the full guide to this step in [Methodology](...)." as the last sentence of the last paragraph, not on its own line.
+1. `## Introduction`: one sentence that says the goal, then a short paragraph on why it matters, using a concrete problem ("without this, you can't tell when you're done"). Define the step's key term here, once, with a glossary link and an example ("A class is a kind of thing, like Wine or Winery."). End the section with the sentence "You can read the full guide to this step in [Method](...)." as the last sentence of the last paragraph, not on its own line.
 2. `## What you'll make`: what exists when the step is done, with real numbers ("21 classes in a tree").
 3. The commands. Use one section, `## Run the commands`, for a short step. For a long step, split into short sections named for what they do: `## Add Wine`, `## Add colors`, `## Settle the terms`. Each section has a sentence or two that tells the reader what to do, then the command block.
 4. `## Read the output`: what the reader should look at in what okb printed, as a short list. Keep it right after the commands. If a note explains one command, put it directly under that command instead (the `Wines` refusal on step 4 does this).
@@ -65,7 +65,7 @@ Each item names the mistake in bold, then says what goes wrong. Put no links in 
 - Use relative paths from `examples/<name>/tutorial/`: `../../../docs/GLOSSARY.md#concept-class`. A remark plugin turns them into routes, and the build fails on a link to a `.md` file with no route.
 - The anchor is the meta-KB id with the dot changed to a dash: `concept-class`, `concept-disjoint`, `step-4-classes`. Check that each anchor exists in the generated doc (`grep '<a id="concept-x">' docs/GLOSSARY.md`), because the build doesn't.
 - Link a command to its reference: `[`okb convention`](../../../docs/CLI.md#cmd-convention)`. The anchors in `docs/CLI.md` are `cmd-<command>`.
-- Link the matching Methodology step: `../../../docs/METHOD.md#step-N-slug`.
+- Link the matching Method step: `../../../docs/METHOD.md#step-N-slug`.
 - Link between tutorial pages with the file name: `[Step 1](1-scope.md)`.
 - Links to other sites show a small arrow on their own. Use the real title as the link text, and say when the target is a PDF.
 

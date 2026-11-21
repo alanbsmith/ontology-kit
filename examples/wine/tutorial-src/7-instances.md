@@ -4,7 +4,7 @@
 
 Add real examples to test the model you've built.
 
-Until now you've described kinds of things. An [instance](../../../docs/GLOSSARY.md#concept-instance) is one real thing: this winery, this bottle. Adding a few is the quickest way to find out whether your [classes](../../../docs/GLOSSARY.md#concept-class) and [slots](../../../docs/GLOSSARY.md#concept-slot) work. If a real wine doesn't fit, the model needs fixing. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-7-instances).
+Until now you've described kinds of things. An [instance](../../../docs/GLOSSARY.md#concept-instance) is one real thing: this winery, this bottle. Adding a few is the quickest way to find out whether your [classes](../../../docs/GLOSSARY.md#concept-class) and [slots](../../../docs/GLOSSARY.md#concept-slot) work. If a real wine doesn't fit, the model needs fixing. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-7-instances).
 
 ## What you'll make
 

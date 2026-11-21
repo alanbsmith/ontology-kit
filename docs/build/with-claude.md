@@ -29,7 +29,7 @@ You can also type `/ontology-coach`. Claude first checks that `okb` runs and tha
 
 ## What to expect
 
-The coach follows the eight steps in [Methodology](../METHOD.md), one at a time:
+The coach follows the eight steps in [Method](../METHOD.md), one at a time:
 
 1. **It asks what you want to model**, and what you'll use it for. That's one question, then it creates the folder with `okb init`.
 2. **It teaches just in time.** Before it asks you to choose between a class and a property, it explains both in a sentence or two, with an example from your subject.

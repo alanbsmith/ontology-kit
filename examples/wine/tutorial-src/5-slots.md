@@ -4,7 +4,7 @@
 
 Describe what you can say about each class: its color, its maker, the foods it pairs with.
 
-A class with no description is just a name. [Slots](../../../docs/GLOSSARY.md#concept-slot) are how an ontology holds facts. They also keep the model tidy, because you attach each slot to one class and every class below it gets it for free ([inheritance](../../../docs/GLOSSARY.md#concept-inheritance)). You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-5-slots).
+A class with no description is just a name. [Slots](../../../docs/GLOSSARY.md#concept-slot) are how an ontology holds facts. They also keep the model tidy, because you attach each slot to one class and every class below it gets it for free ([inheritance](../../../docs/GLOSSARY.md#concept-inheritance)). You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-5-slots).
 
 ## What you'll make
 

@@ -4,7 +4,7 @@
 
 Write down every noun and phrase people use when they talk about your subject. Don't sort them yet.
 
-A messy list now saves you from missing a kind of thing later. It's much easier to throw a term away in step 4 than to notice a gap in step 7. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-3-terms).
+A messy list now saves you from missing a kind of thing later. It's much easier to throw a term away in step 4 than to notice a gap in step 7. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-3-terms).
 
 ## What you'll make
 

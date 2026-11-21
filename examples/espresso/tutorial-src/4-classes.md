@@ -4,7 +4,7 @@
 
 Turn the things on your term list into classes, and arrange them from general to specific.
 
-A [class](../../../docs/GLOSSARY.md#concept-class) is a kind of thing, like Drink or Ingredient. A class below another is its [subclass](../../../docs/GLOSSARY.md#concept-subclass): a Latte is a kind of MilkDrink. Everything you say about MilkDrink later also applies to every subclass. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-4-classes).
+A [class](../../../docs/GLOSSARY.md#concept-class) is a kind of thing, like Drink or Ingredient. A class below another is its [subclass](../../../docs/GLOSSARY.md#concept-subclass): a Latte is a kind of MilkDrink. Everything you say about MilkDrink later also applies to every subclass. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-4-classes).
 
 ## What you'll make
 

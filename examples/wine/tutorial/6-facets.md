@@ -6,7 +6,7 @@
 
 Add the limits that let okb check your data: [fixed values](../../../docs/GLOSSARY.md#concept-fixed-value), [defaults](../../../docs/GLOSSARY.md#concept-default-value) and [inverse slots](../../../docs/GLOSSARY.md#concept-inverse-slots).
 
-You want every wine's body to be light, medium or full, never "pretty strong". A [facet](../../../docs/GLOSSARY.md#concept-facet) is how you say that. You already set several in step 5, with `--values`, `--card` and `--min`. This step adds the rest. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-6-facets).
+You want every wine's body to be light, medium or full, never "pretty strong". A [facet](../../../docs/GLOSSARY.md#concept-facet) is how you say that. You already set several in step 5, with `--values`, `--card` and `--min`. This step adds the rest. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-6-facets).
 
 ## What you'll make
 

@@ -6,7 +6,7 @@
 
 Check whether someone has already modeled part of your subject, and write down what you found.
 
-If a good wine vocabulary exists, borrowing its terms saves time. It also makes your data easier to combine with other people's. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-2-reuse).
+If a good wine vocabulary exists, borrowing its terms saves time. It also makes your data easier to combine with other people's. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-2-reuse).
 
 ## What you'll make
 

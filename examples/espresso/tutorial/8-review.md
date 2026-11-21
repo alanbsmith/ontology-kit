@@ -6,7 +6,7 @@
 
 Check the ontology against the questions you wrote in step 1, add rules, and run every check.
 
-An ontology is only good if it does its job. This step is where you find out, and where you decide what to change. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-8-review).
+An ontology is only good if it does its job. This step is where you find out, and where you decide what to change. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-8-review).
 
 ## What you'll make
 

@@ -61,7 +61,7 @@ test("site: every generated tutorial page has a route, in step order after the i
 
 test("site: the sidebar lists every step and decision guide from the meta-KB, by stable anchor", () => {
   const hrefs = sidebar(nodes).flatMap((g) => g.links.flatMap(withChildren));
-  for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(hrefs.includes(`/build/methodology/#${n.id.replace(/\./g, "-")}`), n.id);
+  for (const n of nodes.filter((n) => n.type === "Step")) assert.ok(hrefs.includes(`/reference/method/#${n.id.replace(/\./g, "-")}`), n.id);
   for (const n of nodes.filter((n) => n.type === "Decision")) assert.ok(hrefs.includes(`/reference/decisions/#${n.id.replace(/\./g, "-")}`), n.id);
   // The anchors exist in the generated pages.
   const method = readFileSync(join(ROOT, "docs/METHOD.md"), "utf8");
@@ -103,7 +103,7 @@ test("site: links are rewritten to routes or GitHub, and a link to an unrouted .
     run({ type: "root", children: [link] }, { path: join(ROOT, from) });
     return link.url;
   };
-  assert.equal(rewrite("METHOD.md#step-2-reuse"), "/build/methodology/#step-2-reuse");
+  assert.equal(rewrite("METHOD.md#step-2-reuse"), "/reference/method/#step-2-reuse");
   assert.equal(rewrite("../../../docs/DECISIONS.md", "examples/wine/tutorial/0-intro.md"), "/reference/decisions/");
   assert.equal(rewrite("meta-kb/README.md", "CONTRIBUTING.md"), "/contributing/meta-kb/");
   assert.equal(rewrite("../README.md"), "https://github.com/alanbsmith/ontology-kit/blob/main/README.md");
@@ -135,7 +135,7 @@ test("site: sidebar sections open for the page being read, and only those", () =
   // A child page opens its parent link and its group, and nothing else.
   assert.deepEqual(open(`${tutorial}3-terms/`).sort(), ["group:Getting started", `link:${tutorial}`].sort());
   // A link with children opens when it is the page itself; its siblings and other groups stay shut.
-  assert.deepEqual(open("/build/methodology/").sort(), ["group:Build", "link:/build/methodology/"].sort());
+  assert.deepEqual(open("/reference/method/").sort(), ["group:Reference", "link:/reference/method/"].sort());
   // A page without children opens its group only.
   assert.deepEqual(open("/reference/glossary/"), ["group:Reference"]);
   // Routes outside the sidebar open nothing.

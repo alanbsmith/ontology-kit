@@ -4,7 +4,7 @@
 
 Narrow each slot: which values it allows, which are fixed, and which links are the same link read both ways.
 
-A [facet](../../../docs/GLOSSARY.md#concept-facet) is a rule about a slot, such as how many values it takes. Facets make the ontology checkable. A [fixed value](../../../docs/GLOSSARY.md#concept-fixed-value) is a value every member of a class has, such as "every lungo is 60 ml". You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-6-facets).
+A [facet](../../../docs/GLOSSARY.md#concept-facet) is a rule about a slot, such as how many values it takes. Facets make the ontology checkable. A [fixed value](../../../docs/GLOSSARY.md#concept-fixed-value) is a value every member of a class has, such as "every lungo is 60 ml". You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-6-facets).
 
 ## What you'll make
 
