@@ -19,14 +19,13 @@ pnpm test
 
 ## Skills
 
-To use the ontology-coach skill with Claude, link it from the kit folder:
+Install the skills that come with okb, the ontology-coach skill among them:
 
 ```bash
-mkdir -p ~/.claude/skills
-ln -s "$PWD/packages/okb/skills/ontology-coach" ~/.claude/skills/ontology-coach
+okb skills install
 ```
 
-Claude Code and Cursor both load skills from `~/.claude/skills/`, and the link keeps the skill current when you update the repo. Start it by asking `coach me through building an ontology`, or with `/ontology-coach`. The other skills in `skills/` install the same way.
+This links them into `~/.claude/skills/`, which Claude Code and Cursor both load skills from, and the links keep the skills current when you update the repo. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
 
 ## Updating
 
@@ -49,7 +48,7 @@ okb version
 
 You don't need to run `pnpm add --global link:./packages/okb` again. It points at this folder, so `okb` runs the new code right away. Link again only if you switch Node versions or move the folder.
 
-Skills you linked into `~/.claude/skills/` update with the repo. If you copied or uploaded them instead, replace the old copies with the new ones from `packages/okb/skills/`. Either way, start a new Claude session so it loads the new version.
+Skills installed with `okb skills install` update with the repo. If they were copies (`--copy`), run `okb skills install --copy` again. Check with `okb skills status`, then start a new Claude session so it loads the new version.
 
 Existing ontologies keep working: okb converts older file formats when it loads them, and new rules only add findings.
 

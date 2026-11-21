@@ -262,6 +262,18 @@ okb verify rule.1 --status SUPPORTED
 
 </div>
 
+## Skills
+
+<div class="cheat-card">
+
+Install the Claude skills that ship with okb:
+
+```bash
+okb skills install
+```
+
+</div>
+
 ## Housekeeping
 
 <div class="cheat-card">

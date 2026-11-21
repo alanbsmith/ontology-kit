@@ -26,25 +26,41 @@ Turns documentation, usually markdown, into an ontology. It quotes the document 
 
 See [From existing docs](../EXTRACTION-PIPELINE.md) for the pipeline.
 
-## Install a skill
+## Install the skills
 
-okb has no command that installs skills yet. To install a skill, link its folder into `~/.claude/skills/`, which Claude Code loads skills from. Run this from your `ontology-kit` folder:
+The skills come in the same package as `okb`, so one command installs them all at the version that matches your okb:
 
 ```bash
-mkdir -p ~/.claude/skills
-ln -s "$PWD/packages/okb/skills/ontology-coach" ~/.claude/skills/ontology-coach
-ln -s "$PWD/packages/okb/skills/ontology-review" ~/.claude/skills/ontology-review
-ln -s "$PWD/packages/okb/skills/build-domain-kb-from-docs" ~/.claude/skills/build-domain-kb-from-docs
-ls ~/.claude/skills
+okb skills install
 ```
 
 ```text
-build-domain-kb-from-docs
-ontology-coach
-ontology-review
+✓ Skills in /Users/you/.claude/skills
+  build-domain-kb-from-docs: linked
+  ontology-coach: linked
+  ontology-review: linked
+
+  Start a new Claude Code or Cursor session to load them.
 ```
 
-Link only the ones you want. A link keeps the skill current when you `git pull` the repo. If you copy a folder instead, replace it when you update. Start a new Claude session after you install or update a skill, so it loads the new version. The [Installation](../getting-started/installation.md) page has the rest of the update steps.
+Claude Code loads skills from `~/.claude/skills/`, and Cursor reads that folder too. By default each skill is a link to the folder inside your okb install, so it stays current when okb updates. Add `--copy` to copy the folders instead (run the command again after you update okb), or `--dir <folder>` to use another skills folder, such as `~/.cursor/skills`. The `OKB_SKILLS_DIR` environment variable sets the folder as well.
+
+Installing again is safe. It replaces a link to an older okb, a broken link or an older copy. It refuses to touch a folder in that place that isn't one of okb's skills, and says what it found and that nothing changed. If you want okb to delete it and take its place, run `okb skills install --force`.
+
+To see what's installed and whether it matches your okb, run `okb skills status`. It exits with code 1 when a skill is missing or out of date:
+
+```bash
+okb skills status
+```
+
+```text
+Skills in /Users/you/.claude/skills  (okb meta-KB 2.4.1)
+  ✓ build-domain-kb-from-docs  linked to this okb, version 2.4.1
+  ✓ ontology-coach             linked to this okb, version 2.4.1
+  ✓ ontology-review            linked to this okb, version 2.4.1
+```
+
+Start a new Claude session after you install or update the skills, so it loads the new version. The [Installation](../getting-started/installation.md) page has the rest of the update steps.
 
 ## Check the version
 
@@ -64,4 +80,4 @@ okb version
 okb 1.0.0 · meta-KB 2.4.1
 ```
 
-Each skill checks the two numbers when it starts. If they differ, it tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.
+Each skill checks the two numbers when it starts, and `okb skills status` checks them for you. If they differ, run `okb skills install` to refresh the skills. A skill that finds a mismatch tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.

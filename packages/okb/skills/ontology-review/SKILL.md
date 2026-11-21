@@ -11,7 +11,7 @@ Give an okb ontology a second opinion. `okb validate` already covers the mechani
 
 ## 1. Gather
 
-1. Find okb: `okb version`, or `node <ontology-kit>/packages/okb/src/cli.ts`. Node 24+. Compare the meta-KB version it prints with this skill's version (top of this file). If they differ, tell the user that the skill or okb is out of date (the Installation page, <https://ontology-kit.dev/getting-started/installation/>, explains how to update) before going on. The docs are readable as plain markdown: <https://ontology-kit.dev/llms.txt> lists every page with a one-line summary, and each page has a `.md` version.
+1. Find okb: `okb version` (Node 24+; if it isn't installed, `npm install --global @ontology-kit/okb`, or from a clone of the repo `node <ontology-kit>/packages/okb/src/cli.ts`). Compare the meta-KB version it prints with this skill's version (top of this file). If they differ, tell the user that the skill or okb is out of date and offer to run `okb skills status`, then `okb skills install` to refresh the skills from this okb (the Installation page, <https://ontology-kit.dev/getting-started/installation/>, covers updating okb itself), before going on. The docs are readable as plain markdown: <https://ontology-kit.dev/llms.txt> lists every page with a one-line summary, and each page has a `.md` version.
 2. In the ontology folder, collect:
    - `okb status --json`: the step they're on and what's complete
    - `okb validate --all --json`: mechanical and heuristic findings

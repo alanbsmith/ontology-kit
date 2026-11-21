@@ -21,7 +21,7 @@ pnpm install
 pnpm add --global link:./packages/okb
 ```
 
-Then `okb init my-ontology` starts one. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.
+Then `okb skills install` adds the Claude skills (Claude Code and Cursor both load them), and `okb init my-ontology` starts an ontology. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.
 
 ## License
 

@@ -558,6 +558,29 @@ export const COMMANDS: Command[] = [
     }],
   },
   {
+    name: "skills",
+    group: "Skills",
+    description: "Puts the skills that come with okb where Claude Code and Cursor load them from, and checks that they match this okb.",
+    forms: [
+      {
+        sub: "install",
+        description: "Links the three skills into `~/.claude/skills/` (a link keeps them current when the package updates), or copies them. It replaces a link to an older okb, a broken link or an older copy. It refuses to touch a folder that is not one of okb's, and changes nothing if it refuses.",
+        examples: ["okb skills install", "okb skills install --copy", "okb skills install --dir ~/.cursor/skills"],
+        args: [
+          ["--copy", "flag", "Copy the skill folders instead of linking to them. Run it again after you update okb."],
+          ["--dir", "path", "The skills folder to use instead of `~/.claude/skills/`. The `OKB_SKILLS_DIR` environment variable sets it too."],
+          ["--force", "flag", "Delete a folder or file that is not one of okb's skills (or a copy you edited) and put the skill in its place."],
+        ],
+      },
+      {
+        sub: "status",
+        description: "Lists each skill with where it is installed and whether its version matches this okb. It exits with code 1 when any skill is missing or out of date.",
+        examples: ["okb skills status", "okb skills status --dir ~/.cursor/skills"],
+        args: [["--dir", "path", "The skills folder to check instead of `~/.claude/skills/`."]],
+      },
+    ],
+  },
+  {
     name: "rename",
     group: "Housekeeping",
     description: "Renames a class, slot or instance and updates everything that points to it.",
@@ -616,6 +639,7 @@ export const CHEAT_SHEET: { example: string; description: string }[] = [
   { example: 'okb quote add button "verbatim text" --cites Button', description: "Record a quote" },
   { example: 'okb rule add --statement "..." --modality SHOULD --cites quote.1', description: "Record a rule a document states" },
   { example: "okb verify rule.1 --status SUPPORTED", description: "Record an independent check" },
+  { example: "okb skills install", description: "Install the Claude skills that ship with okb" },
   { example: "okb rename Vino Wine", description: "Rename something everywhere" },
   { example: "okb remove Vino", description: "Delete something" },
 ];

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -101,6 +101,21 @@ describe("published packages", { skip: SKIP }, () => {
     const pkgDir = join(install, "node_modules", "@ontology-kit", "okb");
     assert.ok(existsSync(join(pkgDir, "dist", "cli.js")));
     assert.ok(!existsSync(join(pkgDir, "src")));
+  });
+
+  it("installs the packaged skills from the installed copy, linked or copied, at the installed version", () => {
+    const pkgDir = join(install, "node_modules", "@ontology-kit", "okb");
+    const meta = okb("version").match(/meta-KB (\S+)/)![1];
+    const skillsDir = join(work, "skills");
+    assert.match(okb("skills", "install", "--dir", skillsDir), /ontology-coach: linked/);
+    assert.equal(realpathSync(join(skillsDir, "ontology-coach")), realpathSync(join(pkgDir, "skills", "ontology-coach")));
+    assert.match(okb("skills", "status", "--dir", skillsDir), new RegExp(`ontology-review +linked to this okb, version ${meta.replace(/\./g, "\\.")}`));
+    for (const n of ["ontology-coach", "ontology-review", "build-domain-kb-from-docs"]) {
+      assert.match(readFileSync(join(skillsDir, n, "SKILL.md"), "utf8"), new RegExp(`^\\*\\*Version ${meta.replace(/\./g, "\\.")}\\.\\*\\*`, "m"));
+    }
+    const copies = join(work, "skill-copies");
+    okb("skills", "install", "--copy", "--dir", copies);
+    assert.match(okb("skills", "status", "--dir", copies), /a copy of this okb's skill/);
   });
 
   it("explains how to read a PDF when pdfjs-dist is not installed", () => {

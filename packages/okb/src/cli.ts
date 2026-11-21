@@ -13,6 +13,7 @@ import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
+import { installSkills, skillsStatus, type SkillState } from "./skills.ts";
 
 type Opts = NonNullable<ParseArgsConfig["options"]>;
 const str = { type: "string" } as const;
@@ -627,6 +628,30 @@ async function main(argvIn: string[]) {
       return output(v, () => hits, () => {
         if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
         for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
+      });
+    }
+
+    case "skills": {
+      const SKILLS_USAGE = "Usage: okb skills install [--copy] [--dir <folder>] [--force]  ·  okb skills status [--dir <folder>]";
+      if (sub !== "install" && sub !== "status") throw new OkbError(SKILLS_USAGE);
+      const { v, p } = parse(rest.slice(1), sub === "install" ? { copy: bool, dir: str, force: bool } : { dir: str });
+      if (p.length) throw new OkbError(SKILLS_USAGE);
+      const opts = { dir: v.dir, metaVersion: MetaKB.get().version };
+      if (sub === "install") {
+        const { dir, lines } = installSkills({ ...opts, copy: v.copy, force: v.force });
+        if (v.json) return void console.log(JSON.stringify({ dir, lines }, null, 2));
+        console.log(`${SYMBOL.ok} Skills in ${dir}`);
+        for (const l of lines) console.log(`  ${l}`);
+        console.log(c.dim("\n  Start a new Claude Code or Cursor session to load them."));
+        return;
+      }
+      const { dir, skills } = skillsStatus(opts);
+      const good = (s: SkillState) => s === "current";
+      if (!skills.every((s) => good(s.state))) process.exitCode = 1;
+      return output(v, () => ({ dir, metaKbVersion: opts.metaVersion, skills }), () => {
+        console.log(c.bold(`Skills in ${dir}`) + c.dim(`  (okb meta-KB ${opts.metaVersion})`));
+        for (const s of skills) console.log(`  ${good(s.state) ? SYMBOL.ok : s.state === "missing" ? SYMBOL.todo : SYMBOL.warning} ${s.name.padEnd(26)} ${s.detail}`);
+        if (!skills.every((s) => good(s.state))) console.log(c.dim("\n  Fix it with: okb skills install"));
       });
     }
 

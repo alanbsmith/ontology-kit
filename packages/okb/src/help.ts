@@ -49,6 +49,9 @@ Documents              okb source add docs/button.md [--repo-url https://github.
                        okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] · okb verify <node> --approve
                        okb source refresh <source>                            after the document changes
 
+Skills                 okb skills install [--copy] [--dir <folder>] [--force]    link (or copy) the packaged skills into ~/.claude/skills
+                       okb skills status [--dir <folder>]                         which are installed, where, and whether they match this okb
+
 Also: okb show <name> · okb rename <old> <new> · okb remove <name> · okb drift <folder>...
 Names: when a class and a slot share a name, say which: class:Genre / slot:genre
 Global options: -C <folder> (default: current folder) · --json (machine-readable output where supported)`;
