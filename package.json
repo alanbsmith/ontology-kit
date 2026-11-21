@@ -1,6 +1,6 @@
 {
   "name": "ontology-kit-workspace",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "The Ontology Kit repository: a pnpm workspace holding the okb package (packages/okb) and the docs site (site), plus repo-wide docs tooling.",
   "type": "module",

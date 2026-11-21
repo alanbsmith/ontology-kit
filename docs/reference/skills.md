@@ -77,7 +77,7 @@ okb version
 ```
 
 ```text
-okb 1.0.0 · meta-KB 2.4.1
+okb 0.1.0 · meta-KB 2.4.1
 ```
 
 Each skill checks the two numbers when it starts, and `okb skills status` checks them for you. If they differ, run `okb skills install` to refresh the skills. A skill that finds a mismatch tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.

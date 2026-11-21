@@ -85,7 +85,7 @@ async function main(argvIn: string[]) {
 
     case "version":
     case "--version":
-      console.log(`okb 1.0.0 · meta-KB ${MetaKB.get().version}`);
+      console.log(`okb 0.1.0 · meta-KB ${MetaKB.get().version}`);
       return;
 
     case "init": {
