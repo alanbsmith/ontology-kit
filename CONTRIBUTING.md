@@ -4,13 +4,13 @@ This page is for changing Ontology Kit itself. To use it, start with the [Introd
 
 ## Setup
 
-You need Node.js 24+ (see [Installation](docs/getting-started/installation.md)). Then `npm install` in the repo root.
+You need Node.js 26 (see [Installation](docs/getting-started/installation.md)). Then `npm install` in the repo root.
 
 ## Repository layout
 
 ```text
 bin/okb.js              launcher (npm link target)
-src/                    okb source (TypeScript, Node 24 type stripping)
+src/                    okb source (TypeScript, Node type stripping)
   cli.ts ops.ts ops/    commands and the operations behind them (ops/ split by reason to change)
   checks.ts status.ts   validator (one check per rule) and step progress
   model.ts types.ts     graph model and the typed okb file format

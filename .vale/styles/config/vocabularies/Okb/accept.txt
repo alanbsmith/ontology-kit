@@ -65,3 +65,6 @@ CafeBombon
 [Mm]ocha
 [Gg]elato
 READMEs
+[Ww]orktrees?
+PR's
+[Rr]ebase

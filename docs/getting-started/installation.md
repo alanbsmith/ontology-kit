@@ -1,6 +1,6 @@
 # Installation
 
-okb needs **Node.js 24+**. It runs its TypeScript source directly, so there's no build step.
+okb needs **Node.js 24 or newer**. It runs its TypeScript source directly, so there's no build step.
 
 ```bash
 git clone https://github.com/alanbsmith/ontology-kit

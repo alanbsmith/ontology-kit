@@ -16,7 +16,7 @@ Check again, and bring the branch up to date, before you commit or open a PR, an
 
 ## Commands
 
-Requires **Node 24+** (see `.nvmrc`). No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
+Requires **Node 26** for development (see `.nvmrc`); okb itself runs on Node 24 or newer. No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
 
 ```bash
 npm test                                   # all suites (node:test)
