@@ -6,7 +6,7 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 
 ## Package releases
 
-### 0.1.0 (unreleased)
+### 0.1.0 (2026-11-21)
 
 The first release. Version 0.x means anything may change between releases; see [Releases](../CONTRIBUTING.md#releases) for what 1.0 will promise.
 
