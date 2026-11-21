@@ -34,17 +34,19 @@ You're done when
 Tips
   • Competency questions are a sketch, not a contract. You'll add and change them.
   • Don't try to list every question now. Write a few examples; each stands for a family of
-  similar questions, and okb will suggest the rest of the family once a question is answered
-  (okb cq link).
+  similar questions, and you can fill in the rest of the family once a question is answered.
   • Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell
   me about wine'.
   • Include a few questions that need relationships (X goes with Y), not only lookups (what
   color is X).
 
 In Ontology 101's wine example
-  Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery
-  inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet
-  Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'
+  • Domain: wine and food
+  • Purpose: suggest good wine–food combinations
+  • Out of scope: winery inventory, restaurant staff
+  • Question: Is Bordeaux a red or white wine?
+  • Question: Does Cabernet Sauvignon go well with seafood?
+  • Question: What is the best choice of wine for grilled meat?
 
 Commands
   okb scope   okb cq add
@@ -136,7 +138,7 @@ Tips
   Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting
   components, tokens and themes.
   • You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually
-  enough: okb reuse add --name ... --url ... --decision reference.
+  enough.
 
 In Ontology 101's wine example
   Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties
@@ -199,8 +201,8 @@ Tips
   • Mine your competency questions and any documents you collected in Step 2.
 
 In Ontology 101's wine example
-  wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat,
-  white wine, and so on.
+  Terms in the wine example include wine, grape, winery, location, a wine's color, body, flavor
+  and sugar content, fish, red meat and white wine.
 
 Commands
   okb term add
@@ -257,8 +259,8 @@ Questions to answer
 You're done when
   ○ A naming convention is set
   ○ At least two classes, organized with at least one is-a link
-  ○ No errors in hierarchy checks
-  ? You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a
+  ○ The class hierarchy has no known mistakes
+  ? You've stood back and looked at the whole tree, checking each is-a link against the "Is this really a subclass?" guide
 
 Tips
   • Steps 4 and 5 are intertwined. It's normal to add a few classes, then a few slots, then go
@@ -268,8 +270,10 @@ Tips
   • Mark 'grouping only' classes as abstract.
 
 In Ontology 101's wine example
-  Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc
-  → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.
+  • Wine → Red Wine, White Wine, Rosé Wine
+  • Red Wine → Bordeaux, Burgundy, and so on
+  • Bordeaux → Médoc → Pauillac, Margaux
+  • Port has two parents: Red Wine and Dessert Wine
 
 Decision guides for this step  (okb explain <id>)
   decision.approach            Top-down, bottom-up, or combination?
@@ -443,8 +447,8 @@ Wine and Food  · 21 classes · 0 slots · 0 instances · 6 questions
 ✓ 4. Define the classes and the class hierarchy ◀ you are here
      ✓ A naming convention is set
      ✓ At least two classes, organized with at least one is-a link
-     ✓ No errors in hierarchy checks
-     ? You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a
+     ✓ The class hierarchy has no known mistakes
+     ? You've stood back and looked at the whole tree, checking each is-a link against the "Is this really a subclass?" guide
 ○ 5. Define the properties of classes (slots)
 ○ 6. Define the facets of the slots
 ○ 7. Create instances
@@ -485,8 +489,9 @@ Tips
   • If you're attaching the same slot to every child, attach it to the parent instead.
 
 In Ontology 101's wine example
-  Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces.
-  Red Wine gets tanninLevel, because white wines aren't described by tannin.
+  • Wine gets: color, body, flavor, sugar, name, maker, grape
+  • Winery gets: location, produces
+  • Red Wine gets: tanninLevel, because white wines aren't described by tannin
 
 Decision guides for this step  (okb explain <id>)
   decision.slot-placement      Which class does this slot go on?
@@ -594,7 +599,7 @@ Questions to answer
 
 You're done when
   ○ Every slot has a value type and cardinality
-  ○ No errors in slot checks
+  ○ The slots have no known mistakes
 
 Tips
   • When in doubt about range, pick the most general class that still only contains valid
@@ -602,8 +607,10 @@ Tips
   • Defaults are suggestions; fixed values are facts. Don't confuse them.
 
 In Ontology 101's wine example
-  body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine,
-  multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.
+  • body: one of light, medium or full, and only one value
+  • produces (on Winery): points to Wine, can have many values, and is the inverse of maker
+  • grape: at least one value
+  • Dessert Wine: sugar is fixed at sweet
 
 Decision guides for this step  (okb explain <id>)
   decision.range               What should this slot's range be?
@@ -682,7 +689,7 @@ Wine and Food  · 21 classes · 11 slots · 0 instances · 6 questions
 ✓ 5. Define the properties of classes (slots)
 ✓ 6. Define the facets of the slots ◀ you are here
      ✓ Every slot has a value type and cardinality
-     ✓ No errors in slot checks
+     ✓ The slots have no known mistakes
 ○ 7. Create instances
 ○ 8. Review against your questions, and iterate
 
@@ -709,7 +716,7 @@ Questions to answer
 
 You're done when
   ○ At least a few instances (enough to answer one competency question end to end)
-  ○ No errors in instance checks
+  ○ The instances have no known mistakes
 
 Tips
   • Start with instances that answer one competency question completely. It's the fastest way to
@@ -718,8 +725,9 @@ Tips
   strict.
 
 In Ontology 101's wine example
-  Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate,
-  tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.
+  • Château Morgon Beaujolais is an instance of Beaujolais, with:
+  • body light, color red, flavor delicate, tannin low
+  • grape Gamay, maker Château Morgon, region Beaujolais, sugar dry
 
 Decision guides for this step  (okb explain <id>)
   decision.instance-or-class   Instance or class?
@@ -830,7 +838,7 @@ Wine and Food  · 21 classes · 11 slots · 9 instances · 6 questions
 ✓ 6. Define the facets of the slots
 ✓ 7. Create instances ◀ you are here
      ✓ At least a few instances (enough to answer one competency question end to end)
-     ✓ No errors in instance checks
+     ✓ The instances have no known mistakes
 ○ 8. Review against your questions, and iterate
 
 Validator (steps 1–7): ✗ 0  ! 0  i 2   okb validate for details
@@ -862,8 +870,8 @@ Questions to answer
 You're done when
   ○ Every competency question is linked to what answers it
   ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
-  ○ No errors from okb validate
-  ○ Every remaining warning is fixed or explained in a design decision
+  ○ The whole ontology has no known mistakes
+  ○ Every remaining issue is fixed or explained in a design decision
   ? Someone who knows the domain has looked at it
 
 Tips
@@ -966,8 +974,8 @@ Wine and Food  · 21 classes · 11 slots · 9 instances · 6 questions
 ✓ 8. Review against your questions, and iterate ◀ you are here
      ✓ Every competency question is linked to what answers it
      ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
-     ✓ No errors from okb validate
-     ✓ Every remaining warning is fixed or explained in a design decision
+     ✓ The whole ontology has no known mistakes
+     ✓ Every remaining issue is fixed or explained in a design decision
      ? Someone who knows the domain has looked at it
 
 Validator (steps 1–8): ✗ 0  ! 0  i 4   okb validate for details

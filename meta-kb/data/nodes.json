@@ -1065,7 +1065,7 @@
   {
     "type": "Principle",
     "id": "principle.structure-not-behavior",
-    "name": "Think in structure, not behavior (it's not object-oriented design)",
+    "name": "Think in structure, not behavior",
     "statement": "A programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class.",
     "plainLanguage": "If you write software, be careful: an ontology class is not a code class. You aren't grouping things by what they do or which code they share. You're grouping them by what they are. 'Is every X necessarily a Y?' is the only question that makes X a subclass of Y."
   },
@@ -2878,11 +2878,11 @@
     ],
     "tips": [
       "Competency questions are a sketch, not a contract. You'll add and change them.",
-      "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and okb will suggest the rest of the family once a question is answered (okb cq link).",
+      "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and you can fill in the rest of the family once a question is answered.",
       "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'.",
       "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
     ],
-    "wine": "Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'",
+    "wine": "Domain: wine and food\nPurpose: suggest good wine–food combinations\nOut of scope: winery inventory, restaurant staff\nQuestion: Is Bordeaux a red or white wine?\nQuestion: Does Cabernet Sauvignon go well with seafood?\nQuestion: What is the best choice of wine for grilled meat?",
     "commands": [
       "okb scope",
       "okb cq add"
@@ -2912,10 +2912,10 @@
     "tips": [
       "Even a glossary page or an existing database schema counts as a source of terms.",
       "Don't let this step stall you. 30 minutes of looking is usually enough for a first version.",
-      "Where to look: Linked Open Vocabularies (https://lov.linkeddata.es) searches hundreds of reusable vocabularies by term. schema.org (https://schema.org) covers everyday things: people, organizations, products, places, events and creative works.",
+      "Where to look: [Linked Open Vocabularies](https://lov.linkeddata.es) searches hundreds of reusable vocabularies by term. [schema.org](https://schema.org) covers everyday things: people, organizations, products, places, events and creative works.",
       "W3C vocabularies cover common needs: SKOS for taxonomies and thesauri, Dublin Core for document metadata, PROV-O for provenance, ORG for organizations and OWL-Time for dates and times.",
-      "For design systems: WAI-ARIA roles (https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The W3C Design Tokens format (https://www.designtokens.org) is the standard for tokens. DSDS, the Design System Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes.",
-      "You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough: okb reuse add --name ... --url ... --decision reference."
+      "For design systems: [WAI-ARIA roles](https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The [W3C Design Tokens format](https://www.designtokens.org) is the standard for tokens. DSDS, the [Design System Documentation Spec](https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes.",
+      "You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough."
     ],
     "wine": "Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes.",
     "commands": [
@@ -2950,7 +2950,7 @@
       "Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5.",
       "Mine your competency questions and any documents you collected in Step 2."
     ],
-    "wine": "wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat, white wine, and so on.",
+    "wine": "Terms in the wine example include wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat and white wine.",
     "commands": [
       "okb term add"
     ]
@@ -2983,11 +2983,11 @@
         "check": "classes_min2_with_isa"
       },
       {
-        "text": "No errors in hierarchy checks",
+        "text": "The class hierarchy has no known mistakes",
         "check": "no_errors_hierarchy"
       },
       {
-        "text": "You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a"
+        "text": "You've stood back and looked at the whole tree, checking each is-a link against the \"Is this really a subclass?\" guide"
       }
     ],
     "tips": [
@@ -2996,7 +2996,7 @@
       "Use singular names consistently (Wine, not Wines).",
       "Mark 'grouping only' classes as abstract."
     ],
-    "wine": "Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.",
+    "wine": "Wine → Red Wine, White Wine, Rosé Wine\nRed Wine → Bordeaux, Burgundy, and so on\nBordeaux → Médoc → Pauillac, Margaux\nPort has two parents: Red Wine and Dessert Wine",
     "commands": [
       "okb convention",
       "okb class add",
@@ -3036,7 +3036,7 @@
       "Name relationships as verbs or roles read from the domain class: a Wine has a maker; a Winery produces wines.",
       "If you're attaching the same slot to every child, attach it to the parent instead."
     ],
-    "wine": "Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces. Red Wine gets tanninLevel, because white wines aren't described by tannin.",
+    "wine": "Wine gets: color, body, flavor, sugar, name, maker, grape\nWinery gets: location, produces\nRed Wine gets: tanninLevel, because white wines aren't described by tannin",
     "commands": [
       "okb property add",
       "okb relationship add",
@@ -3072,7 +3072,7 @@
         "check": "slots_faceted"
       },
       {
-        "text": "No errors in slot checks",
+        "text": "The slots have no known mistakes",
         "check": "no_errors_slots"
       }
     ],
@@ -3080,7 +3080,7 @@
       "When in doubt about range, pick the most general class that still only contains valid fillers.",
       "Defaults are suggestions; fixed values are facts. Don't confuse them."
     ],
-    "wine": "body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine, multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.",
+    "wine": "body: one of light, medium or full, and only one value\nproduces (on Winery): points to Wine, can have many values, and is the inverse of maker\ngrape: at least one value\nDessert Wine: sugar is fixed at sweet",
     "commands": [
       "okb slot set",
       "okb relationship inverse",
@@ -3111,7 +3111,7 @@
         "check": "instances_min3"
       },
       {
-        "text": "No errors in instance checks",
+        "text": "The instances have no known mistakes",
         "check": "no_errors_instances"
       }
     ],
@@ -3119,7 +3119,7 @@
       "Start with instances that answer one competency question completely. It's the fastest way to find gaps.",
       "An instance that won't fit anywhere usually means a class is missing or a facet is too strict."
     ],
-    "wine": "Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate, tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.",
+    "wine": "Château Morgon Beaujolais is an instance of Beaujolais, with:\nbody light, color red, flavor delicate, tannin low\ngrape Gamay, maker Château Morgon, region Beaujolais, sugar dry",
     "commands": [
       "okb instance add",
       "okb instance set"
@@ -3153,11 +3153,11 @@
         "text": "Each question's family has been considered: wanted questions added, the rest recorded as out of scope"
       },
       {
-        "text": "No errors from okb validate",
+        "text": "The whole ontology has no known mistakes",
         "check": "no_errors"
       },
       {
-        "text": "Every remaining warning is fixed or explained in a design decision",
+        "text": "Every remaining issue is fixed or explained in a design decision",
         "check": "warnings_explained"
       },
       {

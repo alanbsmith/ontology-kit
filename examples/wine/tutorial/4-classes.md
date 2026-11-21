@@ -270,8 +270,8 @@ Wine and Food  · 21 classes · 0 slots · 0 instances · 6 questions
 ✓ 4. Define the classes and the class hierarchy ◀ you are here
      ✓ A naming convention is set
      ✓ At least two classes, organized with at least one is-a link
-     ✓ No errors in hierarchy checks
-     ? You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a
+     ✓ The class hierarchy has no known mistakes
+     ? You've stood back and looked at the whole tree, checking each is-a link against the "Is this really a subclass?" guide
 ○ 5. Define the properties of classes (slots)
 ○ 6. Define the facets of the slots
 ○ 7. Create instances
@@ -317,8 +317,9 @@ Tips
   • If you're attaching the same slot to every child, attach it to the parent instead.
 
 In Ontology 101's wine example
-  Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces.
-  Red Wine gets tanninLevel, because white wines aren't described by tannin.
+  • Wine gets: color, body, flavor, sugar, name, maker, grape
+  • Winery gets: location, produces
+  • Red Wine gets: tanninLevel, because white wines aren't described by tannin
 
 Decision guides for this step  (okb explain <id>)
   decision.slot-placement      Which class does this slot go on?

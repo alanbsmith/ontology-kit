@@ -289,8 +289,8 @@ Espresso drinks  · 31 classes · 9 slots · 16 instances · 6 questions
 ▶ 8. Review against your questions, and iterate ◀ you are here
      ○ Every competency question is linked to what answers it
      ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
-     ✓ No errors from okb validate
-     ○ Every remaining warning is fixed or explained in a design decision
+     ✓ The whole ontology has no known mistakes
+     ○ Every remaining issue is fixed or explained in a design decision
      ? Someone who knows the domain has looked at it
 
 Validator (steps 1–8): ✗ 0  ! 1  i 6   okb validate for details

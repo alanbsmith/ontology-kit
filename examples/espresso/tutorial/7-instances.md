@@ -189,7 +189,7 @@ Espresso drinks  · 31 classes · 9 slots · 16 instances · 6 questions
 ✓ 6. Define the facets of the slots
 ✓ 7. Create instances ◀ you are here
      ✓ At least a few instances (enough to answer one competency question end to end)
-     ✓ No errors in instance checks
+     ✓ The instances have no known mistakes
 ○ 8. Review against your questions, and iterate
 
 Validator (steps 1–7): ✗ 0  ! 0  i 4   okb validate for details
@@ -224,8 +224,8 @@ Questions to answer
 You're done when
   ○ Every competency question is linked to what answers it
   ? Each question's family has been considered: wanted questions added, the rest recorded as out of scope
-  ○ No errors from okb validate
-  ○ Every remaining warning is fixed or explained in a design decision
+  ○ The whole ontology has no known mistakes
+  ○ Every remaining issue is fixed or explained in a design decision
   ? Someone who knows the domain has looked at it
 
 Tips

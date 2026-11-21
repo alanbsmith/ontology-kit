@@ -23,10 +23,16 @@ steps:
       - {text: "At least one thing is explicitly out of scope", check: scope_out}
     tips:
       - "Competency questions are a sketch, not a contract. You'll add and change them."
-      - "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and okb will suggest the rest of the family once a question is answered (okb cq link)."
+      - "Don't try to list every question now. Write a few examples; each stands for a family of similar questions, and you can fill in the rest of the family once a question is answered."
       - "Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell me about wine'."
       - "Include a few questions that need relationships (X goes with Y), not only lookups (what color is X)."
-    wine: "Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'"
+    wine: |-
+      Domain: wine and food
+      Purpose: suggest good wine–food combinations
+      Out of scope: winery inventory, restaurant staff
+      Question: Is Bordeaux a red or white wine?
+      Question: Does Cabernet Sauvignon go well with seafood?
+      Question: What is the best choice of wine for grilled meat?
     commands: ["okb scope", "okb cq add"]
     rules: [scope-defined, scope-competency-questions]
     concepts: [concept.scope, concept.competency-question, concept.conceptualization]
@@ -47,10 +53,10 @@ steps:
     tips:
       - "Even a glossary page or an existing database schema counts as a source of terms."
       - "Don't let this step stall you. 30 minutes of looking is usually enough for a first version."
-      - "Where to look: Linked Open Vocabularies (https://lov.linkeddata.es) searches hundreds of reusable vocabularies by term. schema.org (https://schema.org) covers everyday things: people, organizations, products, places, events and creative works."
+      - "Where to look: [Linked Open Vocabularies](https://lov.linkeddata.es) searches hundreds of reusable vocabularies by term. [schema.org](https://schema.org) covers everyday things: people, organizations, products, places, events and creative works."
       - "W3C vocabularies cover common needs: SKOS for taxonomies and thesauri, Dublin Core for document metadata, PROV-O for provenance, ORG for organizations and OWL-Time for dates and times."
-      - "For design systems: WAI-ARIA roles (https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The W3C Design Tokens format (https://www.designtokens.org) is the standard for tokens. DSDS, the Design System Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes."
-      - "You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough: okb reuse add --name ... --url ... --decision reference."
+      - "For design systems: [WAI-ARIA roles](https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The [W3C Design Tokens format](https://www.designtokens.org) is the standard for tokens. DSDS, the [Design System Documentation Spec](https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes."
+      - "You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough."
     wine: "Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes."
     commands: ["okb reuse add", "okb reuse none"]
     rules: [reuse-considered, reuse-recorded]
@@ -74,7 +80,7 @@ steps:
       - "Include nouns (wine, winery), adjectives and properties (color, body, sweet), and verbs (produces, goes well with)."
       - "Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5."
       - "Mine your competency questions and any documents you collected in Step 2."
-    wine: "wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat, white wine, and so on."
+    wine: "Terms in the wine example include wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat and white wine."
     commands: ["okb term add"]
     rules: []
     concepts: [concept.class, concept.slot]
@@ -94,14 +100,18 @@ steps:
     doneWhen:
       - {text: "A naming convention is set", check: convention_set}
       - {text: "At least two classes, organized with at least one is-a link", check: classes_min2_with_isa}
-      - {text: "No errors in hierarchy checks", check: no_errors_hierarchy}
-      - {text: "You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a"}
+      - {text: "The class hierarchy has no known mistakes", check: no_errors_hierarchy}
+      - {text: "You've stood back and looked at the whole tree, checking each is-a link against the \"Is this really a subclass?\" guide"}
     tips:
       - "Steps 4 and 5 are intertwined. It's normal to add a few classes, then a few slots, then go back."
       - "Say each is-a link out loud: 'Every Pinot Noir is a Red Wine.' If it sounds wrong, it is."
       - "Use singular names consistently (Wine, not Wines)."
       - "Mark 'grouping only' classes as abstract."
-    wine: "Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine."
+    wine: |-
+      Wine → Red Wine, White Wine, Rosé Wine
+      Red Wine → Bordeaux, Burgundy, and so on
+      Bordeaux → Médoc → Pauillac, Margaux
+      Port has two parents: Red Wine and Dessert Wine
     commands: ["okb convention", "okb class add", "okb class disjoint", "okb tree", "okb term set"]
     decisions: [decision.approach, decision.is-a, decision.new-class, decision.class-or-value, decision.instance-or-class, decision.disjoint, decision.naming]
     rules: [hier-is-a-means-kind-of, hier-no-cycles, hier-no-singular-plural-pair, hier-no-synonym-classes, hier-siblings-same-generality, hier-no-redundant-isa, hier-single-child, hier-too-many-children, hier-no-subclass-per-restriction, hier-class-or-value, hier-stable-membership, inst-are-leaves, inst-natural-hierarchy-as-classes, disjoint-no-shared-members, disjoint-consider-siblings, naming-convention-defined, naming-follow-convention, naming-singular-plural-consistent, naming-no-type-words, naming-no-abbreviations, naming-subclass-names-consistent, naming-unique, doc-descriptions]
@@ -126,7 +136,10 @@ steps:
       - "Two kinds of slot: properties hold a value (name, year, one of a list); relationships point at another thing (maker → Winery)."
       - "Name relationships as verbs or roles read from the domain class: a Wine has a maker; a Winery produces wines."
       - "If you're attaching the same slot to every child, attach it to the parent instead."
-    wine: "Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces. Red Wine gets tanninLevel, because white wines aren't described by tannin."
+    wine: |-
+      Wine gets: color, body, flavor, sugar, name, maker, grape
+      Winery gets: location, produces
+      Red Wine gets: tanninLevel, because white wines aren't described by tannin
     commands: ["okb property add", "okb relationship add", "okb show", "okb term set"]
     decisions: [decision.slot-placement, decision.class-or-value]
     rules: [slot-attach-most-general, slot-domain-fits-all, slot-value-type-declared, doc-descriptions]
@@ -149,11 +162,15 @@ steps:
     outputs: ["Facets on every Slot node", "RANGE edges for Instance slots", "INVERSE_OF edges", "Class-level fixed values/defaults/overrides"]
     doneWhen:
       - {text: "Every slot has a value type and cardinality", check: slots_faceted}
-      - {text: "No errors in slot checks", check: no_errors_slots}
+      - {text: "The slots have no known mistakes", check: no_errors_slots}
     tips:
       - "When in doubt about range, pick the most general class that still only contains valid fillers."
       - "Defaults are suggestions; fixed values are facts. Don't confuse them."
-    wine: "body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine, multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet."
+    wine: |-
+      body: one of light, medium or full, and only one value
+      produces (on Winery): points to Wine, can have many values, and is the inverse of maker
+      grape: at least one value
+      Dessert Wine: sugar is fixed at sweet
     commands: ["okb slot set", "okb relationship inverse", "okb relationship property", "okb class fix", "okb class default", "okb class restrict"]
     decisions: [decision.range, decision.edge-or-class]
     rules: [slot-instance-needs-range, slot-enum-needs-values, slot-cardinality-declared, slot-cardinality-coherent, slot-range-remove-subclass, slot-range-collapse-subclasses, slot-range-all-but-few, slot-range-not-too-general, slot-default-allowed, slot-fixed-not-overridden, slot-inverse-consistent, slot-edge-properties, hier-subclass-adds-something, terms-dispositioned]
@@ -172,11 +189,14 @@ steps:
     outputs: ["Instance nodes with INSTANCE_OF edges, property values, and relationship edges"]
     doneWhen:
       - {text: "At least a few instances (enough to answer one competency question end to end)", check: instances_min3}
-      - {text: "No errors in instance checks", check: no_errors_instances}
+      - {text: "The instances have no known mistakes", check: no_errors_instances}
     tips:
       - "Start with instances that answer one competency question completely. It's the fastest way to find gaps."
       - "An instance that won't fit anywhere usually means a class is missing or a facet is too strict."
-    wine: "Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate, tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry."
+    wine: |-
+      Château Morgon Beaujolais is an instance of Beaujolais, with:
+      body light, color red, flavor delicate, tannin low
+      grape Gamay, maker Château Morgon, region Beaujolais, sugar dry
     commands: ["okb instance add", "okb instance set"]
     decisions: [decision.instance-or-class]
     rules: [inst-granularity, inst-not-of-abstract, slot-values-respect-facets, slot-value-slot-applies]
@@ -198,8 +218,8 @@ steps:
     doneWhen:
       - {text: "Every competency question is linked to what answers it", check: cq_all_linked}
       - {text: "Each question's family has been considered: wanted questions added, the rest recorded as out of scope"}
-      - {text: "No errors from okb validate", check: no_errors}
-      - {text: "Every remaining warning is fixed or explained in a design decision", check: warnings_explained}
+      - {text: "The whole ontology has no known mistakes", check: no_errors}
+      - {text: "Every remaining issue is fixed or explained in a design decision", check: warnings_explained}
       - {text: "Someone who knows the domain has looked at it"}
     tips:
       - "Iteration is part of the method, not a sign you went wrong."

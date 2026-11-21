@@ -148,7 +148,7 @@ Questions to answer
 
 You're done when
   ○ Every slot has a value type and cardinality
-  ○ No errors in slot checks
+  ○ The slots have no known mistakes
 
 Tips
   • When in doubt about range, pick the most general class that still only contains valid
@@ -156,8 +156,10 @@ Tips
   • Defaults are suggestions; fixed values are facts. Don't confuse them.
 
 In Ontology 101's wine example
-  body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine,
-  multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.
+  • body: one of light, medium or full, and only one value
+  • produces (on Winery): points to Wine, can have many values, and is the inverse of maker
+  • grape: at least one value
+  • Dessert Wine: sugar is fixed at sweet
 
 Decision guides for this step  (okb explain <id>)
   decision.range               What should this slot's range be?
