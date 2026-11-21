@@ -128,7 +128,7 @@ export function explain(node: Explainable): string {
     }
     case "Decision": {
       out.push(c.bold(`Decision guide: ${node.name}`));
-      out.push(c.dim(`  When: ${node.whenYouFaceIt}`), "");
+      out.push(indent(node.plainLanguage, "  "), c.dim(`  When: ${node.whenYouFaceIt}`), "");
       node.tests.forEach((t, i) => {
         out.push(`  ${i + 1}. ${t.ask}`);
         if (t.ifYes && t.ifYes !== "continue") out.push(`       yes → ${t.ifYes}`);
@@ -168,7 +168,7 @@ export function stepGuide(step: MetaStep): string {
     out.push("", c.bold("Tips"));
     for (const t of step.tips) out.push(indent(`• ${t}`, "  "));
   }
-  if (step.wine) out.push("", c.bold("In the paper's wine example"), indent(step.wine, "  "));
+  if (step.wine) out.push("", c.bold("In Ontology 101's wine example"), indent(step.wine, "  "));
   const decisions = meta.targets(step.id, "USES").map((d) => meta.node(d, "Decision"));
   if (decisions.length) {
     out.push("", c.bold("Decision guides for this step") + c.dim("  (okb explain <id>)"));

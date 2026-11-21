@@ -91,6 +91,7 @@ export interface MetaDecision {
   type: "Decision";
   id: string;
   name: string;
+  plainLanguage: string;
   whenYouFaceIt: string;
   tests: DecisionTest[];
   note?: string;

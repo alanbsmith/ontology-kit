@@ -77,7 +77,7 @@ Tips
   • Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5.
   • Mine your competency questions and any documents you collected in Step 2.
 
-In the paper's wine example
+In Ontology 101's wine example
   wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat,
   white wine, and so on.
 

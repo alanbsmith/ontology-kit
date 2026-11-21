@@ -3,7 +3,7 @@
 # source of truth for the format. docs/FORMAT.md explains it for humans.
 #
 #   models   - the glossary concept this type implements
-#   origin   - ontology101 (the paper's modeling primitive) or operational (toolkit/LPG plumbing)
+#   origin   - ontology101 (Ontology 101's modeling primitive) or operational (toolkit/LPG plumbing)
 
 version: "okb-lpg/2"
 

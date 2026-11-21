@@ -161,7 +161,7 @@ Tips
   • An instance that won't fit anywhere usually means a class is missing or a facet is too
   strict.
 
-In the paper's wine example
+In Ontology 101's wine example
   Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate,
   tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.
 

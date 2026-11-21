@@ -437,6 +437,188 @@ h4 {
 	margin-top: var(--space-sm);
 }
 
+/* Reference entries (glossary, rules): a bordered card with a heading band and labeled rows. */
+.prose .entry {
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-lg);
+	background: var(--color-surface-raised);
+	overflow: hidden;
+}
+
+.prose .entry + .entry {
+	margin-top: var(--space-md);
+}
+
+.prose .entry > * + * {
+	margin-top: 0;
+}
+
+.prose .entry .head {
+	padding: var(--space-sm) var(--space-md);
+	border-block-end: var(--border-width) solid var(--color-border);
+}
+
+.prose .entry .head :is(h2, h3) {
+	margin: 0;
+	font-size: var(--text-subheading);
+	overflow-wrap: anywhere;
+}
+
+.prose .entry .chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-xs);
+	margin: var(--space-xs) 0 0;
+}
+
+.prose .entry .chip {
+	padding: 0 var(--space-xs);
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+	border: var(--border-width) solid var(--color-border-strong);
+	border-radius: var(--radius-full);
+}
+
+/* Severity chips lead with a word, so color is never the only cue. */
+.prose .entry .chip.error {
+	font-weight: var(--weight-strong);
+	color: var(--color-text);
+	border-color: var(--color-text);
+}
+
+.prose .entry .row {
+	display: grid;
+	grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+	column-gap: var(--space-md);
+	padding: var(--space-xs) var(--space-md);
+}
+
+.prose .entry .row:first-of-type {
+	padding-block-start: var(--space-sm);
+}
+
+.prose .entry .label {
+	grid-row: 1 / span 9;
+	text-align: end;
+	font-weight: var(--weight-strong);
+	color: var(--color-text);
+}
+
+.prose .entry .row > :not(.label) {
+	grid-column: 2;
+	margin: 0;
+}
+
+.prose .entry .row.muted {
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+}
+
+.prose .entry .row.muted .label {
+	font-weight: normal;
+}
+
+@media (max-width: 36rem) {
+	.prose .entry .row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.prose .entry .label {
+		grid-row: auto;
+		text-align: start;
+	}
+
+	.prose .entry .row > :not(.label) {
+		grid-column: 1;
+	}
+}
+
+/* Sources sit flush at the bottom of the card. */
+.prose .entry details.sources {
+	margin: var(--space-xs) 0 0;
+	border: 0;
+	border-block-start: var(--border-width) solid var(--color-border);
+	border-radius: 0;
+	padding: var(--space-xs) var(--space-md);
+}
+
+/* Decision guides: a plain section with a chart/text toggle, a tip callout and folded sources. */
+.prose .decision {
+	margin-top: var(--space-xl);
+}
+
+.prose .decision > * + * {
+	margin-top: var(--space-md);
+}
+
+.prose .decision h3 {
+	margin-top: 0;
+}
+
+/* Code blocks and diagrams break out past the text column on wide screens (see the
+   min-width: 60rem block above). A guide's chart stays in line with its paragraphs. */
+.prose .decision pre.mermaid {
+	margin-inline: 0;
+}
+
+/* The toggle is added by the page script; its two views are both shown without it. */
+.prose .view.off {
+	visibility: hidden;
+	height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.prose .view > * + * {
+	margin-top: var(--space-sm);
+}
+
+.segmented {
+	display: inline-flex;
+	padding: var(--space-tight);
+	gap: var(--space-tight);
+	border: var(--border-width) solid var(--color-border-strong);
+	border-radius: var(--radius-full);
+}
+
+.segmented button {
+	padding: var(--space-tight) var(--space-sm);
+	font: inherit;
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+	background: none;
+	border: 0;
+	border-radius: var(--radius-full);
+	cursor: pointer;
+}
+
+.segmented button[aria-pressed='true'] {
+	font-weight: var(--weight-strong);
+	color: var(--color-text);
+	background: var(--color-surface-hover);
+}
+
+/* The filter box above a list of entries. */
+.entry-filter input {
+	width: 100%;
+	padding: var(--space-xs) var(--space-sm);
+	font: inherit;
+	color: var(--color-text);
+	background: var(--color-surface-raised);
+	border: var(--border-width) solid var(--color-border-strong);
+	border-radius: var(--radius-md);
+}
+
+.entry-filter .count {
+	margin-block-start: var(--space-xs);
+	font-size: var(--text-small);
+	color: var(--color-text-muted);
+}
+
+.prose .entry[hidden] {
+	display: none;
+}
+
 /* Task lists ("You're done when") keep their boxes in the margin. */
 .prose .contains-task-list {
 	list-style: none;

@@ -1,7 +1,7 @@
 # The method: Ontology 101's seven steps plus a review-and-iterate step.
 #   doneWhen items with a `check` key are evaluated by `okb status`; the rest are
 #   judgment calls the coach asks the learner about.
-#   wine: how the paper's running example handles the step.
+#   wine: how Ontology 101's running example handles the step.
 
 steps:
   - id: step.1-scope
@@ -51,7 +51,7 @@ steps:
       - "W3C vocabularies cover common needs: SKOS for taxonomies and thesauri, Dublin Core for document metadata, PROV-O for provenance, ORG for organizations and OWL-Time for dates and times."
       - "For design systems: WAI-ARIA roles (https://www.w3.org/TR/wai-aria/) are a standard taxonomy of UI components (button, checkbox, switch, tab...). The W3C Design Tokens format (https://www.designtokens.org) is the standard for tokens. DSDS, the Design System Documentation Spec (https://designsystemdocspec.org), is a draft schema for documenting components, tokens and themes."
       - "You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually enough: okb reuse add --name ... --url ... --decision reference."
-    wine: "The paper notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes."
+    wine: "Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties could be imported, but chooses to build from scratch for teaching purposes."
     commands: ["okb reuse add", "okb reuse none"]
     rules: [reuse-considered, reuse-recorded]
     concepts: []
@@ -204,7 +204,7 @@ steps:
     tips:
       - "Iteration is part of the method, not a sign you went wrong."
       - "Use the ontology-review skill for the judgment rules a script can't check."
-    wine: "The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel."
+    wine: "Ontology 101's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel' appears and the class has to be split into White Zinfandel and Red Zinfandel."
     commands: ["okb cq link", "okb validate --all", "okb decision add", "okb diagram"]
     rules: [scope-cq-coverage, scope-cq-families, scope-no-unneeded, doc-record-decisions]
     concepts: [concept.design-decision, concept.competency-question]

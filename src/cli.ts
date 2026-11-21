@@ -63,7 +63,7 @@ async function main(argvIn: string[]) {
     console.log(HELP);
     return;
   }
-  // "property" and "relationship" are everyday names for the paper's two kinds of slot.
+  // "property" and "relationship" are everyday names for Ontology 101's two kinds of slot.
   if (argv[0] === "property") argv[0] = "slot";
   if (argv[0] === "relationship") {
     argv[0] = "slot";

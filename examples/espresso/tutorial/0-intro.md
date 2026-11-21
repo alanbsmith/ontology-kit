@@ -64,7 +64,7 @@ Tips
   • Include a few questions that need relationships (X goes with Y), not only lookups (what
   color is X).
 
-In the paper's wine example
+In Ontology 101's wine example
   Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery
   inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet
   Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'

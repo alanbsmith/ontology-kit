@@ -161,7 +161,7 @@ async function main() {
   const decisionIds = new Set<string>();
   for (const d of decisions) {
     decisionIds.add(d.id);
-    node({ type: "Decision", id: d.id, name: d.name, whenYouFaceIt: d.whenYouFaceIt, tests: d.tests, note: d.note, wine: d.wine });
+    node({ type: "Decision", id: d.id, name: d.name, plainLanguage: d.plainLanguage, whenYouFaceIt: d.whenYouFaceIt, tests: d.tests, note: d.note, wine: d.wine });
     cite(d.id, d.cites);
   }
 

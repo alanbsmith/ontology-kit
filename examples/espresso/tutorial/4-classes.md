@@ -283,7 +283,7 @@ Tips
   Winery produces wines.
   • If you're attaching the same slot to every child, attach it to the parent instead.
 
-In the paper's wine example
+In Ontology 101's wine example
   Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces.
   Red Wine gets tanninLevel, because white wines aren't described by tannin.
 
