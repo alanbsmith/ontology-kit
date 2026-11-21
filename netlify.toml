@@ -1,10 +1,10 @@
-# The Ontology Kit docs site (site/). Node 26's build image has no pnpm pinned to our version, so
-# the command installs the one named in package.json's `packageManager` (and PNPM_VERSION makes
-# Netlify's own dependency install use the same one). One `pnpm install` covers the whole workspace (the root,
-# packages/okb and site/; see pnpm-workspace.yaml). `pnpm site` regenerates the docs from the meta-KB first, so the
+# The Ontology Kit docs site (site/). Netlify's build image installs pnpm itself before the build
+# command runs (PNPM_VERSION pins it to the version in package.json's `packageManager`), so the command
+# must not install it again: `npm i -g pnpm` fails there with EEXIST. One `pnpm install` covers the whole
+# workspace (the root, packages/okb and site/; see pnpm-workspace.yaml). `pnpm site` regenerates the docs from the meta-KB first, so the
 # deployed pages are never stale.
 [build]
-  command = "npm i -g pnpm@12.21.0 && pnpm install --frozen-lockfile && pnpm site"
+  command = "pnpm install --frozen-lockfile && pnpm site"
   publish = "site/dist"
 
 [build.environment]
