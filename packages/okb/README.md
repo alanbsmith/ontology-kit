@@ -16,7 +16,7 @@ okb skills install    # adds the Claude skills; Claude Code and Cursor load them
 okb init my-ontology
 ```
 
-You can also run it without installing, with `npx @ontology-kit/okb version`, or install it with pnpm (`pnpm add --global @ontology-kit/okb`). The unscoped [`ontology-kit`](https://www.npmjs.com/package/ontology-kit) package installs the same `okb` command.
+To update, run `npm update --global @ontology-kit/okb` and `okb skills install` again. You can also run it without installing, with `npx @ontology-kit/okb version`, or install it with pnpm (`pnpm add --global @ontology-kit/okb`). The unscoped [`ontology-kit`](https://www.npmjs.com/package/ontology-kit) package installs the same `okb` command.
 
 ## Documentation
 

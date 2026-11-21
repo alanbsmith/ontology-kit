@@ -14,16 +14,14 @@ It has three parts:
 
 ## Install
 
-Needs **Node.js 24+** and [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`).
+Needs **Node.js 24+**.
 
 ```bash
-git clone https://github.com/alanbsmith/ontology-kit
-cd ontology-kit
-pnpm install
-pnpm add --global link:./packages/okb
+npm install --global @ontology-kit/okb
+okb skills install
 ```
 
-Then `okb skills install` adds the Claude skills (Claude Code and Cursor both load them), and `okb init my-ontology` starts an ontology. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.
+`okb skills install` adds the Claude skills (Claude Code and Cursor both load them), and `okb init my-ontology` starts an ontology. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.
 
 ## License
 

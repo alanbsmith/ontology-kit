@@ -40,7 +40,7 @@ const DEFAULT_DOCS = [
 ];
 /** pnpm commands and tool names that aren't package.json scripts. */
 const PNPM_BUILTINS = new Set(["install", "i", "add", "remove", "update", "link", "unlink", "exec", "dlx", "run", "store", "list", "why", "tsc", "prettier", "ignored-builds", "approve-builds", "pack"]);
-/** npm commands that contributors run, which should be pnpm. An `npm i -g` end-user install is fine. */
+/** npm commands that contributors run, which should be pnpm. An `npm i -g` end-user install and a one-off `npx ontology-kit` run are fine. */
 const NPM_CONTRIBUTOR = /\bnpm (?:run|ci|link|test|install|i|--prefix|exec)\b[^\n`]*|\bnpx\b[^\n`]*/g;
 const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 
@@ -148,7 +148,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
     }
     if (/(?:^|`)\s*pnpm docs\b(?!:)/.test(text)) problems.push({ file, line, kind: "pnpm-script", message: "'pnpm docs' is pnpm's own docs command, not our script; write 'pnpm run docs'." });
     for (const m of text.matchAll(NPM_CONTRIBUTOR)) {
-      if (!/npm (i|install|add) (-g|--global)\b/.test(m[0])) problems.push({ file, line, kind: "npm-command", message: `'${m[0]}': contributors use pnpm here (end-user installs may say 'npm i -g').` });
+      if (!/npm (i|install|add) (-g|--global)\b/.test(m[0]) && !/^npx (ontology-kit|@ontology-kit\/okb)\b/.test(m[0])) problems.push({ file, line, kind: "npm-command", message: `'${m[0]}': contributors use pnpm here (end-user installs may say 'npm i -g').` });
     }
     for (const m of text.matchAll(RULE_ID)) {
       if (!rules.has(m[1])) problems.push({ file, line, kind: "rule", message: `No meta-KB rule '${m[1]}'.` });

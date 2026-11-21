@@ -4,7 +4,14 @@ This page is for changing Ontology Kit itself. To use it, start with the [Introd
 
 ## Setup
 
-You need Node.js 26 (see [Installation](docs/getting-started/installation.md)). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), then run `pnpm install` in the repo root. The repo is a pnpm workspace, so that one install covers `packages/okb` and the docs site (`site/`) too. To put `okb` on your PATH, run `pnpm add --global link:./packages/okb`.
+You need Node.js 26 (`.nvmrc` has the version; okb itself runs on Node 24 or newer, which is all a reader of the [Installation](docs/getting-started/installation.md) page needs). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), clone the repo, and run `pnpm install` in its root. The repo is a pnpm workspace, so that one install covers `packages/okb` and the docs site (`site/`) too. To run okb from your clone, use `node packages/okb/src/cli.ts <command>`, or put `okb` on your PATH with `pnpm add --global link:./packages/okb`. The link points at your clone, so `okb` runs your changes right away, and `okb skills install` links the skills from it. Unlink with `pnpm remove --global @ontology-kit/okb` before you install the published package.
+
+```bash
+git clone https://github.com/alanbsmith/ontology-kit
+cd ontology-kit
+pnpm install
+pnpm test
+```
 
 ## Repository layout
 

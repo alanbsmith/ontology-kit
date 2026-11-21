@@ -9,6 +9,7 @@ Needs **Node.js 24+**.
 ```bash
 npx ontology-kit version
 npm install --global ontology-kit
+okb skills install    # adds the Claude skills; Claude Code and Cursor load them
 okb init my-ontology
 ```
 

@@ -20,7 +20,7 @@ export interface Page {
 
 export const PAGES: readonly Page[] = [
   { route: "/getting-started/", source: "docs/getting-started/introduction.md", label: "Introduction", summary: "What Ontology Kit is and who it is for, its three parts (the meta-KB, the okb command and the Claude skills), and the path to your first ontology." },
-  { route: "/getting-started/installation/", source: "docs/getting-started/installation.md", label: "Installation", summary: "How to install okb with Node 24 or newer, link the Claude skills, check your version and update the kit." },
+  { route: "/getting-started/installation/", source: "docs/getting-started/installation.md", label: "Installation", summary: "How to install okb from npm with Node 24 or newer, install the Claude skills, check your version and update both." },
   { route: "/getting-started/quickstart/", source: "docs/getting-started/quickstart.md", label: "Quickstart", summary: "A short walkthrough that builds a tiny coffee menu ontology, breaks a rule on purpose and runs okb validate." },
   { route: "/getting-started/tutorial/wine-ontology/", source: "packages/okb/examples/wine/tutorial/0-intro.md", label: "Tutorial: Wine ontology", summary: "Introduction to the wine tutorial, which builds a wine and food ontology through the eight steps with the okb CLI." },
   { route: "/getting-started/tutorial/wine-ontology/1-scope/", source: "packages/okb/examples/wine/tutorial/1-scope.md", label: "1. Scope", summary: "Wine tutorial step 1: decide what the ontology is for and write the competency questions it must answer." },
