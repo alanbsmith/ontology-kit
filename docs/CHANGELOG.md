@@ -62,3 +62,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.4.1
 
 - **Skills point at the docs site.** The three shipped skills now send readers to the Installation page for updating, and to `https://ontology-kit.dev/llms.txt` (an index of every docs page, each also served as markdown) instead of the README. No rule changed.
+
+### v2.4.2
+
+- **Skills install with `okb skills install`.** The setup step in the three shipped skills now asks the user to install okb from npm, and offers `okb skills status` and `okb skills install` when the skill and okb versions differ. No rule changed.

@@ -27,7 +27,7 @@ import { findQuote, loadPages } from "../src/quotes.ts";
 import { STEP_CHECKS } from "../src/status.ts";
 import type { GraphEdge, GraphNode } from "@ontology-kit/format";
 
-export const VERSION = "2.4.1";
+export const VERSION = "2.4.2";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MODALITIES = ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"];
 const BASES = ["direct", "interpretive", "operational"];

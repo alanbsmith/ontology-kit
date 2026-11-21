@@ -5,9 +5,9 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.4.1.** It should match the meta-KB version that `okb version` prints.
+**Version 2.4.2.** It should match the meta-KB version that `okb version` prints.
 
-Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `ontology-kit/meta-kb/` (usually `~/Projects/ontology-kit`) and the pipeline in `ontology-kit/docs/EXTRACTION-PIPELINE.md`.
+Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `packages/okb/meta-kb/` and the pipeline in `docs/EXTRACTION-PIPELINE.md` (both in the ontology-kit repository, usually `~/Projects/ontology-kit`).
 
 The point of this skill is to be deterministic where possible and to stop for human review everywhere else. Never auto-merge a finding this pipeline can't fully verify itself. Everything goes through okb commands; don't hand-edit nodes.json/edges.json.
 
