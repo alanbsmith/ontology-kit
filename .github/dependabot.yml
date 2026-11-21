@@ -13,3 +13,19 @@ updates:
       actions:
         patterns:
           - "*"
+
+  # Covers the pnpm workspace: the root, packages/* and site/ share one lockfile.
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /packages/*
+      - /site
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: deps
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
