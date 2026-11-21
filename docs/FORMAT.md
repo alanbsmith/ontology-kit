@@ -22,7 +22,7 @@ Ontology 101 comes from frame-based systems and calls every attribute a **slot**
 | instance                                           | instance                                  | individual        | node              |
 | facet                                              | facet                                     | restriction       | schema constraint |
 
-The authoritative list of node and edge types lives in `meta-kb/src/format.yaml`, and `okb validate` enforces it (rule `struct-well-formed`). If you only use `okb` commands, you never need to edit these files by hand.
+The authoritative list of node and edge types lives in `packages/okb/meta-kb/src/format.yaml`, and `okb validate` enforces it (rule `struct-well-formed`). If you only use `okb` commands, you never need to edit these files by hand.
 
 ## Node types
 
@@ -78,13 +78,89 @@ A Rule is **prescriptive**: a requirement on any implementation, with a modality
 - **`FULFILLS`** (Instance → Rule) is stored in one direction. Many instances can fulfill one rule; read backwards it means "is fulfilled by", not "requires". Set it with `okb fulfills <instance> <rule>`.
 - `okb cite <node> <quote id>` adds a `CITES` edge from an existing node to an existing quote, with the same node types as `quote add --cites`.
 
+## Reading ontologies from code
+
+Other tools can read an okb ontology without copying its types. [`@ontology-kit/format`](https://www.npmjs.com/package/@ontology-kit/format) is the supported way: the typed nodes, loading with migrations, the edge types okb reserves, and reading relationship values. It's a package of its own, with no runtime dependencies and none of okb's CLI, meta-KB or skills, and it needs Node 24 or newer. Add it to your project with npm, pnpm or any other package manager.
+
+```ts
+import { Ontology, isRelationship, isStructuralEdgeType } from "@ontology-kit/format";
+
+const ont = Ontology.load("./my-ontology");
+
+// Every relationship value of every instance, whichever end the edge is stored on.
+for (const slot of ont.ofType("Slot").filter(isRelationship)) {
+  for (const instance of ont.ofType("Instance")) {
+    for (const target of ont.rel.values(instance.id, slot.id)) {
+      console.log(`${instance.name} ${slot.name} ${ont.label(target)}`);
+    }
+  }
+}
+
+// An edge whose type okb doesn't reserve is a relationship value.
+const links = ont.edges.filter((e) => !isStructuralEdgeType(e.type));
+console.log(`${links.length} relationship edges`);
+```
+
+The test suite runs this example against a small ontology in `packages/format/tests/fixtures/coffee` (`packages/format/tests/format-api.test.ts`), so it stays true.
+
+### What's public
+
+Everything is exported from `packages/format/src/index.ts`, and nothing else in the package is public. The tests pin the list of exported names.
+
+| Export                                                                                                         | What it is                                                                                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Ontology`                                                                                                     | An ontology folder. `Ontology.load(folder)` reads `okb.json`, `nodes.json` and `edges.json` from the folder or a parent, and converts an `okb-lpg/1` folder in memory. `Ontology.fromData(nodes, edges)` builds one from data you already have.                                                                            |
+| Reading methods of `Ontology`                                                                                  | `nodes`, `edges`, `manifest`, `meta`, `get`, `require`, `find`, `ofType`, `label`, `outEdges`, `inEdges`, `targets`, `sources`, `edgesOf`, `parents`, `children`, `ancestors`, `descendants`, `roots`, `ownSlots`, `applicableSlots`, `domain`, `range`, `inverses`, `effectiveFacets`, `statedValues`, `instanceClasses`. |
+| `ont.rel` (`Relationships`)                                                                                    | `values(id, slotId)`, `edge(id, slotId, target)`, `spec(slotId)`, `primary`, `isPrimary`, `edgeTypes()`, `slotsWithValues` and `edgeProperties`. This is how to read a relationship value without knowing how it's stored.                                                                                                 |
+| `OkbNode` and the node types                                                                                   | The typed union of every node (`ClassNode`, `SlotNode`, `InstanceNode`, `RuleNode`, ...), plus `NodeType`, `NodeOf<T>`, `GraphEdge`, `GraphNode`, `Manifest`, `Conventions`, `StoredValue`, `Facets` and the other types in the node tables above.                                                                         |
+| `STRUCTURAL_EDGE_TYPES`, `PROVENANCE_EDGE_TYPES`, `NODE_TYPES`, `isStructuralEdgeType`, `isProvenanceEdgeType` | The types the format registry defines. The first holds every edge type okb reserves (including `REFINES` and `FULFILLS`). The second is the provenance and rule layer: `CITES`, `PART_OF`, `GOVERNS`, `REFINES`, `FULFILLS`.                                                                                               |
+| `key`, `relType`, `slug`, `tokens`, `rawTokens`, `fold`, `stripAccents`                                        | The name helpers the format's identities are built from: `key` is the case- and delimiter-insensitive identity that `find` matches names by, `relType` turns a slot name into its edge type (`goesWellWith` becomes `GOES_WELL_WITH`), and `slug` builds the part of an id that comes from a name.                         |
+| `isRelationship`, `nodeLabel`, `nameOrText`, `literalValue`, `literalValues`, `edgeProps`, `findRoot`          | Small helpers.                                                                                                                                                                                                                                                                                                             |
+| `FORMAT`, `MANIFEST`, `VALUE_TYPES`, `DISPOSITIONS`, `CARDINALITIES`, `MODALITIES`, `VERIFICATION_STATUSES`    | The format name (`okb-lpg/2`), the manifest file name and the value lists the node tables use.                                                                                                                                                                                                                             |
+| `OkbError`                                                                                                     | What loading and lookups throw for a problem a person can fix.                                                                                                                                                                                                                                                             |
+
+The edge lists come from `packages/okb/meta-kb/src/format.yaml`, the same registry `okb validate` reads, so they can't drift from it. A `provenance: true` flag on an edge type there puts it in `PROVENANCE_EDGE_TYPES`. Don't copy the lists into another tool; import them.
+
+Loading trusts the files, as the CLI does. A hand-edited file may hold nodes that don't match the types or edges that point nowhere, so use `ont.require` (it throws a readable `OkbError`) for ids that must exist. Checking a file is `okb validate`.
+
+### What isn't public
+
+- **Writing.** Adding and removing nodes and edges, `save()` and the relationship-changing operations on `ont.rel` exist for okb's own commands. They're tagged `@internal` in the source, which leaves them out of the type declarations, but they are in the compiled code, because okb runs on it. Change an ontology with `okb` commands. A supported write API needs the operations designed as a public surface first, so it isn't part of this one. Starting a new folder (`okb init`) is okb's, not this package's.
+- **Validation.** The checks behind `okb validate` depend on the meta-KB rules and change with them. They stay in `@ontology-kit/okb` until a tool needs them as a library.
+- **Anything under `dist/`.** Import only from `@ontology-kit/format`; the `exports` map refuses other paths.
+
+### Versions and semver
+
+The exports above follow semver. The format package has its own version, but while the packages are young all three (`@ontology-kit/format`, `@ontology-kit/okb` and the unscoped `ontology-kit`) release together at one version. Before 1.0, any release may break the API; [Releases](../CONTRIBUTING.md#releases) says what 1.0 will promise and how the package versions relate to the meta-KB version.
+
+- **Major (breaking):** removing or renaming an export; narrowing a type or signature; removing a node or edge property or changing its meaning; changing what `rel.values`, `rel.edge` or `rel.spec` return for a file that was valid before; dropping the conversion of an older format; raising the Node floor.
+- **Minor:** a new export; a new optional property on a node; a new node type or structural edge type (it appears in the lists, so a tool that reads the lists keeps working and one that copied them doesn't); reading a newer file format.
+- **Patch:** fixes that don't change what the API returns for valid files.
+
+Type declarations ship with the package (`dist/*.d.ts`, found through the `types` condition of the package's `exports`).
+
+### Why a package of its own
+
+The reader first shipped as a subpath of okb, `@ontology-kit/okb/format`, before anything was published. It's its own package because a tool that reads okb files shouldn't have to install the CLI, the meta-KB and the skills to do it, and so that the format's contract (the semver rules above) has a name and a version of its own. Nothing was published under the old path, so there's no compatibility shim.
+
+Where the line falls:
+
+- **In `@ontology-kit/format`:** the node and edge types, `Ontology` (loading, migration from `okb-lpg/1`, the indexes and every query), the relationship module (`ont.rel`), the name helpers the format's identities use, `OkbError`, and the registry of node and edge types as data (`packages/format/src/registry.ts`).
+- **In `@ontology-kit/okb`:** everything that writes or judges: the commands and operations, creating a folder, the validator and its rules, the meta-KB, the skills, the naming _style_ rules (PascalCase, plurals), the clock and the export.
+- **The write methods stayed on `Ontology`.** `Ontology` keeps its indexes private and every mutation must keep them current, so splitting the class into a reader and a writer would mean exposing those indexes or duplicating them. The write methods (`addNode`, `addEdge`, `removeNode`, `save`, the `rel` intents like `becomeRelationship`) are tagged `@internal` instead: they're in the compiled JavaScript that okb runs, and `stripInternal` leaves them out of the shipped `.d.ts`, so a consumer's compiler doesn't offer them. `packages/format/tsconfig.internal.json` also writes a full set of declarations to the gitignored `packages/format/types-internal/`, which okb's own build compiles against; it isn't published.
+- **The registry has one source.** `packages/okb/meta-kb/src/format.yaml` stays where it is, because the meta-KB build compiles it into the meta-KB graph that `struct-well-formed` reads (and that data must not change). The same build writes the names the reader needs into `packages/format/src/registry.ts`, a generated file that is committed like `meta-kb/data`. The reader needs no YAML parser and no meta-KB at runtime, and a test (`packages/okb/tests/format-registry.test.ts`) fails if the two copies drift apart. The regenerate-and-diff step in CI catches a YAML edit that wasn't rebuilt.
+
+### Moving a tool onto the API
+
+A tool that kept its own copy of the node types and its own list of structural edge types (okb-mcp, for example) replaces them with imports from `@ontology-kit/format`: the node types, `STRUCTURAL_EDGE_TYPES` in place of a hand-written list, and `ont.rel.values` in place of its own edge walking. A new edge type like `REFINES` then reaches it with an upgrade, not a copy edit. A changed `rel.values` result, a removed export or a node property that went away in a new major version are the breaking changes to watch for.
+
 ## Exporting to a graph database
 
 `okb export` writes the data as JSON or as an openCypher script for Neo4j, Neptune and Memgraph (the `okb-export/2` format). What it writes, its options and an example are on the [Export](build/export.md) page.
 
 Files from the previous format (`okb-lpg/1`, which used `HAS_VALUE` edges) are converted automatically the next time okb loads them.
 
-## Example (from examples/wine)
+## Example (from packages/okb/examples/wine)
 
 ```json
 { "type": "Class", "id": "c.dessert-wine", "name": "DessertWine",

@@ -17,7 +17,7 @@ When you finish, [Where next](where-next.md) points to the tutorials and the res
 
 ## How to read the graphs
 
-Every page uses one example: the espresso ontology, for Vertex Coffee, a made-up café. A name such as "Vertex breve" is that café's breve, one drink on its menu. You can build the same ontology yourself in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md).
+Every page uses one example: the espresso ontology, for Vertex Coffee, a made-up café. A name such as "Vertex breve" is that café's breve, one drink on its menu. You can build the same ontology yourself in the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md).
 
 In the graphs, a ring is a kind of thing, such as Breve, and a dot is one real example of it, such as Vertex breve. A dashed outline marks what the page is about. Click a node to open the inspector and read about it. Drag a node to move it, drag the background to pan, and click the graph before you scroll to zoom. Under each graph, "Text version" describes it in words.
 
@@ -36,4 +36,4 @@ Here is the whole espresso ontology. Use the checkboxes to add the terms, slots 
 
 ## Prefer to build first?
 
-If you learn by doing, start with the [Quickstart](../getting-started/quickstart.md) or build a whole ontology in the [wine](../../examples/wine/tutorial/0-intro.md) or [espresso](../../examples/espresso/tutorial/0-intro.md) tutorial, and come back here when a term needs explaining. The [Glossary](../GLOSSARY.md) defines every term.
+If you learn by doing, start with the [Quickstart](../getting-started/quickstart.md) or build a whole ontology in the [wine](../../packages/okb/examples/wine/tutorial/0-intro.md) or [espresso](../../packages/okb/examples/espresso/tutorial/0-intro.md) tutorial, and come back here when a term needs explaining. The [Glossary](../GLOSSARY.md) defines every term.

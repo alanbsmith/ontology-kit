@@ -98,7 +98,7 @@ The first line holds the strength (`SHOULD NOT`) and the finding level it become
 
 ## Related pages
 
-- [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows rules firing as you build a larger ontology.
+- [The wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md) shows rules firing as you build a larger ontology.
 - [The Rules page](../RULES.md) lists every rule with its strength, reason, source and the step it starts to apply at.
 - [Method](../METHOD.md) explains each step of the method.
 - [Glossary](../GLOSSARY.md) defines every term used here.

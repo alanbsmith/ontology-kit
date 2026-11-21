@@ -1,0 +1,18 @@
+name: Set up the workspace
+description: Node from .nvmrc, pnpm pinned by packageManager in package.json, and a frozen install of the whole workspace.
+inputs:
+  cache:
+    description: Package manager to cache for (pnpm), or empty for none. The release jobs that build what gets published pass empty, so a cache can't feed them.
+    default: pnpm
+runs:
+  using: composite
+  steps:
+    # pnpm first, so setup-node can cache its store. With no `version` input, the action reads
+    # `packageManager` from the root package.json.
+    - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version-file: .nvmrc
+        cache: ${{ inputs.cache }}
+    - run: pnpm install --frozen-lockfile
+      shell: bash

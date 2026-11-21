@@ -5,7 +5,7 @@
   "private": true,
   "description": "The Ontology Kit docs site. Reads the repo's markdown in place; see CONTRIBUTING.md (The docs site).",
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "scripts": {
     "dev": "astro dev",

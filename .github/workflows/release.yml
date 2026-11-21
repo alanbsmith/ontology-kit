@@ -1,0 +1,217 @@
+# Publishes the three packages to npm when a version tag is pushed, after CI passes.
+#   Tag:        git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z
+#   Dry run:    Actions > Release > Run workflow (everything except the publish and the GitHub release)
+# Publishing uses npm trusted publishing (OIDC): no npm token is stored anywhere. Each package needs
+# a trusted publisher on npmjs.com for this repository, workflow file `release.yml` and environment
+# `release`. The one-time setup and the release steps are in CONTRIBUTING.md ("Releases").
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run every step except the real publish and the GitHub release
+        type: boolean
+        default: true
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Check the tag, versions and changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+      dry-run: ${{ steps.check.outputs.dry-run }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Check the tag, the three package versions and the changelog entry
+        id: check
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          DRY_RUN_INPUT: ${{ inputs.dry-run }}
+        run: |
+          dry_run=false
+          if [ "$EVENT" = workflow_dispatch ]; then
+            if [ "$DRY_RUN_INPUT" = true ]; then dry_run=true; fi
+            if [ "$dry_run" = false ] && [ "$REF_TYPE" != tag ]; then
+              echo "::error::A real release runs from a version tag. Push the tag, or run this workflow with dry-run on."
+              exit 1
+            fi
+          fi
+          version="$(node scripts/release.ts version)"
+          tag="v${version}"
+          if [ "$REF_TYPE" = tag ]; then
+            tag="$REF_NAME"
+            # The tag must be on main: a release is what was merged and reviewed.
+            git fetch --no-tags origin main
+            if ! git merge-base --is-ancestor HEAD FETCH_HEAD; then
+              if [ "$dry_run" = false ]; then
+                echo "::error::The tagged commit is not on main."
+                exit 1
+              fi
+              echo "::warning::The tagged commit is not on main (a real release would stop here)."
+            fi
+          fi
+          node scripts/release.ts check "$tag"
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+            echo "dry-run=$dry_run"
+          } >> "$GITHUB_OUTPUT"
+
+  # The whole CI workflow: typecheck, build and test, generated files, docs, site, Node 24 runtime.
+  ci:
+    name: CI
+    needs: verify
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml
+
+  # Builds the tarballs in a job that can neither publish nor write to the repository. Installing the
+  # workspace's dependencies runs their code, so this job gets no identity token and no write access.
+  pack:
+    name: Build the tarballs
+    needs: [verify, ci]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ needs.verify.outputs.tag }}
+      VERSION: ${{ needs.verify.outputs.version }}
+      DRY_RUN: ${{ needs.verify.outputs.dry-run }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          cache: ""
+      # `pnpm pack` builds dist/ (prepack) and rewrites workspace:* dependencies to the real version.
+      - name: Pack the three packages
+        run: |
+          mkdir tarballs
+          pnpm --filter @ontology-kit/format pack --pack-destination tarballs
+          pnpm --filter @ontology-kit/okb pack --pack-destination tarballs
+          pnpm --filter ontology-kit pack --pack-destination tarballs
+          ls -l tarballs
+      - name: Write the release notes from the changelog
+        run: node scripts/release.ts notes "$TAG" > tarballs/release-notes.md
+      # A dry run stops here. It needs no identity token and no `release` environment, so it can run from
+      # any branch while that environment stays limited to version tags. It checks what npm would publish.
+      - name: Dry run of the publish
+        if: env.DRY_RUN == 'true'
+        run: |
+          flags="--access public --dry-run"
+          case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
+          for tarball in tarballs/*.tgz; do
+            # shellcheck disable=SC2086
+            npm publish "$tarball" $flags
+          done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tarballs
+          path: tarballs
+          if-no-files-found: error
+          retention-days: 7
+
+  # The only job with the identity token. It checks out no code and installs nothing: it takes the
+  # tarballs from the pack job and runs `npm publish` on them. In the repository's settings, the
+  # `release` environment must be limited to `v*` tags (see CONTRIBUTING.md, "One-time npm setup"),
+  # because npm's trusted publisher names the workflow file and the environment, not a branch or tag.
+  publish:
+    name: Publish to npm
+    needs: [verify, pack]
+    if: needs.verify.outputs.dry-run != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: release
+    permissions:
+      id-token: write # npm trusted publishing and provenance
+    env:
+      VERSION: ${{ needs.verify.outputs.version }}
+    steps:
+      # setup-node without a cache or a checkout; the Node and npm that ship with 26 satisfy the floor below.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          package-manager-cache: false
+      - name: Check that npm can publish with trusted publishing (11.5.1 or newer)
+        run: |
+          npm --version
+          node -e '
+            const [a, b, c] = process.argv[1].split(".").map(Number);
+            if (!(a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1))))) {
+              console.error("::error::npm 11.5.1 or newer is required for trusted publishing");
+              process.exit(1);
+            }
+          ' "$(npm --version)"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tarballs
+          path: tarballs
+      # In dependency order: the format package, then okb (which depends on it), then the wrapper.
+      # A version already on npm is skipped, so a re-run finishes a release that stopped halfway.
+      # `npm publish` of a tarball does the OIDC token exchange; provenance is on explicitly so the
+      # publish fails rather than going out without it.
+      - name: Publish @ontology-kit/format, @ontology-kit/okb, then ontology-kit
+        run: |
+          set -eu
+          flags="--access public --provenance"
+          case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
+          for entry in "@ontology-kit/format:tarballs/ontology-kit-format-${VERSION}.tgz" "@ontology-kit/okb:tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:tarballs/ontology-kit-${VERSION}.tgz"; do
+            name="${entry%%:*}"
+            tarball="${entry#*:}"
+            if [ -n "$(npm view "${name}@${VERSION}" version 2>/dev/null)" ]; then
+              echo "${name}@${VERSION} is already on npm; skipping."
+              continue
+            fi
+            # shellcheck disable=SC2086
+            npm publish "$tarball" $flags
+          done
+
+  # Needs the repository write access that the publish job must not have, and nothing else.
+  github-release:
+    name: Create the GitHub release
+    needs: [verify, pack, publish]
+    if: needs.verify.outputs.dry-run != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # create the release; no other job has write access
+    env:
+      VERSION: ${{ needs.verify.outputs.version }}
+      TAG: ${{ needs.verify.outputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tarballs
+          path: tarballs
+      - name: Create the GitHub release
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it."
+            exit 0
+          fi
+          prerelease=""
+          case "$VERSION" in *-*) prerelease="--prerelease" ;; esac
+          gh release create "$TAG" tarballs/*.tgz --verify-tag --title "$TAG" --notes-file tarballs/release-notes.md $prerelease

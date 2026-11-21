@@ -1,0 +1,76 @@
+{
+  "name": "@ontology-kit/okb",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "A toolkit for building knowledge graphs with guardrails: a checked file format, rules from a meta-KB, provenance down to verbatim quotes, and skills that drive it.",
+  "homepage": "https://ontology-kit.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanbsmith/ontology-kit.git",
+    "directory": "packages/okb"
+  },
+  "bugs": {
+    "url": "https://github.com/alanbsmith/ontology-kit/issues"
+  },
+  "keywords": [
+    "ontology",
+    "knowledge-graph",
+    "knowledge-base",
+    "provenance",
+    "validation",
+    "ontology-101",
+    "claude-skills",
+    "cli",
+    "okb"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "meta-kb/data",
+    "!meta-kb/README.md",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./bin": "./bin/okb.js",
+    "./cli": {
+      "development": "./src/cli.ts",
+      "default": "./dist/cli.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "okb": "bin/okb.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "okb": "node src/cli.ts",
+    "build:meta": "node meta-kb/build.ts",
+    "verify:quotes": "node meta-kb/build.ts --pdf src.o101=../../sources/ontology101.pdf --pdf src.g93=../../sources/ontolingua-kaj-1993.pdf",
+    "docs": "node src/gendocs.ts",
+    "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
+    "typecheck": "tsc",
+    "test": "node --test --test-concurrency=1 \"tests/*.test.ts\"",
+    "build": "pnpm --filter @ontology-kit/format run build && rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts.ts",
+    "prepack": "npm run build",
+    "prepublishOnly": "node ../../scripts/publish-guard.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^5.9.0"
+  },
+  "optionalDependencies": {
+    "pdfjs-dist": "^6.3.289"
+  },
+  "dependencies": {
+    "@ontology-kit/format": "workspace:*",
+    "yaml": "^2.8.0"
+  }
+}

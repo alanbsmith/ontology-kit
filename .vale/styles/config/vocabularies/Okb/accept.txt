@@ -65,3 +65,14 @@ CafeBombon
 [Mm]ocha
 [Gg]elato
 READMEs
+[Ww]orktrees?
+PR's
+[Rr]ebase
+pnpm
+Corepack
+npm
+unscoped
+allowlist
+semver
+subpath
+Typecheck

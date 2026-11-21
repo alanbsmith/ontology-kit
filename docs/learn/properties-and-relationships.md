@@ -16,7 +16,7 @@ Say Vertex Coffee wants to know where a cortado comes from and what goes in it. 
 
 ## See it
 
-This graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots are switched on here so you can see the fields. Click a node to read about it.
+This graph is from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots are switched on here so you can see the fields. Click a node to read about it.
 
 <okb-graph src="/data/espresso.json" focus="Vertex cortado, Double shot" highlight="Vertex cortado" show="Slot" label="Vertex cortado, the drinks and ingredients it links to, and the slots that describe it">
 <p>The graph shows one drink from the Vertex Coffee menu, with the slots that describe drinks.</p>
@@ -62,7 +62,7 @@ Look at the `kind` line. `origin` is a property, so its [facets](../GLOSSARY.md#
 
 ## Related pages
 
-- [The espresso tutorial, step 5](../../examples/espresso/tutorial/5-slots.md) adds these slots one at a time.
+- [The espresso tutorial, step 5](../../packages/okb/examples/espresso/tutorial/5-slots.md) adds these slots one at a time.
 - [Choosing between a class and a value](../DECISIONS.md#decision-class-or-value) helps when a fact might be a thing.
 - [Choosing the range of a relationship](../DECISIONS.md#decision-range) covers what a link may point to.
 - [What are classes and instances?](classes-and-instances.md) explains the things that these facts describe.

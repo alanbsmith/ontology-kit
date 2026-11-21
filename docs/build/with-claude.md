@@ -6,16 +6,9 @@ Use this path if you have Claude Code (or another tool that loads skills from `~
 
 ## Install okb and the skill
 
-The coach drives the `okb` command, so install okb first with the steps on the [Installation](../getting-started/installation.md) page. Then link the skill into the folder your tool loads skills from:
+The coach drives the `okb` command, so install okb first with the steps on the [Installation](../getting-started/installation.md) page. That page ends with `okb skills install`, which links the skill into `~/.claude/skills/`, the folder Claude Code and Cursor load skills from. Run it again after you update okb. [Skills](../reference/skills.md) lists all three skills and how to check their versions.
 
-```bash
-mkdir -p ~/.claude/skills
-ln -s "$PWD/skills/ontology-coach" ~/.claude/skills/ontology-coach
-```
-
-Run this from the `ontology-kit` folder you cloned. The link keeps the skill current when you `git pull`. okb has no command that installs skills yet, so linking (or copying) the folder is how it works today. [Skills](../reference/skills.md) lists all three skills and how to check their versions.
-
-Start a new Claude session after you link it, so the session loads the skill.
+Start a new Claude session after you install the skills, so the session loads them.
 
 ## Start the coach
 
@@ -54,5 +47,5 @@ In step 8, the coach links each competency question to what answers it, runs `ok
 ## If it doesn't work
 
 - **Claude doesn't offer the coach.** Check that `~/.claude/skills/ontology-coach/SKILL.md` exists, and start a new session.
-- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works, run `npm link` again in the kit folder. If Claude runs in a different environment, give it the path to the kit and it runs `node <kit>/src/cli.ts`.
+- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works but Claude can't run it, Claude is probably running in a different environment (a container or another machine). Install okb there too, with the steps on the [Installation](../getting-started/installation.md) page.
 - **You want to see what Claude did.** Everything it ran is a plain `okb` command. Read the history with `okb status`, `okb tree` and `okb decision list`.

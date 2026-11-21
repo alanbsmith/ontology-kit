@@ -12,7 +12,7 @@ The general voice rules are in CONTRIBUTING's "Writing style", and Vale applies 
 ## Files and routes
 
 - One file per page: `docs/learn/<slug>.md`. Route: `/learn/<slug>/`, in `site/src/nav.ts` with a sidebar label (the question or the idea, short).
-- Add the page to `PAGES` and list it in a chapter in `LEARN_CHAPTERS`, or `tests/site.test.ts` fails.
+- Add the page to `PAGES` and list it in a chapter in `LEARN_CHAPTERS`, or `packages/okb/tests/site.test.ts` fails.
 - The title is the first level-1 heading. Phrase it as the question the reader has ("What is a knowledge graph?").
 
 ## Standalone chapters
@@ -33,7 +33,7 @@ The overview (`index.md`), each chapter opener and the closing page (`where-next
 2. Add its pages (see "Files and routes" and "Page layout").
 3. Add every new page to `PAGES` in `site/src/nav.ts`, and one entry to `LEARN_CHAPTERS` with the title, the opener's `route` and its page routes in order.
 4. Audit each page against "Standalone chapters", and link the new chapter from the overview's table and the previous chapter's "Next" line.
-5. Run `npm test`: it fails on a page that is in no chapter or two, an opener with no page, or a missing glossary anchor.
+5. Run `pnpm test`: it fails on a page that is in no chapter or two, an opener with no page, or a missing glossary anchor.
 
 ## Page layout
 
@@ -45,7 +45,7 @@ Keep these sections in this order, with these names. Every Learn page has all se
 4. `## In okb`: the real command and what you'll see. Run it, then paste the real output. See "The In okb block".
 5. A callout of common mistakes, with no heading (same format as the tutorials).
 6. `## Related pages`: the tutorial where the idea appears at full size (wine or espresso), the glossary, and the Decision guide anchors that apply (`../DECISIONS.md#decision-instance-or-class`). Each item says why you'd go there.
-7. `## Sources`: last. The paper title once as a link (say "(PDF)"), the page number, and one short verbatim quote that the meta-KB already holds (`grep` `meta-kb/data/nodes.json` for the `SourceLocation`, and use its `quote` and `page`). Don't quote more than one sentence.
+7. `## Sources`: last. The paper title once as a link (say "(PDF)"), the page number, and one short verbatim quote that the meta-KB already holds (`grep` `packages/okb/meta-kb/data/nodes.json` for the `SourceLocation`, and use its `quote` and `page`). Don't quote more than one sentence.
 
 Every section, including the first, has a heading.
 
@@ -62,8 +62,8 @@ Every Learn page shows the same ontology so readers meet it once. Embed it as ra
 </okb-graph>
 ```
 
-- `src` is `/data/<name>.json`: `espresso`, `wine`, `meta-kb`, or `wine-step-N`. `tests/site.test.ts` fails on a name with no endpoint.
-- `focus` names the nodes that matter, by name or id (comma separated). Each name must match a node in the data: `tests/site.test.ts` fails on one that doesn't, so a rename in the tutorial can't silently turn a focused graph into the whole thing. The graph shows them, what they touch and the kinds above them. Pick two to four nodes that show the idea, so the graph has about 10 to 15 nodes. With no `focus`, the reader gets the whole graph and type filters: use that once per page at most, in an "Explore it all" section.
+- `src` is `/data/<name>.json`: `espresso`, `wine`, `meta-kb`, or `wine-step-N`. `packages/okb/tests/site.test.ts` fails on a name with no endpoint.
+- `focus` names the nodes that matter, by name or id (comma separated). Each name must match a node in the data: `packages/okb/tests/site.test.ts` fails on one that doesn't, so a rename in the tutorial can't silently turn a focused graph into the whole thing. The graph shows them, what they touch and the kinds above them. Pick two to four nodes that show the idea, so the graph has about 10 to 15 nodes. With no `focus`, the reader gets the whole graph and type filters: use that once per page at most, in an "Explore it all" section.
 - `highlight` marks the one node the page is about (larger, bold, dashed halo). `show` adds node types such as `Slot` or `Term`.
 - **No blank lines inside the element**, or Markdown ends the HTML block. The site test checks this.
 - **The fallback is the text alternative and all GitHub shows.** It must say what the graph shows, in sentences. Don't start it with "Text version", because the site adds that label itself. Name every node and link the page relies on.
@@ -72,13 +72,13 @@ Every Learn page shows the same ontology so readers meet it once. Embed it as ra
 
 ## The Mermaid picture
 
-- A `flowchart LR` of three to six nodes. It must have `accTitle` and `accDescr`; `tests/site.test.ts` fails without them.
+- A `flowchart LR` of three to six nodes. It must have `accTitle` and `accDescr`; `packages/okb/tests/site.test.ts` fails without them.
 - Use the same names as the graph (Vertex breve, Breve, Latte) so the two pictures read as one story.
 - Label every edge with a short verb phrase: `instance of`, `is a`, `contains`.
 
 ## The In okb block
 
-- Don't guess the output. Copy the espresso ontology to a scratch folder outside the repo (`cp -r examples/espresso $SCRATCH/espresso`), run the command from there (`node <repo>/src/cli.ts show "Vertex breve"`), and paste what it prints.
+- Don't guess the output. Copy the espresso ontology to a scratch folder outside the repo (`cp -r packages/okb/examples/espresso $SCRATCH/espresso`), run the command from there (`node <repo>/src/cli.ts show "Vertex breve"`), and paste what it prints.
 - The command goes in a `bash` block (so it gets a copy button) and the output in a `text` block. One command per idea.
 - After the output, say what to look at in it, and tie it back to the graph ("The `contains` line is three edges").
 - Link the command to its reference: `[`okb show`](../CLI.md#cmd-show)`.
@@ -104,15 +104,15 @@ A quote block with a bold lead and two to four items. Each names a mistake a beg
 ## Checks before you commit
 
 ```bash
-npx tsc
-npm test
-npm run lint:docs
+pnpm tsc
+pnpm test
+pnpm lint:docs
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts
-npm run site
+pnpm site
 ```
 
 - `lint:docs` must report 0 errors. The "Beginners may not know" warning fires on terms the page links on purpose. Weigh the others.
-- Open the page (`npm run site:dev`) and check the graph: it loads only when scrolled to, the nodes you focused are there, Tab reaches them, and the fallback reads well on its own (open "Text version of this graph").
+- Open the page (`pnpm site:dev`) and check the graph: it loads only when scrolled to, the nodes you focused are there, Tab reaches them, and the fallback reads well on its own (open "Text version of this graph").
 
 ## Review list
 

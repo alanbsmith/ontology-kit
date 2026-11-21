@@ -17,7 +17,7 @@ Every cortado is a milk drink. Every milk drink is an espresso drink. Every espr
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Every node here is a ring, a kind of drink. The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Every node here is a ring, a kind of drink. The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="MilkDrink" highlight="MilkDrink" label="MilkDrink in the Drink hierarchy: its parents, its five subclasses and the kinds it can't overlap with">
 <p>The graph shows MilkDrink and the kinds around it in the Vertex Coffee drink hierarchy.</p>
@@ -90,8 +90,8 @@ Each indented line is one "is a" link, the same ones as in the graph. The `MilkD
 
 ## Related pages
 
-- [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) builds this tree one class at a time.
-- [The wine tutorial](../../examples/wine/tutorial/4-classes.md) builds a larger tree.
+- [Step 4 of the espresso tutorial](../../packages/okb/examples/espresso/tutorial/4-classes.md) builds this tree one class at a time.
+- [The wine tutorial](../../packages/okb/examples/wine/tutorial/4-classes.md) builds a larger tree.
 - [Is it an "is a"?](../DECISIONS.md#decision-is-a) is the decision guide for each link.
 - [What are classes and instances?](classes-and-instances.md) explains the other kind of link, "instance of".
 - [Can a drink be two kinds at once?](disjoint-and-multiple-parents.md) is the next page: it covers siblings that can't overlap and classes with two parents.

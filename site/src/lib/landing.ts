@@ -35,7 +35,7 @@ interface RuleNode {
 
 /** Counts from the compiled meta-KB, so a new rule changes the page with no edit here. */
 export function ruleCounts(root: string): RuleCounts {
-  const nodes: RuleNode[] = JSON.parse(readFileSync(join(root, "meta-kb/data/nodes.json"), "utf8"));
+  const nodes: RuleNode[] = JSON.parse(readFileSync(join(root, "packages/okb/meta-kb/data/nodes.json"), "utf8"));
   const rules = nodes.filter((n) => n.type === "Rule");
   const n = (f: (r: RuleNode) => boolean) => rules.filter(f).length;
   return {

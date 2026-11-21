@@ -17,7 +17,7 @@ Say a barista types "crunchy" for the texture of a latte. A slot with no rules a
 
 ## See it
 
-This slot comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The graph shows slots too, so you can see the slot `texture` next to the kind it belongs to. Click the slot to read its rules.
+This slot comes from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The graph shows slots too, so you can see the slot `texture` next to the kind it belongs to. Click the slot to read its rules.
 
 <okb-graph src="/data/espresso.json" focus="MilkDrink, texture, contains" highlight="texture" show="Slot" label="The texture slot on Milk drink and the contains slot on Drink, with their rules">
 <p>The graph shows slots and the rules on them.</p>
@@ -53,7 +53,7 @@ okb refuses both, so nothing is saved. The first message names the allowed value
 
 ## Related pages
 
-- [The espresso tutorial, step 6](../../examples/espresso/tutorial/6-facets.md) sets these rules one by one.
+- [The espresso tutorial, step 6](../../packages/okb/examples/espresso/tutorial/6-facets.md) sets these rules one by one.
 - [Choosing a range](../DECISIONS.md#decision-range) covers what a link may point to.
 - [What is slot inheritance?](slot-inheritance.md) explains how a slot, and its rules, reach the classes below.
 - [Can a drink be two kinds at once?](disjoint-and-multiple-parents.md) shows why a default is safer than a fixed value when two parents disagree.

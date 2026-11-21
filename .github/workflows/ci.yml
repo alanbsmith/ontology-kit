@@ -1,0 +1,142 @@
+# Checks that every change must pass. The jobs' names are the status checks to require on `main`:
+#   Typecheck, Build and test, Generated files, Docs, Site, Node 24 runtime
+# `workflow_call` lets the release workflow reuse the whole set before it publishes.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels the run it supersedes. Runs on main and reused runs finish.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # Vale has no setup action; the Docs job downloads this release and checks it against this hash.
+  VALE_VERSION: 3.22.0
+  VALE_SHA256: 52f5cd0314a1b7384cac6aa102a68193977312f6ba9c9f3ae001b5deec8e3a10
+
+jobs:
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: pnpm tsc
+
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+      # Includes the package tests, which pack all three packages and run the installed okb.
+      - run: pnpm test
+
+  generated:
+    name: Generated files
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # The generated files are committed. Rebuild them all, then fail if anything changed or
+      # appeared, which means a rule, command or tutorial changed without a regenerate.
+      - name: Regenerate
+        run: |
+          pnpm build:meta
+          pnpm run docs
+          pnpm example
+      - name: Fail if regenerating changed anything
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Regenerating left changes. Run 'pnpm build:meta && pnpm run docs && pnpm example' and commit the result."
+            git status --short
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Check the docs against the CLI and meta-KB
+        run: node .claude/skills/okb-docs-drift/scripts/check-docs.ts
+      - name: Install Vale
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/vale.tar.gz" "https://github.com/errata-ai/vale/releases/download/v${VALE_VERSION}/vale_${VALE_VERSION}_Linux_64-bit.tar.gz"
+          echo "${VALE_SHA256}  $RUNNER_TEMP/vale.tar.gz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/vale"
+          tar -xzf "$RUNNER_TEMP/vale.tar.gz" -C "$RUNNER_TEMP/vale"
+          echo "$RUNNER_TEMP/vale" >> "$GITHUB_PATH"
+      # Prettier, markdownlint and Vale. scripts/vale.sh runs `vale sync` for the style packages.
+      # Vale fails the step on errors only; its warnings and suggestions print and pass.
+      - run: pnpm lint:docs
+
+  site:
+    name: Site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: pnpm site
+
+  node24:
+    name: Node 24 runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # Build and pack with the development Node (26); `prepack` compiles dist/.
+      - name: Pack the three packages
+        run: |
+          mkdir "$RUNNER_TEMP/tarballs"
+          pnpm --filter @ontology-kit/format pack --pack-destination "$RUNNER_TEMP/tarballs"
+          pnpm --filter @ontology-kit/okb pack --pack-destination "$RUNNER_TEMP/tarballs"
+          pnpm --filter ontology-kit pack --pack-destination "$RUNNER_TEMP/tarballs"
+      # The floor in `engines`: a user on Node 24 installs the tarballs and runs okb.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Install and run okb on Node 24
+        run: |
+          node --version
+          mkdir "$RUNNER_TEMP/install"
+          cd "$RUNNER_TEMP/install"
+          echo '{"name":"install-test","private":true}' > package.json
+          npm install --omit=optional --no-audit --no-fund "$RUNNER_TEMP"/tarballs/*.tgz
+          ./node_modules/.bin/okb version
+          node node_modules/ontology-kit/bin/okb.js version
+          ./node_modules/.bin/okb init my-ontology
+          # The reader package, installed beside okb, loads the ontology okb just made.
+          node --input-type=module -e 'import { Ontology } from "@ontology-kit/format"; console.log(Ontology.load("./my-ontology").manifest.format)'
+          cd my-ontology
+          ../node_modules/.bin/okb validate

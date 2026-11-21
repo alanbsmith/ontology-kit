@@ -988,6 +988,48 @@ $ okb verify rule.1 --approve
 | `--note` | text | A note about the check. |
 | `--approve` | flag | Approve it after review. |
 
+## Skills
+
+<a id="cmd-skills"></a>
+### okb skills
+
+Puts the skills that come with okb where Claude Code and Cursor load them from, and checks that they match this okb.
+
+<a id="cmd-skills-install"></a>
+#### okb skills install
+
+Links the three skills into `~/.claude/skills/` (a link keeps them current when the package updates), or copies them. It replaces a link to an older okb, a broken link or an older copy. It refuses to touch a folder that is not one of okb's, and changes nothing if it refuses.
+
+```bash
+$ okb skills install
+$ okb skills install --copy
+$ okb skills install --dir ~/.cursor/skills
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--copy` | flag | Copy the skill folders instead of linking to them. Run it again after you update okb. |
+| `--dir` | path | The skills folder to use instead of `~/.claude/skills/`. The `OKB_SKILLS_DIR` environment variable sets it too. |
+| `--force` | flag | Delete a folder or file that is not one of okb's skills (or a copy you edited) and put the skill in its place. |
+
+<a id="cmd-skills-status"></a>
+#### okb skills status
+
+Lists each skill with where it is installed and whether its version matches this okb. It exits with code 1 when any skill is missing or out of date.
+
+```bash
+$ okb skills status
+$ okb skills status --dir ~/.cursor/skills
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--dir` | path | The skills folder to check instead of `~/.claude/skills/`. |
+
 ## Housekeeping
 
 <a id="cmd-rename"></a>

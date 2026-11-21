@@ -1,56 +1,48 @@
 # Installation
 
-okb needs **Node.js 24+**. It runs its TypeScript source directly, so there's no build step.
+okb needs **Node.js 24 or newer** (check with `node --version`). It's an npm package, so you install it like any other command-line tool, and you don't need to clone anything.
 
 ```bash
-git clone https://github.com/alanbsmith/ontology-kit
-cd ontology-kit
-npm install
-npm link
+npm install --global @ontology-kit/okb
+okb skills install
 ```
 
-`npm install` fetches one runtime dependency (`yaml`, for markdown frontmatter); the rest are development tools. `npm link` puts `okb` on your PATH (or skip it and run `node src/cli.ts ...`). To check the install, run the test suite, which builds the wine example end to end:
+The first command puts `okb` on your PATH. The second installs the Claude skills that come with okb, the ontology-coach skill among them. To check that it worked:
 
 ```bash
-npm test
+okb version
 ```
 
-`pdftotext` (`brew install poppler`) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
+Prefer pnpm? `pnpm add --global @ontology-kit/okb` installs the same package. To try okb without installing it, put `npx ontology-kit` where you'd type `okb`, as in `npx ontology-kit version`. The unscoped `ontology-kit` package on npm installs the same `okb` command.
+
+`okb` has one runtime dependency (`yaml`, for markdown frontmatter). `pdftotext` (`brew install poppler` on a Mac) is optional: okb uses it to check quotes against PDFs, and falls back to the optional `pdfjs-dist` package without it.
 
 ## Skills
 
-To use the ontology-coach skill with Claude, link it from the kit folder:
-
-```bash
-mkdir -p ~/.claude/skills
-ln -s "$PWD/skills/ontology-coach" ~/.claude/skills/ontology-coach
-```
-
-Claude Code and Cursor both load skills from `~/.claude/skills/`, and the link keeps the skill current when you update the repo. Start it by asking `coach me through building an ontology`, or with `/ontology-coach`. The other skills in `skills/` install the same way.
+`okb skills install` links the three skills into `~/.claude/skills/`, which Claude Code and Cursor both load skills from. The links point into your okb install, so the skills stay current when okb updates. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
 
 ## Updating
 
 Check which version you have:
 
 ```bash
-okb version          # okb 1.0.0 · meta-KB 2.4.1
+okb version          # okb 0.1.0 · meta-KB 2.4.2
 ```
 
-The [meta-KB](../learn/meta-kb.md) version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each one. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).
+The [meta-KB](../learn/meta-kb.md) version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each package release and each meta-KB version. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).
 
-To update:
+To update, upgrade the package, install the skills again, and check the version:
 
 ```bash
-cd ontology-kit
-git pull
-npm install          # dependencies can change between versions
+npm update --global @ontology-kit/okb
+okb skills install
 okb version
 ```
 
-You don't need to run `npm link` again. It points at this folder, so `okb` runs the new code right away. Link again only if you switch Node versions or move the folder.
-
-Skills you linked into `~/.claude/skills/` update with the repo. If you copied or uploaded them instead, replace the old copies with the new ones from `skills/`. Either way, start a new Claude session so it loads the new version.
+With pnpm, use `pnpm update --global @ontology-kit/okb`. Installing the skills again is safe, and it matters if you used `--copy`, because copies don't update on their own. `okb skills status` shows whether the skills match your okb. Then start a new Claude session so it loads the new version.
 
 Existing ontologies keep working: okb converts older file formats when it loads them, and new rules only add findings.
 
-Next: build your first ontology with the [wine tutorial](../../examples/wine/tutorial/0-intro.md).
+Working on okb itself, or running it from a clone? See [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+Next: build your first ontology with the [wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md).

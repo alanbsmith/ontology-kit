@@ -15,7 +15,7 @@ Both are mechanical errors (a wrong number and a strengthened modality). A separ
 
 ## Markdown sources
 
-Most sources will be plain markdown, like component docs converted from MDX. okb reads them itself (`src/markdown.ts`):
+Most sources will be plain markdown, like component docs converted from MDX. okb reads them itself (`packages/okb/src/markdown.ts`):
 
 | In the file                                           | How okb treats it                                                                                                                                |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |

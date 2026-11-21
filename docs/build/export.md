@@ -16,7 +16,7 @@ okb export
 {
   "format": "okb-export/2",
   "ontology": "Coffee Shop",
-  "metaKbVersion": "2.4.1",
+  "metaKbVersion": "2.4.2",
   "nodes": [
     {
       "id": "i.house-latte",
@@ -42,7 +42,7 @@ cat coffee.cypher
 
 ```text
 Wrote coffee.cypher: 1 nodes, 0 relationships (cypher).
-// Coffee Shop: exported by okb (meta-KB 2.4.1)
+// Coffee Shop: exported by okb (meta-KB 2.4.2)
 // Every node carries okbId. To re-import, first run: MATCH (n) WHERE n.okbId IS NOT NULL DETACH DELETE n;
 
 CREATE (:Latte:Espresso:Drink {okbId: "i.house-latte", name: "House Latte", size: "medium"});
