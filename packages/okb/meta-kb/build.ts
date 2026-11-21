@@ -201,7 +201,7 @@ async function main() {
   }
   for (const et of fmt.edgeTypes) {
     const id = `edgetype.${et.name}`;
-    node({ type: "EdgeType", id, name: et.name, origin: et.origin, fromTypes: et.from, toTypes: et.to, props: et.props ?? [], optionalProps: et.optionalProps ?? [], description: et.description });
+    node({ type: "EdgeType", id, name: et.name, origin: et.origin, fromTypes: et.from, toTypes: et.to, props: et.props ?? [], optionalProps: et.optionalProps ?? [], provenance: et.provenance ?? false, description: et.description });
     edge(id, "MODELS", et.models);
   }
 

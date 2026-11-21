@@ -138,6 +138,8 @@ export interface MetaEdgeType {
   props: string[];
   /** Edge properties that may be present (String-valued); `props` are the required ones. */
   optionalProps: string[];
+  /** Part of the provenance and rule layer (quotes, sources, rules) rather than the ontology itself. */
+  provenance: boolean;
   description: string;
 }
 

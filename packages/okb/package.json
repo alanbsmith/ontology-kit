@@ -35,6 +35,11 @@
   ],
   "exports": {
     "./bin": "./bin/okb.js",
+    "./format": {
+      "types": "./dist/format.d.ts",
+      "development": "./src/format.ts",
+      "default": "./dist/format.js"
+    },
     "./cli": {
       "development": "./src/cli.ts",
       "default": "./dist/cli.js"
@@ -55,7 +60,7 @@
     "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/rewrite-dts.ts",
     "prepack": "npm run build"
   },
   "devDependencies": {

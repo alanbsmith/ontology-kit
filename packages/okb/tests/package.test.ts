@@ -52,13 +52,13 @@ describe("published packages", { skip: SKIP }, () => {
   after(() => rmSync(work, { recursive: true, force: true }));
 
   it("ships dist, the compiled meta-KB, skills and bin, and nothing else", () => {
-    for (const f of ["package.json", "README.md", "LICENSE", "bin/okb.js", "dist/cli.js", "dist/metakb.js",
+    for (const f of ["package.json", "README.md", "LICENSE", "bin/okb.js", "dist/cli.js", "dist/metakb.js", "dist/format.js", "dist/format.d.ts",
       "meta-kb/data/nodes.json", "meta-kb/data/edges.json", "skills/ontology-coach/SKILL.md"]) {
       assert.ok(okbFiles.includes(f), `${f} is in the tarball`);
     }
     for (const f of okbFiles) {
       assert.match(f, /^(package\.json|README\.md|LICENSE|bin\/|dist\/|meta-kb\/data\/|skills\/)/, `unexpected file ${f}`);
-      assert.doesNotMatch(f, /(^|\/)(tests|examples|docs|site|sources)\/|\.ya?ml$|\.pdf$|\.ts$|\.map$/, `unwanted file ${f}`);
+      assert.doesNotMatch(f, /(^|\/)(tests|examples|docs|site|sources)\/|\.ya?ml$|\.pdf$|(?<!\.d)\.ts$|\.map$/, `unwanted file ${f}`);
     }
     assert.ok(!okbFiles.includes("dist/gendocs.js"), "the docs generator stays out of the package");
   });

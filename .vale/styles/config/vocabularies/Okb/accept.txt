@@ -73,3 +73,5 @@ Corepack
 npm
 unscoped
 allowlist
+semver
+subpath

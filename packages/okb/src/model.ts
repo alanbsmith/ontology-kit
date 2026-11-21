@@ -81,6 +81,7 @@ export class Ontology {
     return this._edges;
   }
 
+  /** @internal */
   static create(root: string, name: string): Ontology {
     mkdirSync(root, { recursive: true });
     if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
@@ -113,6 +114,7 @@ export class Ontology {
   }
 
   /** okb-lpg/1 stored relationship values as HAS_VALUE edges with a `slot` property. */
+  /** @internal */
   migrateFromV1(): void {
     for (const s of this.ofType("Slot")) {
       if (s.valueType === "Instance" && !s.relType) s.relType = naming.relType(s.name);
@@ -129,6 +131,7 @@ export class Ontology {
     return new Ontology(".", { format: FORMAT, currentStep: 8, ...manifest }, nodes, edges);
   }
 
+  /** @internal */
   save(): void {
     const files: [string, unknown][] = [[MANIFEST, this.manifest], ["nodes.json", this.nodes], ["edges.json", this.edges]];
     for (const [fname, data] of files) {
@@ -142,6 +145,7 @@ export class Ontology {
   // nodes or edges (load, removal, retyping edges) calls reindex().
 
   /** Rebuild every index from scratch. The first node with a given id wins. */
+  /** @internal */
   reindex(): void {
     this.byId = new Map();
     for (const n of this.nodes) if (!this.byId.has(n.id)) this.byId.set(n.id, n);
@@ -273,6 +277,7 @@ export class Ontology {
     throw new OkbError(`No ${what} named '${ref}'.${sugg.length ? ` Did you mean: ${sugg.join(", ")}?` : ""}`);
   }
 
+  /** @internal */
   suggest(ref: string, types?: readonly NodeType[], limit = 3): string[] {
     const k = naming.key(ref);
     const scored = this.nodes
@@ -283,6 +288,7 @@ export class Ontology {
     return scored.slice(0, limit).map((x) => x.name);
   }
 
+  /** @internal */
   newId(type: NodeType, name?: string): string {
     if (type === "CompetencyQuestion" || type === "DesignDecision") {
       const p = type === "CompetencyQuestion" ? "cq" : "d";
@@ -296,6 +302,7 @@ export class Ontology {
     return id;
   }
 
+  /** @internal */
   addNode<T extends OkbNode>(node: T): T {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
     this._nodes.push(node);
@@ -303,6 +310,7 @@ export class Ontology {
     return node;
   }
 
+  /** @internal */
   addEdge(from: string, type: string, to: string, props: Record<string, unknown> = {}): GraphEdge {
     const existing = this.outEdges(from, type).find(
       (e) => e.to === to && Object.entries(props).every(([k, v]) => e[k] === v),
@@ -314,6 +322,7 @@ export class Ontology {
     return e;
   }
 
+  /** @internal */
   removeEdges(pred: (e: GraphEdge) => boolean): number {
     const before = this.edges.length;
     this._edges = this._edges.filter((e) => !pred(e));
@@ -322,12 +331,14 @@ export class Ontology {
   }
 
   /** Change every edge of one type to another (a relationship's edge type was renamed). */
+  /** @internal */
   retypeEdges(from: string, to: string): void {
     for (const e of this._edges) if (e.type === from) e.type = to;
     this.reindex();
   }
 
   /** Remove a node, every edge touching it, and every value stored under its id. For a relationship slot, call rel.drop() first. */
+  /** @internal */
   removeNode(id: string): void {
     this._nodes = this._nodes.filter((x) => x.id !== id);
     this._edges = this._edges.filter((e) => e.from !== id && e.to !== id);

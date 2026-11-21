@@ -4,6 +4,8 @@
 #
 #   models   - the glossary concept this type implements
 #   origin   - ontology101 (Ontology 101's modeling primitive) or operational (toolkit/LPG plumbing)
+#   provenance - (edge types) true for the quote, source and rule layer; the public API's
+#                PROVENANCE_EDGE_TYPES list is built from it (src/format.ts)
 
 version: "okb-lpg/2"
 
@@ -54,13 +56,13 @@ edgeTypes:
      description: "Step-3 term → what it turned into."}
   - {name: ABOUT, from: [DesignDecision], to: [Class, Slot, Instance, CompetencyQuestion, Term, ReusedOntology, Ontology, Rule], origin: operational, models: concept.design-decision,
      description: "Design decision → what it's about."}
-  - {name: CITES, from: [Class, Slot, Instance, Rule, DesignDecision], to: [SourceLocation], origin: operational, models: concept.lpg,
+  - {name: CITES, provenance: true, from: [Class, Slot, Instance, Rule, DesignDecision], to: [SourceLocation], origin: operational, models: concept.lpg,
      description: "Provenance: element → the verbatim passage it came from."}
-  - {name: PART_OF, from: [SourceLocation], to: [Source], origin: operational, models: concept.lpg,
+  - {name: PART_OF, provenance: true, from: [SourceLocation], to: [Source], origin: operational, models: concept.lpg,
      description: "Provenance: passage → its document."}
-  - {name: GOVERNS, from: [Rule], to: [Class, Slot, Instance], origin: operational, models: concept.lpg,
+  - {name: GOVERNS, provenance: true, from: [Rule], to: [Class, Slot, Instance], origin: operational, models: concept.lpg,
      description: "Domain rule → what it constrains."}
-  - {name: REFINES, from: [Rule], to: [Rule], optionalProps: [adds], origin: operational, models: concept.rule-refines,
+  - {name: REFINES, provenance: true, from: [Rule], to: [Rule], optionalProps: [adds], origin: operational, models: concept.rule-refines,
      description: "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."}
-  - {name: FULFILLS, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
+  - {name: FULFILLS, provenance: true, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
      description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfill one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}

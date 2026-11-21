@@ -94,6 +94,7 @@ export class Relationships {
    * (from, relationship, to); `props` (edge properties, or `rule`) are merged into it.
    * Returns whether a new edge was created.
    */
+  /** @internal */
   link(id: string, slotId: string, target: string, props: Record<string, unknown> = {}): boolean {
     const existing = this.edge(id, slotId, target);
     if (existing) {
@@ -107,6 +108,7 @@ export class Relationships {
     return true;
   }
 
+  /** @internal */
   unlink(id: string, slotId: string, target: string): void {
     const spec = this.spec(slotId);
     if (!spec) return;
@@ -115,6 +117,7 @@ export class Relationships {
   }
 
   /** The edge type a relationship called `name` would be stored as; refuses structural and taken types. */
+  /** @internal */
   typeFor(name: string, slotId: string): string {
     const t = naming.relType(name);
     const { edgeTypes } = MetaKB.get().formatRegistry();
@@ -125,6 +128,7 @@ export class Relationships {
   }
 
   /** A slot's value type became Instance: give it an edge type, unless it already has one. */
+  /** @internal */
   becomeRelationship(slot: SlotNode): void {
     if (!slot.relType) slot.relType = this.typeFor(slot.name, slot.id);
   }
@@ -133,6 +137,7 @@ export class Relationships {
    * A relationship's value type changed to a literal type: its stored links and its
    * inverse pairing go. Returns the edge type and how many edges of it there were.
    */
+  /** @internal */
   becomeProperty(slot: SlotNode): { type?: string; links: number } {
     const type = slot.relType;
     const links = type ? this.ont.edgesOf(type).length : 0;
@@ -147,6 +152,7 @@ export class Relationships {
    * under b's own type move onto a's type, reversed (merging properties where the
    * same link already exists). Returns how many edges moved.
    */
+  /** @internal */
   declareInverse(a: RelationshipSlot, b: RelationshipSlot): number {
     const moved = this.ont.edgesOf(b.relType);
     this.ont.removeEdges((e) => e.type === b.relType);
@@ -165,6 +171,7 @@ export class Relationships {
    * A relationship is being renamed: claim the new edge type and, if this slot stores
    * the edges, retype them. Returns the change when stored edges were retyped.
    */
+  /** @internal */
   rename(slot: SlotNode, name: string): { from?: string; to: string } | null {
     const t = this.typeFor(name, slot.id);
     if (t === slot.relType) return null;
@@ -180,6 +187,7 @@ export class Relationships {
    * inverse, the inverse becomes the stored direction and keeps every link;
    * otherwise its stored edges are deleted. Returns what was kept, if anything.
    */
+  /** @internal */
   drop(slot: SlotNode): { links: number; type: string; name: string } | null {
     const type = slot.relType;
     if (!type || !this.isPrimary(slot.id)) return null;
