@@ -13,6 +13,7 @@ import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
+import { PACKAGE_VERSION } from "./version.ts";
 import { installSkills, skillsStatus, type SkillState } from "./skills.ts";
 
 type Opts = NonNullable<ParseArgsConfig["options"]>;
@@ -85,7 +86,7 @@ async function main(argvIn: string[]) {
 
     case "version":
     case "--version":
-      console.log(`okb 0.1.0 · meta-KB ${MetaKB.get().version}`);
+      console.log(`okb ${PACKAGE_VERSION} · meta-KB ${MetaKB.get().version}`);
       return;
 
     case "init": {

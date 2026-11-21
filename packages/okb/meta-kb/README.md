@@ -50,4 +50,4 @@ Each rule states its **basis**:
 
 ## Changelog
 
-What changed in each version, from the first draft to now, is in the [changelog](../../../docs/CHANGELOG.md).
+What changed in each version, from the first draft to now, is in the [changelog](../../../docs/CHANGELOG.md), which also lists the package releases. How the package and meta-KB versions relate is in [Releases](../../../CONTRIBUTING.md#releases).

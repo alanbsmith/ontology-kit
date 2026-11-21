@@ -130,7 +130,7 @@ Loading trusts the files, as the CLI does. A hand-edited file may hold nodes tha
 
 ### Versions and semver
 
-The exports above follow semver, in the same version as the rest of `@ontology-kit/okb`.
+The exports above follow semver, in the same version as the rest of `@ontology-kit/okb`. Before 1.0, any release may break them; [Releases](../CONTRIBUTING.md#releases) says what 1.0 will promise and how the package version relates to the meta-KB version.
 
 - **Major (breaking):** removing or renaming an export; narrowing a type or signature; removing a node or edge property or changing its meaning; changing what `rel.values`, `rel.edge` or `rel.spec` return for a file that was valid before; dropping the conversion of an older format; raising the Node floor.
 - **Minor:** a new export; a new optional property on a node; a new node type or structural edge type (it appears in the lists, so a tool that reads the lists keeps working and one that copied them doesn't); reading a newer file format.
