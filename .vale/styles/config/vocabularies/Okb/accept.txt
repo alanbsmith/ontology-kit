@@ -76,3 +76,7 @@ allowlist
 semver
 subpath
 Typecheck
+commitlint
+PRs
+Dependabot
+husky

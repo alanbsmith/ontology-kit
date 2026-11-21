@@ -11,6 +11,7 @@
   },
   "scripts": {
     "okb": "node packages/okb/src/cli.ts",
+    "prepare": "husky",
     "build": "pnpm --filter @ontology-kit/format --filter @ontology-kit/okb run build",
     "build:meta": "pnpm --filter @ontology-kit/okb run build:meta",
     "verify:quotes": "pnpm --filter @ontology-kit/okb run verify:quotes",
@@ -24,6 +25,9 @@
     "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && scripts/vale.sh"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "husky": "^9.1.7",
     "markdownlint-cli2": "^0.23.3",
     "prettier": "^3.9.9",
     "yaml": "^2.8.0"

@@ -1,0 +1,2 @@
+# Lints the commit message (commitlint.config.js). Skip once with `git commit --no-verify`; the PR check still runs.
+pnpm exec commitlint --edit "$1"

@@ -3,13 +3,14 @@
  *
  *   node scripts/release.ts check [vX.Y.Z]   All three packages have the same version (and it matches the tag, if given),
  *                                            and docs/CHANGELOG.md has a dated entry for it.
- *   node scripts/release.ts notes <vX.Y.Z>   Prints that changelog entry (without its heading), for the release notes.
+ *   node scripts/release.ts notes <vX.Y.Z>   Prints the GitHub release notes: that changelog entry, formatted for a release page.
  *   node scripts/release.ts version          Prints the package version.
  *
  * Versions are read from the package.json files, so nothing here is typed by hand.
  */
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -50,6 +51,38 @@ export function changelogEntry(version: string, root = ROOT): { heading: string;
   return { heading: lines[start], notes };
 }
 
+/**
+ * The changelog entry as a GitHub release page shows it: the `####` sections become `###` (the release's own
+ * title is the page heading), links relative to docs/ point at the files in the repository at that tag (a release page
+ * has no folder to resolve them from), and a link to the full comparison with the previous release ends it.
+ */
+export function releaseNotes(notes: string, opts: { tag: string; repo?: string; previousTag?: string }): string {
+  const { tag, repo, previousTag } = opts;
+  let fenced = false;
+  const lines = notes.split("\n").map((line) => {
+    if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
+    if (fenced) return line;
+    if (line.startsWith("#### ")) return line.slice(1);
+    if (!repo) return line;
+    return line.replace(/\]\(((?!https?:|#|mailto:)[^)\s]+)\)/g, (_m, target: string) => {
+      const [path, anchor] = target.split("#");
+      const file = posix.normalize(posix.join("docs", path));
+      return `](https://github.com/${repo}/blob/${tag}/${file}${anchor ? `#${anchor}` : ""})`;
+    });
+  });
+  const out = lines.join("\n").trim();
+  return repo && previousTag ? `${out}\n\n**Full changelog**: https://github.com/${repo}/compare/${previousTag}...${tag}\n` : `${out}\n`;
+}
+
+/** The newest `v*` tag before `tag`, or undefined if there is none or the tags aren't fetched. */
+function previousTagOf(tag: string): string | undefined {
+  try {
+    return execFileSync("git", ["describe", "--tags", "--abbrev=0", "--match", "v*", `${tag}^`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Throws unless the tag, the packages and the changelog agree. Returns the version. */
 export function check(tag?: string, root = ROOT): string {
   const version = releaseVersion(root);
@@ -69,7 +102,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       if (!arg) throw new Error("Usage: release.ts notes vX.Y.Z");
       const version = arg.replace(/^v/, "");
       if (arg !== `v${version}`) throw new Error(`Expected a tag like v${version}`);
-      console.log(changelogEntry(version).notes);
+      process.stdout.write(releaseNotes(changelogEntry(version).notes, { tag: arg, repo: process.env.GITHUB_REPOSITORY, previousTag: previousTagOf(arg) }));
     } else if (cmd === "version") console.log(releaseVersion());
     else throw new Error("Usage: release.ts check [vX.Y.Z] | notes vX.Y.Z | version");
   } catch (e) {
