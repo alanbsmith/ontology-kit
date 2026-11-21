@@ -59,17 +59,19 @@ You're done when
 Tips
   • Competency questions are a sketch, not a contract. You'll add and change them.
   • Don't try to list every question now. Write a few examples; each stands for a family of
-  similar questions, and okb will suggest the rest of the family once a question is answered
-  (okb cq link).
+  similar questions, and you can fill in the rest of the family once a question is answered.
   • Good questions are specific and answerable: 'Which wines go with grilled meat?' beats 'Tell
   me about wine'.
   • Include a few questions that need relationships (X goes with Y), not only lookups (what
   color is X).
 
 In Ontology 101's wine example
-  Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery
-  inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet
-  Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'
+  • Domain: wine and food
+  • Purpose: suggest good wine–food combinations
+  • Out of scope: winery inventory, restaurant staff
+  • Question: Is Bordeaux a red or white wine?
+  • Question: Does Cabernet Sauvignon go well with seafood?
+  • Question: What is the best choice of wine for grilled meat?
 
 Commands
   okb scope   okb cq add

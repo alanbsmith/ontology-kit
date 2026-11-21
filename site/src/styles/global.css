@@ -437,6 +437,16 @@ h4 {
 	margin-top: var(--space-sm);
 }
 
+/* A bold label above a block ("Goal", "Tips"): it sits close to what it introduces. The label
+   has no bottom margin of its own, and the block after it gets a small top margin. */
+.prose .block-label {
+	margin-bottom: 0;
+}
+
+.prose .block-label + * {
+	margin-top: var(--space-xs);
+}
+
 /* Reference entries (glossary, rules): a bordered card with a heading band and labeled rows. */
 .prose .entry {
 	border: var(--border-width) solid var(--color-border);

@@ -78,8 +78,8 @@ Tips
   • Mine your competency questions and any documents you collected in Step 2.
 
 In Ontology 101's wine example
-  wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat,
-  white wine, and so on.
+  Terms in the wine example include wine, grape, winery, location, a wine's color, body, flavor
+  and sugar content, fish, red meat and white wine.
 
 Commands
   okb term add

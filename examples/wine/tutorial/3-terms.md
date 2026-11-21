@@ -89,8 +89,8 @@ Questions to answer
 You're done when
   ○ A naming convention is set
   ○ At least two classes, organized with at least one is-a link
-  ○ No errors in hierarchy checks
-  ? You've stood back and looked at the tree (okb tree) against the checklist in decision.is-a
+  ○ The class hierarchy has no known mistakes
+  ? You've stood back and looked at the whole tree, checking each is-a link against the "Is this really a subclass?" guide
 
 Tips
   • Steps 4 and 5 are intertwined. It's normal to add a few classes, then a few slots, then go
@@ -100,8 +100,10 @@ Tips
   • Mark 'grouping only' classes as abstract.
 
 In Ontology 101's wine example
-  Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc
-  → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.
+  • Wine → Red Wine, White Wine, Rosé Wine
+  • Red Wine → Bordeaux, Burgundy, and so on
+  • Bordeaux → Médoc → Pauillac, Margaux
+  • Port has two parents: Red Wine and Dessert Wine
 
 Decision guides for this step  (okb explain <id>)
   decision.approach            Top-down, bottom-up, or combination?

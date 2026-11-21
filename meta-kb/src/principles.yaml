@@ -27,7 +27,7 @@ principles:
     cites: [src.o101/not-a-goal, src.o101/pudding]
 
   - id: principle.structure-not-behavior
-    name: "Think in structure, not behavior (it's not object-oriented design)"
+    name: "Think in structure, not behavior"
     statement: "A programmer makes design decisions based on the operational properties of a class, whereas an ontology designer makes these decisions based on the structural properties of a class."
     plainLanguage: "If you write software, be careful: an ontology class is not a code class. You aren't grouping things by what they do or which code they share. You're grouping them by what they are. 'Is every X necessarily a Y?' is the only question that makes X a subclass of Y."
     cites: [src.o101/structural-not-operational]

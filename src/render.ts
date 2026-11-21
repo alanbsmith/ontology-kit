@@ -166,9 +166,10 @@ export function stepGuide(step: MetaStep): string {
   for (const d of step.doneWhen) out.push(`  ${d.check ? SYMBOL.todo : SYMBOL.ask} ${d.text}`);
   if (step.tips?.length) {
     out.push("", c.bold("Tips"));
-    for (const t of step.tips) out.push(indent(`• ${t}`, "  "));
+    // Tips can hold markdown links for the docs page; in the terminal show the address after the name.
+    for (const t of step.tips) out.push(indent(`• ${t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}`, "  "));
   }
-  if (step.wine) out.push("", c.bold("In Ontology 101's wine example"), indent(step.wine, "  "));
+  if (step.wine) out.push("", c.bold("In Ontology 101's wine example"), ...step.wine.split("\n").map((l) => indent(step.wine.includes("\n") ? `• ${l}` : l, "  ")));
   const decisions = meta.targets(step.id, "USES").map((d) => meta.node(d, "Decision"));
   if (decisions.length) {
     out.push("", c.bold("Decision guides for this step") + c.dim("  (okb explain <id>)"));

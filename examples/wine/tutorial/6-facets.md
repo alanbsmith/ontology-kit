@@ -121,7 +121,7 @@ Wine and Food  · 21 classes · 11 slots · 0 instances · 6 questions
 ✓ 5. Define the properties of classes (slots)
 ✓ 6. Define the facets of the slots ◀ you are here
      ✓ Every slot has a value type and cardinality
-     ✓ No errors in slot checks
+     ✓ The slots have no known mistakes
 ○ 7. Create instances
 ○ 8. Review against your questions, and iterate
 
@@ -153,7 +153,7 @@ Questions to answer
 
 You're done when
   ○ At least a few instances (enough to answer one competency question end to end)
-  ○ No errors in instance checks
+  ○ The instances have no known mistakes
 
 Tips
   • Start with instances that answer one competency question completely. It's the fastest way to
@@ -162,8 +162,9 @@ Tips
   strict.
 
 In Ontology 101's wine example
-  Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate,
-  tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.
+  • Château Morgon Beaujolais is an instance of Beaujolais, with:
+  • body light, color red, flavor delicate, tannin low
+  • grape Gamay, maker Château Morgon, region Beaujolais, sugar dry
 
 Decision guides for this step  (okb explain <id>)
   decision.instance-or-class   Instance or class?
