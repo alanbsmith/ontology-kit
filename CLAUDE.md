@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Starting a session
+
+Before reading, editing or generating anything, make sure the work sits on an up-to-date branch. A worktree session can start from a stale base, and work built on one has to be redone.
+
+1. Run `git fetch origin`, then `git branch --show-current` and `git status --short`.
+2. Decide the base branch. It's `main`, unless the task names another branch: a milestone's integration branch, an issue's parent branch, or a PR's base. If the task names a branch to work on, check that you are on it.
+3. Check how far behind the base you are: `git log --oneline HEAD..origin/<base>`. Any output means the branch is stale.
+4. If it is stale, bring it up to date before doing any work. Stash uncommitted changes first. Rebase onto `origin/<base>`; if the branch is already pushed or has an open PR, merge `origin/<base>` instead. Reapply the stash, and resolve conflicts in generated files (`docs/*.md`, `meta-kb/data/*.json`) by regenerating them, not by merging by hand.
+5. Say in one line which branch you are on and which base you checked it against.
+
+Check again, and bring the branch up to date, before you commit or open a PR, and whenever the user says the base has moved. A long session drifts too.
+
 ## Commands
 
 Requires **Node 24+** (see `.nvmrc`). No build step: Node runs the `.ts` sources directly via type stripping, so only erasable TypeScript syntax is allowed (no `enum`, `namespace`, or constructor parameter properties; `tsconfig.json` sets `erasableSyntaxOnly`). Relative imports use the `.ts` extension.
