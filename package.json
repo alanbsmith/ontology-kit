@@ -24,7 +24,7 @@
     "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && scripts/vale.sh"
   },
   "devDependencies": {
-    "markdownlint-cli2": "^0.23.3",
+    "markdownlint-cli2": "^0.24.1",
     "prettier": "^3.9.9",
     "yaml": "^2.8.0"
   }
