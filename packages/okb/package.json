@@ -59,7 +59,8 @@
     "typecheck": "tsc",
     "test": "node --test \"tests/*.test.ts\"",
     "build": "pnpm --filter @ontology-kit/format run build && rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts.ts",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "prepublishOnly": "node ../../scripts/publish-guard.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

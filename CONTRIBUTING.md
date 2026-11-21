@@ -162,7 +162,7 @@ The Generated files check catches a rule, command or tutorial change that you di
 
 ### What the versions mean
 
-Two version numbers exist, and `okb version` prints both: `okb 0.1.0 · meta-KB 2.4.1`.
+Two version numbers exist, and `okb version` prints both: `okb 0.1.0 · meta-KB 2.4.2`.
 
 - **The package version** is semver over everything a user or another tool depends on: the CLI (command and flag names, exit codes and the `--json` output), the file format (`okb-lpg/2`, and reading older formats), and the `@ontology-kit/format` exports (so the format package's semver is the format API's contract). `@ontology-kit/format`, `@ontology-kit/okb` and the unscoped `ontology-kit` wrapper always release together at the same version. `okb version` reads it from `package.json`.
 - **The meta-KB version** covers the method and the rules (`VERSION` in `packages/okb/meta-kb/build.ts`). Each ontology's `okb.json` records the one it started with. [Changing rules](#changing-rules) says when to bump it.
@@ -204,11 +204,11 @@ git tag -a v0.1.0 -m "v0.1.0"
 git push origin v0.1.0
 ```
 
-The tag must be `v` plus the version. The release workflow (`.github/workflows/release.yml`) then checks that the tag, all three versions and the changelog entry agree and that the tag is on `main`; runs the whole CI workflow; builds and packs the three packages; publishes `@ontology-kit/format`, then `@ontology-kit/okb`, then `ontology-kit` to npm, in that order because each depends on the one before; and creates the GitHub release with the changelog entry as its notes. A run that is repeated skips a version already on npm, so it can finish a release that stopped halfway. To try everything except the publish, run the workflow by hand from the Actions tab with `dry-run` on (the default).
+The tag must be `v` plus the version. The release workflow (`.github/workflows/release.yml`) then checks that the tag, all three versions and the changelog entry agree and that the tag is on `main`; runs the whole CI workflow; builds and packs the three packages in a job with no publish rights; publishes `@ontology-kit/format`, then `@ontology-kit/okb`, then `ontology-kit` to npm from those tarballs, in that order because each depends on the one before, in the only job that holds the identity token and checks out no code; and creates the GitHub release with the changelog entry as its notes, in a last job that is the only one with write access to the repository. A run that is repeated skips a version already on npm, so it can finish a release that stopped halfway. To try everything except the publish, run the workflow by hand from the Actions tab with `dry-run` on (the default). A dry run ends with `npm publish --dry-run` on the tarballs, needs no `release` environment, and doesn't exercise the token exchange.
 
 ### One-time npm setup
 
-The workflow holds no npm token. It publishes with [trusted publishing](https://docs.npmjs.com/trusted-publishers): npm accepts a short-lived identity token that GitHub issues for the exact repository, workflow file and environment you configured, and records provenance for each version. This needs npm 11.5.1 or newer, which the workflow checks. It runs `npm publish` on the packed tarballs: `pnpm pack` rewrites the `workspace:*` dependencies (the wrapper's on okb, okb's on the format package) to the real version, and applies the format package's `publishConfig.exports`, and `npm publish` is the client npm documents for the token exchange.
+The workflow holds no npm token. It publishes with [trusted publishing](https://docs.npmjs.com/trusted-publishers): npm accepts a short-lived identity token that GitHub issues for the exact repository, workflow file and environment you configured, and records provenance for each version. This needs npm 11.5.1 or newer, which the workflow checks. It runs `npm publish` on the packed tarballs: `pnpm pack` rewrites the `workspace:*` dependencies (the wrapper's on okb, okb's on the format package) to the real version, and applies the format package's `publishConfig.exports`, and `npm publish` is the client npm documents for the token exchange. Publish only the tarballs: a package folder's `package.json` still has the `workspace:*` ranges and, in the format package, source `exports`, so each package's `prepublishOnly` script refuses a folder publish.
 
 npm can configure a trusted publisher only for a package that already exists, so the first version of each of the three packages is published by hand once. The owner does this, with 2FA, from a clone on Node 26:
 
@@ -227,11 +227,19 @@ npm can configure a trusted publisher only for a package that already exists, so
    git checkout -- packages/format/package.json packages/okb/package.json packages/ontology-kit/package.json
    ```
 
-3. For each package (`@ontology-kit/format`, `@ontology-kit/okb`, then `ontology-kit`), on npmjs.com open **Settings → Trusted Publisher → GitHub Actions** and enter repository owner `alanbsmith`, repository `ontology-kit`, workflow filename `release.yml` and environment `release`. The `npm trust github <package> --file release.yml --repo alanbsmith/ontology-kit --env release --allow-publish` command does the same. The fields are case-sensitive and npm doesn't check them when you save, so a typo shows up as a failed publish. Cut the first release soon after: npm drops a trusted-publisher setup that sees no publish for a while.
-4. On GitHub, under **Settings → Environments**, the `release` environment is created by the first run. Add required reviewers there if you want to approve each publish, and limit it to `v*` tags. This is optional.
+3. For each package (`@ontology-kit/format`, `@ontology-kit/okb`, then `ontology-kit`), on npmjs.com open **Settings → Trusted Publisher → GitHub Actions** and enter repository owner `alanbsmith`, repository `ontology-kit`, workflow filename `release.yml` and environment `release`. The `npm trust github <package> --file release.yml --repo alanbsmith/ontology-kit --env release --allow-publish` command does the same. The fields are case-sensitive and npm doesn't check them when you save, so a typo shows up as a failed publish. npm expires a trusted publisher that has not completed a successful publish within 2 days of being created, and it can't be edited then. Do this step last: merge the release change, run the workflow by hand with `dry-run` on, then add the trusted publishers, then push the tag the same day.
+4. On GitHub, protect the release path before the first tag. This is required, not optional: npm's trusted publisher names the repository, the workflow file and the environment, and does not check the branch or tag. Without protection, anyone who can push a branch could edit `release.yml` there, run it by hand, and publish with valid provenance. Under **Settings → Environments**, create `release` before the first tag (a real run would otherwise create it with no protection), set **Deployment branches and tags** to the tag pattern `v*`, and add yourself as a required reviewer if you want to approve each publish. Then, under **Settings → Rules**, add a tag rule on `v*` that restricts who can create such tags, and turn on the branch rule for `main`. With the GitHub CLI, the environment part is:
+
+   ```bash
+   gh api -X PUT repos/alanbsmith/ontology-kit/environments/release --input - <<< '{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+   gh api -X POST repos/alanbsmith/ontology-kit/environments/release/deployment-branch-policies -f name='v*' -f type=tag
+   ```
+
 5. Optionally, on each package's **Settings → Publishing access**, choose "Require two-factor authentication and disallow tokens". Trusted publishing keeps working.
 
 If npm lets you configure the trusted publisher before the package exists, skip step 2 and go straight to tagging.
+
+After the first release, mark the bootstrap versions as superseded, since they were published from a laptop and have no provenance: `npm deprecate "@ontology-kit/format@0.1.0-bootstrap.0" "Superseded by 0.1.0"`, and the same for `@ontology-kit/okb` and `ontology-kit`. Before step 2, check that the unscoped name is free and passes npm's similar-name rule: `npm view ontology-kit` should say it is not found.
 
 ## Before you commit
 

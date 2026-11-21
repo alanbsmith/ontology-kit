@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -76,5 +76,13 @@ describe("release checks", () => {
 
   it("exits non-zero from the command line when the tag is wrong", () => {
     assert.throws(() => execFileSync(process.execPath, [join(REPO, "scripts", "release.ts"), "notes", "v9.9.9"], { stdio: "pipe" }));
+  });
+
+  it("refuses to publish a package folder, so only the packed tarballs can go out", () => {
+    for (const dir of ["format", "okb", "ontology-kit"]) {
+      const pkg = JSON.parse(readFileSync(join(REPO, "packages", dir, "package.json"), "utf8"));
+      assert.equal(pkg.scripts.prepublishOnly, "node ../../scripts/publish-guard.ts", dir);
+    }
+    assert.throws(() => execFileSync(process.execPath, [join(REPO, "scripts", "publish-guard.ts")], { stdio: "pipe" }), /Don't publish a package folder/);
   });
 });

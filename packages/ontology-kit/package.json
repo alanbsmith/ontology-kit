@@ -40,5 +40,8 @@
   },
   "dependencies": {
     "@ontology-kit/okb": "workspace:*"
+  },
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/publish-guard.ts"
   }
 }
