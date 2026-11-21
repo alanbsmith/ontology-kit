@@ -4,36 +4,41 @@ This page is for changing Ontology Kit itself. To use it, start with the [Introd
 
 ## Setup
 
-You need Node.js 26 (see [Installation](docs/getting-started/installation.md)). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), then run `pnpm install` in the repo root. It installs the docs site too, so `site/` needs no separate step. To put `okb` on your PATH, run `pnpm link --global`.
+You need Node.js 26 (see [Installation](docs/getting-started/installation.md)). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), then run `pnpm install` in the repo root. The repo is a pnpm workspace, so that one install covers `packages/okb` and the docs site (`site/`) too. To put `okb` on your PATH, run `pnpm add --global link:./packages/okb`.
 
 ## Repository layout
 
 ```text
-bin/okb.js              launcher (pnpm link --global target)
-src/                    okb source (TypeScript, Node type stripping)
-  cli.ts ops.ts ops/    commands and the operations behind them (ops/ split by reason to change)
-  checks.ts status.ts   validator (one check per rule) and step progress
-  model.ts types.ts     graph model and the typed okb file format
-  relationships.ts      how relationship values are stored as edges (inverses, renames, removal)
-  naming.ts errors.ts   naming conventions; OkbError
-  metakb.ts render.ts   meta-KB access, terminal output
-  export.ts review.ts   graph-database export, judgment-rule review
-  markdown.ts provenance.ts   markdown reader; sources, quotes, extracted rules, verification
-  quotes.ts gendocs.ts  verbatim-quote matching, doc generator
-meta-kb/src/*.yaml      the meta-KB source (edit these)
-meta-kb/data/*.json     the compiled meta-KB (pnpm build:meta)
-meta-kb/build.ts        compiler + integrity checks + quote verification
+packages/okb/           @ontology-kit/okb: the CLI and library (a pnpm workspace package)
+  bin/okb.js            launcher (pnpm add --global link:./packages/okb target)
+  src/                  okb source (TypeScript, Node type stripping)
+    cli.ts ops.ts ops/  commands and the operations behind them (ops/ split by reason to change)
+    checks.ts status.ts validator (one check per rule) and step progress
+    model.ts types.ts   graph model and the typed okb file format
+    relationships.ts    how relationship values are stored as edges (inverses, renames, removal)
+    naming.ts errors.ts naming conventions; OkbError
+    metakb.ts render.ts meta-KB access, terminal output
+    export.ts review.ts graph-database export, judgment-rule review
+    markdown.ts provenance.ts   markdown reader; sources, quotes, extracted rules, verification
+    quotes.ts gendocs.ts        verbatim-quote matching, doc generator
+  meta-kb/src/*.yaml    the meta-KB source (edit these)
+  meta-kb/data/*.json   the compiled meta-KB (pnpm build:meta)
+  meta-kb/build.ts      compiler + integrity checks + quote verification
+  examples/             build-wine.ts, lib/tutorial.ts → examples/wine/ (pnpm example)
+  skills/               SKILL.md files for Claude
+  tests/                node:test suites (also the docs site's tests)
+site/                   the docs site (Astro; a private workspace package, reads the markdown in place)
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (pnpm run docs)
-examples/               build-wine.ts, lib/tutorial.ts → examples/wine/ (pnpm example)
-site/                   the docs site (Astro; its own package, reads the markdown in place)
-skills/                 SKILL.md files for Claude
 sources/                the source PDFs (gitignored; see sources/README.md)
-tests/                  node:test suites
+scripts/                repo-wide tooling (vale.sh)
+.claude/skills/         development skills (docs drift check, tutorial and Learn page writing)
 ```
+
+The root `package.json` is a private workspace root that holds the repo-wide tooling (Prettier, `markdownlint-cli2`, Vale) and scripts that run across the packages. The `docs/` folder and `sources/` stay at the root because they describe the whole kit, not one package. New packages go under `packages/`.
 
 ## Changing rules
 
-Edit `meta-kb/src/*.yaml`, then:
+Edit `packages/okb/meta-kb/src/*.yaml`, then:
 
 ```bash
 pnpm verify:quotes   # rebuild + check every quote word-for-word against the PDFs
@@ -41,7 +46,7 @@ pnpm run docs        # regenerate docs/
 pnpm test
 ```
 
-The build fails if a rule cites a quote that doesn't exist, if a mechanical rule has no check in `src/checks.ts` (or a check has no rule), or if a step's checklist refers to a status check that isn't implemented. See the [meta-KB internals](meta-kb/README.md) for the schema and the full editing steps, including when to bump the version.
+The build fails if a rule cites a quote that doesn't exist, if a mechanical rule has no check in `packages/okb/src/checks.ts` (or a check has no rule), or if a step's checklist refers to a status check that isn't implemented. See the [meta-KB internals](packages/okb/meta-kb/README.md) for the schema and the full editing steps, including when to bump the version.
 
 ## The docs site
 
@@ -52,21 +57,21 @@ pnpm site           # regenerate docs/, then build the site into site/dist (with
 pnpm site:dev       # the same, served at http://localhost:4321 while you edit
 ```
 
-Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`pnpm --dir site preview`). Netlify builds and hosts it from `netlify.toml`.
+Pages and the menu are listed in `site/src/nav.ts`; a test fails if a file in `docs/` isn't in it. Search only works on the built site (`pnpm --filter ontology-kit-docs preview`). Netlify builds and hosts it from `netlify.toml`.
 
 ## Writing style
 
-The beginner pages are `docs/getting-started/*.md`, `docs/learn/*.md`, `docs/build/*.md` and `examples/*/tutorial-src/*.md`. They're written for a developer who is new to ontologies and has a problem to solve, not a vocabulary to learn. `pnpm lint:docs` applies extra Vale rules to these paths (the `Beginner` style in `.vale/styles/Beginner`). The reference docs (METHOD, RULES, FORMAT and so on) keep the normal rules.
+The beginner pages are `docs/getting-started/*.md`, `docs/learn/*.md`, `docs/build/*.md` and `packages/okb/examples/*/tutorial-src/*.md`. They're written for a developer who is new to ontologies and has a problem to solve, not a vocabulary to learn. `pnpm lint:docs` applies extra Vale rules to these paths (the `Beginner` style in `.vale/styles/Beginner`). The reference docs (METHOD, RULES, FORMAT and so on) keep the normal rules.
 
 ### Page format
 
 Every page on the docs site starts with its `# Title` heading, before any paragraph, callout or other content. The site takes the page title from that heading, and a consistent opening makes the pages read the same.
 
-Generated pages (METHOD, GLOSSARY, RULES, DECISIONS) keep their "Generated from … Don't edit by hand" warning as an HTML comment right after the heading. Never show it as a visible callout: readers of the site don't need it, and an invisible comment still warns anyone who opens the source. `tests/site.test.ts` enforces both rules for every page.
+Generated pages (METHOD, GLOSSARY, RULES, DECISIONS) keep their "Generated from … Don't edit by hand" warning as an HTML comment right after the heading. Never show it as a visible callout: readers of the site don't need it, and an invisible comment still warns anyone who opens the source. `packages/okb/tests/site.test.ts` enforces both rules for every page.
 
 ### Tutorials
 
-The wine tutorial is written in `examples/wine/tutorial-src/*.md`, one file per page (`0-intro.md`, `1-scope.md` and so on). A source is plain prose plus code blocks tagged `okb` that hold only commands, one per line, each starting with `okb`:
+The wine tutorial is written in `packages/okb/examples/wine/tutorial-src/*.md`, one file per page (`0-intro.md`, `1-scope.md` and so on). A source is plain prose plus code blocks tagged `okb` that hold only commands, one per line, each starting with `okb`:
 
 ````markdown
 ```okb
@@ -74,7 +79,7 @@ okb class add Wine --desc "A specific wine."
 ```
 ````
 
-A block tagged `include` holds a file name and shows that file's contents, such as the diagram an earlier command wrote. Add the word `fails` after the `okb` tag for a command that must fail, such as a mistake you want to show. `pnpm example` runs every command in file order with the real CLI, then writes the finished pages to `examples/wine/tutorial/` (with each command and its output), a graph snapshot after each step to `examples/wine/tutorial/graph/`, and `TRANSCRIPT.md`. A command that fails stops the build and names the file and command. Never edit the generated files. To add a tutorial, copy the layout in `examples/lib/tutorial.ts` and add its pages to `site/src/nav.ts`. The `write-tutorial` skill (`.claude/skills/write-tutorial/SKILL.md`) has the page layout, voice, link and command-block conventions that keep tutorials alike. Read it before you write or review one.
+A block tagged `include` holds a file name and shows that file's contents, such as the diagram an earlier command wrote. Add the word `fails` after the `okb` tag for a command that must fail, such as a mistake you want to show. `pnpm example` runs every command in file order with the real CLI, then writes the finished pages to `packages/okb/examples/wine/tutorial/` (with each command and its output), a graph snapshot after each step to `packages/okb/examples/wine/tutorial/graph/`, and `TRANSCRIPT.md`. A command that fails stops the build and names the file and command. Never edit the generated files. To add a tutorial, copy the layout in `packages/okb/examples/lib/tutorial.ts` and add its pages to `site/src/nav.ts`. The `write-tutorial` skill (`.claude/skills/write-tutorial/SKILL.md`) has the page layout, voice, link and command-block conventions that keep tutorials alike. Read it before you write or review one.
 
 ### Explain, don't just describe
 
@@ -128,4 +133,4 @@ pnpm lint:docs                                           # Prettier, markdownlin
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts # docs and skills still match the CLI
 ```
 
-`pnpm test` regenerates tracked files (`meta-kb/data/*.json` and everything in `examples/wine/` except `tutorial-src/`). A diff in `examples/wine/` after a refactor means CLI output changed, so check it. Make one commit per change, and keep refactors apart from behavior changes.
+`pnpm test` regenerates tracked files (`packages/okb/meta-kb/data/*.json` and everything in `packages/okb/examples/wine/` except `tutorial-src/`). A diff in `packages/okb/examples/wine/` after a refactor means CLI output changed, so check it. Make one commit per change, and keep refactors apart from behavior changes.

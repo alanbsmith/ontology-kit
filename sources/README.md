@@ -1,6 +1,6 @@
 # Source documents
 
-`pnpm verify:quotes` checks every [meta-KB](../meta-kb/README.md) quote against these PDFs:
+`pnpm verify:quotes` checks every [meta-KB](../packages/okb/meta-kb/README.md) quote against these PDFs:
 
 - `ontology101.pdf`: Noy & McGuinness (2001), _Ontology Development 101_. Stanford: <https://protege.stanford.edu/publications/ontology_development/ontology101.pdf>
 - `ontolingua-kaj-1993.pdf`: Gruber (1993), _A Translation Approach to Portable Ontology Specifications_, Knowledge Acquisition 5(2).

@@ -5,14 +5,14 @@
  *
  * Reads the docs (default: every hand-written markdown file) and reports anything
  * that names something that doesn't exist:
- *   - okb commands/subcommands and their --flags, checked against src/cli.ts
- *   - `pnpm <script>`, checked against package.json
+ *   - okb commands/subcommands and their --flags, checked against packages/okb/src/cli.ts
+ *   - `pnpm <script>`, checked against the scripts in the root package.json and packages/okb/package.json
  *   - contributor commands that use npm (`npm run`, `npm ci`, `npm link`, `npm test`, `npm install`, `npx`): contributors use pnpm
- *   - repo paths (src/..., docs/..., meta-kb/..., tests/..., examples/..., skills/...)
+ *   - repo paths (docs/..., sources/..., and packages/okb/{src,meta-kb,tests,examples,skills,bin}/...; a bare src/... resolves inside packages/okb)
  *   - rule ids (hier-*, slot-*, naming-*, ...), checked against the compiled meta-KB
- *   - node and edge types in docs/FORMAT.md tables, checked against meta-kb/src/format.yaml
+ *   - node and edge types in docs/FORMAT.md tables, checked against packages/okb/meta-kb/src/format.yaml
  *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
- *     checked against meta-kb/data/manifest.json
+ *     checked against packages/okb/meta-kb/data/manifest.json
  * Exit code 1 if anything is found. It can't judge prose; the skill covers that.
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -21,10 +21,12 @@ import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
-/** The tutorial sources (examples/<name>/tutorial-src/*.md); the generated pages next to them copy these. */
-const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
-  ? readdirSync(join(ROOT, "examples"), { withFileTypes: true }).flatMap((e) => {
-      const dir = `examples/${e.name}/tutorial-src`;
+/** The okb package: the CLI, meta-KB, skills, examples and tests (repo-relative). */
+const PKG = "packages/okb";
+/** The tutorial sources (packages/okb/examples/<name>/tutorial-src/*.md); the generated pages next to them copy these. */
+const TUTORIAL_SOURCES = existsSync(join(ROOT, PKG, "examples"))
+  ? readdirSync(join(ROOT, PKG, "examples"), { withFileTypes: true }).flatMap((e) => {
+      const dir = `${PKG}/examples/${e.name}/tutorial-src`;
       return e.isDirectory() && existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : [];
     })
   : [];
@@ -32,8 +34,8 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, "examples"))
 const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 const DEFAULT_DOCS = [
-  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", "meta-kb/README.md", "sources/README.md",
-  "skills/ontology-coach/SKILL.md", "skills/ontology-review/SKILL.md", "skills/build-domain-kb-from-docs/SKILL.md", ...TUTORIAL_SOURCES,
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", `${PKG}/meta-kb/README.md`, "sources/README.md",
+  `${PKG}/skills/ontology-coach/SKILL.md`, `${PKG}/skills/ontology-review/SKILL.md`, `${PKG}/skills/build-domain-kb-from-docs/SKILL.md`, ...TUTORIAL_SOURCES,
   ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
 ];
 /** pnpm commands and tool names that aren't package.json scripts. */
@@ -49,9 +51,9 @@ interface Problem {
   message: string;
 }
 
-/** okb command -> its subcommands and flags, from the `case "x":` blocks in src/cli.ts. */
+/** okb command -> its subcommands and flags, from the `case "x":` blocks in packages/okb/src/cli.ts. */
 function cliSurface(): Map<string, { subs: Set<string>; flags: Set<string> }> {
-  const src = read("src/cli.ts");
+  const src = read(`${PKG}/src/cli.ts`);
   const out = new Map<string, { subs: Set<string>; flags: Set<string> }>();
   const global = ["C", "json", "help", "h"];
   const optionKeys = (text: string) =>
@@ -78,28 +80,28 @@ function cliSurface(): Map<string, { subs: Set<string>; flags: Set<string> }> {
 }
 
 function ruleKeys(): Set<string> {
-  const nodes = JSON.parse(read("meta-kb/data/nodes.json")) as { type: string; key?: string }[];
+  const nodes = JSON.parse(read(`${PKG}/meta-kb/data/nodes.json`)) as { type: string; key?: string }[];
   return new Set(nodes.filter((n) => n.type === "Rule" && n.key).map((n) => n.key!));
 }
 
 function formatTypes(): { nodes: Set<string>; edges: Set<string> } {
-  const fmt = parseYaml(read("meta-kb/src/format.yaml")) as { nodeTypes: { name: string }[]; edgeTypes: { name: string }[] };
+  const fmt = parseYaml(read(`${PKG}/meta-kb/src/format.yaml`)) as { nodeTypes: { name: string }[]; edgeTypes: { name: string }[] };
   return { nodes: new Set(fmt.nodeTypes.map((t) => t.name)), edges: new Set(fmt.edgeTypes.map((t) => t.name)) };
 }
 
 /** Meta-KB node counts by the words docs use for them. */
 function metaCounts(): Map<string, number> {
-  const { nodeCounts } = JSON.parse(read("meta-kb/data/manifest.json")) as { nodeCounts: Record<string, number> };
+  const { nodeCounts } = JSON.parse(read(`${PKG}/meta-kb/data/manifest.json`)) as { nodeCounts: Record<string, number> };
   return new Map([
     ["rules", nodeCounts.Rule], ["glossary concepts", nodeCounts.Concept], ["concepts", nodeCounts.Concept],
     ["principles", nodeCounts.Principle], ["decision guides", nodeCounts.Decision], ["steps", nodeCounts.Step],
   ]);
 }
 const COUNTS = metaCounts();
-const META_VERSION = (JSON.parse(read("meta-kb/data/manifest.json")) as { version: string }).version;
+const META_VERSION = (JSON.parse(read(`${PKG}/meta-kb/data/manifest.json`)) as { version: string }).version;
 
 const RULE_ID = /`((?:struct|hier|inst|slot|disjoint|naming|scope|doc|reuse|terms|prov)-[a-z0-9-]+)`/g;
-const REPO_PATH = /(?<![\w./-])((?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
+const REPO_PATH = /(?<![\w./-])((?:packages\/okb\/)?(?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
 
 function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
   const problems: Problem[] = [];
@@ -118,7 +120,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
       const [cmd, maybeSub] = m[1].split(" ");
       const spec = cli.get(cmd);
       if (!spec) {
-        problems.push({ file, line, kind: "command", message: `'okb ${cmd}' isn't a command in src/cli.ts.` });
+        problems.push({ file, line, kind: "command", message: `'okb ${cmd}' isn't a command in packages/okb/src/cli.ts.` });
         continue;
       }
       // class/slot/instance (and their aliases) always take a subcommand; the others can take
@@ -142,7 +144,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
       if (m[1] !== META_VERSION) problems.push({ file, line, kind: "version", message: `Says meta-KB ${m[1]}; it's ${META_VERSION}.` });
     }
     for (const m of text.matchAll(/(?:^|`)\s*pnpm (?:run )?([a-z][\w:-]*)/g)) {
-      if (!scripts.has(m[1]) && !PNPM_BUILTINS.has(m[1])) problems.push({ file, line, kind: "pnpm-script", message: `package.json has no '${m[1]}' script.` });
+      if (!scripts.has(m[1]) && !PNPM_BUILTINS.has(m[1])) problems.push({ file, line, kind: "pnpm-script", message: `no package.json (root or packages/okb) has a '${m[1]}' script.` });
     }
     if (/(?:^|`)\s*pnpm docs\b(?!:)/.test(text)) problems.push({ file, line, kind: "pnpm-script", message: "'pnpm docs' is pnpm's own docs command, not our script; write 'pnpm run docs'." });
     for (const m of text.matchAll(NPM_CONTRIBUTOR)) {
@@ -157,7 +159,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
       if (okbArgs.has(m[1])) continue; // an argument to okb: a file in the user's own project
       if (p.includes("*") || p.includes("<") || /\/$/.test(p) || text[(m.index ?? 0) + m[1].length] === "|") continue; // globs, placeholders, docs/A|B|C
       const fromFile = join(dirname(file), p);
-      if (!existsSync(join(ROOT, p)) && !existsSync(join(ROOT, fromFile)) && !isGenerated(p)) {
+      if (!existsSync(join(ROOT, p)) && !existsSync(join(ROOT, PKG, p)) && !existsSync(join(ROOT, fromFile)) && !isGenerated(p)) {
         problems.push({ file, line, kind: "path", message: `'${p}' doesn't exist.` });
       }
     }
@@ -165,12 +167,12 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
     if (file === "docs/FORMAT.md" && !inFence) {
       const cell = text.match(/^\| `([A-Za-z_]+)` \|/)?.[1];
       const section = lines.slice(0, i).reverse().find((l) => l.startsWith("## "));
-      if (cell && section === "## Node types" && !fmt.nodes.has(cell)) problems.push({ file, line, kind: "format-type", message: `Node type '${cell}' isn't in meta-kb/src/format.yaml.` });
-      if (cell && section === "## Edge types" && !fmt.edges.has(cell)) problems.push({ file, line, kind: "format-type", message: `Edge type '${cell}' isn't in meta-kb/src/format.yaml.` });
+      if (cell && section === "## Node types" && !fmt.nodes.has(cell)) problems.push({ file, line, kind: "format-type", message: `Node type '${cell}' isn't in packages/okb/meta-kb/src/format.yaml.` });
+      if (cell && section === "## Edge types" && !fmt.edges.has(cell)) problems.push({ file, line, kind: "format-type", message: `Edge type '${cell}' isn't in packages/okb/meta-kb/src/format.yaml.` });
     }
   });
   // Shipped skills state the version they were written for, so an agent can check it against okb version.
-  if (/^skills\/[^/]+\/SKILL\.md$/.test(file)) {
+  if (/^packages\/okb\/skills\/[^/]+\/SKILL\.md$/.test(file)) {
     const stated = read(file).match(/\*\*Version (\d+\.\d+\.\d+)\.\*\*/)?.[1];
     if (!stated) problems.push({ file, line: 0, kind: "version", message: `No "**Version X.Y.Z.**" line; add one matching meta-KB ${META_VERSION}.` });
     else if (stated !== META_VERSION) problems.push({ file, line: 0, kind: "version", message: `Skill says version ${stated}; the meta-KB is ${META_VERSION}. Update the skill's version line.` });
@@ -185,7 +187,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
 
 /** Paths that only exist after a command runs (PDFs are gitignored, examples are built). */
 function isGenerated(p: string): boolean {
-  return /^sources\/.*\.pdf$/.test(p) || /^examples\/(wine|espresso)\//.test(p);
+  return /^sources\/.*\.pdf$/.test(p) || /^(packages\/okb\/)?examples\/(wine|espresso)\//.test(p);
 }
 
 // Main
@@ -195,7 +197,7 @@ const files = args.filter((a) => !a.startsWith("--")).map((f) => relative(ROOT, 
 const cli = cliSurface();
 const rules = ruleKeys();
 const fmt = formatTypes();
-const scripts = new Set(Object.keys((JSON.parse(read("package.json")) as { scripts: Record<string, string> }).scripts));
+const scripts = new Set(["package.json", `${PKG}/package.json`].flatMap((p) => Object.keys((JSON.parse(read(p)) as { scripts: Record<string, string> }).scripts)));
 const problems = (files.length ? files : DEFAULT_DOCS).filter((f) => existsSync(join(ROOT, f))).flatMap((f) => checkFile(f, cli, rules, fmt, scripts));
 
 if (json) console.log(JSON.stringify(problems, null, 2));

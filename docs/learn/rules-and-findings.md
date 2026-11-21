@@ -17,7 +17,7 @@ Say you add the question "How much does each drink cost?" to the Vertex Coffee o
 
 ## See it
 
-The graph is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Here a dot can also be a competency question or a slot. Click a node to read about it. The dashed outline marks the question that `okb validate` complains about.
+The graph is from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Here a dot can also be a competency question or a slot. Click a node to read about it. The dashed outline marks the question that `okb validate` complains about.
 
 <okb-graph src="/data/espresso.json" focus="cq.3, cq.6" highlight="cq.6" show="CompetencyQuestion,Slot" label="Two competency questions: one linked to the classes and slots that answer it, and one linked to nothing">
 <p>The graph shows two competency questions from the espresso ontology.</p>
@@ -94,7 +94,7 @@ The warning count drops to 0 and the finding moves to an "EXPLAINED by design de
 
 ## Related pages
 
-- [Step 8 of the espresso tutorial](../../examples/espresso/tutorial/8-review.md) shows this finding and the decision at full size.
+- [Step 8 of the espresso tutorial](../../packages/okb/examples/espresso/tutorial/8-review.md) shows this finding and the decision at full size.
 - [The Rules page](../RULES.md) lists every rule, its strength and the reason for it.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 - [What are facets?](facets.md) covers the rules you set on a slot, which several findings check.

@@ -18,7 +18,7 @@ Without questions, you may model everything you can think of about coffee and ne
 
 ## See it
 
-This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The question is a node too. It points at what it needs, and the dashed outline marks it. The slot `contains` is a dot as well, but it is part of the plan, not a real drink.
+This graph comes from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md). [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The question is a node too. It points at what it needs, and the dashed outline marks it. The slot `contains` is a dot as well, but it is part of the plan, not a real drink.
 
 <okb-graph src="/data/espresso.json" focus="cq.3, Cappuccino, contains, Vertex cappuccino" show="CompetencyQuestion, Slot" highlight="cq.3" label="The question 'What goes into a cappuccino?' linked to the class and slot that answer it, with the real drink Vertex cappuccino">
 <p>The graph shows the question "What goes into a cappuccino?" and the parts of the espresso ontology that answer it.</p>
@@ -64,8 +64,8 @@ The `cq.3` line is the graph above: its two needs are the two links out of the q
 
 ## Related pages
 
-- [The espresso tutorial](../../examples/espresso/tutorial/1-scope.md) writes these questions in its scope step.
-- [The wine tutorial](../../examples/wine/tutorial/1-scope.md) does the same with wine questions.
+- [The espresso tutorial](../../packages/okb/examples/espresso/tutorial/1-scope.md) writes these questions in its scope step.
+- [The wine tutorial](../../packages/okb/examples/wine/tutorial/1-scope.md) does the same with wine questions.
 - [What is a knowledge graph?](knowledge-graphs.md) covers the nodes and links that the questions point at.
 - [What are classes and instances?](classes-and-instances.md) is the next page: it turns the kinds of thing in your questions into classes.
 - [Choosing a new class](../DECISIONS.md#decision-new-class) helps when a question needs a kind you don't have.

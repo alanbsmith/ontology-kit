@@ -16,7 +16,7 @@ Say you record that Vertex cortado contains a Double shot. Someone later asks wh
 
 ## See it
 
-This is from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots, the named fields on a kind of thing, are switched on so you can see the pair of them.
+This is from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Slots, the named fields on a kind of thing, are switched on so you can see the pair of them.
 
 <okb-graph src="/data/espresso.json" focus="Vertex cortado, Double shot, contains, usedIn" highlight="usedIn" show="Slot" label="Vertex cortado, Double shot and the contains and <code>usedIn</code> slots that are inverses">
 <p>The graph shows Double shot, the drinks that contain it and the two slots that describe the link. Vertex cortado is the one to follow.</p>
@@ -62,7 +62,7 @@ The phrase `reads :CONTAINS backwards` is the point. Nobody typed those eight dr
 
 ## Related pages
 
-- [The espresso tutorial, step 6](../../examples/espresso/tutorial/6-facets.md) declares this pair.
+- [The espresso tutorial, step 6](../../packages/okb/examples/espresso/tutorial/6-facets.md) declares this pair.
 - [Choosing the range of a relationship](../DECISIONS.md#decision-range) covers what each end may point to.
 - [Properties or relationships?](properties-and-relationships.md) explains the links that an inverse pairs up.
 - [How do I read and fix a finding?](rules-and-findings.md) is the next page: it starts the chapter on keeping an ontology honest.

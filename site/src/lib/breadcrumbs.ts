@@ -18,7 +18,7 @@ const LEARN: Crumb = { label: "Learn", href: LEARN_OVERVIEW };
 const GETTING_STARTED: Crumb = { label: "Getting started", href: "/getting-started/" };
 
 /** A tutorial's intro page is its generated `0-intro.md`; the steps live below its route. */
-const isTutorialIntro = (p: Page) => /^examples\/[^/]+\/tutorial\/0-intro\.md$/.test(p.source);
+const isTutorialIntro = (p: Page) => /^packages\/okb\/examples\/[^/]+\/tutorial\/0-intro\.md$/.test(p.source);
 
 /** "Tutorial: Wine ontology" → "Wine ontology tutorial". */
 const tutorialName = (p: Page) => `${p.label.replace(/^Tutorial:\s*/, "")} tutorial`;

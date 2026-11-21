@@ -1,20 +1,20 @@
 ---
 name: write-tutorial
-description: Write or edit an ontology-kit tutorial (examples/<name>/tutorial-src/*.md, built into pages by the tutorial engine). Use it when adding a new tutorial such as the espresso one, changing the wine tutorial, or reviewing tutorial pages, so every tutorial has the same page layout, voice, links and command-block conventions.
+description: Write or edit an ontology-kit tutorial (packages/okb/examples/<name>/tutorial-src/*.md, built into pages by the tutorial engine). Use it when adding a new tutorial such as the espresso one, changing the wine tutorial, or reviewing tutorial pages, so every tutorial has the same page layout, voice, links and command-block conventions.
 ---
 
 # Write a tutorial
 
-A tutorial builds one ontology from scratch, one step per page. The wine tutorial (`examples/wine/tutorial-src/`) is the model. A new tutorial should feel like its sibling: same sections in the same order, same voice, same kinds of links. Read two or three of the wine pages before you start, and copy their shape.
+A tutorial builds one ontology from scratch, one step per page. The wine tutorial (`packages/okb/examples/wine/tutorial-src/`) is the model. A new tutorial should feel like its sibling: same sections in the same order, same voice, same kinds of links. Read two or three of the wine pages before you start, and copy their shape.
 
-This skill covers the writing. The mechanics (how the engine runs commands, what it writes) are in the header of `examples/lib/tutorial.ts` and the "Tutorials" section of `CONTRIBUTING.md`. The general voice rules are in CONTRIBUTING's "Writing style", and Vale enforces part of them on `examples/*/tutorial-src/*.md`.
+This skill covers the writing. The mechanics (how the engine runs commands, what it writes) are in the header of `packages/okb/examples/lib/tutorial.ts` and the "Tutorials" section of `CONTRIBUTING.md`. The general voice rules are in CONTRIBUTING's "Writing style", and Vale enforces part of them on `packages/okb/examples/*/tutorial-src/*.md`.
 
 ## Files and routes
 
 - One file per page: `0-intro.md`, then `1-scope.md` to `8-review.md`. The names are `N-slug.md`, and the number is the order.
 - Page titles: the intro is `# Tutorial: <Name>` (for example `# Tutorial: Wine ontology`). Each step is `# Step N: <Word>` (`# Step 4: Classes`). Use the word the Method step uses.
-- Routes live in `site/src/nav.ts`: the intro at `/getting-started/tutorial/<name>/` and the steps at `/getting-started/tutorial/<name>/N-slug/`. The sidebar label for the intro is the page title. The labels for the steps are `1. Scope`, `2. Reuse` and so on. Add every generated page there, or `tests/site.test.ts` fails.
-- Never edit `examples/<name>/tutorial/` or `TRANSCRIPT.md`. They're generated. Edit the sources and run `pnpm example`.
+- Routes live in `site/src/nav.ts`: the intro at `/getting-started/tutorial/<name>/` and the steps at `/getting-started/tutorial/<name>/N-slug/`. The sidebar label for the intro is the page title. The labels for the steps are `1. Scope`, `2. Reuse` and so on. Add every generated page there, or `packages/okb/tests/site.test.ts` fails.
+- Never edit `packages/okb/examples/<name>/tutorial/` or `TRANSCRIPT.md`. They're generated. Edit the sources and run `pnpm example`.
 
 ## Page layout
 
@@ -62,7 +62,7 @@ Each item names the mistake in bold, then says what goes wrong. Put no links in 
 ## Links
 
 - **Link ontology terms to the glossary** at their first mention on each page, and again in a later section where the term is used on its own. Don't link twice in the same paragraph or section. Add a short clue next to a term the reader hasn't met: "a slot is a fact you can state about a class, such as `color`". Never use a term without a clue before it has been defined or linked.
-- Use relative paths from `examples/<name>/tutorial/`: `../../../docs/GLOSSARY.md#concept-class`. A remark plugin turns them into routes, and the build fails on a link to a `.md` file with no route.
+- Use relative paths from `packages/okb/examples/<name>/tutorial/`: `../../../../../docs/GLOSSARY.md#concept-class`. A remark plugin turns them into routes, and the build fails on a link to a `.md` file with no route.
 - The anchor is the meta-KB id with the dot changed to a dash: `concept-class`, `concept-disjoint`, `step-4-classes`. Check that each anchor exists in the generated doc (`grep '<a id="concept-x">' docs/GLOSSARY.md`), because the build doesn't.
 - Link a command to its reference: `[`okb convention`](../../../docs/CLI.md#cmd-convention)`. The anchors in `docs/CLI.md` are `cmd-<command>`.
 - Link the matching Method step: `../../../docs/METHOD.md#step-N-slug`.
@@ -84,7 +84,7 @@ Each item names the mistake in bold, then says what goes wrong. Put no links in 
 
 The commands in the sources create the ontology files. Reordering a command, changing an option or editing a quoted description changes `nodes.json` or `edges.json`. That includes the prose inside `--desc` and `--why` text, since okb stores it.
 
-- After a rebuild, run `git diff --stat -- 'examples/<name>/*.json'`. For the wine example it must be empty. For a new tutorial, the diff is the whole point, so check the files by reading them.
+- After a rebuild, run `git diff --stat -- 'packages/okb/examples/<name>/*.json'`. For the wine example it must be empty. For a new tutorial, the diff is the whole point, so check the files by reading them.
 - Add commands to a page that only read (`status`, `validate`, `show`, `tree`) freely. They don't change the files, but they do change the page output.
 - Remember `okb step next` changes `currentStep` and what `validate` shows. Keep the same order the real work would have.
 

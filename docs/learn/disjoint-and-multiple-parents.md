@@ -19,7 +19,7 @@ A drink with milk can't be a drink with only coffee and water. That's a rule you
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Breve, PureEspresso" highlight="Breve" label="Breve with its two parents, and PureEspresso, which is disjoint with MilkDrink">
 <p>The graph shows Breve with two parents, and the groups of drinks that can't overlap.</p>
@@ -58,8 +58,8 @@ Adding `--parent Latte --parent Cappuccino` is allowed, because those two aren't
 
 ## Related pages
 
-- [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) adds Breve with two parents and declares the disjoint groups.
-- [Step 6 of the espresso tutorial](../../examples/espresso/tutorial/6-facets.md) shows how defaults settle facts that two parents disagree on.
+- [Step 4 of the espresso tutorial](../../packages/okb/examples/espresso/tutorial/4-classes.md) adds Breve with two parents and declares the disjoint groups.
+- [Step 6 of the espresso tutorial](../../packages/okb/examples/espresso/tutorial/6-facets.md) shows how defaults settle facts that two parents disagree on.
 - [Are these classes disjoint?](../DECISIONS.md#decision-disjoint) is the decision guide for each pair of siblings.
 - [What does "is a kind of" mean?](hierarchy.md) explains the "is a" links that these rules build on.
 - [Properties or relationships?](properties-and-relationships.md) is the next page: it moves from kinds of thing to facts about them.

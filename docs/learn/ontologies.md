@@ -18,7 +18,7 @@ Think of a database. A table definition says a drink has a name and a list of in
 
 ## See it
 
-This graph comes from the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The dashed outline marks the kind this page is about. The `contains` node is a [slot](../GLOSSARY.md#concept-slot), a named link that a kind of thing can have. It is a dot too, but it belongs to the plan.
+This graph comes from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings and dots. The dashed outline marks the kind this page is about. The `contains` node is a [slot](../GLOSSARY.md#concept-slot), a named link that a kind of thing can have. It is a dot too, but it belongs to the plan.
 
 <okb-graph src="/data/espresso.json" focus="Vertex breve, Breve, contains" show="Slot" highlight="Breve" label="The plan and the data in the espresso ontology: the kind Breve and its slot contains, and one real drink, Vertex breve">
 <p>The graph shows the plan and the data for one drink in the espresso ontology.</p>
@@ -72,8 +72,8 @@ This output is all plan, with no real drink values. It lists the slots a breve c
 
 ## Related pages
 
-- [The espresso tutorial](../../examples/espresso/tutorial/0-intro.md) builds the plan and then adds the real drinks.
-- [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows the same split with a larger ontology.
+- [The espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md) builds the plan and then adds the real drinks.
+- [The wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md) shows the same split with a larger ontology.
 - [What is a knowledge graph?](knowledge-graphs.md) shows the links that both the plan and the data use.
 - [Why start with questions?](competency-questions.md) is the next page: it shows how to decide what the plan must cover.
 - [Choosing between a class and an instance](../DECISIONS.md#decision-instance-or-class) helps when you aren't sure which side a thing belongs on.

@@ -8,16 +8,16 @@ You don't need to know what an ontology is yet. An [ontology](../learn/ontologie
 
 The kit has three parts. You use all three, but you only type to one of them.
 
-- **The `okb` tool** (in `src/`) is a command-line program. It creates your ontology one step at a time, stops common mistakes as you make them, and explains every problem it finds in plain words.
-- **The meta-KB** (in `meta-kb/`) is what `okb` checks your work against. It's a knowledge base about building knowledge bases: the steps, the vocabulary, and the rules. Every rule quotes the paper it comes from, or says it's a toolkit convention. [Where do the rules come from?](../learn/meta-kb.md) shows how.
-- **The skills** (in `skills/`) are instructions that let Claude work with `okb` for you:
+- **The `okb` tool** (in `packages/okb/src/`) is a command-line program. It creates your ontology one step at a time, stops common mistakes as you make them, and explains every problem it finds in plain words.
+- **The meta-KB** (in `packages/okb/meta-kb/`) is what `okb` checks your work against. It's a knowledge base about building knowledge bases: the steps, the vocabulary, and the rules. Every rule quotes the paper it comes from, or says it's a toolkit convention. [Where do the rules come from?](../learn/meta-kb.md) shows how.
+- **The skills** (in `packages/okb/skills/`) are instructions that let Claude work with `okb` for you:
   - **ontology-coach** guides you from a blank page.
   - **ontology-review** gives a second opinion on the judgment calls a script can't check.
   - **build-domain-kb-from-docs** pulls an ontology out of existing docs, and checks every quote before it keeps it.
 
 ## Your path
 
-1. **Learn the method.** Start with the [Learn course](../learn/index.md). The key idea is that you sort things into _kinds_. The method calls a kind a [class](../learn/classes-and-instances.md), so "Red Wine is a kind of Wine" is a class hierarchy. Then you describe each kind with _properties_ such as `body` or `maker`. The method calls these [slots](../learn/properties-and-relationships.md). You can limit what a property accepts with [facets](../learn/facets.md), and add real examples (the method calls them instances). The [wine tutorial](../../examples/wine/tutorial/0-intro.md) builds the paper's wine ontology command by command, with real output.
+1. **Learn the method.** Start with the [Learn course](../learn/index.md). The key idea is that you sort things into _kinds_. The method calls a kind a [class](../learn/classes-and-instances.md), so "Red Wine is a kind of Wine" is a class hierarchy. Then you describe each kind with _properties_ such as `body` or `maker`. The method calls these [slots](../learn/properties-and-relationships.md). You can limit what a property accepts with [facets](../learn/facets.md), and add real examples (the method calls them instances). The [wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md) builds the paper's wine ontology command by command, with real output.
 2. **Install okb.** Follow [Installation](installation.md).
 3. **Build your first ontology.** Try the [Quickstart](quickstart.md) for a small one. Or ask Claude to `coach me through building an ontology`, which uses the ontology-coach skill. Or run the commands yourself:
 

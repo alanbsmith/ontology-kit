@@ -10,7 +10,7 @@ The coach drives the `okb` command, so install okb first with the steps on the [
 
 ```bash
 mkdir -p ~/.claude/skills
-ln -s "$PWD/skills/ontology-coach" ~/.claude/skills/ontology-coach
+ln -s "$PWD/packages/okb/skills/ontology-coach" ~/.claude/skills/ontology-coach
 ```
 
 Run this from the `ontology-kit` folder you cloned. The link keeps the skill current when you `git pull`. okb has no command that installs skills yet, so linking (or copying) the folder is how it works today. [Skills](../reference/skills.md) lists all three skills and how to check their versions.
@@ -54,5 +54,5 @@ In step 8, the coach links each competency question to what answers it, runs `ok
 ## If it doesn't work
 
 - **Claude doesn't offer the coach.** Check that `~/.claude/skills/ontology-coach/SKILL.md` exists, and start a new session.
-- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works, run `pnpm link --global` again in the kit folder. If Claude runs in a different environment, give it the path to the kit and it runs `node <kit>/src/cli.ts`.
+- **Claude can't find `okb`.** Run `okb version` in your own terminal. If that works, run `pnpm add --global link:./packages/okb` again in the kit folder. If Claude runs in a different environment, give it the path to the kit and it runs `node <kit>/packages/okb/src/cli.ts`.
 - **You want to see what Claude did.** Everything it ran is a plain `okb` command. Read the history with `okb status`, `okb tree` and `okb decision list`.

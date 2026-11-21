@@ -1,6 +1,6 @@
 # Skills
 
-A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships three, in the `skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
+A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships three, in the `packages/okb/skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
 
 | Skill                                                   | Use it to                                                         | Page                                            |
 | ------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------- |
@@ -32,9 +32,9 @@ okb has no command that installs skills yet. To install a skill, link its folder
 
 ```bash
 mkdir -p ~/.claude/skills
-ln -s "$PWD/skills/ontology-coach" ~/.claude/skills/ontology-coach
-ln -s "$PWD/skills/ontology-review" ~/.claude/skills/ontology-review
-ln -s "$PWD/skills/build-domain-kb-from-docs" ~/.claude/skills/build-domain-kb-from-docs
+ln -s "$PWD/packages/okb/skills/ontology-coach" ~/.claude/skills/ontology-coach
+ln -s "$PWD/packages/okb/skills/ontology-review" ~/.claude/skills/ontology-review
+ln -s "$PWD/packages/okb/skills/build-domain-kb-from-docs" ~/.claude/skills/build-domain-kb-from-docs
 ls ~/.claude/skills
 ```
 

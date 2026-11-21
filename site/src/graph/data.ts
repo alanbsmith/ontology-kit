@@ -9,7 +9,9 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { RawGraph } from "./model.ts";
 
-const WINE_SNAPSHOTS = "examples/wine/tutorial/graph";
+// The okb package (the example ontologies and the meta-KB data), relative to the repo root.
+const PKG = "packages/okb";
+const WINE_SNAPSHOTS = `${PKG}/examples/wine/tutorial/graph`;
 
 const readJson = <T>(root: string, path: string): T => JSON.parse(readFileSync(join(root, path), "utf8")) as T;
 
@@ -33,7 +35,7 @@ export function loadGraph(root: string, name: string): RawGraph {
     const snap = readJson<{ nodes: RawGraph["nodes"]; edges: RawGraph["edges"] }>(root, `${WINE_SNAPSHOTS}/step-${step}.json`);
     return { nodes: snap.nodes, edges: snap.edges };
   }
-  const dir = name === "meta-kb" ? "meta-kb/data" : name === "espresso" || name === "wine" ? `examples/${name}` : undefined;
+  const dir = name === "meta-kb" ? `${PKG}/meta-kb/data` : name === "espresso" || name === "wine" ? `${PKG}/examples/${name}` : undefined;
   if (!dir) throw new Error(`No graph named ${name}`);
   return { nodes: readJson(root, `${dir}/nodes.json`), edges: readJson(root, `${dir}/edges.json`) };
 }

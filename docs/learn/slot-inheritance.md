@@ -17,7 +17,7 @@ Say every drink on the Vertex Coffee menu needs a pour order. You could add the 
 
 ## See it
 
-This is part of the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md) ontology. Vertex Coffee is the made-up café behind it ([how to read the graphs](index.md#how-to-read-the-graphs)). The arrows between rings read "is a kind of", which stacks them into a [class hierarchy](../GLOSSARY.md#concept-class-hierarchy). Slots are switched on, so you can see which ring each one hangs from.
+This is part of the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md) ontology. Vertex Coffee is the made-up café behind it ([how to read the graphs](index.md#how-to-read-the-graphs)). The arrows between rings read "is a kind of", which stacks them into a [class hierarchy](../GLOSSARY.md#concept-class-hierarchy). Slots are switched on, so you can see which ring each one hangs from.
 
 <okb-graph src="/data/espresso.json" focus="Cortado, Drink" highlight="Cortado" show="Slot" label="The chain from Drink down to Cortado, with the slots attached along the way">
 <p>The graph shows the chain of kinds from Drink down to Cortado.</p>
@@ -72,7 +72,7 @@ Cortado has no slots attached directly. Every line says where it came from: `fro
 
 ## Related pages
 
-- [The espresso tutorial, step 5](../../examples/espresso/tutorial/5-slots.md) attaches these slots to the hierarchy.
+- [The espresso tutorial, step 5](../../packages/okb/examples/espresso/tutorial/5-slots.md) attaches these slots to the hierarchy.
 - [Where to attach a slot](../DECISIONS.md#decision-slot-placement) walks through the choice.
 - [What does "is a kind of" mean?](hierarchy.md) explains the "is a" links that carry slots down.
 - [What are facets?](facets.md) is the next page: it sets rules on a slot, such as a default value.

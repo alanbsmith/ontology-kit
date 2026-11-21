@@ -18,7 +18,7 @@ Needs **Node.js 24+** and [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`)
 git clone https://github.com/alanbsmith/ontology-kit
 cd ontology-kit
 pnpm install
-pnpm link --global
+pnpm add --global link:./packages/okb
 ```
 
 Then `okb init my-ontology` starts one. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.

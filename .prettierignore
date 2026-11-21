@@ -5,15 +5,15 @@ docs/RULES.md
 docs/DECISIONS.md
 docs/CLI.md
 docs/CLI-CHEAT-SHEET.md
-examples/wine/*.json
-examples/wine/*.md
-examples/wine/tutorial/
-examples/wine/wine.cypher
-meta-kb/data/
+packages/okb/examples/wine/*.json
+packages/okb/examples/wine/*.md
+packages/okb/examples/wine/tutorial/
+packages/okb/examples/wine/wine.cypher
+packages/okb/meta-kb/data/
 node_modules/
 pnpm-lock.yaml
 # Test fixture: tests assert its exact lines, and it is malformed on purpose.
-tests/fixtures/
+packages/okb/tests/fixtures/
 # Docs site build output and dependencies.
 site/node_modules/
 site/dist/

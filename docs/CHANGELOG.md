@@ -1,6 +1,6 @@
 # Changelog
 
-What changed in each meta-KB version. The version is the one `okb version` prints, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). How to edit the meta-KB, and when to bump the version, is in the [meta-KB internals](../meta-kb/README.md).
+What changed in each meta-KB version. The version is the one `okb version` prints, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). How to edit the meta-KB, and when to bump the version, is in the [meta-KB internals](../packages/okb/meta-kb/README.md).
 
 ## Changes from the first draft (v1)
 

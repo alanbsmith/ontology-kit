@@ -174,6 +174,18 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      markdownlint-cli2:
+        specifier: ^0.23.3
+        version: 0.23.3
+      prettier:
+        specifier: ^3.9.9
+        version: 3.10.1
+      yaml:
+        specifier: ^2.8.0
+        version: 2.9.1
+
+  packages/okb:
     dependencies:
       yaml:
         specifier: ^2.8.0
@@ -182,12 +194,6 @@ importers:
       '@types/node':
         specifier: ^26.6.6
         version: 26.6.6
-      markdownlint-cli2:
-        specifier: ^0.23.3
-        version: 0.23.3
-      prettier:
-        specifier: ^3.9.9
-        version: 3.10.1
       typescript:
         specifier: ^5.9.0
         version: 5.9.3

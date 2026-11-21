@@ -18,7 +18,7 @@ Say a café, Vertex Coffee, wants to answer "which drinks have no milk?" A list 
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). Vertex Coffee is the made-up café in that tutorial, so "Vertex breve" is its breve, one real drink on its menu. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings, dots and the controls. The dashed outline marks the drink this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md). Vertex Coffee is the made-up café in that tutorial, so "Vertex breve" is its breve, one real drink on its menu. [How to read the graphs](index.md#how-to-read-the-graphs) explains rings, dots and the controls. The dashed outline marks the drink this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Vertex breve, Vertex cappuccino" highlight="Vertex breve" label="Part of the espresso ontology: two drinks, what they contain and the kinds they belong to">
 <p>The graph shows two drinks from the Vertex Coffee menu in the espresso ontology.</p>
@@ -37,7 +37,7 @@ A graph alone doesn't stop you from linking a Milk drink to a bicycle. An [ontol
 
 ## In okb
 
-Run [`okb show`](../CLI.md#cmd-show) on a drink to see its links. Run it from the `espresso` folder that the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md) builds.
+Run [`okb show`](../CLI.md#cmd-show) on a drink to see its links. Run it from the `espresso` folder that the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md) builds.
 
 ```bash
 okb show "Vertex breve"
@@ -82,8 +82,8 @@ Here is the whole espresso ontology: 31 classes and 16 instances. Use the checkb
 
 ## Related pages
 
-- [The espresso tutorial](../../examples/espresso/tutorial/0-intro.md) builds this graph from nothing, one step at a time.
-- [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows the same idea with a larger ontology.
+- [The espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md) builds this graph from nothing, one step at a time.
+- [The wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md) shows the same idea with a larger ontology.
 - [What is an ontology?](ontologies.md) is the next page: it shows how a plan keeps a graph like this one consistent.
 - [Why start with questions?](competency-questions.md) shows how to decide what your graph needs to answer.
 - [Choosing between a class and an instance](../DECISIONS.md#decision-instance-or-class) helps when you aren't sure which one a thing is.

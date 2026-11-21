@@ -16,7 +16,7 @@ Say Vertex Coffee sells a drink called a cortado. "Cortado" is the kind: you can
 
 ## See it
 
-This is a small part of the ontology you build in the [espresso tutorial](../../examples/espresso/tutorial/0-intro.md). The tutorial's made-up café, Vertex Coffee, serves the drinks, so "Vertex cortado" is that café's cortado ([how to read the graphs](index.md#how-to-read-the-graphs)). A ring is a class, and a dot is an instance. The dashed outline marks the class this page is about.
+This is a small part of the ontology you build in the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md). The tutorial's made-up café, Vertex Coffee, serves the drinks, so "Vertex cortado" is that café's cortado ([how to read the graphs](index.md#how-to-read-the-graphs)). A ring is a class, and a dot is an instance. The dashed outline marks the class this page is about.
 
 <okb-graph src="/data/espresso.json" focus="Cortado, Latte, Vertex cortado" highlight="Cortado" label="The Cortado class, its place under MilkDrink, and Vertex cortado, one cortado on the menu">
 <p>The graph shows the Cortado class and one real cortado from the Vertex Coffee menu.</p>
@@ -77,7 +77,7 @@ The `instances` line lists Vertex cortado, the dot in the graph. The `fixed` lin
 
 ## Related pages
 
-- [Step 4 of the espresso tutorial](../../examples/espresso/tutorial/4-classes.md) adds Cortado as a class, and [step 7](../../examples/espresso/tutorial/7-instances.md) adds Vertex cortado.
+- [Step 4 of the espresso tutorial](../../packages/okb/examples/espresso/tutorial/4-classes.md) adds Cortado as a class, and [step 7](../../packages/okb/examples/espresso/tutorial/7-instances.md) adds Vertex cortado.
 - [Instance or class?](../DECISIONS.md#decision-instance-or-class) is the decision guide for choosing.
 - [What does "is a kind of" mean?](hierarchy.md) is the next page: it arranges classes into a tree.
 - [Why start with questions?](competency-questions.md) shows where the classes you need come from.

@@ -6,4 +6,4 @@
 export const INSTALL_COMMAND = `git clone https://github.com/alanbsmith/ontology-kit
 cd ontology-kit
 pnpm install
-pnpm link --global`;
+pnpm add --global link:./packages/okb`;

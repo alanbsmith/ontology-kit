@@ -157,6 +157,6 @@ See the guide for this step: okb step
 
 ## Next steps
 
-- **Follow the method properly.** The [wine tutorial](../../examples/wine/tutorial/0-intro.md) builds a full ontology from step 1 to step 8, with the real output of every command.
+- **Follow the method properly.** The [wine tutorial](../../packages/okb/examples/wine/tutorial/0-intro.md) builds a full ontology from step 1 to step 8, with the real output of every command.
 - **Look up a term.** `okb explain <topic>` explains any concept, rule, step or decision guide, such as `okb explain class`.
 - **Have Claude coach you.** Ask `coach me through building an ontology` once you've installed the skill (see [Installation](installation.md)).

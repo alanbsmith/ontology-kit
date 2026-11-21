@@ -22,7 +22,7 @@ Ontology 101 comes from frame-based systems and calls every attribute a **slot**
 | instance                                           | instance                                  | individual        | node              |
 | facet                                              | facet                                     | restriction       | schema constraint |
 
-The authoritative list of node and edge types lives in `meta-kb/src/format.yaml`, and `okb validate` enforces it (rule `struct-well-formed`). If you only use `okb` commands, you never need to edit these files by hand.
+The authoritative list of node and edge types lives in `packages/okb/meta-kb/src/format.yaml`, and `okb validate` enforces it (rule `struct-well-formed`). If you only use `okb` commands, you never need to edit these files by hand.
 
 ## Node types
 
@@ -84,7 +84,7 @@ A Rule is **prescriptive**: a requirement on any implementation, with a modality
 
 Files from the previous format (`okb-lpg/1`, which used `HAS_VALUE` edges) are converted automatically the next time okb loads them.
 
-## Example (from examples/wine)
+## Example (from packages/okb/examples/wine)
 
 ```json
 { "type": "Class", "id": "c.dessert-wine", "name": "DessertWine",

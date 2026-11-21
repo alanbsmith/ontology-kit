@@ -1,40 +1,30 @@
 {
-  "name": "ontology-kit",
+  "name": "ontology-kit-workspace",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "A beginner-friendly toolkit for building ontologies the Ontology 101 way: guided method, meta-knowledge base of rules, and the okb CLI.",
+  "description": "The Ontology Kit repository: a pnpm workspace holding the okb package (packages/okb) and the docs site (site), plus repo-wide docs tooling.",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@12.21.0",
-  "bin": {
-    "okb": "bin/okb.js"
-  },
   "engines": {
     "node": ">=24"
   },
   "scripts": {
-    "okb": "node src/cli.ts",
-    "build:meta": "node meta-kb/build.ts",
-    "verify:quotes": "node meta-kb/build.ts --pdf src.o101=sources/ontology101.pdf --pdf src.g93=sources/ontolingua-kaj-1993.pdf",
-    "docs": "node src/gendocs.ts",
-    "site": "pnpm run docs && pnpm example && pnpm --dir site build",
-    "site:dev": "pnpm run docs && pnpm example && pnpm --dir site dev",
-    "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
-    "typecheck": "tsc",
-    "test": "node --test \"tests/*.test.ts\"",
+    "okb": "node packages/okb/src/cli.ts",
+    "build:meta": "pnpm --filter @ontology-kit/okb run build:meta",
+    "verify:quotes": "pnpm --filter @ontology-kit/okb run verify:quotes",
+    "docs": "pnpm --filter @ontology-kit/okb run docs",
+    "example": "pnpm --filter @ontology-kit/okb run example",
+    "site": "pnpm run docs && pnpm example && pnpm --filter ontology-kit-docs run build",
+    "site:dev": "pnpm run docs && pnpm example && pnpm --filter ontology-kit-docs run dev",
+    "tsc": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
     "format:docs": "prettier --write \"**/*.md\"",
     "lint:docs": "prettier --check \"**/*.md\" && markdownlint-cli2 && scripts/vale.sh"
   },
   "devDependencies": {
-    "@types/node": "^26.6.6",
     "markdownlint-cli2": "^0.23.3",
     "prettier": "^3.9.9",
-    "typescript": "^5.9.0"
-  },
-  "optionalDependencies": {
-    "pdfjs-dist": "^6.3.289"
-  },
-  "dependencies": {
     "yaml": "^2.8.0"
   }
 }

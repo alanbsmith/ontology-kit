@@ -34,7 +34,7 @@ const time = timeLabel(page.route, (route) => bodies.get(route) ?? '');
 const trail = breadcrumbs(page.route);
 const { prev, next } = neighbors(metaNodes, page.route);
 // A generated tutorial page links to the hand-written source it was built from.
-const sourceFile = page.source.replace(/^(examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
+const sourceFile = page.source.replace(/^(packages\/okb\/examples\/[^/]+)\/tutorial\//, '$1/tutorial-src/');
 const sourceUrl = `https://github.com/alanbsmith/ontology-kit/blob/main/${sourceFile}`;
 ---
 
