@@ -128,7 +128,7 @@ export function explain(node: Explainable): string {
     }
     case "Decision": {
       out.push(c.bold(`Decision guide: ${node.name}`));
-      out.push(c.dim(`  When: ${node.whenYouFaceIt}`), "");
+      out.push(indent(node.plainLanguage, "  "), c.dim(`  When: ${node.whenYouFaceIt}`), "");
       node.tests.forEach((t, i) => {
         out.push(`  ${i + 1}. ${t.ask}`);
         if (t.ifYes && t.ifYes !== "continue") out.push(`       yes → ${t.ifYes}`);
