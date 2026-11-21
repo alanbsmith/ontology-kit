@@ -121,7 +121,7 @@ jobs:
         run: |
           flags="--access public --dry-run"
           case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
-          for tarball in tarballs/*.tgz; do
+          for tarball in ./tarballs/*.tgz; do
             # shellcheck disable=SC2086
             npm publish "$tarball" $flags
           done
@@ -167,6 +167,7 @@ jobs:
         with:
           name: tarballs
           path: tarballs
+      # The tarball paths start with ./ because npm reads `tarballs/x.tgz` as a GitHub owner/repo shorthand.
       # In dependency order: the format package, then okb (which depends on it), then the wrapper.
       # A version already on npm is skipped, so a re-run finishes a release that stopped halfway.
       # `npm publish` of a tarball does the OIDC token exchange; provenance is on explicitly so the
@@ -176,7 +177,7 @@ jobs:
           set -eu
           flags="--access public --provenance"
           case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
-          for entry in "@ontology-kit/format:tarballs/ontology-kit-format-${VERSION}.tgz" "@ontology-kit/okb:tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:tarballs/ontology-kit-${VERSION}.tgz"; do
+          for entry in "@ontology-kit/format:./tarballs/ontology-kit-format-${VERSION}.tgz" "@ontology-kit/okb:./tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:./tarballs/ontology-kit-${VERSION}.tgz"; do
             name="${entry%%:*}"
             tarball="${entry#*:}"
             if [ -n "$(npm view "${name}@${VERSION}" version 2>/dev/null)" ]; then
