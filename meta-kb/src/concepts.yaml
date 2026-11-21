@@ -1,7 +1,7 @@
 # Glossary: the vocabulary a beginner needs.
 #   definition     - grounded in the cited passage(s)
 #   plainLanguage  - how to explain it to someone who has never built an ontology
-#   example        - mostly from the paper's wine & food ontology
+#   example        - mostly from Ontology 101's wine & food ontology
 #   inThisToolkit  - where the idea shows up in the okb file format / CLI
 # `origin: operational` marks toolkit concepts that aren't in the sources.
 
@@ -101,7 +101,7 @@ concepts:
     name: Abstract class
     definition: "A class that cannot have any direct instances; only its subclasses can."
     plainLanguage: "A grouping class that exists to organize other classes. Nothing is ever 'just' one of these without also belonging to a more specific subclass."
-    example: "In the paper, every wine-region class is abstract."
+    example: "In Ontology 101, every wine-region class is abstract."
     inThisToolkit: "Class property `abstract: true` (`okb class add ... --abstract`)."
     cites: [src.o101/abstract]
 
@@ -117,7 +117,7 @@ concepts:
     name: Slot
     aliases: [property, relationship, role, attribute, datatype property, object property]
     definition: "A property of a class describing features and attributes of its instances. Slots can hold simple values (like a name) or relationships to other individuals (like a maker)."
-    plainLanguage: "A field every member of a class has. There are two kinds. A property holds a plain value, such as a name, a year or one of a fixed list. A relationship points at another thing: a wine's maker is a Winery. 'Slot' is the paper's word for both. OWL calls them datatype properties and object properties, and a graph database stores them as node properties and relationship types."
+    plainLanguage: "A field every member of a class has. There are two kinds. A property holds a plain value, such as a name, a year or one of a fixed list. A relationship points at another thing: a wine's maker is a Winery. 'Slot' is Ontology 101's word for both. OWL calls them datatype properties and object properties, and a graph database stores them as node properties and relationship types."
     example: "Wine has slots color, body, flavor, sugar, name, maker and grape."
     inThisToolkit: "A node of type Slot, attached to classes with HAS_SLOT edges. `okb property add body --on Wine ...` creates a property; `okb relationship add maker --from Wine --to Winery` creates a relationship (a Slot with value type Instance, stored as edges of type MAKER)."
     cites: [src.o101/def-ontology, src.o101/slots-describe, src.o101/slot-kinds]
@@ -125,7 +125,7 @@ concepts:
   - id: concept.intrinsic-extrinsic
     name: Intrinsic vs. extrinsic property
     definition: "Intrinsic properties belong to the thing itself (a wine's flavor); extrinsic properties are assigned from outside (a wine's name, the area it comes from)."
-    plainLanguage: "A rough test (the toolkit's, not the paper's): would the property stay the same if nobody was looking? Flavor would, so it's intrinsic. A name, a location, or whether it's currently chilled is extrinsic. Extrinsic properties make poor classes because things move in and out of them."
+    plainLanguage: "A rough test (the toolkit's, not Ontology 101's): would the property stay the same if nobody was looking? Flavor would, so it's intrinsic. A name, a location, or whether it's currently chilled is extrinsic. Extrinsic properties make poor classes because things move in and out of them."
     example: "Chilled Wine should not be a class: a bottle goes in and out of the fridge. 'chilled' is a slot."
     inThisToolkit: "It matters when you decide between a class and a slot value (decision guide class-or-value)."
     cites: [src.o101/slot-kinds, src.o101/stable-membership]
@@ -254,7 +254,7 @@ concepts:
   - id: concept.design-decision
     name: Design decision (record)
     definition: "A written note of a modeling choice and the reason for it, for people who reuse the ontology without knowing the application it was designed for."
-    plainLanguage: "When you deliberately leave something out, or pick between two reasonable options, write one sentence on what you chose and why. Future readers, including you in six months, will need it. (The paper asks for this for scope decisions; the toolkit suggests it for any choice a reader wouldn't expect.)"
+    plainLanguage: "When you deliberately leave something out, or pick between two reasonable options, write one sentence on what you chose and why. Future readers, including you in six months, will need it. (Ontology 101 asks for this for scope decisions; the toolkit suggests it for any choice a reader wouldn't expect.)"
     example: "'Experimenter is NOT modeled as a subclass of Biological Organism, because we never run experiments on experimenters.'"
     inThisToolkit: "DesignDecision nodes with ABOUT edges (`okb decision add`)."
     cites: [src.o101/record-decisions]

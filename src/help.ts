@@ -19,7 +19,7 @@ Step 4: classes        okb convention [--class-case PascalCase] [--slot-case cam
                        okb class disjoint RedWine WhiteWine RoseWine
                        okb term set wine --as class|slot|instance|value|synonym|out-of-scope [--node Name]
                        okb tree [--instances]
-Step 5: slots          Two kinds (the paper calls both "slots"):
+Step 5: slots          Two kinds (Ontology 101 calls both "slots"):
                        okb property add body --on Wine --type Enumerated --values light,medium,full --card single
                        okb relationship add maker --from Wine --to Winery --card single     (stored as edges :MAKER)
                        okb slot set body [--on X] [--off X] [--desc] ...   ·   okb show Wine

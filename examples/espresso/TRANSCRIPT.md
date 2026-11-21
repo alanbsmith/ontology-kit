@@ -41,7 +41,7 @@ Tips
   • Include a few questions that need relationships (X goes with Y), not only lookups (what
   color is X).
 
-In the paper's wine example
+In Ontology 101's wine example
   Domain: wine and food. Purpose: suggest good wine–food combinations. Out of scope: winery
   inventory, restaurant staff. Questions: 'Is Bordeaux a red or white wine?', 'Does Cabernet
   Sauvignon go well with seafood?', 'What is the best choice of wine for grilled meat?'
@@ -138,8 +138,8 @@ Tips
   • You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually
   enough: okb reuse add --name ... --url ... --decision reference.
 
-In the paper's wine example
-  The paper notes a French-wine knowledge base or a wine retailer's list of wine properties
+In Ontology 101's wine example
+  Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties
   could be imported, but chooses to build from scratch for teaching purposes.
 
 Commands
@@ -195,7 +195,7 @@ Tips
   • Overlaps and duplicates are fine here. You'll sort them out in Steps 4 and 5.
   • Mine your competency questions and any documents you collected in Step 2.
 
-In the paper's wine example
+In Ontology 101's wine example
   wine, grape, winery, location, a wine's color, body, flavor and sugar content, fish, red meat,
   white wine, and so on.
 
@@ -261,7 +261,7 @@ Tips
   • Use singular names consistently (Wine, not Wines).
   • Mark 'grouping only' classes as abstract.
 
-In the paper's wine example
+In Ontology 101's wine example
   Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc
   → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.
 
@@ -468,7 +468,7 @@ Tips
   Winery produces wines.
   • If you're attaching the same slot to every child, attach it to the parent instead.
 
-In the paper's wine example
+In Ontology 101's wine example
   Wine gets color, body, flavor, sugar, name, maker, grape. Winery gets location and produces.
   Red Wine gets tanninLevel, because white wines aren't described by tannin.
 
@@ -582,7 +582,7 @@ Tips
   fillers.
   • Defaults are suggestions; fixed values are facts. Don't confuse them.
 
-In the paper's wine example
+In Ontology 101's wine example
   body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine,
   multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.
 
@@ -748,7 +748,7 @@ Tips
   • An instance that won't fit anywhere usually means a class is missing or a facet is too
   strict.
 
-In the paper's wine example
+In Ontology 101's wine example
   Château Morgon Beaujolais: instance of Beaujolais; body light, color red, flavor delicate,
   tannin low, grape Gamay, maker Château Morgon, region Beaujolais, sugar dry.
 
@@ -926,8 +926,8 @@ Tips
   • Iteration is part of the method, not a sign you went wrong.
   • Use the ontology-review skill for the judgment rules a script can't check.
 
-In the paper's wine example
-  The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel'
+In Ontology 101's wine example
+  Ontology 101's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel'
   appears and the class has to be split into White Zinfandel and Red Zinfandel.
 
 Commands

@@ -131,8 +131,8 @@ Tips
   • You rarely need to import a whole vocabulary. Borrowing its terms and definitions is usually
   enough: okb reuse add --name ... --url ... --decision reference.
 
-In the paper's wine example
-  The paper notes a French-wine knowledge base or a wine retailer's list of wine properties
+In Ontology 101's wine example
+  Ontology 101 notes a French-wine knowledge base or a wine retailer's list of wine properties
   could be imported, but chooses to build from scratch for teaching purposes.
 
 Commands

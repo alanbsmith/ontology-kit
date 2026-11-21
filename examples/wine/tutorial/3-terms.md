@@ -99,7 +99,7 @@ Tips
   • Use singular names consistently (Wine, not Wines).
   • Mark 'grouping only' classes as abstract.
 
-In the paper's wine example
+In Ontology 101's wine example
   Wine → Red Wine / White Wine / Rosé Wine; Red Wine → Bordeaux, Burgundy, ...; Bordeaux → Médoc
   → Pauillac, Margaux. Port has two parents: Red Wine and Dessert Wine.
 

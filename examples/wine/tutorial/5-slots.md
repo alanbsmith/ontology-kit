@@ -164,7 +164,7 @@ Tips
   fillers.
   • Defaults are suggestions; fixed values are facts. Don't confuse them.
 
-In the paper's wine example
+In Ontology 101's wine example
   body: Enumerated {light, medium, full}, single. produces (on Winery): Instance, range Wine,
   multiple, inverse of maker. grape: min 1. Dessert Wine fixes sugar = sweet.
 

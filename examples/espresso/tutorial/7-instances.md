@@ -232,8 +232,8 @@ Tips
   • Iteration is part of the method, not a sign you went wrong.
   • Use the ontology-review skill for the judgment rules a script can't check.
 
-In the paper's wine example
-  The paper's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel'
+In Ontology 101's wine example
+  Ontology 101's own evolution example: Zinfandel starts under Red Wine, then 'white zinfandel'
   appears and the class has to be split into White Zinfandel and Red Zinfandel.
 
 Commands
