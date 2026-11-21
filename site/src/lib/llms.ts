@@ -125,7 +125,7 @@ export function titleOf(markdown: string, fallback: string): string {
   return fallback;
 }
 
-/** Every page in reading order, each once. The sidebar's methodology and decision entries share their page. */
+/** Every page in reading order, each once. The sidebar's method and decision entries share their page. */
 export function orderedPages(nodes: readonly MetaNode[]): Page[] {
   const seen = new Set<string>();
   const pages: Page[] = [];

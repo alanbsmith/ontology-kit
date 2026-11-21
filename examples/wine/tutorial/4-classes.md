@@ -6,7 +6,7 @@
 
 Turn the things on your term list into classes, and arrange them from general to specific.
 
-A [class](../../../docs/GLOSSARY.md#concept-class) is a kind of thing, like Wine or Winery. A class below another one is its [subclass](../../../docs/GLOSSARY.md#concept-subclass): RedWine is a subclass of Wine. The arrangement matters because everything you say about Wine later also applies to every subclass. Most modeling mistakes are mistakes in this arrangement. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-4-classes).
+A [class](../../../docs/GLOSSARY.md#concept-class) is a kind of thing, like Wine or Winery. A class below another one is its [subclass](../../../docs/GLOSSARY.md#concept-subclass): RedWine is a subclass of Wine. The arrangement matters because everything you say about Wine later also applies to every subclass. Most modeling mistakes are mistakes in this arrangement. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-4-classes).
 
 ## What you'll make
 

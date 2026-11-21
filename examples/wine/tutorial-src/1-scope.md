@@ -4,7 +4,7 @@
 
 Decide what your [ontology](../../../docs/GLOSSARY.md#concept-ontology) is for, and write down the questions it must answer.
 
-Without this, you can't tell when you're done. An ontology about "wine" can grow forever. An ontology that must answer six specific questions has an end. What it covers, and what it leaves out, is its [scope](../../../docs/GLOSSARY.md#concept-scope). You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-1-scope).
+Without this, you can't tell when you're done. An ontology about "wine" can grow forever. An ontology that must answer six specific questions has an end. What it covers, and what it leaves out, is its [scope](../../../docs/GLOSSARY.md#concept-scope). You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-1-scope).
 
 ## What you'll make
 

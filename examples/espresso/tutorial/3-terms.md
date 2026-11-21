@@ -6,7 +6,7 @@
 
 Write down every word someone might use about your subject, without sorting them.
 
-A term is any word or phrase from the domain. A long list now means fewer surprises later, because you sort the words in later steps. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-3-terms).
+A term is any word or phrase from the domain. A long list now means fewer surprises later, because you sort the words in later steps. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-3-terms).
 
 ## What you'll make
 

@@ -153,7 +153,7 @@ Validator (steps 1–1): ✗ 0  ! 1  i 0   okb validate for details
 See the guide for this step: okb step
 ```
 
-`okb status` follows the eight steps of the Ontology 101 method, which the [Methodology](../METHOD.md) page explains in full. Run it whenever you're unsure what to do next. You jumped ahead to classes and slots here to see results fast. The method goes in order, and the next section shows where to learn it.
+`okb status` follows the eight steps of the Ontology 101 method, which the [Method](../METHOD.md) page explains in full. Run it whenever you're unsure what to do next. You jumped ahead to classes and slots here to see results fast. The method goes in order, and the next section shows where to learn it.
 
 ## Next steps
 

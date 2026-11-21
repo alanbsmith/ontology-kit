@@ -6,7 +6,7 @@
 
 Add the real things your ontology describes.
 
-An [instance](../../../docs/GLOSSARY.md#concept-instance) is one specific thing, like the cortado on your café's menu. Classes say what kinds of things exist. Instances are the things. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-7-instances).
+An [instance](../../../docs/GLOSSARY.md#concept-instance) is one specific thing, like the cortado on your café's menu. Classes say what kinds of things exist. Instances are the things. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-7-instances).
 
 ## What you'll make
 

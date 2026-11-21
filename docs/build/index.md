@@ -15,7 +15,7 @@ Start from a blank page, even if you have docs. Extraction works best once you k
 - **Never built an ontology?** Use [With Claude](with-claude.md) if you have Claude, or [With the CLI](with-the-cli.md) if you don't. The [Quickstart](../getting-started/quickstart.md) is the short version of the CLI path.
 - **Built one and want to scale up?** Go to [From existing docs](../EXTRACTION-PIPELINE.md). It needs a scope and at least three competency questions first, so it builds on either of the other two.
 
-All three follow the same [methodology](../METHOD.md) in eight steps. You don't give up the method by letting Claude type for you.
+All three follow the same [eight-step method](../METHOD.md). You don't give up the method by letting Claude type for you.
 
 ## After you build
 

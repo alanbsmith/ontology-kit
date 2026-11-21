@@ -4,7 +4,7 @@
 
 List the facts you can state about each class.
 
-A [slot](../../../docs/GLOSSARY.md#concept-slot) is a fact you can state about a class, such as `pullVolumeMl` for an espresso drink. A slot comes in two kinds. A **property** holds a value, such as `30`. A **relationship** links to another thing, such as the ingredients in a drink. okb stores a relationship as an edge in the graph. You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-5-slots).
+A [slot](../../../docs/GLOSSARY.md#concept-slot) is a fact you can state about a class, such as `pullVolumeMl` for an espresso drink. A slot comes in two kinds. A **property** holds a value, such as `30`. A **relationship** links to another thing, such as the ingredients in a drink. okb stores a relationship as an edge in the graph. You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-5-slots).
 
 ## What you'll make
 

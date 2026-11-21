@@ -8,7 +8,7 @@ In this tutorial, you'll build a small knowledge base about wine and food using 
 
 You don't need to know what an [ontology](../../../docs/GLOSSARY.md#concept-ontology) is yet. It's a shared, precise vocabulary for one subject. Say you run a restaurant and want software to suggest a wine for each dish. The software has to know that Bordeaux is a red wine, and that red wine goes well with grilled meat. An ontology is where you write that down so a program can check it. The Learn page [What is an ontology?](../../../docs/learn/ontologies.md) explains the idea in a few minutes.
 
-The example comes from the paper [_Ontology Development 101_](https://protege.stanford.edu/publications/ontology_development/ontology101.pdf) by Noy and McGuinness (PDF), which this tutorial calls Ontology 101. It follows the paper's eight steps, and each step has its own page. The full method is in [Methodology](../../../docs/METHOD.md).
+The example comes from the paper [_Ontology Development 101_](https://protege.stanford.edu/publications/ontology_development/ontology101.pdf) by Noy and McGuinness (PDF), which this tutorial calls Ontology 101. It follows the paper's eight steps, and each step has its own page. The full method is in [Method](../../../docs/METHOD.md).
 
 ## Who it's for
 

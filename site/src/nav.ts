@@ -62,9 +62,9 @@ export const PAGES: readonly Page[] = [
   { route: "/build/with-claude/", source: "docs/build/with-claude.md", label: "With Claude", summary: "How to build an ontology with the ontology-coach skill, which asks small questions, runs the okb commands and explains each result." },
   { route: "/build/with-the-cli/", source: "docs/build/with-the-cli.md", label: "With the CLI", summary: "How to build an ontology yourself with the okb command: the loop of running a command, reading the notes and validating, by step." },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs", summary: "The pipeline for turning existing documentation into an ontology without inventing claims, with quote-first extraction and an independent verification pass." },
-  { route: "/build/methodology/", source: "docs/METHOD.md", label: "Methodology", summary: "The eight-step method behind okb, from Ontology Development 101: its principles, and for each step the questions to ask and the checklist for being done." },
   { route: "/build/review/", source: "docs/build/review.md", label: "Review and iterate", summary: "How to review an ontology beyond what okb validate can see, with okb review and the ontology-review skill." },
   { route: "/build/export/", source: "docs/build/export.md", label: "Export", summary: "How okb export writes your instances as JSON or as an openCypher script for a graph database such as Neo4j." },
+  { route: "/reference/method/", source: "docs/METHOD.md", label: "Method", summary: "The eight-step method behind okb, from Ontology Development 101: its principles, and for each step the questions to ask and the checklist for being done." },
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary", summary: "Plain-language definitions of every term okb uses, from abstract class to slot." },
   { route: "/reference/rules/", source: "docs/RULES.md", label: "Rules", summary: "Every rule okb validate and okb review check, with its strength, where it comes from and how to fix a finding." },
   { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides", summary: "Short yes/no guides for the recurring which-way-do-I-model-this questions, such as class or instance, and property or relationship." },
@@ -168,17 +168,17 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
   const steps = nodes
     .filter((n) => n.type === "Step")
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map((s) => ({ label: `${s.order}. ${s.name}`, href: `/build/methodology/#${anchorId(s.id)}` }));
+    .map((s) => ({ label: `${s.order}. ${s.name}`, href: `/reference/method/#${anchorId(s.id)}` }));
   const decisions = nodes
     .filter((n) => n.type === "Decision")
     .map((d) => ({ label: d.name ?? d.id, href: `/reference/decisions/#${anchorId(d.id)}` }));
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
     { label: "Learn", links: [link(LEARN_OVERVIEW), ...LEARN_CHAPTERS.map(chapter), link(LEARN_CLOSING)] },
-    { label: "Build", links: [link("/build/"), link("/build/with-claude/"), link("/build/with-the-cli/"), link("/build/from-docs/"), link("/build/methodology/", steps), link("/build/review/"), link("/build/export/")] },
+    { label: "Build", links: [link("/build/"), link("/build/with-claude/"), link("/build/with-the-cli/"), link("/build/from-docs/"), link("/build/review/"), link("/build/export/")] },
     {
       label: "Reference",
-      links: [link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/cli-cheat-sheet/"), link("/reference/cli-reference/"), link("/reference/format/"), link("/reference/skills/"), link("/reference/changelog/")],
+      links: [link("/reference/method/", steps), link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/cli-cheat-sheet/"), link("/reference/cli-reference/"), link("/reference/format/"), link("/reference/skills/"), link("/reference/changelog/")],
     },
     { label: "Contributing", links: [link("/contributing/"), link("/contributing/meta-kb/"), link("/contributing/code-review/")] },
   ];
@@ -208,7 +208,7 @@ export function neighbors(nodes: readonly MetaNode[], route: string): { prev?: N
   return i < 0 ? {} : { prev: seq[i - 1], next: seq[i + 1] };
 }
 
-/** A link's path without its `#anchor`: the methodology steps and decision guides share their page's path. */
+/** A link's path without its `#anchor`: the method steps and decision guides share their page's path. */
 const pathOf = (href: string) => href.split("#")[0];
 
 /**

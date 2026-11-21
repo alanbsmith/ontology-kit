@@ -4,7 +4,7 @@
 
 Write down what the ontology is for, and the questions it must answer.
 
-The [scope](../../../docs/GLOSSARY.md#concept-scope) is the part of the world your ontology covers. Without it, you can't tell when you're done. A coffee ontology could cover beans, roasting and farms forever. A [competency question](../../../docs/GLOSSARY.md#concept-competency-question) is a question the finished ontology must be able to answer, like "Which drinks have no milk?" You can read the full guide to this step in [Methodology](../../../docs/METHOD.md#step-1-scope).
+The [scope](../../../docs/GLOSSARY.md#concept-scope) is the part of the world your ontology covers. Without it, you can't tell when you're done. A coffee ontology could cover beans, roasting and farms forever. A [competency question](../../../docs/GLOSSARY.md#concept-competency-question) is a question the finished ontology must be able to answer, like "Which drinks have no milk?" You can read the full guide to this step in [Method](../../../docs/METHOD.md#step-1-scope).
 
 ## What you'll make
 

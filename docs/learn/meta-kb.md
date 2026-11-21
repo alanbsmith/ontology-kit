@@ -100,7 +100,7 @@ The first line holds the strength (`SHOULD NOT`) and the finding level it become
 
 - [The wine tutorial](../../examples/wine/tutorial/0-intro.md) shows rules firing as you build a larger ontology.
 - [The Rules page](../RULES.md) lists every rule with its strength, reason, source and the step it starts to apply at.
-- [Methodology](../METHOD.md) explains each step of the method.
+- [Method](../METHOD.md) explains each step of the method.
 - [Glossary](../GLOSSARY.md) defines every term used here.
 - [How do I read and fix a finding?](rules-and-findings.md) comes before this page: it shows the findings that these rules produce.
 - [What is a knowledge graph?](knowledge-graphs.md) explains the nodes and edges that the meta-KB is made of.

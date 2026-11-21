@@ -2,7 +2,7 @@
 
 Your ontology lives in three plain JSON files, which suit okb and git. A graph database or an app wants something else: nodes with labels and properties, ready to load. `okb export` writes your **data** that way, as JSON or as an openCypher script for Neo4j, Neptune or Memgraph. The files in your folder don't change.
 
-The ontology file format itself is in [File format](../FORMAT.md). This page covers the export. Either way, model the _meaning_ first (see _Model the domain, not the database_ in [Methodology](../METHOD.md)).
+The ontology file format itself is in [File format](../FORMAT.md). This page covers the export. Either way, model the _meaning_ first (see _Model the domain, not the database_ in [Method](../METHOD.md)).
 
 ## Run an export
 
