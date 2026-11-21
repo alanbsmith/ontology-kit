@@ -69,17 +69,17 @@ Wine and Food
 
 ```console
 $ okb cq add "Which wine characteristics should I consider when choosing a wine?"
-Added cq.1.
+Added cq.an5hqz.
 $ okb cq add "Is Bordeaux a red or white wine?"
-Added cq.2.
+Added cq.ffbmq8.
 $ okb cq add "Does Cabernet Sauvignon go well with seafood?"
-Added cq.3.
+Added cq.tmq6hs.
 $ okb cq add "What is the best choice of wine for grilled meat?"
-Added cq.4.
+Added cq.pv8gg4.
 $ okb cq add "Which characteristics of a wine affect its appropriateness for a dish?"
-Added cq.5.
+Added cq.s7b99r.
 $ okb cq add "Which wines does a given winery produce?"
-Added cq.6.
+Added cq.4mz6a9.
 ```
 
 ```console
@@ -352,7 +352,7 @@ Multiple parents are fine when it's truly a kind of each. Consider recording why
 
 ```console
 $ okb decision add --title "Sauternes keeps its final s" --decision "The class is named Sauternes, not Sauterne." --why "It's the proper name of the appellation, not a plural." --about Sauternes --waives naming-singular-plural-consistent
-Recorded design decision d.2: Sauternes keeps its final s.
+Recorded design decision d.386rne: Sauternes keeps its final s.
 It explains 1 current finding(s) from naming-singular-plural-consistent (they'll show as 'explained' in okb validate).
 ```
 
@@ -389,7 +389,7 @@ Linked to Class 'RoseWine'.
 
 ```console
 $ okb decision add --title "Regional wines are terminological classes" --decision "Bordeaux, Medoc, Pauillac, Margaux and Beaujolais are classes even though they add no slots of their own." --why "Sommeliers and diners always distinguish these appellations (Ontology 101 §4.4: distinctions experts commonly make)." --about Bordeaux --about Medoc --about Beaujolais --waives hier-single-child
-Recorded design decision d.3: Regional wines are terminological classes.
+Recorded design decision d.8wg5vc: Regional wines are terminological classes.
 It explains 1 current finding(s) from hier-single-child (they'll show as 'explained' in okb validate).
 ```
 
@@ -430,8 +430,8 @@ HINTS: worth a look
       and White Wine can).
 
 EXPLAINED by design decisions (2)
-  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
-  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.3
+  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.386rne
+  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (9 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)
@@ -674,8 +674,8 @@ HINTS: worth a look
       and White Wine can).
 
 EXPLAINED by design decisions (2)
-  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
-  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.3
+  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.386rne
+  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)
@@ -787,7 +787,7 @@ Filled in default body = "medium".
 
 ```console
 $ okb show "Chateau Morgon Beaujolais"
-Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais
+Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
   instance of    Beaujolais
 
   Values
@@ -801,7 +801,7 @@ Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais
     region             Beaujolais region
     goesWellWith       RedMeat (fixed by RedWine)
 $ okb show "Chateau Morgon"
-Chateau Morgon  Instance · i.chateau-morgon
+Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   instance of    Winery
 
   Values
@@ -822,8 +822,8 @@ HINTS: worth a look
       and White Wine can).
 
 EXPLAINED by design decisions (2)
-  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
-  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.3
+  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.386rne
+  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)
@@ -890,50 +890,50 @@ Commands
 
 ```console
 $ okb cq link 1 color body flavor sugar tanninLevel
-Linked cq.1 → color (Slot).
-Linked cq.1 → body (Slot).
-Linked cq.1 → flavor (Slot).
-Linked cq.1 → sugar (Slot).
-Linked cq.1 → tanninLevel (Slot).
-  Tip: cq.1 is one example of a family of questions. Would you also ask more about Wine (maker, grape, region, goesWellWith)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.an5hqz → color (Slot).
+Linked cq.an5hqz → body (Slot).
+Linked cq.an5hqz → flavor (Slot).
+Linked cq.an5hqz → sugar (Slot).
+Linked cq.an5hqz → tanninLevel (Slot).
+  Tip: cq.an5hqz is one example of a family of questions. Would you also ask more about Wine (maker, grape, region, goesWellWith)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 2 Bordeaux RedWine WhiteWine
-Linked cq.2 → Bordeaux (Class).
-Linked cq.2 → RedWine (Class).
-Linked cq.2 → WhiteWine (Class).
-  Tip: cq.2 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (maker, grape, region, goesWellWith); the same question about RoseWine, DessertWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.ffbmq8 → Bordeaux (Class).
+Linked cq.ffbmq8 → RedWine (Class).
+Linked cq.ffbmq8 → WhiteWine (Class).
+  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (maker, grape, region, goesWellWith); the same question about RoseWine, DessertWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 3 goesWellWith grape Seafood
-Linked cq.3 → goesWellWith (Slot).
-Linked cq.3 → grape (Slot).
-Linked cq.3 → Seafood (Class).
-  Tip: cq.3 is one example of a family of questions. Would you also ask more about Wine (maker, region); the same question about RedMeat? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.tmq6hs → goesWellWith (Slot).
+Linked cq.tmq6hs → grape (Slot).
+Linked cq.tmq6hs → Seafood (Class).
+  Tip: cq.tmq6hs is one example of a family of questions. Would you also ask more about Wine (maker, region); the same question about RedMeat? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 4 RedMeat goesWellWith
-Linked cq.4 → RedMeat (Class).
-Linked cq.4 → goesWellWith (Slot).
-  Tip: cq.4 is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.pv8gg4 → RedMeat (Class).
+Linked cq.pv8gg4 → goesWellWith (Slot).
+  Tip: cq.pv8gg4 is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 5 goesWellWith body flavor
-Linked cq.5 → goesWellWith (Slot).
-Linked cq.5 → body (Slot).
-Linked cq.5 → flavor (Slot).
-  Tip: cq.5 is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.s7b99r → goesWellWith (Slot).
+Linked cq.s7b99r → body (Slot).
+Linked cq.s7b99r → flavor (Slot).
+  Tip: cq.s7b99r is one example of a family of questions. Would you also ask more about Wine (maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 6 produces Winery
-Linked cq.6 → produces (Slot).
-Linked cq.6 → Winery (Class).
-  Tip: cq.6 is one example of a family of questions. Would you also ask more about Winery (location)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.4mz6a9 → produces (Slot).
+Linked cq.4mz6a9 → Winery (Class).
+  Tip: cq.4mz6a9 is one example of a family of questions. Would you also ask more about Winery (location)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
 $ okb cq list
-cq.1   Which wine characteristics should I consider when choosing a wine? [draft]
+1   Which wine characteristics should I consider when choosing a wine? [draft]
        needs: color, body, flavor, sugar, tanninLevel
-cq.2   Is Bordeaux a red or white wine? [draft]
+2   Is Bordeaux a red or white wine? [draft]
        needs: Bordeaux, RedWine, WhiteWine
-cq.3   Does Cabernet Sauvignon go well with seafood? [draft]
+3   Does Cabernet Sauvignon go well with seafood? [draft]
        needs: goesWellWith, grape, Seafood
-cq.4   What is the best choice of wine for grilled meat? [draft]
+4   What is the best choice of wine for grilled meat? [draft]
        needs: RedMeat, goesWellWith
-cq.5   Which characteristics of a wine affect its appropriateness for a dish? [draft]
+5   Which characteristics of a wine affect its appropriateness for a dish? [draft]
        needs: goesWellWith, body, flavor
-cq.6   Which wines does a given winery produce? [draft]
+6   Which wines does a given winery produce? [draft]
        needs: produces, Winery
 ```
 
@@ -954,8 +954,8 @@ HINTS: worth a look
       Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (2)
-  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
-  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.3
+  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.386rne
+  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 ```

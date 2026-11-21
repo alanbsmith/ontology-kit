@@ -1,6 +1,6 @@
 [
   {
-    "from": "d.1",
+    "from": "d.h6nzmn",
     "type": "ABOUT",
     "to": "ontology"
   },
@@ -135,7 +135,7 @@
     "to": "c.dessert-wine"
   },
   {
-    "from": "d.2",
+    "from": "d.386rne",
     "type": "ABOUT",
     "to": "c.sauternes"
   },
@@ -185,17 +185,17 @@
     "to": "c.rose-wine"
   },
   {
-    "from": "d.3",
+    "from": "d.8wg5vc",
     "type": "ABOUT",
     "to": "c.bordeaux"
   },
   {
-    "from": "d.3",
+    "from": "d.8wg5vc",
     "type": "ABOUT",
     "to": "c.medoc"
   },
   {
-    "from": "d.3",
+    "from": "d.8wg5vc",
     "type": "ABOUT",
     "to": "c.beaujolais"
   },
@@ -336,172 +336,172 @@
     "to": "c.seafood"
   },
   {
-    "from": "i.chateau-morgon",
+    "from": "i.chateau-morgon-ypqfhf",
     "type": "INSTANCE_OF",
     "to": "c.winery"
   },
   {
-    "from": "i.sterling-vineyards",
+    "from": "i.sterling-vineyards-agkt52",
     "type": "INSTANCE_OF",
     "to": "c.winery"
   },
   {
-    "from": "i.gamay",
+    "from": "i.gamay-kfjm22",
     "type": "INSTANCE_OF",
     "to": "c.wine-grape"
   },
   {
-    "from": "i.merlot-grape",
+    "from": "i.merlot-grape-egah0e",
     "type": "INSTANCE_OF",
     "to": "c.wine-grape"
   },
   {
-    "from": "i.chardonnay-grape",
+    "from": "i.chardonnay-grape-jwb195",
     "type": "INSTANCE_OF",
     "to": "c.wine-grape"
   },
   {
-    "from": "i.riesling-grape",
+    "from": "i.riesling-grape-139wgt",
     "type": "INSTANCE_OF",
     "to": "c.wine-grape"
   },
   {
-    "from": "i.beaujolais-region",
+    "from": "i.beaujolais-region-jz521c",
     "type": "INSTANCE_OF",
     "to": "c.wine-region"
   },
   {
     "from": "c.merlot",
     "type": "GRAPE",
-    "to": "i.merlot-grape"
+    "to": "i.merlot-grape-egah0e"
   },
   {
     "from": "c.chardonnay",
     "type": "GRAPE",
-    "to": "i.chardonnay-grape"
+    "to": "i.chardonnay-grape-jwb195"
   },
   {
     "from": "c.riesling",
     "type": "GRAPE",
-    "to": "i.riesling-grape"
+    "to": "i.riesling-grape-139wgt"
   },
   {
-    "from": "i.chateau-morgon-beaujolais",
+    "from": "i.chateau-morgon-beaujolais-ygb1b8",
     "type": "INSTANCE_OF",
     "to": "c.beaujolais"
   },
   {
-    "from": "i.chateau-morgon-beaujolais",
+    "from": "i.chateau-morgon-beaujolais-ygb1b8",
     "type": "GRAPE",
-    "to": "i.gamay"
+    "to": "i.gamay-kfjm22"
   },
   {
-    "from": "i.chateau-morgon-beaujolais",
+    "from": "i.chateau-morgon-beaujolais-ygb1b8",
     "type": "MAKER",
-    "to": "i.chateau-morgon"
+    "to": "i.chateau-morgon-ypqfhf"
   },
   {
-    "from": "i.chateau-morgon-beaujolais",
+    "from": "i.chateau-morgon-beaujolais-ygb1b8",
     "type": "REGION",
-    "to": "i.beaujolais-region"
+    "to": "i.beaujolais-region-jz521c"
   },
   {
-    "from": "i.sterling-vineyards-merlot",
+    "from": "i.sterling-vineyards-merlot-8nm0jf",
     "type": "INSTANCE_OF",
     "to": "c.merlot"
   },
   {
-    "from": "i.sterling-vineyards-merlot",
+    "from": "i.sterling-vineyards-merlot-8nm0jf",
     "type": "MAKER",
-    "to": "i.sterling-vineyards"
+    "to": "i.sterling-vineyards-agkt52"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.color"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.body"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.flavor"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.sugar"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.tannin-level"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "c.bordeaux"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "c.red-wine"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "c.white-wine"
   },
   {
-    "from": "cq.3",
+    "from": "cq.tmq6hs",
     "type": "NEEDS",
     "to": "s.goes-well-with"
   },
   {
-    "from": "cq.3",
+    "from": "cq.tmq6hs",
     "type": "NEEDS",
     "to": "s.grape"
   },
   {
-    "from": "cq.3",
+    "from": "cq.tmq6hs",
     "type": "NEEDS",
     "to": "c.seafood"
   },
   {
-    "from": "cq.4",
+    "from": "cq.pv8gg4",
     "type": "NEEDS",
     "to": "c.red-meat"
   },
   {
-    "from": "cq.4",
+    "from": "cq.pv8gg4",
     "type": "NEEDS",
     "to": "s.goes-well-with"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "s.goes-well-with"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "s.body"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "s.flavor"
   },
   {
-    "from": "cq.6",
+    "from": "cq.4mz6a9",
     "type": "NEEDS",
     "to": "s.produces"
   },
   {
-    "from": "cq.6",
+    "from": "cq.4mz6a9",
     "type": "NEEDS",
     "to": "c.winery"
   }

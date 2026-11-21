@@ -23,43 +23,43 @@
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.1",
+      "id": "cq.an5hqz",
       "text": "Which drinks have no milk?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.2",
+      "id": "cq.ffbmq8",
       "text": "What's the difference between a cortado and a latte?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.3",
+      "id": "cq.tmq6hs",
       "text": "What goes into a cappuccino?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.4",
+      "id": "cq.pv8gg4",
       "text": "Which drinks are a variation of another drink?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.5",
+      "id": "cq.s7b99r",
       "text": "Which drinks on the menu come with chocolate?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.6",
+      "id": "cq.4mz6a9",
       "text": "How much does each drink cost?",
       "status": "draft"
     },
     {
       "type": "DesignDecision",
-      "id": "d.1",
+      "id": "d.h6nzmn",
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
@@ -278,7 +278,7 @@
   ],
   "edges": [
     {
-      "from": "d.1",
+      "from": "d.h6nzmn",
       "type": "ABOUT",
       "to": "ontology"
     }

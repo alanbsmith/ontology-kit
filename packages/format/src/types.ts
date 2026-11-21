@@ -1,5 +1,5 @@
 /**
- * Shared types for the okb file format (okb-lpg/2). The node and edge registry
+ * Shared types for the okb file format (okb-lpg/3). The node and edge registry
  * is meta-kb/src/format.yaml; docs/FORMAT.md describes each property.
  *
  * Files can be edited by hand, so what's loaded is only *expected* to match these

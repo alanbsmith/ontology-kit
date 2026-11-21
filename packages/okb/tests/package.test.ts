@@ -126,7 +126,7 @@ describe("published packages", { skip: SKIP }, () => {
       console.log(ont.manifest.format);
       await import("@ontology-kit/okb/format").then(() => console.log("imported"), (e) => console.log(e.code));`;
     const out = run(process.execPath, ["--input-type=module", "-e", script], install).trim().split("\n");
-    assert.deepEqual(out, ["okb-lpg/2", "ERR_PACKAGE_PATH_NOT_EXPORTED"]);
+    assert.deepEqual(out, ["okb-lpg/3", "ERR_PACKAGE_PATH_NOT_EXPORTED"]);
     const dir = join(install, "node_modules", "@ontology-kit");
     assert.ok(existsSync(join(dir, "format", "dist", "index.js")));
     assert.ok(!existsSync(join(dir, "okb", "node_modules", "@ontology-kit")), "okb uses the one installed format package");

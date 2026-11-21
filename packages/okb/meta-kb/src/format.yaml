@@ -10,7 +10,7 @@
 # The meta-KB build (meta-kb/build.ts) compiles this file into the meta-KB graph and writes the
 # type names into packages/format/src/registry.ts, which the reader package ships as data.
 
-version: "okb-lpg/2"
+version: "okb-lpg/3"
 
 nodeTypes:
   - {name: Ontology, origin: operational, models: concept.scope, required: [id, name],

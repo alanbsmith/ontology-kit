@@ -200,13 +200,13 @@ okb decision add --title "Milk names stay natural" --decision "HalfAndHalf keeps
 ```
 
 ```text
-Recorded design decision d.2: Drinks keep their own names.
+Recorded design decision d.386rne: Drinks keep their own names.
 It explains 2 current finding(s) from naming-subclass-names-consistent (they'll show as 'explained' in okb validate).
 
-Recorded design decision d.3: Menu names for pure espressos.
+Recorded design decision d.8wg5vc: Menu names for pure espressos.
 Note: it doesn't match any current finding from naming-subclass-names-consistent. Check the --about target (a decision about a class also covers its subclasses).
 
-Recorded design decision d.4: Milk names stay natural.
+Recorded design decision d.0a44cm: Milk names stay natural.
 It explains 1 current finding(s) from naming-subclass-names-consistent (they'll show as 'explained' in okb validate).
 ```
 
@@ -219,7 +219,7 @@ okb decision add --title "Cortado is a class" --decision "Every drink type, Cort
 ```
 
 ```text
-Recorded design decision d.5: Cortado is a class.
+Recorded design decision d.jctqnh: Cortado is a class.
 ```
 
 ## Check your work

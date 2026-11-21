@@ -29,43 +29,43 @@
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.1",
+    "id": "cq.an5hqz",
     "text": "Which wine characteristics should I consider when choosing a wine?",
     "status": "draft"
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.2",
+    "id": "cq.ffbmq8",
     "text": "Is Bordeaux a red or white wine?",
     "status": "draft"
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.3",
+    "id": "cq.tmq6hs",
     "text": "Does Cabernet Sauvignon go well with seafood?",
     "status": "draft"
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.4",
+    "id": "cq.pv8gg4",
     "text": "What is the best choice of wine for grilled meat?",
     "status": "draft"
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.5",
+    "id": "cq.s7b99r",
     "text": "Which characteristics of a wine affect its appropriateness for a dish?",
     "status": "draft"
   },
   {
     "type": "CompetencyQuestion",
-    "id": "cq.6",
+    "id": "cq.4mz6a9",
     "text": "Which wines does a given winery produce?",
     "status": "draft"
   },
   {
     "type": "DesignDecision",
-    "id": "d.1",
+    "id": "d.h6nzmn",
     "title": "No existing ontology reused",
     "decision": "Build from scratch.",
     "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
@@ -319,7 +319,7 @@
   },
   {
     "type": "DesignDecision",
-    "id": "d.2",
+    "id": "d.386rne",
     "title": "Sauternes keeps its final s",
     "decision": "The class is named Sauternes, not Sauterne.",
     "rationale": "It's the proper name of the appellation, not a plural.",
@@ -370,7 +370,7 @@
   },
   {
     "type": "DesignDecision",
-    "id": "d.3",
+    "id": "d.8wg5vc",
     "title": "Regional wines are terminological classes",
     "decision": "Bordeaux, Medoc, Pauillac, Margaux and Beaujolais are classes even though they add no slots of their own.",
     "rationale": "Sommeliers and diners always distinguish these appellations (Ontology 101 §4.4: distinctions experts commonly make).",
@@ -511,7 +511,7 @@
   },
   {
     "type": "Instance",
-    "id": "i.chateau-morgon",
+    "id": "i.chateau-morgon-ypqfhf",
     "name": "Chateau Morgon",
     "values": {
       "s.location": "Beaujolais, France"
@@ -519,7 +519,7 @@
   },
   {
     "type": "Instance",
-    "id": "i.sterling-vineyards",
+    "id": "i.sterling-vineyards-agkt52",
     "name": "Sterling Vineyards",
     "values": {
       "s.location": "Napa Valley, California"
@@ -527,37 +527,37 @@
   },
   {
     "type": "Instance",
-    "id": "i.gamay",
+    "id": "i.gamay-kfjm22",
     "name": "Gamay",
     "values": {}
   },
   {
     "type": "Instance",
-    "id": "i.merlot-grape",
+    "id": "i.merlot-grape-egah0e",
     "name": "Merlot grape",
     "values": {}
   },
   {
     "type": "Instance",
-    "id": "i.chardonnay-grape",
+    "id": "i.chardonnay-grape-jwb195",
     "name": "Chardonnay grape",
     "values": {}
   },
   {
     "type": "Instance",
-    "id": "i.riesling-grape",
+    "id": "i.riesling-grape-139wgt",
     "name": "Riesling grape",
     "values": {}
   },
   {
     "type": "Instance",
-    "id": "i.beaujolais-region",
+    "id": "i.beaujolais-region-jz521c",
     "name": "Beaujolais region",
     "values": {}
   },
   {
     "type": "Instance",
-    "id": "i.chateau-morgon-beaujolais",
+    "id": "i.chateau-morgon-beaujolais-ygb1b8",
     "name": "Chateau Morgon Beaujolais",
     "values": {
       "s.body": "light",
@@ -568,7 +568,7 @@
   },
   {
     "type": "Instance",
-    "id": "i.sterling-vineyards-merlot",
+    "id": "i.sterling-vineyards-merlot-8nm0jf",
     "name": "Sterling Vineyards Merlot",
     "values": {
       "s.flavor": "moderate",

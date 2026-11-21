@@ -1,6 +1,6 @@
 [
   {
-    "from": "d.1",
+    "from": "d.h6nzmn",
     "type": "ABOUT",
     "to": "ontology"
   },
@@ -410,22 +410,22 @@
     "to": "c.gelato"
   },
   {
-    "from": "d.2",
+    "from": "d.386rne",
     "type": "ABOUT",
     "to": "c.espresso-drink"
   },
   {
-    "from": "d.3",
+    "from": "d.8wg5vc",
     "type": "ABOUT",
     "to": "c.pure-espresso"
   },
   {
-    "from": "d.4",
+    "from": "d.0a44cm",
     "type": "ABOUT",
     "to": "c.milk"
   },
   {
-    "from": "d.5",
+    "from": "d.jctqnh",
     "type": "ABOUT",
     "to": "c.cortado"
   },
@@ -655,260 +655,260 @@
     "to": "c.condensed-milk"
   },
   {
-    "from": "i.double-shot",
+    "from": "i.double-shot-t7wr67",
     "type": "INSTANCE_OF",
     "to": "c.coffee"
   },
   {
-    "from": "i.hot-water",
+    "from": "i.hot-water-5k070p",
     "type": "INSTANCE_OF",
     "to": "c.water"
   },
   {
-    "from": "i.steamed-whole-milk",
+    "from": "i.steamed-whole-milk-mxyt0r",
     "type": "INSTANCE_OF",
     "to": "c.whole-milk"
   },
   {
-    "from": "i.steamed-half-and-half",
+    "from": "i.steamed-half-and-half-r364hz",
     "type": "INSTANCE_OF",
     "to": "c.half-and-half"
   },
   {
-    "from": "i.milk-foam",
+    "from": "i.milk-foam-ap9t4r",
     "type": "INSTANCE_OF",
     "to": "c.foam"
   },
   {
-    "from": "i.chocolate-syrup",
+    "from": "i.chocolate-syrup-vss60w",
     "type": "INSTANCE_OF",
     "to": "c.chocolate"
   },
   {
-    "from": "i.whipped-cream",
+    "from": "i.whipped-cream-rffjm7",
     "type": "INSTANCE_OF",
     "to": "c.whipped-cream"
   },
   {
-    "from": "i.vanilla-gelato",
+    "from": "i.vanilla-gelato-0mc3re",
     "type": "INSTANCE_OF",
     "to": "c.gelato"
   },
   {
-    "from": "i.house-espresso",
+    "from": "i.house-espresso-464q3e",
     "type": "INSTANCE_OF",
     "to": "c.espresso"
   },
   {
-    "from": "i.house-espresso",
+    "from": "i.house-espresso-464q3e",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-cortado",
+    "from": "i.vertex-cortado-wb9n3x",
     "type": "INSTANCE_OF",
     "to": "c.cortado"
   },
   {
-    "from": "i.vertex-cortado",
+    "from": "i.vertex-cortado-wb9n3x",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-cortado",
+    "from": "i.vertex-cortado-wb9n3x",
     "type": "CONTAINS",
-    "to": "i.steamed-whole-milk"
+    "to": "i.steamed-whole-milk-mxyt0r"
   },
   {
-    "from": "i.vertex-flat-white",
+    "from": "i.vertex-flat-white-7vjzhp",
     "type": "INSTANCE_OF",
     "to": "c.flat-white"
   },
   {
-    "from": "i.vertex-flat-white",
+    "from": "i.vertex-flat-white-7vjzhp",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-flat-white",
+    "from": "i.vertex-flat-white-7vjzhp",
     "type": "CONTAINS",
-    "to": "i.steamed-whole-milk"
+    "to": "i.steamed-whole-milk-mxyt0r"
   },
   {
-    "from": "i.vertex-cappuccino",
+    "from": "i.vertex-cappuccino-d0g1cz",
     "type": "INSTANCE_OF",
     "to": "c.cappuccino"
   },
   {
-    "from": "i.vertex-cappuccino",
+    "from": "i.vertex-cappuccino-d0g1cz",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-cappuccino",
+    "from": "i.vertex-cappuccino-d0g1cz",
     "type": "CONTAINS",
-    "to": "i.steamed-whole-milk"
+    "to": "i.steamed-whole-milk-mxyt0r"
   },
   {
-    "from": "i.vertex-cappuccino",
+    "from": "i.vertex-cappuccino-d0g1cz",
     "type": "CONTAINS",
-    "to": "i.milk-foam"
+    "to": "i.milk-foam-ap9t4r"
   },
   {
-    "from": "i.vertex-breve",
+    "from": "i.vertex-breve-7fvaz3",
     "type": "INSTANCE_OF",
     "to": "c.breve"
   },
   {
-    "from": "i.vertex-breve",
+    "from": "i.vertex-breve-7fvaz3",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-breve",
+    "from": "i.vertex-breve-7fvaz3",
     "type": "CONTAINS",
-    "to": "i.steamed-half-and-half"
+    "to": "i.steamed-half-and-half-r364hz"
   },
   {
-    "from": "i.vertex-breve",
+    "from": "i.vertex-breve-7fvaz3",
     "type": "CONTAINS",
-    "to": "i.milk-foam"
+    "to": "i.milk-foam-ap9t4r"
   },
   {
-    "from": "i.vertex-mocha",
+    "from": "i.vertex-mocha-vya6eq",
     "type": "INSTANCE_OF",
     "to": "c.mocha"
   },
   {
-    "from": "i.vertex-mocha",
+    "from": "i.vertex-mocha-vya6eq",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-mocha",
+    "from": "i.vertex-mocha-vya6eq",
     "type": "CONTAINS",
-    "to": "i.chocolate-syrup"
+    "to": "i.chocolate-syrup-vss60w"
   },
   {
-    "from": "i.vertex-mocha",
+    "from": "i.vertex-mocha-vya6eq",
     "type": "CONTAINS",
-    "to": "i.steamed-whole-milk"
+    "to": "i.steamed-whole-milk-mxyt0r"
   },
   {
-    "from": "i.vertex-affogato",
+    "from": "i.vertex-affogato-gba1f1",
     "type": "INSTANCE_OF",
     "to": "c.affogato"
   },
   {
-    "from": "i.vertex-affogato",
+    "from": "i.vertex-affogato-gba1f1",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-affogato",
+    "from": "i.vertex-affogato-gba1f1",
     "type": "CONTAINS",
-    "to": "i.vanilla-gelato"
+    "to": "i.vanilla-gelato-0mc3re"
   },
   {
-    "from": "i.vertex-macchiato",
+    "from": "i.vertex-macchiato-j3z2ev",
     "type": "INSTANCE_OF",
     "to": "c.macchiato"
   },
   {
-    "from": "i.vertex-macchiato",
+    "from": "i.vertex-macchiato-j3z2ev",
     "type": "CONTAINS",
-    "to": "i.double-shot"
+    "to": "i.double-shot-t7wr67"
   },
   {
-    "from": "i.vertex-macchiato",
+    "from": "i.vertex-macchiato-j3z2ev",
     "type": "CONTAINS",
-    "to": "i.milk-foam",
+    "to": "i.milk-foam-ap9t4r",
     "amount": "splash"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "c.drink"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "s.contains"
   },
   {
-    "from": "cq.1",
+    "from": "cq.an5hqz",
     "type": "NEEDS",
     "to": "c.milk"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "c.cortado"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "c.latte"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "s.espresso-to-milk-ratio"
   },
   {
-    "from": "cq.2",
+    "from": "cq.ffbmq8",
     "type": "NEEDS",
     "to": "s.texture"
   },
   {
-    "from": "cq.3",
+    "from": "cq.tmq6hs",
     "type": "NEEDS",
     "to": "c.cappuccino"
   },
   {
-    "from": "cq.3",
+    "from": "cq.tmq6hs",
     "type": "NEEDS",
     "to": "s.contains"
   },
   {
-    "from": "cq.4",
+    "from": "cq.pv8gg4",
     "type": "NEEDS",
     "to": "s.variation-of"
   },
   {
-    "from": "cq.4",
+    "from": "cq.pv8gg4",
     "type": "NEEDS",
     "to": "c.breve"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "s.contains"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "c.chocolate"
   },
   {
-    "from": "cq.5",
+    "from": "cq.s7b99r",
     "type": "NEEDS",
     "to": "c.mocha"
   },
   {
-    "from": "loc.vertex-coffee-house-guide.1",
+    "from": "loc.vertex-coffee-house-guide-bdsph9",
     "type": "PART_OF",
     "to": "house-guide"
   },
   {
-    "from": "loc.vertex-coffee-house-guide.2",
+    "from": "loc.vertex-coffee-house-guide-q2hn8f",
     "type": "PART_OF",
     "to": "house-guide"
   },
   {
     "from": "rule.milk-drinks-have-milk",
     "type": "CITES",
-    "to": "loc.vertex-coffee-house-guide.1"
+    "to": "loc.vertex-coffee-house-guide-bdsph9"
   },
   {
     "from": "rule.milk-drinks-have-milk",
@@ -918,7 +918,7 @@
   {
     "from": "rule.breve-uses-half-and-half",
     "type": "CITES",
-    "to": "loc.vertex-coffee-house-guide.2"
+    "to": "loc.vertex-coffee-house-guide-q2hn8f"
   },
   {
     "from": "rule.breve-uses-half-and-half",
@@ -932,12 +932,12 @@
     "adds": "The milk must be half-and-half."
   },
   {
-    "from": "i.vertex-breve",
+    "from": "i.vertex-breve-7fvaz3",
     "type": "FULFILLS",
     "to": "rule.breve-uses-half-and-half"
   },
   {
-    "from": "i.vertex-cortado",
+    "from": "i.vertex-cortado-wb9n3x",
     "type": "FULFILLS",
     "to": "rule.milk-drinks-have-milk"
   }

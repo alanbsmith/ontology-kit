@@ -1,6 +1,6 @@
 {
   "version": "2.4.2",
-  "formatVersion": "okb-lpg/2",
+  "formatVersion": "okb-lpg/3",
   "nodeCounts": {
     "MetaKB": 1,
     "Source": 2,

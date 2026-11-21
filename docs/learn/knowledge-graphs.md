@@ -46,7 +46,7 @@ okb show "Vertex breve"
 You'll see the kind it belongs to, and then each fact. The links show up as values:
 
 ```text
-Vertex breve  Instance · i.vertex-breve
+Vertex breve  Instance · i.vertex-breve-7fvaz3
   instance of    Breve
 
   Values

@@ -70,7 +70,7 @@ export const PAGES: readonly Page[] = [
   { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides", summary: "Short yes/no guides for the recurring which-way-do-I-model-this questions, such as class or instance, and property or relationship." },
   { route: "/reference/cli-reference/", source: "docs/CLI.md", label: "CLI reference", summary: "Every okb command, grouped by task, with an example and a table of arguments for each." },
   { route: "/reference/cli-cheat-sheet/", source: "docs/CLI-CHEAT-SHEET.md", label: "CLI cheat sheet", summary: "The okb commands you will use most, in the order you usually need them." },
-  { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format", summary: "The okb-lpg/2 file format: the three JSON files of an ontology, their node and edge types and how slot values are stored." },
+  { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format", summary: "The okb-lpg/3 file format: the three JSON files of an ontology, their node and edge types and how slot values are stored." },
   { route: "/reference/skills/", source: "docs/reference/skills.md", label: "Skills", summary: "The three Claude skills the kit ships, what each is for, how to install and update one and how to check its version." },
   { route: "/reference/changelog/", source: "docs/CHANGELOG.md", label: "Changelog", summary: "What changed in each package release and each meta-KB version, with the reasons behind the changes to rules and the method." },
   { route: "/contributing/", source: "CONTRIBUTING.md", label: "Contributing", summary: "How to work on Ontology Kit itself: setup, repository layout, changing rules, the docs site, writing style and what to run before a commit." },

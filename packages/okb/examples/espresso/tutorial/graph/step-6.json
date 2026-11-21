@@ -31,43 +31,43 @@
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.1",
+      "id": "cq.an5hqz",
       "text": "Which drinks have no milk?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.2",
+      "id": "cq.ffbmq8",
       "text": "What's the difference between a cortado and a latte?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.3",
+      "id": "cq.tmq6hs",
       "text": "What goes into a cappuccino?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.4",
+      "id": "cq.pv8gg4",
       "text": "Which drinks are a variation of another drink?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.5",
+      "id": "cq.s7b99r",
       "text": "Which drinks on the menu come with chocolate?",
       "status": "draft"
     },
     {
       "type": "CompetencyQuestion",
-      "id": "cq.6",
+      "id": "cq.4mz6a9",
       "text": "How much does each drink cost?",
       "status": "draft"
     },
     {
       "type": "DesignDecision",
-      "id": "d.1",
+      "id": "d.h6nzmn",
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
@@ -540,7 +540,7 @@
     },
     {
       "type": "DesignDecision",
-      "id": "d.2",
+      "id": "d.386rne",
       "title": "Drinks keep their own names",
       "decision": "Espresso, Ristretto, Lungo and the other drinks keep the names a menu uses.",
       "rationale": "Baristas say Lungo, not LungoEspresso. The parent names group them, so the children don't repeat a word.",
@@ -551,7 +551,7 @@
     },
     {
       "type": "DesignDecision",
-      "id": "d.3",
+      "id": "d.8wg5vc",
       "title": "Menu names for pure espressos",
       "decision": "The pure espresso drinks keep their menu names.",
       "rationale": "Nobody orders a LongBlackEspresso.",
@@ -562,7 +562,7 @@
     },
     {
       "type": "DesignDecision",
-      "id": "d.4",
+      "id": "d.0a44cm",
       "title": "Milk names stay natural",
       "decision": "HalfAndHalf keeps its everyday name.",
       "rationale": "That's what the carton says.",
@@ -573,7 +573,7 @@
     },
     {
       "type": "DesignDecision",
-      "id": "d.5",
+      "id": "d.jctqnh",
       "title": "Cortado is a class",
       "decision": "Every drink type, Cortado included, is a class. Items on the menu are instances.",
       "rationale": "The questions compare kinds of drinks, and each kind has its own facts. A café that only listed menu items would model them as instances.",
@@ -675,7 +675,7 @@
   ],
   "edges": [
     {
-      "from": "d.1",
+      "from": "d.h6nzmn",
       "type": "ABOUT",
       "to": "ontology"
     },
@@ -1085,22 +1085,22 @@
       "to": "c.gelato"
     },
     {
-      "from": "d.2",
+      "from": "d.386rne",
       "type": "ABOUT",
       "to": "c.espresso-drink"
     },
     {
-      "from": "d.3",
+      "from": "d.8wg5vc",
       "type": "ABOUT",
       "to": "c.pure-espresso"
     },
     {
-      "from": "d.4",
+      "from": "d.0a44cm",
       "type": "ABOUT",
       "to": "c.milk"
     },
     {
-      "from": "d.5",
+      "from": "d.jctqnh",
       "type": "ABOUT",
       "to": "c.cortado"
     },

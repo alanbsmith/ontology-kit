@@ -29,7 +29,7 @@ const ont = Ontology.load("./espresso");
 export const classes: ClassNode[] = ont.ofType("Class");
 export const slots: RelationshipSlot[] = ont.ofType("Slot").filter(isRelationship);
 export const first: OkbNode | undefined = ont.get("ontology");
-export const values: string[] = ont.rel.values("i.vertex-cortado", "s.contains");
+export const values: string[] = ont.rel.values(ont.find("Vertex Cortado", "Instance").id, "s.contains");
 export const edge: GraphEdge | undefined = ont.rel.edge("i.vertex-cortado", "s.contains", "i.double-shot");
 export const reserved: readonly string[] = STRUCTURAL_EDGE_TYPES;
 
@@ -78,7 +78,7 @@ describe("@ontology-kit/format from the packed tarball", { skip: SKIP }, () => {
   it("loads an ontology and reads edge types and relationship values", () => {
     const script = `import { Ontology, STRUCTURAL_EDGE_TYPES, PROVENANCE_EDGE_TYPES, isRelationship } from "@ontology-kit/format";
       const ont = Ontology.load("./espresso");
-      const values = ont.rel.values("i.vertex-cortado", "s.contains").map((id) => ont.label(id));
+      const values = ont.rel.values(ont.find("Vertex Cortado", "Instance").id, "s.contains").map((id) => ont.label(id));
       console.log(JSON.stringify({ structural: STRUCTURAL_EDGE_TYPES, provenance: PROVENANCE_EDGE_TYPES,
         relationships: ont.ofType("Slot").filter(isRelationship).length, values, format: ont.manifest.format }));`;
     const out = JSON.parse(run(process.execPath, ["--input-type=module", "-e", script], install));
@@ -86,7 +86,7 @@ describe("@ontology-kit/format from the packed tarball", { skip: SKIP }, () => {
     assert.deepEqual([...out.provenance].sort(), ["CITES", "FULFILLS", "GOVERNS", "PART_OF", "REFINES"]);
     assert.ok(out.relationships >= 3);
     assert.ok(out.values.includes("Double shot"));
-    assert.equal(out.format, "okb-lpg/2");
+    assert.equal(out.format, "okb-lpg/3");
   });
 
   it("refuses paths outside the exports map", () => {

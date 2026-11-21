@@ -1,4 +1,5 @@
 /** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). Part of @ontology-kit/format. */
+import { createHash, randomBytes } from "node:crypto";
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { OkbError } from "./errors.ts";
@@ -15,8 +16,28 @@ export { DISPOSITIONS, VALUE_TYPES };
 export const FORMAT: string = FORMAT_VERSION;
 export const MANIFEST = "okb.json";
 const ID_PREFIX: Partial<Record<NodeType, string>> = {
-  Class: "c", Slot: "s", Instance: "i", Term: "t", ReusedOntology: "r", Source: "src", SourceLocation: "loc", Rule: "rule",
+  CompetencyQuestion: "cq", DesignDecision: "d", Class: "c", Slot: "s", Instance: "i", Term: "t", ReusedOntology: "r", Source: "src", SourceLocation: "loc", Rule: "rule",
 };
+/** Nodes whose ids always carry a tag: different people can add different ones with the same name (or none). */
+const TAGGED_TYPES = new Set<NodeType>(["CompetencyQuestion", "DesignDecision", "Instance", "SourceLocation"]);
+const TAG_ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"; // Crockford base32: lowercase, no i l o u
+
+/**
+ * Six characters (30 bits) that two branches won't pick twice. Random, except when
+ * SOURCE_DATE_EPOCH is set (a reproducible build): then a hash of the epoch, the type,
+ * the name and the attempt number, so generated output like examples/wine is identical
+ * on every run.
+ */
+function idTag(type: NodeType, name: string | undefined, attempt: number): string {
+  const epoch = process.env.SOURCE_DATE_EPOCH;
+  const bytes = epoch
+    ? createHash("sha256").update(`${epoch}\0${type}\0${name ?? ""}\0${attempt}`).digest()
+    : randomBytes(6);
+  let tag = "";
+  for (let i = 0; i < 6; i++) tag += TAG_ALPHABET[bytes[i] % 32];
+  return tag;
+}
+
 /** `okb show class:Genre` etc.: prefixes that say which kind of node a name refers to. */
 const REF_PREFIX: Record<string, NodeType> = {
   class: "Class", slot: "Slot", instance: "Instance", term: "Term", cq: "CompetencyQuestion", question: "CompetencyQuestion", decision: "DesignDecision",
@@ -32,9 +53,9 @@ export function nodeLabel(n: OkbNode): string {
   return n.id;
 }
 
-/** Every name-like field a node can be looked up by. */
+/** Every name-like field a node can be looked up by (a quote's text counts: its id has a random tag). */
 function lookupNames(n: OkbNode): string[] {
-  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || ""];
+  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || "", ("quote" in n && typeof n.quote === "string" && n.quote) || ""];
 }
 
 export { isRelationship };
@@ -96,6 +117,8 @@ export class Ontology {
       readJson<GraphEdge[]>(join(root, "edges.json"), []),
     );
     if (ont.manifest.format === "okb-lpg/1") ont.migrateFromV1();
+    // okb-lpg/2 -> /3 changes how new ids are made, not any existing id, so only the version moves.
+    if (ont.manifest.format === "okb-lpg/2") ont.manifest.format = FORMAT;
     return ont;
   }
 
@@ -231,8 +254,14 @@ export class Ontology {
     const k = naming.key(ref);
     let hits = this.nodes.filter((n) => ok(n) && k && lookupNames(n).some((x) => naming.key(x) === k));
     if (hits.length === 0 && /^\d+$/.test(ref) && ts) {
-      if (ts.includes("CompetencyQuestion")) hits = this.nodes.filter((n) => n.id === `cq.${ref}`);
-      if (ts.includes("DesignDecision")) hits = hits.concat(this.nodes.filter((n) => n.id === `d.${ref}`));
+      // A bare number is a position in `okb cq list` / `okb decision list` (ids carry no number),
+      // or, for ids made before okb-lpg/3, the number inside `cq.3` / `d.3`.
+      for (const [t, p] of [["CompetencyQuestion", "cq"], ["DesignDecision", "d"]] as const) {
+        if (!ts.includes(t)) continue;
+        const legacy = this.byId.get(`${p}.${ref}`);
+        const nth = this.nodes.filter((n) => n.type === t)[Number(ref) - 1];
+        hits = hits.concat(legacy?.type === t ? [legacy] : nth ? [nth] : []);
+      }
     }
     if (hits.length > 1 && !ts) {
       // Untyped lookups prefer the modeling elements over brainstorm terms, questions, etc.
@@ -276,16 +305,27 @@ export class Ontology {
 
   /** @internal */
   newId(type: NodeType, name?: string): string {
-    if (type === "CompetencyQuestion" || type === "DesignDecision") {
-      const p = type === "CompetencyQuestion" ? "cq" : "d";
-      let i = 1;
-      while (this.byId.has(`${p}.${i}`)) i++;
-      return `${p}.${i}`;
+    const prefix = ID_PREFIX[type] ?? type.toLowerCase();
+    const slug = naming.slug(name ?? type);
+    // Where two branches could each create a different node with the same id, the id carries a
+    // tag. Elsewhere a slug id is the first free one, and a clash with an existing id gets a tag too.
+    const base = type === "CompetencyQuestion" || type === "DesignDecision" ? prefix : `${prefix}.${slug}`;
+    const plain = TAGGED_TYPES.has(type) ? undefined : base;
+    if (plain && !this.byId.has(plain)) return plain;
+    for (let attempt = 0; ; attempt++) {
+      const tag = idTag(type, name, attempt);
+      const id = type === "CompetencyQuestion" || type === "DesignDecision" ? `${base}.${tag}` : `${base}-${tag}`;
+      if (!this.byId.has(id)) return id;
     }
-    const base = `${ID_PREFIX[type] ?? type.toLowerCase()}.${naming.slug(name ?? type)}`;
-    let id = base;
-    for (let i = 2; this.byId.has(id); i++) id = `${base}-${i}`;
-    return id;
+  }
+
+  /**
+   * The number a person types for a competency question or design decision (`okb cq link 2 ...`):
+   * its position in file order, counting from 1. Ids no longer carry it.
+   */
+  /** @internal */
+  displayNumber(n: OkbNode): number {
+    return this.nodes.filter((x) => x.type === n.type).indexOf(n) + 1;
   }
 
   /** @internal */

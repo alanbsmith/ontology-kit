@@ -93,7 +93,7 @@ okb show "Chateau Morgon"
 ```
 
 ```text
-Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais
+Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
   instance of    Beaujolais
 
   Values
@@ -107,7 +107,7 @@ Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais
     region             Beaujolais region
     goesWellWith       RedMeat (fixed by RedWine)
 
-Chateau Morgon  Instance · i.chateau-morgon
+Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   instance of    Winery
 
   Values
@@ -140,8 +140,8 @@ HINTS: worth a look
       and White Wine can).
 
 EXPLAINED by design decisions (2)
-  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.2
-  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.3
+  · Class 'Sauternes' looks plural, but the convention is singular. Try 'Sauterne'. [naming-singular-plural-consistent] → d.386rne
+  · 'Bordeaux' has only one direct subclass ('Medoc'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)

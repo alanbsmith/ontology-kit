@@ -25,29 +25,29 @@ okb cq link 5 contains Chocolate Mocha
 ```
 
 ```text
-Linked cq.1 → Drink (Class).
-Linked cq.1 → contains (Slot).
-Linked cq.1 → Milk (Class).
-  Tip: cq.1 is one example of a family of questions. Would you also ask the same question about EspressoDrink, or more about Drink (pourOrder, origin, variationOf); the same question about Coffee, Water, Foam, Chocolate, or more about Milk (fatPercent, usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.an5hqz → Drink (Class).
+Linked cq.an5hqz → contains (Slot).
+Linked cq.an5hqz → Milk (Class).
+  Tip: cq.an5hqz is one example of a family of questions. Would you also ask the same question about EspressoDrink, or more about Drink (pourOrder, origin, variationOf); the same question about Coffee, Water, Foam, Chocolate, or more about Milk (fatPercent, usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
-Linked cq.2 → Cortado (Class).
-Linked cq.2 → Latte (Class).
-Linked cq.2 → espressoToMilkRatio (Slot).
-Linked cq.2 → texture (Slot).
-  Tip: cq.2 is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Cappuccino, or more about Cortado (pullVolumeMl, pourOrder, origin, variationOf); the same question about Breve? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.ffbmq8 → Cortado (Class).
+Linked cq.ffbmq8 → Latte (Class).
+Linked cq.ffbmq8 → espressoToMilkRatio (Slot).
+Linked cq.ffbmq8 → texture (Slot).
+  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Cappuccino, or more about Cortado (pullVolumeMl, pourOrder, origin, variationOf); the same question about Breve? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
-Linked cq.3 → Cappuccino (Class).
-Linked cq.3 → contains (Slot).
-  Tip: cq.3 is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Breve, or more about Cappuccino (pullVolumeMl, pourOrder, origin, variationOf)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.tmq6hs → Cappuccino (Class).
+Linked cq.tmq6hs → contains (Slot).
+  Tip: cq.tmq6hs is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Breve, or more about Cappuccino (pullVolumeMl, pourOrder, origin, variationOf)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
-Linked cq.4 → variationOf (Slot).
-Linked cq.4 → Breve (Class).
-  Tip: cq.4 is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); more about Breve (pullVolumeMl)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.pv8gg4 → variationOf (Slot).
+Linked cq.pv8gg4 → Breve (Class).
+  Tip: cq.pv8gg4 is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); more about Breve (pullVolumeMl)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
-Linked cq.5 → contains (Slot).
-Linked cq.5 → Chocolate (Class).
-Linked cq.5 → Mocha (Class).
-  Tip: cq.5 is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate (usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+Linked cq.s7b99r → contains (Slot).
+Linked cq.s7b99r → Chocolate (Class).
+Linked cq.s7b99r → Mocha (Class).
+  Tip: cq.s7b99r is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate (usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ## Add rules
@@ -66,16 +66,16 @@ Read 2 blocks (2 quotable) under 3 headings.
   Tip: add --repo-url <GitHub URL of this file> so quotes get links to the exact lines.
 Next: okb source outline house-guide   (the list of quotable blocks to work through)
 
-Added loc.vertex-coffee-house-guide.1 at Vertex Coffee house guide > Milk drinks, line 5.
+Added loc.vertex-coffee-house-guide-bdsph9 at Vertex Coffee house guide > Milk drinks, line 5.
 
-Added loc.vertex-coffee-house-guide.2 at Vertex Coffee house guide > Breve, line 9.
+Added loc.vertex-coffee-house-guide-q2hn8f at Vertex Coffee house guide > Breve, line 9.
 ```
 
 The second rule narrows the first. Every milk drink needs milk, and a breve needs one particular milk. That's a [refinement](../../../../../docs/GLOSSARY.md#concept-rule-refines):
 
 ```bash
-okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.vertex-coffee-house-guide.1
-okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.vertex-coffee-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
+okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites "Every milk drink must contain milk or cream."
+okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites "A breve must use half-and-half, never whole milk." --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
 okb rule list
 ```
 
@@ -89,10 +89,10 @@ Next: verify it in a fresh context, then okb verify rule.breve-uses-half-and-hal
 
 rule.milk-drinks-have-milk [MUST · authored · unverified]
    A MilkDrink MUST contain a milk ingredient.
-   governs: MilkDrink · cites: loc.vertex-coffee-house-guide.1
+   governs: MilkDrink · cites: loc.vertex-coffee-house-guide-bdsph9
 rule.breve-uses-half-and-half [MUST · authored · unverified]
    A Breve MUST be made with HalfAndHalf.
-   governs: Breve · cites: loc.vertex-coffee-house-guide.2
+   governs: Breve · cites: loc.vertex-coffee-house-guide-q2hn8f
 ```
 
 A rule starts unverified. Check that each quote supports its rule, then approve them:
@@ -140,7 +140,7 @@ okb review
 ✗ 0 error(s)   ! 1 warning(s)   i 6 hint(s)   · all checks
 
 WARNINGS: fix, or record a design decision explaining why not
-  ! Competency question cq.6 ("How much does each drink cost?") isn't linked to anything that answers it. [scope-cq-coverage]
+  ! Competency question cq.4mz6a9 ("How much does each drink cost?") isn't linked to anything that answers it. [scope-cq-coverage]
       Fix: `okb cq link <cq> <Class|slot>...`, or add what's missing.
 
 HINTS: worth a look
@@ -162,9 +162,9 @@ HINTS: worth a look
       Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.4
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.386rne
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.386rne
+  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 
@@ -237,15 +237,15 @@ Review: what only a person can judge (step 8 and anything already visible)
    Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
 ? scope-cq-families (SHOULD)  For each answered competency question: what's its family (the same question about sibling classes or other instances, and the questions next to it about the same subject)? Would the ontology answer them? Is each one you don't want recorded as out of scope?
-   · cq.1 "Which drinks have no milk?": would you also ask the same question about EspressoDrink, or more about Drink: pourOrder, origin?
-   · cq.1 "Which drinks have no milk?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Milk: fatPercent, usedIn?
-   · cq.2 "What's the difference between a cortado and a latte?": would you also ask the same question about Macchiato, FlatWhite, or more about Cortado: pullVolumeMl, pourOrder, origin?
-   · cq.3 "What goes into a cappuccino?": would you also ask the same question about Macchiato, FlatWhite, or more about Cappuccino: pullVolumeMl, pourOrder, origin?
-   · cq.4 "Which drinks are a variation of another drink?": would you also ask more about Drink: pourOrder, origin?
-   · cq.4 "Which drinks are a variation of another drink?": would you also ask more about Breve: pullVolumeMl?
-   · cq.5 "Which drinks on the menu come with chocolate?": would you also ask more about Drink: pourOrder, origin?
-   · cq.5 "Which drinks on the menu come with chocolate?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate: usedIn?
-   · cq.5 "Which drinks on the menu come with chocolate?": would you also ask the same question about ConPanna, Affogato, CafeBombon, or more about Mocha: pullVolumeMl?
+   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about EspressoDrink, or more about Drink: pourOrder, origin?
+   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Milk: fatPercent, usedIn?
+   · cq.ffbmq8 "What's the difference between a cortado and a latte?": would you also ask the same question about Macchiato, FlatWhite, or more about Cortado: pullVolumeMl, pourOrder, origin?
+   · cq.tmq6hs "What goes into a cappuccino?": would you also ask the same question about Macchiato, FlatWhite, or more about Cappuccino: pullVolumeMl, pourOrder, origin?
+   · cq.pv8gg4 "Which drinks are a variation of another drink?": would you also ask more about Drink: pourOrder, origin?
+   · cq.pv8gg4 "Which drinks are a variation of another drink?": would you also ask more about Breve: pullVolumeMl?
+   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask more about Drink: pourOrder, origin?
+   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate: usedIn?
+   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about ConPanna, Affogato, CafeBombon, or more about Mocha: pullVolumeMl?
    · For each family you don't want: record it as out of scope (out of scope so far: brewing equipment, coffee beans and roasting).
    Ontology 101 §3 Step 1, Competency questions, p.5
 

@@ -131,10 +131,7 @@ function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> 
 }
 
 function nextLocId(ont: Ontology, src: SourceNode): string {
-  const base = `loc.${naming.slug(src.title ?? src.id).slice(0, 30)}`;
-  let i = 1;
-  while (ont.get(`${base}.${i}`)) i++;
-  return `${base}.${i}`;
+  return ont.newId("SourceLocation", naming.slug(src.title ?? src.id).slice(0, 30));
 }
 
 /** Suggest the block that shares the most words with a failed quote. */

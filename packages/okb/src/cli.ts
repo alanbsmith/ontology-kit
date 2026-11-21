@@ -167,8 +167,9 @@ async function main(argvIn: string[]) {
         if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
         for (const q of qs) {
           const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
-          console.log(`${c.bold(q.id.padEnd(6))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
-          console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + q.id.split(".")[1] + " <Class|slot>...)"}`));
+          const num = ont.displayNumber(q);
+          console.log(`${c.bold(String(num).padEnd(3))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
+          console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + num + " <Class|slot>...)"}`));
         }
       });
     }
@@ -312,7 +313,7 @@ async function main(argvIn: string[]) {
       const ds = ont.ofType("DesignDecision");
       return output(v, () => ds, () => {
         for (const d of ds) {
-          console.log(`${c.bold(d.id)} ${d.title}`);
+          console.log(`${c.bold(String(ont.displayNumber(d)).padEnd(3))} ${d.title}`);
           console.log(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
           const about = ont.targets(d.id, "ABOUT").map((x) => ont.label(x));
           if (about.length || d.metaRules) console.log(c.dim(`   about: ${about.join(", ") || "—"}${d.metaRules ? " · explains: " + d.metaRules.join(", ") : ""}`));

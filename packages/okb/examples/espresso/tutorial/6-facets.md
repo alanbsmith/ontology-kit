@@ -181,9 +181,9 @@ HINTS: worth a look
       and White Wine can).
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.4
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.386rne
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.386rne
+  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)

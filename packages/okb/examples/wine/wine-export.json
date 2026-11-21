@@ -4,86 +4,86 @@
   "metaKbVersion": "2.4.2",
   "nodes": [
     {
-      "id": "i.chateau-morgon",
+      "id": "i.chateau-morgon-ypqfhf",
       "labels": [
         "Winery"
       ],
       "properties": {
-        "okbId": "i.chateau-morgon",
+        "okbId": "i.chateau-morgon-ypqfhf",
         "name": "Chateau Morgon",
         "location": "Beaujolais, France"
       }
     },
     {
-      "id": "i.sterling-vineyards",
+      "id": "i.sterling-vineyards-agkt52",
       "labels": [
         "Winery"
       ],
       "properties": {
-        "okbId": "i.sterling-vineyards",
+        "okbId": "i.sterling-vineyards-agkt52",
         "name": "Sterling Vineyards",
         "location": "Napa Valley, California"
       }
     },
     {
-      "id": "i.gamay",
+      "id": "i.gamay-kfjm22",
       "labels": [
         "WineGrape"
       ],
       "properties": {
-        "okbId": "i.gamay",
+        "okbId": "i.gamay-kfjm22",
         "name": "Gamay"
       }
     },
     {
-      "id": "i.merlot-grape",
+      "id": "i.merlot-grape-egah0e",
       "labels": [
         "WineGrape"
       ],
       "properties": {
-        "okbId": "i.merlot-grape",
+        "okbId": "i.merlot-grape-egah0e",
         "name": "Merlot grape"
       }
     },
     {
-      "id": "i.chardonnay-grape",
+      "id": "i.chardonnay-grape-jwb195",
       "labels": [
         "WineGrape"
       ],
       "properties": {
-        "okbId": "i.chardonnay-grape",
+        "okbId": "i.chardonnay-grape-jwb195",
         "name": "Chardonnay grape"
       }
     },
     {
-      "id": "i.riesling-grape",
+      "id": "i.riesling-grape-139wgt",
       "labels": [
         "WineGrape"
       ],
       "properties": {
-        "okbId": "i.riesling-grape",
+        "okbId": "i.riesling-grape-139wgt",
         "name": "Riesling grape"
       }
     },
     {
-      "id": "i.beaujolais-region",
+      "id": "i.beaujolais-region-jz521c",
       "labels": [
         "WineRegion"
       ],
       "properties": {
-        "okbId": "i.beaujolais-region",
+        "okbId": "i.beaujolais-region-jz521c",
         "name": "Beaujolais region"
       }
     },
     {
-      "id": "i.chateau-morgon-beaujolais",
+      "id": "i.chateau-morgon-beaujolais-ygb1b8",
       "labels": [
         "Beaujolais",
         "RedWine",
         "Wine"
       ],
       "properties": {
-        "okbId": "i.chateau-morgon-beaujolais",
+        "okbId": "i.chateau-morgon-beaujolais-ygb1b8",
         "name": "Chateau Morgon Beaujolais",
         "tanninLevel": "low",
         "color": "red",
@@ -93,14 +93,14 @@
       }
     },
     {
-      "id": "i.sterling-vineyards-merlot",
+      "id": "i.sterling-vineyards-merlot-8nm0jf",
       "labels": [
         "Merlot",
         "RedWine",
         "Wine"
       ],
       "properties": {
-        "okbId": "i.sterling-vineyards-merlot",
+        "okbId": "i.sterling-vineyards-merlot-8nm0jf",
         "name": "Sterling Vineyards Merlot",
         "tanninLevel": "moderate",
         "color": "red",
@@ -345,34 +345,34 @@
   "relationships": [
     {
       "type": "GRAPE",
-      "from": "i.sterling-vineyards-merlot",
-      "to": "i.merlot-grape",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
+      "to": "i.merlot-grape-egah0e",
       "properties": {
         "inheritedFrom": "Merlot"
       }
     },
     {
       "type": "GRAPE",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.gamay",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.gamay-kfjm22",
       "properties": {}
     },
     {
       "type": "MAKER",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.chateau-morgon",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.chateau-morgon-ypqfhf",
       "properties": {}
     },
     {
       "type": "REGION",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.beaujolais-region",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.beaujolais-region-jz521c",
       "properties": {}
     },
     {
       "type": "MAKER",
-      "from": "i.sterling-vineyards-merlot",
-      "to": "i.sterling-vineyards",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
+      "to": "i.sterling-vineyards-agkt52",
       "properties": {}
     },
     {
@@ -485,55 +485,55 @@
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.chateau-morgon",
+      "from": "i.chateau-morgon-ypqfhf",
       "to": "c.winery",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.sterling-vineyards",
+      "from": "i.sterling-vineyards-agkt52",
       "to": "c.winery",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.gamay",
+      "from": "i.gamay-kfjm22",
       "to": "c.wine-grape",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.merlot-grape",
+      "from": "i.merlot-grape-egah0e",
       "to": "c.wine-grape",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.chardonnay-grape",
+      "from": "i.chardonnay-grape-jwb195",
       "to": "c.wine-grape",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.riesling-grape",
+      "from": "i.riesling-grape-139wgt",
       "to": "c.wine-grape",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.beaujolais-region",
+      "from": "i.beaujolais-region-jz521c",
       "to": "c.wine-region",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.chateau-morgon-beaujolais",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
       "to": "c.beaujolais",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.sterling-vineyards-merlot",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
       "to": "c.merlot",
       "properties": {}
     },
@@ -557,7 +557,7 @@
     {
       "type": "GRAPE",
       "from": "c.merlot",
-      "to": "i.merlot-grape",
+      "to": "i.merlot-grape-egah0e",
       "properties": {
         "classLevel": true
       }
@@ -565,7 +565,7 @@
     {
       "type": "GRAPE",
       "from": "c.chardonnay",
-      "to": "i.chardonnay-grape",
+      "to": "i.chardonnay-grape-jwb195",
       "properties": {
         "classLevel": true
       }
@@ -573,7 +573,7 @@
     {
       "type": "GRAPE",
       "from": "c.riesling",
-      "to": "i.riesling-grape",
+      "to": "i.riesling-grape-139wgt",
       "properties": {
         "classLevel": true
       }

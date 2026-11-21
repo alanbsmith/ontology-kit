@@ -398,7 +398,7 @@ describe("waivers", () => {
     cls(o, "CotesDor", ["Burgundy"]);
     ops.addDecision(o, { title: "t", decision: "d", about: ["Burgundy"], waives: ["hier-single-child"] });
     const f = runChecks(o, { all: true, only: ["hier-single-child"] }).findings;
-    assert.equal(f[0].explainedBy, "d.1");
+    assert.equal(f[0].explainedBy, o.ofType("DesignDecision")[0].id);
     assert.throws(() => ops.addDecision(o, { title: "t", decision: "d", waives: ["hier-no-cycles"] }), /can't waive an error/);
   });
   it("warnings from later steps are hidden until then; errors never are", () => {
