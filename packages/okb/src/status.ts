@@ -5,8 +5,8 @@
  */
 import { MIN_COMPETENCY_QUESTIONS, runChecks } from "./checks.ts";
 import { MetaKB } from "./metakb.ts";
-import type { Ontology } from "./model.ts";
-import type { Finding } from "./types.ts";
+import { type Ontology } from "@ontology-kit/format";
+import { type Finding } from "./types.ts";
 
 type StepCheck = (ont: Ontology, all: Finding[]) => boolean;
 

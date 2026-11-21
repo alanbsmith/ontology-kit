@@ -1,8 +1,8 @@
-/** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). */
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+/** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). Part of @ontology-kit/format. */
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { today } from "./clock.ts";
 import { OkbError } from "./errors.ts";
+import { FORMAT_VERSION } from "./registry.ts";
 import * as naming from "./naming.ts";
 import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
 import {
@@ -12,7 +12,7 @@ import {
 } from "./types.ts";
 
 export { DISPOSITIONS, VALUE_TYPES };
-export const FORMAT = "okb-lpg/2";
+export const FORMAT: string = FORMAT_VERSION;
 export const MANIFEST = "okb.json";
 const ID_PREFIX: Partial<Record<NodeType, string>> = {
   Class: "c", Slot: "s", Instance: "i", Term: "t", ReusedOntology: "r", Source: "src", SourceLocation: "loc", Rule: "rule",
@@ -79,20 +79,6 @@ export class Ontology {
 
   get edges(): readonly GraphEdge[] {
     return this._edges;
-  }
-
-  /** @internal */
-  static create(root: string, name: string): Ontology {
-    mkdirSync(root, { recursive: true });
-    if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
-    const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: today() };
-    const nodes: OkbNode[] = [{
-      type: "Ontology", id: "ontology", name, domain: "", purpose: "", users: [], maintainers: [],
-      outOfScope: [], kind: "application", reuseReviewed: false,
-    }];
-    const ont = new Ontology(resolve(root), manifest, nodes, []);
-    ont.save();
-    return ont;
   }
 
   static load(start: string): Ontology {

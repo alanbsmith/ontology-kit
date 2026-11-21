@@ -8,7 +8,7 @@
  * Things another question already needs are left out (they're covered), and each
  * suggestion appears once, under the first subject it came up for.
  */
-import type { Ontology } from "./model.ts";
+import { type Ontology } from "@ontology-kit/format";
 
 export interface QuestionFamily {
   /** What the question is about (a class, instance, or a slot's class). */

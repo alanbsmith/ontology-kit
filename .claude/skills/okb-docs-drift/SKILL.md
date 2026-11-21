@@ -17,7 +17,7 @@ node .claude/skills/okb-docs-drift/scripts/check-docs.ts --json   # machine-read
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts README.md packages/okb/skills/ontology-coach/SKILL.md
 ```
 
-It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB and sources READMEs and the shipped skills. The generated pages (including the tutorial pages under `packages/okb/examples/*/tutorial/`) are left out. It reports, with file and line:
+It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB, sources and `packages/format` READMEs and the shipped skills. The generated pages (including the tutorial pages under `packages/okb/examples/*/tutorial/`) are left out. It reports, with file and line:
 
 - **command / flag**: an `okb ...` in code (inline backticks or a fenced block) naming a command, subcommand or `--flag` that `packages/okb/src/cli.ts` doesn't accept. It knows the `property` / `relationship` aliases and their `--from` / `--to` flags.
 - **pnpm-script**: `pnpm x` with no `x` in package.json, and **npm-command**: a contributor command that uses npm where pnpm belongs (running a script, installing or linking the repo, or `npx`). An end-user `npm i -g` is fine.
@@ -35,7 +35,7 @@ The script knows that names exist, not that the docs say true things about them.
 - **Behavior claims.** When a doc says what a command does ("`okb link` merges properties when linking again", "inverses are stored once"), confirm it in `packages/okb/src/ops/` or `packages/okb/src/relationships.ts`. Where the example output is quoted, compare it with what the command prints now. `packages/okb/examples/wine/TRANSCRIPT.md` is regenerated from real runs, so it's a good reference.
 - **Architecture descriptions.** The layout in README.md and the architecture in CLAUDE.md should match `src/` (for example `ops/` split by reason to change, `relationships.ts` owning edge storage, `types.ts` typing the file format). A module that was split, renamed or merged is the most common drift.
 - **The skills.** `packages/okb/skills/*/SKILL.md` drive the CLI step by step. Walk each workflow against `okb help` and the command's usage message: do the commands run in that order, and do the JSON fields the skill reads (`okb review --json`, `okb validate --json`) still exist with those names?
-- **The file format.** docs/FORMAT.md's property lists should match the interfaces in `packages/okb/src/types.ts` (`ClassNode`, `SlotNode`, ...), because those are what okb actually reads and writes.
+- **The file format.** docs/FORMAT.md's property lists should match the interfaces in `packages/format/src/types.ts` (`ClassNode`, `SlotNode`, ...), because those are what okb actually reads and writes.
 - **Versions.** `docs/CHANGELOG.md` should cover `VERSION` in `packages/okb/meta-kb/build.ts`.
 
 Leave generated docs alone (METHOD, GLOSSARY, RULES, and DECISIONS say "Generated from" at the top; CLI and CLI-CHEAT-SHEET come from `packages/okb/src/commands.ts`). If one of them is wrong, the fix is in `packages/okb/meta-kb/src/*.yaml` followed by `pnpm build:meta && pnpm run docs`.

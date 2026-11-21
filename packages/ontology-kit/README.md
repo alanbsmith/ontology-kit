@@ -2,7 +2,7 @@
 
 [Ontology Kit](https://ontology-kit.dev) is a toolkit for building knowledge graphs with guardrails: a checked file format, rules from a meta-KB, provenance down to verbatim quotes, and skills that let Claude drive it. It serves a team that keeps a knowledge base and someone building their first.
 
-This package installs its `okb` command. It only depends on [`@ontology-kit/okb`](https://www.npmjs.com/package/@ontology-kit/okb), which holds the code, and the two are released together with the same version.
+This package installs its `okb` command. It only depends on [`@ontology-kit/okb`](https://www.npmjs.com/package/@ontology-kit/okb), which holds the code, and the packages are released together with the same version (with a third, [`@ontology-kit/format`](https://www.npmjs.com/package/@ontology-kit/format), which reads the file format).
 
 Needs **Node.js 24+**.
 

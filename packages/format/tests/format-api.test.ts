@@ -5,23 +5,22 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { after, before, describe, it } from "node:test";
-import * as format from "../src/format.ts";
-import { Ontology, PROVENANCE_EDGE_TYPES, STRUCTURAL_EDGE_TYPES, isProvenanceEdgeType, isRelationship, isStructuralEdgeType } from "../src/format.ts";
-import { MetaKB } from "../src/metakb.ts";
+import * as format from "../src/index.ts";
+import { Ontology, PROVENANCE_EDGE_TYPES, STRUCTURAL_EDGE_TYPES, isProvenanceEdgeType, isRelationship, isStructuralEdgeType } from "../src/index.ts";
 
 const PKG = dirname(dirname(fileURLToPath(import.meta.url)));
-const ESPRESSO = join(PKG, "examples", "espresso");
+const COFFEE = join(PKG, "tests", "fixtures", "coffee");
 const FORMAT_DOC = join(dirname(dirname(PKG)), "docs", "FORMAT.md");
 
 /** The public allowlist. Adding or removing a name here is a semver decision (docs/FORMAT.md). */
 const PUBLIC_EXPORTS = [
   "CARDINALITIES", "DISPOSITIONS", "FORMAT", "MANIFEST", "MODALITIES", "NODE_TYPES", "OkbError", "Ontology",
   "PROVENANCE_EDGE_TYPES", "Relationships", "STRUCTURAL_EDGE_TYPES", "VALUE_TYPES", "VERIFICATION_STATUSES",
-  "edgeProps", "findRoot", "isProvenanceEdgeType", "isRelationship", "isStructuralEdgeType", "literalValue",
-  "literalValues", "nameOrText", "nodeLabel",
+  "edgeProps", "findRoot", "fold", "isProvenanceEdgeType", "isRelationship", "isStructuralEdgeType", "key", "literalValue",
+  "literalValues", "nameOrText", "nodeLabel", "rawTokens", "relType", "slug", "stripAccents", "tokens",
 ];
 
-describe("public file-format API (@ontology-kit/okb/format)", () => {
+describe("public file-format API (@ontology-kit/format)", () => {
   let work = "";
   before(() => {
     work = mkdtempSync(join(tmpdir(), "okb-format-api-"));
@@ -32,12 +31,11 @@ describe("public file-format API (@ontology-kit/okb/format)", () => {
     assert.deepEqual(Object.keys(format).sort(), [...PUBLIC_EXPORTS].sort());
   });
 
-  it("lists the edge types okb reserves, from the format registry, REFINES and FULFILLS included", () => {
-    const registry = [...MetaKB.get().formatRegistry().edgeTypes.keys()];
-    assert.deepEqual([...STRUCTURAL_EDGE_TYPES], registry);
+  it("lists the edge types okb reserves, REFINES and FULFILLS included", () => {
     for (const t of ["IS_A", "INSTANCE_OF", "HAS_SLOT", "RANGE", "INVERSE_OF", "DISJOINT_WITH", "NEEDS", "BECAME", "ABOUT", "CITES", "PART_OF", "GOVERNS", "REFINES", "FULFILLS"]) {
       assert.ok(isStructuralEdgeType(t), t);
     }
+    assert.equal(STRUCTURAL_EDGE_TYPES.length, 14);
     assert.deepEqual([...PROVENANCE_EDGE_TYPES].sort(), ["CITES", "FULFILLS", "GOVERNS", "PART_OF", "REFINES"]);
     assert.ok(PROVENANCE_EDGE_TYPES.every((t) => isStructuralEdgeType(t) && isProvenanceEdgeType(t)));
     assert.ok(!isProvenanceEdgeType("IS_A"));
@@ -46,16 +44,17 @@ describe("public file-format API (@ontology-kit/okb/format)", () => {
   });
 
   it("loads an ontology and reads relationship values, from either end", () => {
-    const ont = Ontology.load(ESPRESSO);
+    const ont = Ontology.load(COFFEE);
     assert.equal(ont.manifest.format, format.FORMAT);
     // Every edge is structural or the type of exactly one relationship slot.
     const relTypes = ont.rel.edgeTypes();
     assert.ok(relTypes.size > 0);
     for (const e of ont.edges) assert.ok(isStructuralEdgeType(e.type) || relTypes.has(e.type), `${e.type} is classified`);
     assert.ok(ont.edges.some((e) => e.type === "REFINES") && ont.edges.some((e) => e.type === "FULFILLS"));
+    for (const n of ont.nodes) assert.ok(format.NODE_TYPES.includes(n.type), `${n.type} is a node type`);
 
     const slots = ont.ofType("Slot").filter(isRelationship);
-    assert.ok(slots.length >= 3);
+    assert.ok(slots.length >= 1);
     const contains = ont.require("s.contains", "Slot");
     const stored = ont.edges.find((e) => e.type === "CONTAINS");
     assert.ok(stored);
@@ -86,14 +85,30 @@ describe("public file-format API (@ontology-kit/okb/format)", () => {
     assert.equal(ont.edges.some((e) => e.type === "HAS_VALUE"), false);
   });
 
+  it("builds names and edge types the way the file does", () => {
+    assert.equal(format.relType("goesWellWith"), "GOES_WELL_WITH");
+    assert.equal(format.relType("Rosé maker"), "ROSE_MAKER");
+    assert.equal(format.key("Red Wine"), format.key("red_wine"));
+    assert.equal(format.slug("Rosé Wine"), "rose-wine");
+    assert.deepEqual(format.tokens("RedWine"), ["red", "wine"]);
+  });
+
+  it("refuses a relationship type the format reserves", () => {
+    const ont = Ontology.fromData(
+      [{ type: "Slot", id: "s.is-a", name: "isA", valueType: "Instance", relType: "IS_A" }, { type: "Slot", id: "s.x", name: "x", valueType: "Instance" }],
+      [],
+    );
+    assert.throws(() => ont.rel.typeFor("is a", "s.x"), /okb uses for its own structure/);
+  });
+
   it("runs the usage example in docs/FORMAT.md", () => {
     const doc = readFileSync(FORMAT_DOC, "utf8");
     const block = doc.match(/```ts\n([\s\S]*?)```/)?.[1];
     assert.ok(block, "FORMAT.md has a ts usage example");
-    assert.ok(block.includes('"@ontology-kit/okb/format"') && block.includes('"./my-ontology"'));
+    assert.ok(block.includes('"@ontology-kit/format"') && block.includes('"./my-ontology"'));
     const script = block
-      .replace('"@ontology-kit/okb/format"', JSON.stringify(pathToFileURL(join(PKG, "src", "format.ts")).href))
-      .replace('"./my-ontology"', JSON.stringify(ESPRESSO));
+      .replace('"@ontology-kit/format"', JSON.stringify(pathToFileURL(join(PKG, "src", "index.ts")).href))
+      .replace('"./my-ontology"', JSON.stringify(COFFEE));
     const file = join(work, "example.mts");
     writeFileSync(file, script);
     const out = execFileSync(process.execPath, [file], { encoding: "utf8" });

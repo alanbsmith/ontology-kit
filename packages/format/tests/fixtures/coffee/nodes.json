@@ -1,0 +1,105 @@
+[
+  {
+    "type": "Ontology",
+    "id": "ontology",
+    "name": "Coffee",
+    "domain": "Espresso drinks",
+    "purpose": "A small fixture for the format package's tests",
+    "users": [
+      "tests"
+    ],
+    "maintainers": [
+      "tests"
+    ],
+    "outOfScope": [],
+    "kind": "application",
+    "reuseReviewed": true
+  },
+  {
+    "type": "Class",
+    "id": "c.drink",
+    "name": "Drink",
+    "description": "Something you order."
+  },
+  {
+    "type": "Class",
+    "id": "c.milk-drink",
+    "name": "MilkDrink",
+    "description": "A drink with milk."
+  },
+  {
+    "type": "Class",
+    "id": "c.ingredient",
+    "name": "Ingredient",
+    "description": "What goes into a drink."
+  },
+  {
+    "type": "Slot",
+    "id": "s.contains",
+    "name": "contains",
+    "valueType": "Instance",
+    "relType": "CONTAINS",
+    "cardinality": "multiple",
+    "description": "What goes into the drink."
+  },
+  {
+    "type": "Slot",
+    "id": "s.used-in",
+    "name": "usedIn",
+    "valueType": "Instance",
+    "cardinality": "multiple",
+    "description": "The drinks an ingredient goes into."
+  },
+  {
+    "type": "Slot",
+    "id": "s.price",
+    "name": "price",
+    "valueType": "Float",
+    "cardinality": "single",
+    "description": "Menu price."
+  },
+  {
+    "type": "Instance",
+    "id": "i.vertex-cortado",
+    "name": "Vertex cortado",
+    "values": {
+      "s.price": 4.5
+    }
+  },
+  {
+    "type": "Instance",
+    "id": "i.double-shot",
+    "name": "Double shot"
+  },
+  {
+    "type": "Instance",
+    "id": "i.steamed-milk",
+    "name": "Steamed milk"
+  },
+  {
+    "type": "Source",
+    "id": "src.guide",
+    "title": "House guide",
+    "format": "markdown"
+  },
+  {
+    "type": "SourceLocation",
+    "id": "loc.guide.1",
+    "quote": "Every milk drink has milk.",
+    "locator": "Drinks"
+  },
+  {
+    "type": "Rule",
+    "id": "rule.milk",
+    "name": "Milk drinks have milk",
+    "modality": "MUST",
+    "statement": "A MilkDrink MUST contain milk."
+  },
+  {
+    "type": "Rule",
+    "id": "rule.whole-milk",
+    "name": "Use whole milk",
+    "modality": "SHOULD",
+    "statement": "A MilkDrink SHOULD use whole milk."
+  }
+]

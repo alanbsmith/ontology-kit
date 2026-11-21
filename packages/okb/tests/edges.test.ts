@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { runChecks } from "../src/checks.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
-import { Ontology } from "../src/model.ts";
+import { Ontology } from "@ontology-kit/format";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 import { show } from "../src/render.ts";
@@ -20,7 +20,7 @@ const FIXTURE = join(dirname(fileURLToPath(import.meta.url)), "fixtures", "butto
 
 async function setup() {
   const dir = mkdtempSync(join(tmpdir(), "okb-edge-"));
-  const ont = Ontology.create(dir, "Components");
+  const ont = ops.createOntology(dir, "Components");
   ops.setConventions(ont, {});
   ops.addClass(ont, "Component", { description: "A Canvas Kit component.", abstract: true });
   for (const c of ["Button", "Checkbox", "Switch", "SegmentedControl"]) ops.addClass(ont, c, { parents: ["Component"], description: c });

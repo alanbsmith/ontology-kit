@@ -1,6 +1,6 @@
 # Changelog
 
-What changed in each release. `okb version` prints two versions, the package's and the meta-KB's. The package version covers the CLI, the file format and the `@ontology-kit/okb/format` exports. The meta-KB version covers the method and rules, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). [Releases](../CONTRIBUTING.md#releases) says how the two relate and what the numbers promise. How to edit the meta-KB, and when to bump its version, is in the [meta-KB internals](../packages/okb/meta-kb/README.md).
+What changed in each release. `okb version` prints two versions, the package's and the meta-KB's. The package version covers the CLI, the file format and the `@ontology-kit/format` exports. The meta-KB version covers the method and rules, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). [Releases](../CONTRIBUTING.md#releases) says how the two relate and what the numbers promise. How to edit the meta-KB, and when to bump its version, is in the [meta-KB internals](../packages/okb/meta-kb/README.md).
 
 Package releases come first, newest first, in the [Keep a Changelog](https://keepachangelog.com) style. The release workflow publishes a version's entry as its GitHub release notes, so each entry sits under a `### <version>` heading with a date.
 
@@ -13,8 +13,7 @@ The first release. Version 0.x means anything may change between releases; see [
 #### Added
 
 - The `okb` command, with the guided Ontology 101 method, checks, review questions, provenance down to verbatim quotes, and export.
-- Two npm packages, released together at the same version: `@ontology-kit/okb`, and the unscoped `ontology-kit`, which installs the same `okb` command.
-- `@ontology-kit/okb/format`, a supported library entry for reading the `okb-lpg/2` file format from other tools. Its semver rules are in [the format reference](FORMAT.md).
+- Three npm packages, released together at the same version: `@ontology-kit/okb`, the unscoped `ontology-kit`, which installs the same `okb` command, and `@ontology-kit/format`, the supported library for reading the `okb-lpg/2` file format from other tools without the CLI. Its semver rules are in [the format reference](FORMAT.md). It's a package of its own, not a subpath of okb, so nothing needs to change when a tool adopts it.
 - `okb skills install` and `okb skills status`, which link the shipped skills into `~/.claude/skills/`.
 - The packages require Node 24 or newer.
 

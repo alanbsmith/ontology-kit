@@ -1,7 +1,6 @@
 /** Naming conventions, and the checks every new class or slot name goes through. */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology } from "../model.ts";
-import type { Conventions } from "../types.ts";
+import { OkbError, type Ontology, type Conventions } from "@ontology-kit/format";
 import type { Notes } from "./common.ts";
 
 export function setConventions(ont: Ontology, o: Partial<Conventions>): Notes {

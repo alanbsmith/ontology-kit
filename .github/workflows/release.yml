@@ -1,4 +1,4 @@
-# Publishes both packages to npm when a version tag is pushed, after CI passes.
+# Publishes the three packages to npm when a version tag is pushed, after CI passes.
 #   Tag:        git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z
 #   Dry run:    Actions > Release > Run workflow (everything except the publish and the GitHub release)
 # Publishing uses npm trusted publishing (OIDC): no npm token is stored anywhere. Each package needs
@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Check the tag, both package versions and the changelog entry
+      - name: Check the tag, the three package versions and the changelog entry
         id: check
         env:
           EVENT: ${{ github.event_name }}
@@ -111,25 +111,27 @@ jobs:
               process.exit(1);
             }
           ' "$(npm --version)"
-      # `pnpm pack` builds dist/ (prepack) and rewrites the wrapper's workspace:* dependency to the real version.
-      - name: Pack both packages
+      # `pnpm pack` builds dist/ (prepack) and rewrites workspace:* dependencies to the real version.
+      - name: Pack the three packages
         run: |
           mkdir tarballs
+          pnpm --filter @ontology-kit/format pack --pack-destination tarballs
           pnpm --filter @ontology-kit/okb pack --pack-destination tarballs
           pnpm --filter ontology-kit pack --pack-destination tarballs
           ls -l tarballs
       - name: Write the release notes from the changelog
         run: node scripts/release.ts notes "$TAG" > release-notes.md
-      # okb first: the wrapper depends on it. A version already on npm is skipped, so a re-run finishes
+      # In dependency order: the format package, then okb (which depends on it), then the wrapper.
+      # A version already on npm is skipped, so a re-run finishes
       # a release that stopped halfway. `npm publish` of a tarball does the OIDC token exchange; provenance
       # is on explicitly so the publish fails rather than going out without it.
-      - name: Publish @ontology-kit/okb, then ontology-kit
+      - name: Publish @ontology-kit/format, @ontology-kit/okb, then ontology-kit
         run: |
           set -eu
           flags="--access public --provenance"
           case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
           if [ "$DRY_RUN" = true ]; then flags="$flags --dry-run"; fi
-          for entry in "@ontology-kit/okb:tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:tarballs/ontology-kit-${VERSION}.tgz"; do
+          for entry in "@ontology-kit/format:tarballs/ontology-kit-format-${VERSION}.tgz" "@ontology-kit/okb:tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:tarballs/ontology-kit-${VERSION}.tgz"; do
             name="${entry%%:*}"
             tarball="${entry#*:}"
             if [ -n "$(npm view "${name}@${VERSION}" version 2>/dev/null)" ]; then

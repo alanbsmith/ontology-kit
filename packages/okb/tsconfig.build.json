@@ -8,8 +8,17 @@
     "rewriteRelativeImportExtensions": true,
     "rootDir": "src",
     "outDir": "dist",
-    "sourceMap": false
+    "sourceMap": false,
+    "paths": {
+      "@ontology-kit/format": [
+        "../format/types-internal/index.d.ts"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["src/gendocs.ts"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/gendocs.ts"
+  ]
 }

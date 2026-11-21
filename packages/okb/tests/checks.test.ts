@@ -8,12 +8,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, describe, it } from "node:test";
 import { CHECKS, loadSourcePages, runChecks } from "../src/checks.ts";
-import { Ontology } from "../src/model.ts";
+import { Ontology, type GraphEdge, type GraphNode, type OkbNode } from "@ontology-kit/format";
 import * as ops from "../src/ops.ts";
 import { DEFAULT_CONVENTIONS } from "../src/naming.ts";
 import { exportGraph } from "../src/export.ts";
 import { mermaid, show } from "../src/render.ts";
-import type { GraphEdge, GraphNode, OkbNode } from "../src/types.ts";
 
 const covered = new Set<string>();
 

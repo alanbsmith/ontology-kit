@@ -4,7 +4,7 @@ The `okb` command-line tool from [Ontology Kit](https://ontology-kit.dev), a too
 
 It's for a team that keeps a knowledge base and wants every fact to point back to its source. It's also for someone building their first: the Ontology 101 method (Noy & McGuinness, 2001), the Learn course and the tutorials walk you through it step by step.
 
-The package ships the `okb` command, the meta-KB (a knowledge base about building knowledge bases, which holds the method and its rules), and skills that let Claude coach you, review your work, and extract a knowledge base from documents. Other tools can read and write the file format through `@ontology-kit/okb/format`.
+The package ships the `okb` command, the meta-KB (a knowledge base about building knowledge bases, which holds the method and its rules), and skills that let Claude coach you, review your work, and extract a knowledge base from documents. Other tools can read the file format with the small [`@ontology-kit/format`](https://www.npmjs.com/package/@ontology-kit/format) package, which okb itself builds on.
 
 ## Install
 

@@ -23,9 +23,8 @@
  *   rules       (default true) export verified domain rules with their quotes and sources
  *   unverified  also export rules that aren't verified yet, each with its verification status
  */
-import { edgeProps, type Ontology } from "./model.ts";
+import { edgeProps, type Ontology, type RuleNode } from "@ontology-kit/format";
 import { MetaKB } from "./metakb.ts";
-import type { RuleNode } from "./types.ts";
 
 export interface ExportNode {
   id: string;

@@ -1,0 +1,78 @@
+[
+  {
+    "from": "c.milk-drink",
+    "type": "IS_A",
+    "to": "c.drink"
+  },
+  {
+    "from": "c.drink",
+    "type": "HAS_SLOT",
+    "to": "s.contains"
+  },
+  {
+    "from": "c.drink",
+    "type": "HAS_SLOT",
+    "to": "s.price"
+  },
+  {
+    "from": "s.contains",
+    "type": "RANGE",
+    "to": "c.ingredient"
+  },
+  {
+    "from": "s.contains",
+    "type": "INVERSE_OF",
+    "to": "s.used-in"
+  },
+  {
+    "from": "c.ingredient",
+    "type": "HAS_SLOT",
+    "to": "s.used-in"
+  },
+  {
+    "from": "i.vertex-cortado",
+    "type": "INSTANCE_OF",
+    "to": "c.milk-drink"
+  },
+  {
+    "from": "i.double-shot",
+    "type": "INSTANCE_OF",
+    "to": "c.ingredient"
+  },
+  {
+    "from": "i.steamed-milk",
+    "type": "INSTANCE_OF",
+    "to": "c.ingredient"
+  },
+  {
+    "from": "i.vertex-cortado",
+    "type": "CONTAINS",
+    "to": "i.double-shot"
+  },
+  {
+    "from": "i.vertex-cortado",
+    "type": "CONTAINS",
+    "to": "i.steamed-milk"
+  },
+  {
+    "from": "loc.guide.1",
+    "type": "PART_OF",
+    "to": "src.guide"
+  },
+  {
+    "from": "rule.milk",
+    "type": "CITES",
+    "to": "loc.guide.1"
+  },
+  {
+    "from": "rule.whole-milk",
+    "type": "REFINES",
+    "to": "rule.milk",
+    "adds": "The milk is whole milk."
+  },
+  {
+    "from": "i.vertex-cortado",
+    "type": "FULFILLS",
+    "to": "rule.milk"
+  }
+]

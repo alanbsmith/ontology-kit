@@ -10,12 +10,12 @@
 import { existsSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 import { MetaKB } from "./metakb.ts";
-import { Ontology, VALUE_TYPES, DISPOSITIONS } from "./model.ts";
+import { Ontology, VALUE_TYPES, DISPOSITIONS, type ClassNode, type ExtractedFields, type Facets, type OkbNode, type SourceLocationNode } from "@ontology-kit/format";
+import { isOneOf, type Finding, type Severity } from "./types.ts";
 import * as naming from "./naming.ts";
 import { findQuote, loadPages, normalize } from "./quotes.ts";
 import { locate, parseMarkdown, type MdDoc } from "./markdown.ts";
 import { readFileSync } from "node:fs";
-import { isOneOf, type ClassNode, type ExtractedFields, type Facets, type Finding, type OkbNode, type Severity, type SourceLocationNode } from "./types.ts";
 
 export interface Hit {
   message: string;

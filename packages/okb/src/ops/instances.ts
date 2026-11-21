@@ -1,6 +1,6 @@
 /** Instances and the classes they belong to. */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology, literalValues } from "../model.ts";
+import { OkbError, type Ontology, literalValues } from "@ontology-kit/format";
 import { an, type Notes } from "./common.ts";
 import { assign } from "./values.ts";
 import { checkParents } from "./classes.ts";

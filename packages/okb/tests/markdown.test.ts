@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { loadSourcePages, runChecks } from "../src/checks.ts";
 import { deepLinks, inlineToText, locate, parseMarkdown, splitRow } from "../src/markdown.ts";
-import { OkbError, Ontology } from "../src/model.ts";
+import { OkbError } from "@ontology-kit/format";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 
@@ -70,7 +70,7 @@ describe("locating quotes", () => {
 describe("extraction commands", () => {
   const setup = () => {
     const dir = mkdtempSync(join(tmpdir(), "okb-md-"));
-    const ont = Ontology.create(dir, "Button KB");
+    const ont = ops.createOntology(dir, "Button KB");
     ops.setConventions(ont, {});
     ops.addClass(ont, "Button", { description: "A control that triggers an action." });
     mkdirSync(join(dir, "docs"));

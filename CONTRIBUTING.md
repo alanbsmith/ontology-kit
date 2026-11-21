@@ -4,7 +4,7 @@ This page is for changing Ontology Kit itself. To use it, start with the [Introd
 
 ## Setup
 
-You need Node.js 26 (`.nvmrc` has the version; okb itself runs on Node 24 or newer, which is all a reader of the [Installation](docs/getting-started/installation.md) page needs). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), clone the repo, and run `pnpm install` in its root. The repo is a pnpm workspace, so that one install covers `packages/okb` and the docs site (`site/`) too. To run okb from your clone, use `node packages/okb/src/cli.ts <command>`, or put `okb` on your PATH with `pnpm add --global link:./packages/okb`. The link points at your clone, so `okb` runs your changes right away, and `okb skills install` links the skills from it. Unlink with `pnpm remove --global @ontology-kit/okb` before you install the published package.
+You need Node.js 26 (`.nvmrc` has the version; okb itself runs on Node 24 or newer, which is all a reader of the [Installation](docs/getting-started/installation.md) page needs). Install [pnpm](https://pnpm.io/installation) (`npm i -g pnpm`; Node 26 doesn't bundle Corepack, and `package.json` pins the version in `packageManager`), clone the repo, and run `pnpm install` in its root. The repo is a pnpm workspace, so that one install covers `packages/format`, `packages/okb`, `packages/ontology-kit` and the docs site (`site/`) too. To run okb from your clone, use `node packages/okb/src/cli.ts <command>`, or put `okb` on your PATH with `pnpm add --global link:./packages/okb`. The link points at your clone, so `okb` runs your changes right away, and `okb skills install` links the skills from it. Unlink with `pnpm remove --global @ontology-kit/okb` before you install the published package.
 
 ```bash
 git clone https://github.com/alanbsmith/ontology-kit
@@ -16,16 +16,19 @@ pnpm test
 ## Repository layout
 
 ```text
-packages/okb/           @ontology-kit/okb: the CLI and library (a pnpm workspace package)
+packages/format/        @ontology-kit/format: the file-format reader (types, loading, relationship values; no CLI, no meta-KB)
+  src/                  index.ts is the public allowlist; model.ts, relationships.ts, types.ts, naming.ts, errors.ts
+  registry.ts (in src)  node and edge type names, generated from meta-kb/src/format.yaml by the meta-KB build
+  tests/                node:test suites and a small fixture ontology
+packages/okb/           @ontology-kit/okb: the CLI (a pnpm workspace package; depends on @ontology-kit/format)
   bin/okb.js            launcher (pnpm add --global link:./packages/okb target): runs src/ in a checkout, dist/ when installed
   tsconfig.build.json   compiles src/ to dist/ (gitignored; pnpm build)
   README.md LICENSE     the package's npm page
   src/                  okb source (TypeScript, Node type stripping)
     cli.ts ops.ts ops/  commands and the operations behind them (ops/ split by reason to change)
     checks.ts status.ts validator (one check per rule) and step progress
-    model.ts types.ts   graph model and the typed okb file format
-    relationships.ts    how relationship values are stored as edges (inverses, renames, removal)
-    naming.ts errors.ts naming conventions; OkbError
+    types.ts            findings and small guards (the file format's types are in packages/format)
+    naming.ts           naming style rules (PascalCase, plurals); the identity helpers come from packages/format
     metakb.ts render.ts meta-KB access, terminal output
     export.ts review.ts graph-database export, judgment-rule review
     markdown.ts provenance.ts   markdown reader; sources, quotes, extracted rules, verification
@@ -40,17 +43,19 @@ packages/ontology-kit/  ontology-kit: the unscoped wrapper, just a bin that forw
 site/                   the docs site (Astro; a private workspace package, reads the markdown in place)
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (pnpm run docs)
 sources/                the source PDFs (gitignored; see sources/README.md)
-scripts/                repo-wide tooling (vale.sh)
+scripts/                repo-wide tooling (vale.sh, release.ts, rewrite-dts.ts)
 .claude/skills/         development skills (docs drift check, tutorial and Learn page writing)
 ```
 
 The root `package.json` is a private workspace root that holds the repo-wide tooling (Prettier, `markdownlint-cli2`, Vale) and scripts that run across the packages. The `docs/` folder and `sources/` stay at the root because they describe the whole kit, not one package. New packages go under `packages/`.
 
+The graph model, the typed file format and the relationship storage (`Ontology`, `Relationships`, the node types) live in `packages/format`, and `packages/okb` imports them from `@ontology-kit/format`. The class keeps its write methods, tagged `@internal`, so a change to how something is stored is still one change in one place; [the format reference](docs/FORMAT.md#why-a-package-of-its-own) explains where the line falls. A change to what `packages/format/src/index.ts` exports is a version decision, and the allowlist test (`packages/format/tests/format-api.test.ts`) fails until you update it on purpose.
+
 ## Build and pack
 
-Development runs the TypeScript sources, so `pnpm test` needs no build. The published package ships compiled JavaScript, because Node won't strip types from files under `node_modules`. `pnpm build` compiles `packages/okb/src/` to `packages/okb/dist/` (`tsconfig.build.json`; `dist/` is gitignored). `bin/okb.js` runs `src/cli.ts` when `src/` exists (a clone) and `dist/cli.js` otherwise (an installed package). The `development` condition in the `exports` map points at the sources and the default condition at `dist/`, so tools that run with `--conditions=development` stay on the sources.
+Development runs the TypeScript sources, so `pnpm test` needs no build. The published package ships compiled JavaScript, because Node won't strip types from files under `node_modules`. `pnpm build` compiles `packages/format/src/` and `packages/okb/src/` to each package's `dist/` (`tsconfig.build.json`; `dist/` is gitignored). The format build also writes `types-internal/` (gitignored, never published): declarations that keep the write methods, which okb's build compiles against because the published declarations leave them out. `bin/okb.js` runs `src/cli.ts` when `src/` exists (a clone) and `dist/cli.js` otherwise (an installed package). The `development` condition in okb's `exports` map points at the sources and the default condition at `dist/`, so tools that run with `--conditions=development` stay on the sources. The format package does it the other way round, because okb imports it by name and must run on its sources without a flag or a build: its `exports` point at the TypeScript entry, and `publishConfig.exports` (which `pnpm pack` applies) points at `dist/`.
 
-The `files` allowlist in `packages/okb/package.json` holds `bin`, `dist`, `meta-kb/data`, `skills`, the README and LICENSE; it leaves out the YAML sources, docs, site, tests, examples and PDFs. Code that reads the package's own files resolves them from the package root, so it works in a clone and in an installed package (`META_DIR` in `metakb.ts`). `packages/okb/tests/package.test.ts` runs `pnpm pack` on both packages, installs the tarballs into a temp folder and runs the installed `okb` (a few seconds; set `OKB_SKIP_PACKAGE_TEST=1` to skip it). Both packages keep the same version; a test fails if they differ. Publishing is done by the release workflow, described under [Releases](#releases).
+The `files` allowlist in `packages/okb/package.json` holds `bin`, `dist`, `meta-kb/data`, `skills`, the README and LICENSE; it leaves out the YAML sources, docs, site, tests, examples and PDFs. Code that reads the package's own files resolves them from the package root, so it works in a clone and in an installed package (`META_DIR` in `metakb.ts`). The format package ships `dist`, the README and LICENSE and nothing else. `packages/okb/tests/package.test.ts` runs `pnpm pack` on all three packages, installs the tarballs into a temp folder and runs the installed `okb`, and `packages/okb/tests/format-package.test.ts` installs the format tarball alone and type-checks a consumer against its declarations (a few seconds each; set `OKB_SKIP_PACKAGE_TEST=1` to skip them). The three packages keep the same version; a test fails if they differ. Publishing is done by the release workflow, described under [Releases](#releases).
 
 ## Changing rules
 
@@ -142,14 +147,14 @@ Add new project terms to `.vale/styles/config/vocabularies/Okb/accept.txt` (it's
 
 GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and every push to `main`. Each job is a separate status check:
 
-| Check           | What it runs                                                                                     | Run it locally                                                               |
-| --------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Typecheck       | `pnpm tsc`                                                                                       | `pnpm tsc`                                                                   |
-| Build and test  | `pnpm build`, then `pnpm test`                                                                   | `pnpm build && pnpm test`                                                    |
-| Generated files | Regenerates everything, then fails if `git status` shows a change                                | `pnpm build:meta && pnpm run docs && pnpm example`, then `git status`        |
-| Docs            | The docs drift check, then `pnpm lint:docs` (Vale errors fail; warnings and suggestions don't)   | `node .claude/skills/okb-docs-drift/scripts/check-docs.ts && pnpm lint:docs` |
-| Site            | `pnpm site`                                                                                      | `pnpm site`                                                                  |
-| Node 24 runtime | Packs both packages, installs them on Node 24, runs `okb version`, `okb init` and `okb validate` | `pnpm test` runs the same on your Node; use `nvm use 24` to try the floor    |
+| Check           | What it runs                                                                                          | Run it locally                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Typecheck       | `pnpm tsc`                                                                                            | `pnpm tsc`                                                                   |
+| Build and test  | `pnpm build`, then `pnpm test`                                                                        | `pnpm build && pnpm test`                                                    |
+| Generated files | Regenerates everything, then fails if `git status` shows a change                                     | `pnpm build:meta && pnpm run docs && pnpm example`, then `git status`        |
+| Docs            | The docs drift check, then `pnpm lint:docs` (Vale errors fail; warnings and suggestions don't)        | `node .claude/skills/okb-docs-drift/scripts/check-docs.ts && pnpm lint:docs` |
+| Site            | `pnpm site`                                                                                           | `pnpm site`                                                                  |
+| Node 24 runtime | Packs the three packages, installs them on Node 24, runs `okb version`, `okb init` and `okb validate` | `pnpm test` runs the same on your Node; use `nvm use 24` to try the floor    |
 
 The Generated files check catches a rule, command or tutorial change that you didn't regenerate. The release workflow reuses the whole workflow (it has a `workflow_call` trigger), so a release only publishes after these checks pass. Local runs don't need Vale installed for the other checks, but `pnpm lint:docs` does (`brew install vale`).
 
@@ -159,7 +164,7 @@ The Generated files check catches a rule, command or tutorial change that you di
 
 Two version numbers exist, and `okb version` prints both: `okb 0.1.0 · meta-KB 2.4.1`.
 
-- **The package version** is semver over everything a user or another tool depends on: the CLI (command and flag names, exit codes and the `--json` output), the file format (`okb-lpg/2`, and reading older formats), and the `@ontology-kit/okb/format` exports. `@ontology-kit/okb` and the unscoped `ontology-kit` wrapper always release together at the same version. `okb version` reads it from `package.json`.
+- **The package version** is semver over everything a user or another tool depends on: the CLI (command and flag names, exit codes and the `--json` output), the file format (`okb-lpg/2`, and reading older formats), and the `@ontology-kit/format` exports (so the format package's semver is the format API's contract). `@ontology-kit/format`, `@ontology-kit/okb` and the unscoped `ontology-kit` wrapper always release together at the same version. `okb version` reads it from `package.json`.
 - **The meta-KB version** covers the method and the rules (`VERSION` in `packages/okb/meta-kb/build.ts`). Each ontology's `okb.json` records the one it started with. [Changing rules](#changing-rules) says when to bump it.
 
 The two move separately, with one link. The meta-KB ships inside the package, so any change to it reaches users only in a package release. A meta-KB bump (a rule changes meaning, or a skill's instructions change) therefore needs a package release that carries it, at least a minor one while the version is 0.x. A package change that leaves the rules alone, such as a CLI fix, doesn't bump the meta-KB.
@@ -168,7 +173,7 @@ The two move separately, with one link. The meta-KB ships inside the package, so
 
 - A command, flag or `--json` field removed or renamed, or an exit code changed.
 - A file the previous version read and validated structurally (`struct-well-formed`) that the new version rejects, or a format change with no automatic conversion of the older one.
-- A breaking change to the `@ontology-kit/okb/format` exports, as [the format reference](docs/FORMAT.md#versions-and-semver) lists.
+- A breaking change to the `@ontology-kit/format` exports, as [the format reference](docs/FORMAT.md#versions-and-semver) lists.
 - Raising the Node floor.
 
 New or tightened rules are not breaking by themselves, even when a rule's severity is error: the method is what the meta-KB exists to sharpen, and its version tells a user which rules their ontology was started with. New commands, flags, exports and rules are minor; fixes are patches.
@@ -179,7 +184,7 @@ Versions before 1.0 promise nothing: any release may change the CLI, the file fo
 
 - The command and flag names, exit codes and `--json` shapes have been used for a while without renames, and the docs and skills describe all of them.
 - The file format has a documented upgrade path, and the `okb-lpg/2` files in the wild load without changes.
-- `@ontology-kit/okb/format` has been used by a real outside tool (the okb-mcp server is the candidate) without needing breaking changes.
+- `@ontology-kit/format` has been used by a real outside tool (the okb-mcp server is the candidate) without needing breaking changes.
 - Releases have gone out through the workflow below, with trusted publishing and provenance, a few times without manual fixes.
 
 ### The changelog
@@ -188,7 +193,7 @@ Versions before 1.0 promise nothing: any release may change the CLI, the file fo
 
 ### Cutting a release
 
-1. On a branch from `main`, set the same `version` in `packages/okb/package.json` and `packages/ontology-kit/package.json`.
+1. On a branch from `main`, set the same `version` in `packages/format/package.json`, `packages/okb/package.json` and `packages/ontology-kit/package.json`.
 2. In `docs/CHANGELOG.md`, add the entry under `## Package releases` (or change `(unreleased)` in the existing heading to the date) and write what changed.
 3. Run `node scripts/release.ts check`. It fails if the versions differ or the entry is missing, empty or undated. Then run the [usual checks](#before-you-commit), and merge the change to `main`.
 4. Tag the merged commit and push the tag:
@@ -199,28 +204,30 @@ git tag -a v0.1.0 -m "v0.1.0"
 git push origin v0.1.0
 ```
 
-The tag must be `v` plus the version. The release workflow (`.github/workflows/release.yml`) then checks that the tag, both versions and the changelog entry agree and that the tag is on `main`; runs the whole CI workflow; builds and packs both packages; publishes `@ontology-kit/okb` and then `ontology-kit` to npm; and creates the GitHub release with the changelog entry as its notes. A run that is repeated skips a version already on npm, so it can finish a release that stopped halfway. To try everything except the publish, run the workflow by hand from the Actions tab with `dry-run` on (the default).
+The tag must be `v` plus the version. The release workflow (`.github/workflows/release.yml`) then checks that the tag, all three versions and the changelog entry agree and that the tag is on `main`; runs the whole CI workflow; builds and packs the three packages; publishes `@ontology-kit/format`, then `@ontology-kit/okb`, then `ontology-kit` to npm, in that order because each depends on the one before; and creates the GitHub release with the changelog entry as its notes. A run that is repeated skips a version already on npm, so it can finish a release that stopped halfway. To try everything except the publish, run the workflow by hand from the Actions tab with `dry-run` on (the default).
 
 ### One-time npm setup
 
-The workflow holds no npm token. It publishes with [trusted publishing](https://docs.npmjs.com/trusted-publishers): npm accepts a short-lived identity token that GitHub issues for the exact repository, workflow file and environment you configured, and records provenance for each version. This needs npm 11.5.1 or newer, which the workflow checks. It runs `npm publish` on the packed tarballs: `pnpm pack` rewrites the wrapper's `workspace:*` dependency to the real version, and `npm publish` is the client npm documents for the token exchange.
+The workflow holds no npm token. It publishes with [trusted publishing](https://docs.npmjs.com/trusted-publishers): npm accepts a short-lived identity token that GitHub issues for the exact repository, workflow file and environment you configured, and records provenance for each version. This needs npm 11.5.1 or newer, which the workflow checks. It runs `npm publish` on the packed tarballs: `pnpm pack` rewrites the `workspace:*` dependencies (the wrapper's on okb, okb's on the format package) to the real version, and applies the format package's `publishConfig.exports`, and `npm publish` is the client npm documents for the token exchange.
 
-npm can configure a trusted publisher only for a package that already exists, so the first version of each package is published by hand once. The owner does this, with 2FA, from a clone on Node 26:
+npm can configure a trusted publisher only for a package that already exists, so the first version of each of the three packages is published by hand once. The owner does this, with 2FA, from a clone on Node 26:
 
 1. Own the `@ontology-kit` organization on npm (done) and be signed in: `npm login`.
-2. Publish a pre-release of both packages under a side tag, so the real first release is still 0.1.0 and has provenance. In both `package.json` files set `version` to `0.1.0-bootstrap.0` (don't commit this), then:
+2. Publish a pre-release of the three packages under a side tag, so the real first release is still 0.1.0 and has provenance. In all three `package.json` files set `version` to `0.1.0-bootstrap.0` (don't commit this), then:
 
    ```bash
    pnpm install --frozen-lockfile
    mkdir /tmp/okb-bootstrap
+   pnpm --filter @ontology-kit/format pack --pack-destination /tmp/okb-bootstrap
    pnpm --filter @ontology-kit/okb pack --pack-destination /tmp/okb-bootstrap
    pnpm --filter ontology-kit pack --pack-destination /tmp/okb-bootstrap
+   npm publish /tmp/okb-bootstrap/ontology-kit-format-0.1.0-bootstrap.0.tgz --access public --tag bootstrap
    npm publish /tmp/okb-bootstrap/ontology-kit-okb-0.1.0-bootstrap.0.tgz --access public --tag bootstrap
    npm publish /tmp/okb-bootstrap/ontology-kit-0.1.0-bootstrap.0.tgz --access public --tag bootstrap
-   git checkout -- packages/okb/package.json packages/ontology-kit/package.json
+   git checkout -- packages/format/package.json packages/okb/package.json packages/ontology-kit/package.json
    ```
 
-3. For each package (`@ontology-kit/okb`, then `ontology-kit`), on npmjs.com open **Settings → Trusted Publisher → GitHub Actions** and enter repository owner `alanbsmith`, repository `ontology-kit`, workflow filename `release.yml` and environment `release`. The `npm trust github <package> --file release.yml --repo alanbsmith/ontology-kit --env release --allow-publish` command does the same. The fields are case-sensitive and npm doesn't check them when you save, so a typo shows up as a failed publish. Cut the first release soon after: npm drops a trusted-publisher setup that sees no publish for a while.
+3. For each package (`@ontology-kit/format`, `@ontology-kit/okb`, then `ontology-kit`), on npmjs.com open **Settings → Trusted Publisher → GitHub Actions** and enter repository owner `alanbsmith`, repository `ontology-kit`, workflow filename `release.yml` and environment `release`. The `npm trust github <package> --file release.yml --repo alanbsmith/ontology-kit --env release --allow-publish` command does the same. The fields are case-sensitive and npm doesn't check them when you save, so a typo shows up as a failed publish. Cut the first release soon after: npm drops a trusted-publisher setup that sees no publish for a while.
 4. On GitHub, under **Settings → Environments**, the `release` environment is created by the first run. Add required reviewers there if you want to approve each publish, and limit it to `v*` tags. This is optional.
 5. Optionally, on each package's **Settings → Publishing access**, choose "Require two-factor authentication and disallow tokens". Trusted publishing keeps working.
 

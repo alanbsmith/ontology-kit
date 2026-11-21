@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { runChecks } from "../src/checks.ts";
 import { exportGraph } from "../src/export.ts";
-import { Ontology } from "../src/model.ts";
+import { Ontology } from "@ontology-kit/format";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 import { show } from "../src/render.ts";
@@ -20,7 +20,7 @@ const Q2 = "Use Hyperlinks within a paragraph to navigate to another page.";
 
 async function setup() {
   const dir = mkdtempSync(join(tmpdir(), "okb-rules-"));
-  const ont = Ontology.create(dir, "Components");
+  const ont = ops.createOntology(dir, "Components");
   ops.setConventions(ont, {});
   ops.addClass(ont, "Behavior", { description: "What one component does." });
   ops.addSlot(ont, "condition", { on: ["Behavior"], onRules: true, type: "Enumerated", values: ["open", "disabled"], description: "State of the governed node." });

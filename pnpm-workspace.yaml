@@ -1,7 +1,8 @@
 # One `pnpm install` at the root installs every package and the docs site, with one lockfile.
-#   packages/okb  the okb CLI and library (@ontology-kit/okb), with the meta-KB, skills, examples and tests
+#   packages/format  the file-format reader (@ontology-kit/format): types, loading, relationship values
+#   packages/okb     the okb CLI (@ontology-kit/okb), with the meta-KB, skills, examples and tests
+#   packages/ontology-kit  the unscoped wrapper (ontology-kit) that forwards to okb
 #   site          the docs site (private)
-# Later packages (the unscoped ontology-kit wrapper, a file-format package) go under packages/.
 packages:
   - packages/*
   - site

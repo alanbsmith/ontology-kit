@@ -1,7 +1,7 @@
 /**
  * Release helpers, used by .github/workflows/release.yml and tested in packages/okb/tests/release.test.ts.
  *
- *   node scripts/release.ts check [vX.Y.Z]   Both packages have the same version (and it matches the tag, if given),
+ *   node scripts/release.ts check [vX.Y.Z]   All three packages have the same version (and it matches the tag, if given),
  *                                            and docs/CHANGELOG.md has a dated entry for it.
  *   node scripts/release.ts notes <vX.Y.Z>   Prints that changelog entry (without its heading), for the release notes.
  *   node scripts/release.ts version          Prints the package version.
@@ -13,7 +13,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-export const PACKAGES = ["packages/okb", "packages/ontology-kit"];
+// In publish order: okb depends on format, and the ontology-kit wrapper depends on okb.
+export const PACKAGES = ["packages/format", "packages/okb", "packages/ontology-kit"];
 
 const SEMVER = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 

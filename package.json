@@ -2,7 +2,7 @@
   "name": "ontology-kit-workspace",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "The Ontology Kit repository: a pnpm workspace holding the okb package (packages/okb) and the docs site (site), plus repo-wide docs tooling.",
+  "description": "The Ontology Kit repository: a pnpm workspace holding the packages (the file-format reader in packages/format, the okb CLI in packages/okb, the ontology-kit wrapper) and the docs site (site), plus repo-wide docs tooling.",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@12.21.0",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "okb": "node packages/okb/src/cli.ts",
-    "build": "pnpm --filter @ontology-kit/okb run build",
+    "build": "pnpm --filter @ontology-kit/format --filter @ontology-kit/okb run build",
     "build:meta": "pnpm --filter @ontology-kit/okb run build:meta",
     "verify:quotes": "pnpm --filter @ontology-kit/okb run verify:quotes",
     "docs": "pnpm --filter @ontology-kit/okb run docs",

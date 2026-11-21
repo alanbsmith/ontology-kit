@@ -11,11 +11,11 @@ import { PACKAGE_VERSION } from "../src/version.ts";
 const PKG = dirname(dirname(fileURLToPath(import.meta.url)));
 const REPO = dirname(dirname(PKG));
 
-/** A throwaway repo layout: two package.json files and a changelog. */
-function fixture(versions: [string, string], changelog: string): string {
+/** A throwaway repo layout: three package.json files and a changelog. */
+function fixture(versions: [string, string, string], changelog: string): string {
   const root = mkdtempSync(join(tmpdir(), "okb-release-test-"));
-  const names = ["@ontology-kit/okb", "ontology-kit"];
-  ["packages/okb", "packages/ontology-kit"].forEach((d, i) => {
+  const names = ["@ontology-kit/format", "@ontology-kit/okb", "ontology-kit"];
+  ["packages/format", "packages/okb", "packages/ontology-kit"].forEach((d, i) => {
     mkdirSync(join(root, d), { recursive: true });
     writeFileSync(join(root, d, "package.json"), JSON.stringify({ name: names[i], version: versions[i] }));
   });
@@ -27,8 +27,9 @@ function fixture(versions: [string, string], changelog: string): string {
 const LOG = "# Changelog\n\n## Package releases\n\n### 0.2.0 (2030-01-02)\n\nNew things.\n\n#### Added\n\n- A thing.\n\n### 0.1.0 (2030-01-01)\n\nFirst.\n\n## Meta-KB changes\n\n### v2.1\n\nOld.\n";
 
 describe("release checks", () => {
-  it("keeps both packages at one version, and okb version reports it", () => {
+  it("keeps all three packages at one version, and okb version reports it", () => {
     const versions = packageVersions(REPO);
+    assert.deepEqual(Object.keys(versions), ["@ontology-kit/format", "@ontology-kit/okb", "ontology-kit"], "every publishable package is checked, in publish order");
     assert.equal(new Set(Object.values(versions)).size, 1, `the packages must share a version: ${JSON.stringify(versions)}`);
     assert.equal(PACKAGE_VERSION, releaseVersion(REPO));
     const out = execFileSync(process.execPath, [join(PKG, "src", "cli.ts"), "version"], { encoding: "utf8" });
@@ -41,7 +42,7 @@ describe("release checks", () => {
   });
 
   it("extracts exactly one entry, with its subsections", () => {
-    const root = fixture(["0.2.0", "0.2.0"], LOG);
+    const root = fixture(["0.2.0", "0.2.0", "0.2.0"], LOG);
     try {
       const { notes } = changelogEntry("0.2.0", root);
       assert.match(notes, /^New things\./);
@@ -55,12 +56,13 @@ describe("release checks", () => {
   });
 
   it("fails on differing versions, a wrong tag, a missing entry or an unreleased one", () => {
-    const bad: [string, [string, string], string, string | undefined][] = [
-      ["versions differ", ["0.2.0", "0.1.0"], LOG, "v0.2.0"],
-      ["tag mismatch", ["0.2.0", "0.2.0"], LOG, "v0.1.0"],
-      ["no entry", ["0.3.0", "0.3.0"], LOG, "v0.3.0"],
-      ["unreleased", ["0.2.0", "0.2.0"], LOG.replace("(2030-01-02)", "(unreleased)"), "v0.2.0"],
-      ["empty entry", ["0.2.0", "0.2.0"], LOG.replace("New things.\n\n#### Added\n\n- A thing.\n\n", ""), "v0.2.0"],
+    const bad: [string, [string, string, string], string, string | undefined][] = [
+      ["versions differ", ["0.2.0", "0.2.0", "0.1.0"], LOG, "v0.2.0"],
+      ["format differs", ["0.1.0", "0.2.0", "0.2.0"], LOG, "v0.2.0"],
+      ["tag mismatch", ["0.2.0", "0.2.0", "0.2.0"], LOG, "v0.1.0"],
+      ["no entry", ["0.3.0", "0.3.0", "0.3.0"], LOG, "v0.3.0"],
+      ["unreleased", ["0.2.0", "0.2.0", "0.2.0"], LOG.replace("(2030-01-02)", "(unreleased)"), "v0.2.0"],
+      ["empty entry", ["0.2.0", "0.2.0", "0.2.0"], LOG.replace("New things.\n\n#### Added\n\n- A thing.\n\n", ""), "v0.2.0"],
     ];
     for (const [label, versions, log, tag] of bad) {
       const root = fixture(versions, log);

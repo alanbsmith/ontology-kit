@@ -12,13 +12,12 @@ import { MetaKB } from "../src/metakb.ts";
 import { SITE_URL, ruleUrl } from "../src/site.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
-import { Ontology } from "../src/model.ts";
+import { Ontology, type OkbNode } from "@ontology-kit/format";
 import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
 import { STEP_CHECKS, computeStatus } from "../src/status.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
 import { buildReview } from "../src/review.ts";
-import type { OkbNode } from "../src/types.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 // docs/ lives at the repo root, two levels above this package.

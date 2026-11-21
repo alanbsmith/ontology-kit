@@ -14,9 +14,9 @@
  * so a change to the storage scheme is a change to this file.
  */
 import { OkbError } from "./errors.ts";
-import { MetaKB } from "./metakb.ts";
 import type { Ontology } from "./model.ts";
 import * as naming from "./naming.ts";
+import { isStructuralEdgeType } from "./edge-types.ts";
 import type { EdgePropertyDecl, GraphEdge, RelationshipSlot, SlotNode } from "./types.ts";
 
 /** How one slot's values are stored: the edge type, and whether this slot reads it backwards. */
@@ -120,8 +120,7 @@ export class Relationships {
   /** @internal */
   typeFor(name: string, slotId: string): string {
     const t = naming.relType(name);
-    const { edgeTypes } = MetaKB.get().formatRegistry();
-    if (edgeTypes.has(t)) throw new OkbError(`A relationship called '${name}' would be stored as ${t}, which okb uses for its own structure. Pick another name.`);
+    if (isStructuralEdgeType(t)) throw new OkbError(`A relationship called '${name}' would be stored as ${t}, which okb uses for its own structure. Pick another name.`);
     const other = this.ont.ofType("Slot").find((x) => x.id !== slotId && x.relType === t);
     if (other) throw new OkbError(`'${name}' would be stored as ${t}, which ${other.name} already uses. Pick another name.`);
     return t;

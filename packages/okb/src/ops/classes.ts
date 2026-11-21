@@ -1,7 +1,6 @@
 /** The class hierarchy: adding and changing classes, parents and disjointness. */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology } from "../model.ts";
-import type { ClassNode } from "../types.ts";
+import { OkbError, type Ontology, type ClassNode } from "@ontology-kit/format";
 import { an, splitList as list, type Notes } from "./common.ts";
 import { checkName } from "./naming.ts";
 import { linkTermIfAny } from "./scope.ts";

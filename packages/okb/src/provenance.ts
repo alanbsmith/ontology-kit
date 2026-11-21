@@ -6,15 +6,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
-import { OkbError, nameOrText, type Ontology } from "./model.ts";
+import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
+import { isOneOf } from "./types.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { assign } from "./ops/values.ts";
 import { findQuote, loadPages } from "./quotes.ts";
-import {
-  MODALITIES, VERIFICATION_STATUSES as STATUSES, isOneOf,
-  type SourceLocationNode, type SourceNode,
-} from "./types.ts";
 /** Suggest the closest block for a failed quote only if it shares at least this share of the quote's words. */
 const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 

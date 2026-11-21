@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as naming from "./naming.ts";
-import type { GraphEdge, Modality, Severity } from "./types.ts";
+import { type GraphEdge, type Modality } from "@ontology-kit/format";
+import { type Severity } from "./types.ts";
 
 export const META_DIR = join(dirname(dirname(fileURLToPath(import.meta.url))), "meta-kb", "data");
 

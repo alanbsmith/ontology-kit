@@ -1,12 +1,27 @@
-/** Design decisions, renaming and removing. */
+/** Creating an ontology, design decisions, renaming and removing. */
+import { existsSync, mkdirSync } from "node:fs";
+import { join, resolve } from "node:path";
 import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
 import { today } from "../clock.ts";
 import { MetaKB } from "../metakb.ts";
-import { OkbError, type Ontology, nameOrText } from "../model.ts";
-import type { NodeType } from "../types.ts";
+import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType, type OkbNode } from "@ontology-kit/format";
 import type { Notes } from "./common.ts";
 import { checkName } from "./naming.ts";
+
+/** Start an empty ontology folder: the manifest, the one Ontology node, no edges. Saved before it returns. */
+export function createOntology(root: string, name: string): Ontology {
+  mkdirSync(root, { recursive: true });
+  if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
+  const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: today() };
+  const nodes: OkbNode[] = [{
+    type: "Ontology", id: "ontology", name, domain: "", purpose: "", users: [], maintainers: [],
+    outOfScope: [], kind: "application", reuseReviewed: false,
+  }];
+  const ont = new Ontology(resolve(root), manifest, nodes, []);
+  ont.save();
+  return ont;
+}
 
 export function addDecision(ont: Ontology, o: { title: string; decision: string; question?: string; rationale?: string; alternatives?: string[]; about?: string[]; waives?: string[] }): Notes {
   const meta = MetaKB.get();

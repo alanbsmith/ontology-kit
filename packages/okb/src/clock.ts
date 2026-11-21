@@ -4,7 +4,7 @@
  * convention) pins it, so generated output like examples/wine is the same on any
  * day and in any time zone.
  */
-import { OkbError } from "./errors.ts";
+import { OkbError } from "@ontology-kit/format";
 
 /** YYYY-MM-DD, in UTC. */
 export function today(): string {

@@ -1,7 +1,6 @@
 /** Parsing and storing values: instance values, class fixed values, defaults and restrictions. */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology, literalValues, nameOrText } from "../model.ts";
-import type { Literal, SlotNode } from "../types.ts";
+import { OkbError, type Ontology, literalValues, nameOrText, type Literal, type SlotNode } from "@ontology-kit/format";
 import { an, splitList as list, type Notes } from "./common.ts";
 
 export function parseAssignments(args: string[]): { slot: string; op: "=" | "+=" | "-="; raw: string }[] {

@@ -5,7 +5,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
 import { MetaKB, explainName } from "./metakb.ts";
-import { OkbError, Ontology } from "./model.ts";
+import { OkbError, Ontology } from "@ontology-kit/format";
 import * as ops from "./ops.ts";
 import { c, explain, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
@@ -93,7 +93,7 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(rest, { name: str });
       if (!p[0]) throw new OkbError('Usage: okb init <folder> --name "My Ontology"');
       const name = v.name ?? p[0];
-      const ont = Ontology.create(p[0], name);
+      const ont = ops.createOntology(p[0], name);
       ont.manifest.metaKbVersion = MetaKB.get().version;
       ont.save();
       console.log(`${SYMBOL.ok} Created ontology '${name}' in ${ont.root}\n`);

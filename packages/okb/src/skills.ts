@@ -7,7 +7,7 @@ import { cpSync, lstatSync, existsSync, mkdirSync, readdirSync, readFileSync, re
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { OkbError } from "./errors.ts";
+import { OkbError } from "@ontology-kit/format";
 
 /** The skills in this package. From src/ and from dist/ the package root is one folder up. */
 export const PACKAGED_SKILLS_DIR = join(dirname(dirname(fileURLToPath(import.meta.url))), "skills");

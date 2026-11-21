@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       - run: pnpm build
-      # Includes the package test, which packs both packages and runs the installed okb.
+      # Includes the package tests, which pack all three packages and run the installed okb.
       - run: pnpm test
 
   generated:
@@ -104,9 +104,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       # Build and pack with the development Node (26); `prepack` compiles dist/.
-      - name: Pack both packages
+      - name: Pack the three packages
         run: |
           mkdir "$RUNNER_TEMP/tarballs"
+          pnpm --filter @ontology-kit/format pack --pack-destination "$RUNNER_TEMP/tarballs"
           pnpm --filter @ontology-kit/okb pack --pack-destination "$RUNNER_TEMP/tarballs"
           pnpm --filter ontology-kit pack --pack-destination "$RUNNER_TEMP/tarballs"
       # The floor in `engines`: a user on Node 24 installs the tarballs and runs okb.
@@ -121,6 +122,9 @@ jobs:
           echo '{"name":"install-test","private":true}' > package.json
           npm install --omit=optional --no-audit --no-fund "$RUNNER_TEMP"/tarballs/*.tgz
           ./node_modules/.bin/okb version
+          node node_modules/ontology-kit/bin/okb.js version
           ./node_modules/.bin/okb init my-ontology
+          # The reader package, installed beside okb, loads the ontology okb just made.
+          node --input-type=module -e 'import { Ontology } from "@ontology-kit/format"; console.log(Ontology.load("./my-ontology").manifest.format)'
           cd my-ontology
           ../node_modules/.bin/okb validate
