@@ -15,7 +15,7 @@
  */
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { OkbError, Ontology, slug } from "@ontology-kit/format";
 import { today } from "./clock.ts";
 import { diffMarkdown, diffOntologies, isEmpty, type OntologyDiff } from "./diff.ts";
@@ -281,6 +281,9 @@ export function verifyRelease(root: string): VerifyResult {
   const m = readReleaseManifest(file);
   const problems: string[] = [];
   let checked = 0;
+  // The knowledge itself must be pinned: a manifest that leaves out the ontology files would verify anything.
+  for (const f of ONTOLOGY_FILES) if (!m.datasets.ontology?.files[f]) problems.push(`ontology: ${f} isn't pinned in the manifest`);
+  const inside = (base: string, p: string) => !relative(base, p).startsWith("..") && !isAbsolute(relative(base, p));
   for (const [name, d] of Object.entries(m.datasets) as [string, Dataset][]) {
     const dir = resolve(root, d.path);
     if (!existsSync(dir) || !statSync(dir).isDirectory()) {
@@ -290,7 +293,8 @@ export function verifyRelease(root: string): VerifyResult {
     for (const [f, expected] of Object.entries(d.files).sort(([p], [q]) => (p < q ? -1 : 1))) {
       checked++;
       const p = join(dir, f);
-      if (!existsSync(p) || !statSync(p).isFile()) problems.push(`${name}: ${f} is missing`);
+      if (!inside(dir, p)) problems.push(`${name}: ${f} points outside its folder`);
+      else if (!existsSync(p) || !statSync(p).isFile()) problems.push(`${name}: ${f} is missing`);
       else {
         const got = sha256(p);
         if (got !== expected) problems.push(`${name}: ${f} differs from the release (SHA-256 ${got.slice(0, 12)}…, the manifest says ${expected.slice(0, 12)}…)`);

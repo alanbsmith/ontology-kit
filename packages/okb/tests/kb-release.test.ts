@@ -210,3 +210,28 @@ describe("a release that stopped half-way", () => {
     assert.match(okb("release", "1.2.0").out, /isn't newer/);
   });
 });
+
+describe("release verify refuses a manifest that pins too little", () => {
+  const verify = (dir: string) => spawnSync(process.execPath, [CLI, "-C", dir, "release", "verify"], { encoding: "utf8", env: ENV });
+  const copy = (name: string) => {
+    const d = join(tmp, name);
+    cpSync(kb, d, { recursive: true });
+    return { d, manifest: JSON.parse(readFileSync(join(d, "manifest.json"), "utf8")) };
+  };
+  it("flags an ontology file the manifest leaves out", () => {
+    const { d, manifest } = copy("pins-less");
+    delete manifest.datasets.ontology.files["nodes.jsonl"];
+    writeFileSync(join(d, "manifest.json"), JSON.stringify(manifest, null, 2));
+    const r = verify(d);
+    assert.equal(r.status, 1);
+    assert.match(r.stdout, /nodes\.jsonl isn't pinned/);
+  });
+  it("flags a file that points outside its folder", () => {
+    const { d, manifest } = copy("pins-out");
+    manifest.datasets.ontology.files["../outside.txt"] = "0".repeat(64);
+    writeFileSync(join(d, "manifest.json"), JSON.stringify(manifest, null, 2));
+    const r = verify(d);
+    assert.equal(r.status, 1);
+    assert.match(r.stdout, /\.\.\/outside\.txt points outside its folder/);
+  });
+});
