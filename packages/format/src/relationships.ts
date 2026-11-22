@@ -164,8 +164,11 @@ export class Relationships {
       else this.ont.addEdge(e.to, a.relType, e.from, edgeProps(e));
     }
     const declared = a.edgeProperties ?? [];
-    if (b.edgeProperties?.length) a.edgeProperties = [...declared, ...b.edgeProperties.filter((p) => !declared.some((q) => q.name === p.name))];
-    this.ont.touch(a);
+    const copied = (b.edgeProperties ?? []).filter((p) => !declared.some((q) => q.name === p.name));
+    if (copied.length) {
+      a.edgeProperties = [...declared, ...copied];
+      this.ont.touch(a); // only a stamp for content that changed on the node; the INVERSE_OF edge below is not
+    }
     this.ont.addEdge(a.id, "INVERSE_OF", b.id);
     return moved.length;
   }
