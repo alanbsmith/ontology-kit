@@ -318,6 +318,11 @@ export function kbDocs(ont: Ontology): DocFiles {
 export function writeKbDocs(ont: Ontology, dir: string): string[] {
   const files = kbDocs(ont);
   for (const old of listMarkdown(dir)) if (!(old in files) && readFileSync(join(dir, old), "utf8").startsWith(BANNER)) rmSync(join(dir, old));
+  return writePages(dir, files);
+}
+
+/** Write pages into `dir` (creating folders) and leave every other file alone. Returns the file names. */
+export function writePages(dir: string, files: DocFiles): string[] {
   for (const [name, text] of Object.entries(files)) {
     mkdirSync(dirname(join(dir, name)), { recursive: true });
     writeFileSync(join(dir, name), text);

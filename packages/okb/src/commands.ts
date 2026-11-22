@@ -455,11 +455,32 @@ export const COMMANDS: Command[] = [
     name: "docs",
     group: "Reviewing and sharing",
     description: "Writes Markdown reference pages for the ontology, so people can read its structure and rules without okb: an index, one page per class, a rules page and a sources page.",
-    forms: [{
-      description: "Writes `index.md` (scope, competency questions, class tree, decisions), `classes/<id>.md` (slots with allowed values, inherited and own rules with their quotes, instances, decisions), `rules.md` and `sources.md`. Every rule links to its quote on the sources page. Items have stable anchors made from their ids (`rule.breve` becomes `#rule-breve`), links are relative, and the output has no dates, so you can commit it and check it for drift. It replaces pages an earlier run wrote and leaves other files alone. It never changes the ontology.",
-      examples: ["okb docs --out docs/kb"],
-      args: [["--out", "folder", "Where to write the pages. Required; it is created if it doesn't exist."]],
-    }],
+    forms: [
+      {
+        description: "Writes `index.md` (scope, competency questions, class tree, decisions), `classes/<id>.md` (slots with allowed values, inherited and own rules with their quotes, instances, decisions), `rules.md` and `sources.md`. Every rule links to its quote on the sources page. Items have stable anchors made from their ids (`rule.breve` becomes `#rule-breve`), links are relative, and the output has no dates, so you can commit it and check it for drift. It replaces pages an earlier run wrote and leaves other files alone. It never changes the ontology.",
+        examples: ["okb docs --out docs/kb"],
+        args: [["--out", "folder", "Where to write the pages. Required; it is created if it doesn't exist."]],
+      },
+      {
+        sub: "--changed",
+        description: "A review view of a change: only the pages whose text differs from `<ref>` (a git ref or a folder, the same as `okb diff`). A rule changed on a class changes the page of every subclass that inherits it, so those pages come with it. It also writes `changes.md`, which lists the changed pages and the stale-quote worklist from `okb source refresh --all --dry-run` (quotes that are gone or moved, and blocks that are new or changed, each with the nodes that cite them), because a source edit that hasn't been re-synced yet changes no page. Pages are the same text as the full render, so links to pages that aren't in the folder point into the full output. It only adds and overwrites files, so write it to a scratch folder, not to the committed pages. It never changes the ontology.",
+        examples: ["okb docs --out review --changed main", "okb docs --out review --changed v1.0.0 --hops 1"],
+        args: [
+          ["--out", "folder", "Where to write the pages. Required."],
+          ["--changed", "ref", "The git ref (or folder) to compare the working folder with."],
+          ["--hops", "number", "Also write the class pages that link to or from a changed class page, this many links away. Default 0. It doesn't go through the index, rules or sources pages, which link to everything."],
+        ],
+      },
+      {
+        sub: "--context",
+        description: "A review view of every rule beside the source text around its quote: the statement, modality, verification status, the verifier's note (when `okb verify --note` stored one), the original draft of a corrected rule, the quote, and the lines around it with the quoted lines marked. Rules that need a person come first (UNSUPPORTED, OVERREACH not yet approved, not verified, no quote, quote no longer in the source), then the rest by name. It reads the source files, so it needs them on disk. A source that isn't Markdown shows the quote alone. It writes `rules-in-context.md` and never changes the ontology.",
+        examples: ["okb docs --out review --context"],
+        args: [
+          ["--out", "folder", "Where to write `rules-in-context.md`. Required."],
+          ["--context", "flag", "Write the rules-in-context page instead of the reference pages. It doesn't combine with `--changed`."],
+        ],
+      },
+    ],
   },
   {
     name: "source",

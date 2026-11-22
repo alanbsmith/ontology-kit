@@ -6,6 +6,13 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 
 ## Package releases
 
+### 0.2.0 (unreleased)
+
+#### Review views
+
+- `okb docs --out <folder> --changed <ref>` writes only the reference pages whose text differs from a git ref or folder, so a change to a rule on a class includes the pages of the subclasses that inherit it, plus a `changes.md` that lists them and the quotes and source blocks that changed but haven't been re-synced. `--hops N` adds neighboring class pages for context.
+- `okb docs --out <folder> --context` writes `rules-in-context.md`: each rule with its verification status, the verifier note, its quote and the source lines around it, problem cases first.
+
 ### 0.1.0 (2026-11-21)
 
 The first release. Version 0.x means anything may change between releases; see [Releases](../CONTRIBUTING.md#releases) for what 1.0 will promise.

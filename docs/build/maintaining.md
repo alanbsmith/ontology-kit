@@ -71,7 +71,13 @@ okb check
 
 `okb source refresh` re-locates each quote by its text. A quote that only moved to another line is updated. A quote whose text changed is reported as missing, and `okb check` fails on it until you fix it (see [A quote is wrong or missing](#a-quote-is-wrong-or-missing)).
 
-<!-- TODO(#17): when the refresh-all command and its worklist of changed documents are merged, describe them here: refresh every source at once and work through what changed. -->
+When several documents changed, check them all at once:
+
+```bash
+okb source refresh --all
+```
+
+It re-locates every quote in every source and prints one report. Quotes that only moved are updated. Quotes that are gone are listed with the rules and other nodes that cite them, and the command exits with code 1 so a script notices. The report also has a worklist: the blocks of each document that are new, changed or removed since the KB last recorded it. Work through it, then run `okb source refresh --all --record` to store the new baseline. Add `--dry-run` to look without writing. [From existing docs](../EXTRACTION-PIPELINE.md#when-the-docs-change-the-worklist) explains the worklist.
 
 ## A rule is added
 
@@ -139,7 +145,13 @@ git commit -m "Release 1.0.0"
 git tag v1.0.0
 ```
 
-<!-- TODO(#18): when the docs command is merged, add a sentence here (and a step in "How a change goes") about regenerating the KB's reference pages before a release. -->
+Before you tag the release, regenerate the KB's reference pages so the committed copy matches what you release:
+
+```bash
+okb docs --out docs/kb
+```
+
+The pages have no dates, so `git diff` shows only real changes.
 
 ## What review needs
 
@@ -177,3 +189,25 @@ Copy `pull_request_template.md` from the okb package to `.github/pull_request_te
 - [Check a KB before you merge](check-in-ci.md) sets up the workflow that runs `okb check` and `okb diff` on every pull request.
 - [File format](../FORMAT.md) explains the files and the compatibility policy, so you know what a change to them means.
 - [From existing docs](../EXTRACTION-PIPELINE.md) covers quoting, drafting and verifying in full.
+
+## Review aids
+
+A subject matter expert or a reviewer often doesn't read the `okb` output. `okb docs` writes pages they can read, and two options narrow them to what matters. Write them to a scratch folder. Don't write them over the committed reference pages, because these options only add and overwrite files.
+
+**Only what a change touched.** Compare the working folder with a git ref (or another folder):
+
+```bash
+okb docs --out review --changed main
+```
+
+The folder holds the pages whose text differs from `main`, and nothing else. If a change touches a rule on a class, every subclass page that shows the inherited rule is in the folder too. `changes.md` lists the pages and ends with the source changes not yet in the KB: quotes that are gone or moved and blocks that are new or changed, with the rules that cite them. A source edit that nobody has re-synced yet changes no page, so this list is where it shows up. Add `--hops 1` to also write the class pages next to a changed one, for context.
+
+**Each rule beside its source.** The verifier sees only a quote and a statement. This page is the first place a person reads the rule in context:
+
+```bash
+okb docs --out review --context
+```
+
+`review/rules-in-context.md` shows each rule's statement, modality, verification status, the note the verifier recorded, if any (`okb verify --note "..."`), the quote and a few lines of the source around it. The quoted lines are marked. Rules that need a person come first: `UNSUPPORTED`, `OVERREACH` corrections nobody approved yet, unverified rules, and rules whose quote is gone. Read the lines around the quote of every `OVERREACH` rule. A neighboring sentence often narrows the quote, and that is the kind of thing that makes a correction wrong.
+
+`SUPPORTED` results have no assigned reviewer: `okb check` blocks only on unverified, `UNSUPPORTED` and unapproved corrected rules. The context view puts them in front of the person who owns the KB, after the flagged ones.

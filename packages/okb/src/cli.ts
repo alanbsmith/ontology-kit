@@ -9,7 +9,8 @@ import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNod
 import * as ops from "./ops.ts";
 import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
-import { writeKbDocs } from "./kbdocs.ts";
+import { kbDocs, writeKbDocs, writePages } from "./kbdocs.ts";
+import { changedPageSet, changesPage, contextPage } from "./reviewdocs.ts";
 import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
@@ -712,10 +713,31 @@ async function main(argvIn: string[]) {
     }
 
     case "docs": {
-      const { v, p } = parse(rest, { out: str });
-      if (p.length || !v.out) throw new OkbError("Usage: okb docs --out <folder>   (writes Markdown reference pages for this ontology)");
-      const files = writeKbDocs(load(v), resolve(v.out));
-      return output(v, () => ({ out: v.out, files }), () => console.log(`${SYMBOL.ok} Wrote ${files.length} pages to ${v.out} (start at index.md).`));
+      const DOCS_USAGE = "Usage: okb docs --out <folder>  ·  okb docs --out <folder> --changed <ref> [--hops N]  ·  okb docs --out <folder> --context";
+      const { v, p } = parse(rest, { out: str, changed: str, hops: str, context: bool });
+      if (p.length || !v.out) throw new OkbError(DOCS_USAGE);
+      const out = resolve(v.out);
+      const done = (files: string[], what: string, hint: string, extra: object = {}) => output(v, () => ({ out: v.out, files, ...extra }), () => console.log(`${SYMBOL.ok} Wrote ${what} to ${v.out}${hint}.`));
+      if (v.context && (v.changed !== undefined || v.hops !== undefined)) throw new OkbError("--context is its own view of every rule; it doesn't combine with --changed or --hops.");
+      if (v.hops !== undefined && v.changed === undefined) throw new OkbError("--hops adds neighbors to a --changed view; give --changed <ref> too.");
+      if (v.context) {
+        const ont = load(v);
+        return done(writePages(out, { "rules-in-context.md": contextPage(ont, await loadSourcePages(ont)) }), "rules-in-context.md", "");
+      }
+      if (v.changed !== undefined) {
+        const hops = num(v.hops, "--hops") ?? 0;
+        const ont = load(v);
+        const old = loadSide(v.changed, v.C ?? ".");
+        const { pages, changes } = changedPageSet(kbDocs(old.ont), kbDocs(ont), hops);
+        const after = kbDocs(ont);
+        const report = resync(ont, await loadSourcePages(ont), { write: false, record: false });
+        const files = Object.fromEntries(pages.map((n) => [n, after[n]]));
+        files["changes.md"] = changesPage({ against: v.changed, name: ont.meta.name, changes, hops, resync: report });
+        const stale = report.gone.length + report.moved.length + report.worklist.length;
+        return done(writePages(out, files), `${pages.length} changed ${pages.length === 1 ? "page" : "pages"} and changes.md (${stale} source ${stale === 1 ? "change" : "changes"} not yet in the KB)`, " (start at changes.md)", changes);
+      }
+      const files = writeKbDocs(load(v), out);
+      return done(files, `${files.length} pages`, " (start at index.md)");
     }
 
     case "skills": {
