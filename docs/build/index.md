@@ -19,9 +19,11 @@ All three follow the same [eight-step method](../METHOD.md). You don't give up t
 
 ## After you build
 
-Once you have something that runs, four pages cover the rest of the loop:
+Once you have something that runs, these pages cover the rest of the loop:
 
 - [Review and iterate](review.md) checks the ontology against the rules a script can't judge.
 - [Check a KB before you merge](check-in-ci.md) shows `okb check` and the workflow that runs it on every pull request.
 - [Maintain a KB with a team](maintaining.md) shows how other people change the KB: a changed doc, a new rule, a rename and a release, and what a reviewer checks.
+- [Maintain a KB: the whole workflow](maintainers.md) is the map: who does what, which tool to use when, and the order a change takes to a release.
+- [Sign off on a KB](sign-off.md) is for subject-matter experts and reviewers who decide whether the rules are right.
 - [Export](export.md) writes it as JSON or openCypher for a graph database or an app.

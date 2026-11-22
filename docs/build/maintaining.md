@@ -186,6 +186,8 @@ Copy `pull_request_template.md` from the okb package to `.github/pull_request_te
 
 ## What to read next
 
+- [Maintain a KB: the whole workflow](maintainers.md) is the map of roles, tools and the usual order.
+- [Sign off on a KB](sign-off.md) is the page to give a subject-matter expert or reviewer.
 - [Check a KB before you merge](check-in-ci.md) sets up the workflow that runs `okb check` and `okb diff` on every pull request.
 - [File format](../FORMAT.md) explains the files and the compatibility policy, so you know what a change to them means.
 - [From existing docs](../EXTRACTION-PIPELINE.md) covers quoting, drafting and verifying in full.

@@ -8,7 +8,7 @@ A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job
 | [ontology-review](#ontology-review)                     | Get a second opinion on an ontology you've built.                      | [Review and iterate](../build/review.md)             |
 | [build-domain-kb-from-docs](#build-domain-kb-from-docs) | Extract an ontology from documentation, with every claim checked.      | [From existing docs](../EXTRACTION-PIPELINE.md)      |
 | [ontology-maintainer](#ontology-maintainer)             | Keep an existing KB current: docs changed, a fix, a rename, a release. | [Maintain a KB with a team](../build/maintaining.md) |
-| [ontology-signoff](#ontology-signoff)                   | Confirm that a KB's rules are right: a first review, or a change.      | [Maintain a KB with a team](../build/maintaining.md) |
+| [ontology-signoff](#ontology-signoff)                   | Confirm that a KB's rules are right: a first review, or a change.      | [Sign off on a KB](../build/sign-off.md)             |
 
 ## ontology-coach
 
@@ -38,7 +38,7 @@ Start it by asking `the docs changed, update the KB`. See [Maintain a KB with a 
 
 Walks a subject-matter expert or a pull request reviewer through confirming that a KB's rules are right. It shows each rule beside its quote and the source text around it, riskiest first (rules the checker could not support, then corrected rules waiting for approval, then rules not yet checked), asks for one decision at a time in plain language, and ends with a summary the person can paste as a review comment. It covers a first review of a freshly extracted KB, the review of a change (using `okb diff` and `okb docs --changed`), and a short session that stops early with what is left listed. The only thing it writes is `okb verify --approve`, and only after the person says yes to that rule by name; it prints the command it ran. Everything else they say (reject, reword, "this doesn't fit together") goes on a follow-up list for the maintainer. It says what was not reviewed, and sends the maintainer to ontology-maintainer when a source changed without a re-sync.
 
-Start it by asking `I'm the subject-matter expert, help me review the KB`. See [Maintain a KB with a team](../build/maintaining.md) for the commands it runs.
+Start it by asking `I'm the subject-matter expert, help me review the KB`. See [Sign off on a KB](../build/sign-off.md) for what it asks and records, and [Maintain a KB with a team](../build/maintaining.md) for the commands it runs.
 
 ## Install the skills
 
