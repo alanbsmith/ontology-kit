@@ -5,6 +5,7 @@
  */
 import type { Ontology } from "@ontology-kit/format";
 import { loadSourcePages, runChecks, type CheckContext } from "./checks.ts";
+import { compareVersions as compareSemver } from "./release.ts";
 import type { Finding } from "./types.ts";
 
 export type StepStatus = "pass" | "warn" | "fail";
@@ -38,16 +39,11 @@ export interface CheckStep {
 const open = (fs: Finding[]) => fs.filter((f) => !f.explainedBy);
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-/** Compare `a.b.c[-pre]` versions: negative when `a` is older than `b`. Returns null for text that isn't a version. */
+/** Compare `a.b.c[-pre]` versions (a leading `v` and `+build` are ignored): negative when `a` is older than `b`. Null for text that isn't a version. */
 export function compareVersions(a: string, b: string): number | null {
-  const parse = (v: string) => /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+.*)?$/.exec(v.trim());
-  const pa = parse(a), pb = parse(b);
-  if (!pa || !pb) return null;
-  for (let i = 1; i <= 3; i++) if (Number(pa[i]) !== Number(pb[i])) return Number(pa[i]) - Number(pb[i]);
-  if (pa[4] === pb[4]) return 0;
-  if (!pa[4]) return 1; // a release is newer than its prerelease
-  if (!pb[4]) return -1;
-  return pa[4] < pb[4] ? -1 : 1;
+  const core = (v: string) => /^v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)(?:\+.*)?$/.exec(v.trim())?.[1];
+  const x = core(a), y = core(b);
+  return x && y ? compareSemver(x, y) : null;
 }
 
 const QUOTE_RULES = ["prov-quote-current"];
@@ -63,7 +59,7 @@ export const CHECK_STEPS: CheckStep[] = [
       const mine = open(findings).filter((f) => !claimed.has(f.rule));
       const errors = mine.filter((f) => f.severity === "error");
       const warnings = mine.filter((f) => f.severity === "warning").length;
-      const tail = warnings ? ` (${plural(warnings, "warning")} don't block a merge; okb validate --all lists them)` : "";
+      const tail = warnings ? ` (${plural(warnings, "warning")} ${warnings === 1 ? "doesn't" : "don't"} block a merge; okb validate --all lists them)` : "";
       return errors.length
         ? { status: "fail", summary: `${plural(errors.length, "error")}${tail}`, problems: errors.map((f) => `${f.rule}: ${f.message}`) }
         : { status: "pass", summary: `no errors${tail}`, problems: [] };

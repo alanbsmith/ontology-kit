@@ -163,6 +163,8 @@ describe("compareVersions", () => {
     assert.equal(compareVersions("1.2.3", "1.2.3"), 0);
     assert.ok(compareVersions("1.0.0-rc.1", "1.0.0")! < 0);
     assert.equal(compareVersions("latest", "1.0.0"), null);
+    assert.ok(compareVersions("1.0.0-rc.2", "1.0.0-rc.10")! < 0, "numeric prerelease parts compare as numbers");
+    assert.equal(compareVersions("v1.2.3+build.5", "1.2.3"), 0);
   });
 });
 
