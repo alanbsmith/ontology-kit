@@ -5,7 +5,7 @@ description: Use when a subject-matter expert or a pull request reviewer has to 
 
 # Sign off on a KB
 
-**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.1.** It should match the meta-KB version that `okb version` prints.
 
 For the person who knows the subject but may not know git, JSON or the `okb` command: a subject-matter expert (SME) whose documents an agent turned into rules, or a teammate reviewing a pull request that changes a KB. The job is to put each rule in front of them with the words it came from, get a decision, and keep a record. You run the commands. They answer questions.
 
@@ -52,7 +52,7 @@ Scope: everything.
 3. **Walk the problem items, one at a time**, in this order: the checker could not support it (`UNSUPPORTED`), reworded by the checker and not yet approved (`OVERREACH`), not checked at all, no quote, quote missing from the source. For each item use the decision prompt below.
 
 4. **Record the decision.** What "record" means depends on the item:
-   - A reworded rule, the person says yes to the corrected wording: run the approval command for that one rule, print it, and say what it did.
+   - A reworded rule, the person says yes to the corrected wording: run the approval command for that one rule, print it, and say what it did. If the new wording changes MUST, SHOULD or MAY, say first that the rule's stored strength still has the old one (the correction changes only the statement), and put it on the follow-up list for the maintainer instead of approving.
 
      ```bash
      okb verify <rule id> --approve

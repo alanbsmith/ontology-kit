@@ -5,7 +5,7 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.1.** It should match the meta-KB version that `okb version` prints.
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `packages/okb/meta-kb/` and the pipeline in `docs/EXTRACTION-PIPELINE.md` (both in the ontology-kit repository, usually `~/Projects/ontology-kit`).
 
@@ -88,7 +88,7 @@ okb source refresh --all --json
 
 It re-locates every quote in every source (updating the lines and links of quotes that only moved) and prints one report: `gone` (quotes no longer in the text, each with `citedBy`, the rules and facts that cite it), `moved`, and `worklist`, the new, changed and removed blocks since the KB last recorded the document. It exits with code 1 when a quote is gone. Add `--dry-run` to write nothing. If a source has no baseline yet (a KB from before hashes), the report says so; there's no worklist for it until you run `okb source refresh --all --record` once.
 
-1. **Gone quotes first.** For each `gone` entry, read the current text near `was.locator`. If the passage was reworded, re-extract it (Step 1, `okb quote add`), re-cite the nodes in `citedBy` with `okb cite`, and verify them again (Step 3). If the passage no longer exists, the nodes that cite it are no longer supported: ask the user whether to remove or rewrite them, and never keep a citation to text that isn't there.
+1. **Gone quotes first.** For each `gone` entry, read the current text near `was.locator`. If the passage was reworded, re-extract it (Step 1, `okb quote add`), re-cite the nodes in `citedBy` with `okb cite`, and verify them again (Step 3). Once every node in `citedBy` has its new citation, remove the old quote with `okb remove <old quote id>`; otherwise it stays in the KB and every refresh and `okb check` reports it as gone again. If the passage no longer exists, the nodes that cite it are no longer supported: ask the user whether to remove or rewrite them, and never keep a citation to text that isn't there.
 2. **Then the worklist.** `changed` blocks have `oldPreview` and `preview`: check whether a quote or a fact drawn from the old text is now wrong. `new` blocks are not extracted yet: do Steps 1 to 3 for the ones that state facts or rules. `removed` blocks usually show up as gone quotes already; if nothing cites them, nothing is needed. Skip blocks that aren't relevant, and say so in the review diff.
 3. **Run Step 5** (`okb validate --all`), then record the new baseline with `okb source refresh --all --record` so the next run lists only what changes after this one. Don't record before the worklist is handled: the baseline is how the next refresh knows what you've seen.
 

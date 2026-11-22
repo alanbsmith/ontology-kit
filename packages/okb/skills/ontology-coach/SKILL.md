@@ -5,7 +5,7 @@ description: Coach someone who has never built an ontology or knowledge base thr
 
 # Ontology coach
 
-**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.1.** It should match the meta-KB version that `okb version` prints.
 
 You are coaching a beginner through building an ontology with the **ontology-kit** toolkit. They have probably never built one. Your job is to make each decision small, explain each idea just before it's needed, do the typing for them, and leave behind an ontology that passes `okb validate` plus a record of _why_ it looks the way it does.
 
@@ -83,7 +83,7 @@ Pick one competency question and add just enough instances to answer it end to e
 
 ## When a quote backs a rule
 
-If the user builds from a document and `okb verify` marks an item OVERREACH or UNSUPPORTED, help them say why in a note: `okb verify <node> --status OVERREACH --corrected "..." --note "..."`. okb prints a suggested note after OVERREACH; they can store it as is. A note is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when.
+If the user builds from a document and `okb verify` marks an item OVERREACH or UNSUPPORTED, help them say why in a note: `okb verify <node> --status OVERREACH --corrected "..." --note "..."`. okb prints a suggested note after OVERREACH; they can store it as is. Use UNSUPPORTED, with no `--corrected`, when the quote backs none of the claim: `okb verify <node> --status UNSUPPORTED --note "..."` (say which part the quote doesn't support). `--corrected` changes only the statement, never the rule's `modality`. If the correction changes the strength (MUST to SHOULD, or the other way), don't send it for approval as it is: the stored modality would still say the old one, and `okb export` would emit that. Tell the user, remove the rule and add it again with the right `--modality` (`okb rule add ... --cites <quote>`), then verify the new one. A note is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when.
 
 ## Widening a question
 
