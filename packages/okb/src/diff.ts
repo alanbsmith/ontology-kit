@@ -5,7 +5,7 @@
  * identity and shows as a rename. `createdAt`/`updatedAt` are ignored: a node whose only change is
  * a stamp isn't a change in the knowledge (it's counted in `summary.stampOnly`).
  */
-import { NODE_TYPES, edgeProps, type GraphEdge, type OkbNode, type Ontology } from "@ontology-kit/format";
+import { NODE_TYPES, edgeProps, nodeLabel, type GraphEdge, type OkbNode, type Ontology } from "@ontology-kit/format";
 
 /** One changed field. `path` is the raw key path; `field` is how it reads (slot ids become slot names). */
 export interface FieldChange {
@@ -88,14 +88,13 @@ const isPlain = (v: unknown): v is Record<string, unknown> => v !== null && type
 
 /** What a node is called, for a reader. */
 export function label(n: OkbNode, ont: Ontology): string {
-  const x = n as Record<string, any>;
   if (n.type === "SourceLocation") {
-    const q = String(x.quote ?? "");
+    const q = String(n.quote ?? "");
     const text = q.length > 60 ? q.slice(0, 57) + "..." : q;
     const src = ont.targets(n.id, "PART_OF").map((id) => ont.get(id)).find((s) => s?.type === "Source");
     return `"${text}"` + (src && src.type === "Source" ? ` (${src.title})` : "");
   }
-  return x.name ?? x.text ?? x.title ?? n.id;
+  return nodeLabel(n);
 }
 
 /** Every leaf of a node as [path, value], skipping id, type and stamps. Plain objects are walked; arrays are leaves. */
@@ -190,8 +189,8 @@ export function diffOntologies(a: Ontology, b: Ontology, oldName = "old", newNam
     const was = label(na, a);
     if (was !== change.name) {
       change.renamedFrom = was;
-      const earlier = ((nb as { formerNames?: unknown }).formerNames as string[] | undefined)?.filter((x) => x !== was && x !== change.name);
-      if (Array.isArray(earlier) && earlier.length) change.otherFormerNames = earlier;
+      const earlier = "formerNames" in nb && Array.isArray(nb.formerNames) ? nb.formerNames.filter((x) => x !== was && x !== change.name) : undefined;
+      if (earlier?.length) change.otherFormerNames = earlier;
     }
     if (nb.type === "SourceLocation") {
       const parts: string[] = [];

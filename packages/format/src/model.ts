@@ -368,8 +368,8 @@ export class Ontology {
   /**
    * The number a person types for a competency question or design decision (`okb cq link 2 ...`):
    * its position in display order (see `numbered`), counting from 1. Ids carry no number.
+   * @internal
    */
-  /** @internal */
   displayNumber(n: OkbNode): number {
     return this.numbered(n.type).indexOf(n) + 1;
   }
