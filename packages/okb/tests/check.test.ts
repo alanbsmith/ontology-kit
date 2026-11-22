@@ -135,6 +135,8 @@ describe("okb check", () => {
     const r = okb(dir, "check");
     assert.equal(r.code, 0, r.out + r.err);
     assert.match(r.out, /older than the 99\.0\.0 this KB pins/);
+    assert.match(r.out, /Safe to merge: no check failed, but 1 warned/);
+    assert.doesNotMatch(r.out, /every check passed/);
     assert.equal(check(dir).steps.find((s: any) => s.id === "okb-version").status, "warn");
   });
 

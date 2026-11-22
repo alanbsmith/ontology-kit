@@ -375,6 +375,8 @@ export function formatCheck(report: CheckReport, name: string): string {
     for (const p of s.problems) out.push(`    ${SYMBOL.error} ${p}`);
   }
   const failed = report.steps.filter((s) => s.status === "fail").length;
-  out.push("", report.ok ? `${SYMBOL.ok} Safe to merge: every check passed.` : `${SYMBOL.error} Not safe to merge: ${failed} of ${report.steps.length} checks failed.`);
+  const warned = report.steps.filter((s) => s.status === "warn").length;
+  const safe = warned ? `no check failed, but ${warned} warned (marked ${SYMBOL.warning} above).` : "every check passed.";
+  out.push("", report.ok ? `${SYMBOL.ok} Safe to merge: ${safe}` : `${SYMBOL.error} Not safe to merge: ${failed} of ${report.steps.length} checks failed.`);
   return out.join("\n");
 }
