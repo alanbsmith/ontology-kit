@@ -1,7 +1,7 @@
 // A file layout that merges cleanly in git, a lock for concurrent commands, and the post-merge check (issue #92, okb-lpg/3).
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
@@ -177,6 +177,20 @@ describe("the lock", () => {
     writeFileSync(join(dir, ".okb.lock"), JSON.stringify({ pid: Number(dead), host: hostname(), token: "x" }));
     must(dir, ["class", "add", "Wine"]);
     assert.ok(!existsSync(join(dir, ".okb.lock")));
+  });
+
+  it("doesn't take over an old lock whose command is still running on this machine", () => {
+    const dir = newOntology();
+    const lock = join(dir, ".okb.lock");
+    writeFileSync(lock, JSON.stringify({ pid: process.pid, host: hostname(), token: "x" }));
+    const old = new Date(Date.now() - 3600_000);
+    utimesSync(lock, old, old);
+    const r = okb(dir, ["class", "add", "Wine"], { OKB_LOCK_WAIT_MS: "300" });
+    assert.notEqual(r.code, 0);
+    assert.ok(existsSync(lock), "the running command's lock stays");
+    writeFileSync(lock, JSON.stringify({ pid: process.pid, host: "another-machine", token: "x" }));
+    utimesSync(lock, old, old);
+    assert.equal(okb(dir, ["class", "add", "Wine"]).code, 0, "an old lock from another machine is taken over");
   });
 
   it("fails with a clear error when a running command holds the lock for too long, and changes nothing", () => {

@@ -42,15 +42,26 @@ function alive(pid: number): boolean {
   }
 }
 
-/** The lock's owner is gone: a crashed command (same machine, process not running) or a lock older than ten minutes. */
+/**
+ * The lock's owner is gone: a crashed command (same machine, process not running), or, when the owner can't be
+ * checked (another machine on a shared folder, a lock no one can read), a lock older than ten minutes.
+ * A command still running on this machine keeps its lock however long it takes.
+ */
 function isStale(path: string): boolean {
   const { owner } = readOwner(path);
+  const mine = Boolean(owner && owner.host === hostname() && Number.isInteger(owner.pid));
+  if (mine) return !alive(owner!.pid);
   try {
-    if (Date.now() - statSync(path).mtimeMs > MAX_AGE_MS) return true;
+    return Date.now() - statSync(path).mtimeMs > MAX_AGE_MS;
   } catch {
     return false; // released while we looked
   }
-  return Boolean(owner && owner.host === hostname() && Number.isInteger(owner.pid) && !alive(owner.pid));
+}
+
+/** Whether a command holds the lock right now. */
+export function isLocked(root: string): boolean {
+  const path = join(root, LOCK_FILE);
+  return existsSync(path) && !isStale(path);
 }
 
 /** Wait (up to a few seconds) until no command holds the lock. Used by readers, who don't take it. */
