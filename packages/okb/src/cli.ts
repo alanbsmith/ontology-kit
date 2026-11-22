@@ -9,6 +9,7 @@ import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNod
 import * as ops from "./ops.ts";
 import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
+import { writeKbDocs } from "./kbdocs.ts";
 import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
@@ -708,6 +709,13 @@ async function main(argvIn: string[]) {
       const b = p[1] ? loadSide(p[1], here) : { ont: Ontology.load(here), name: "working folder" };
       const d = diffOntologies(a.ont, b.ont, a.name, b.name);
       return output(v, () => d, () => process.stdout.write(diffMarkdown(d)));
+    }
+
+    case "docs": {
+      const { v, p } = parse(rest, { out: str });
+      if (p.length || !v.out) throw new OkbError("Usage: okb docs --out <folder>   (writes Markdown reference pages for this ontology)");
+      const files = writeKbDocs(load(v), resolve(v.out));
+      return output(v, () => ({ out: v.out, files }), () => console.log(`${SYMBOL.ok} Wrote ${files.length} pages to ${v.out} (start at index.md).`));
     }
 
     case "skills": {

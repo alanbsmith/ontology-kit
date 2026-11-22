@@ -452,6 +452,16 @@ export const COMMANDS: Command[] = [
     }],
   },
   {
+    name: "docs",
+    group: "Reviewing and sharing",
+    description: "Writes Markdown reference pages for the ontology, so people can read its structure and rules without okb: an index, one page per class, a rules page and a sources page.",
+    forms: [{
+      description: "Writes `index.md` (scope, competency questions, class tree, decisions), `classes/<id>.md` (slots with allowed values, inherited and own rules with their quotes, instances, decisions), `rules.md` and `sources.md`. Every rule links to its quote on the sources page. Items have stable anchors made from their ids (`rule.breve` becomes `#rule-breve`), links are relative, and the output has no dates, so you can commit it and check it for drift. It replaces pages an earlier run wrote and leaves other files alone. It never changes the ontology.",
+      examples: ["okb docs --out docs/kb"],
+      args: [["--out", "folder", "Where to write the pages. Required; it is created if it doesn't exist."]],
+    }],
+  },
+  {
     name: "source",
     group: "Working from documents",
     description: "Registers documents you are extracting from, so quotes and rules can point back to them.",

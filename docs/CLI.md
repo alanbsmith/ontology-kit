@@ -779,6 +779,21 @@ $ okb export --format cypher --out wine.cypher
 | `--no-rules` | flag | Leave out extracted rules. |
 | `--include-unverified` | flag | Include rules and quotes that haven't been verified. |
 
+<a id="cmd-docs"></a>
+### okb docs
+
+Writes Markdown reference pages for the ontology, so people can read its structure and rules without okb: an index, one page per class, a rules page and a sources page.
+
+```bash
+$ okb docs --out docs/kb
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--out` | folder | Where to write the pages. Required; it is created if it doesn't exist. |
+
 ## Working from documents
 
 <a id="cmd-source"></a>

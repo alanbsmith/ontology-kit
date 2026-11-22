@@ -4,7 +4,7 @@
   "ignores": [
     "**/node_modules/**", ".github/pull_request_template.md", "site/dist/**", "site/.astro/**",
     "docs/METHOD.md", "docs/GLOSSARY.md", "docs/RULES.md", "docs/DECISIONS.md", "docs/CLI.md", "docs/CLI-CHEAT-SHEET.md",
-    "packages/okb/examples/wine/*.md", "packages/okb/examples/wine/tutorial/**", "packages/okb/tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
+    "packages/okb/examples/wine/*.md", "packages/okb/examples/wine/tutorial/**", "packages/okb/examples/*/docs/**", "packages/okb/tests/fixtures/**", ".vale/styles/Google/**", ".vale/styles/write-good/**"
   ],
   "config": {
     "default": true,

@@ -55,6 +55,7 @@ Skills                 okb skills install [--copy] [--dir <folder>] [--force]   
 Also: okb show <name> · okb rename <old> <new> · okb remove <name> · okb drift <folder>...
        okb check [--json]                is this KB safe to merge? (validation, quotes, verification; non-zero exit if not)
        okb pin                           record this okb version in okb.json (CI installs it; okb check warns on older)
+       okb docs --out <folder>           write Markdown reference pages: classes, slots, rules and the quotes behind them
        okb diff <old> [<new>] [--json]   what changed in the knowledge between two folders or git refs (okb diff main)
        okb release <version> · okb release verify   cut a pinned release with a manifest and change log; check files against it
 Names: when a class and a slot share a name, say which: class:Genre / slot:genre

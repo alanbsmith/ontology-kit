@@ -29,6 +29,10 @@ buildTutorial({
   },
 });
 
+// Reference pages for the ontology (okb docs), committed next to it so a change in the ontology or in
+// the generator shows up as a diff, and tests/kbdocs.test.ts fails if they drift.
+execFileSync(process.execPath, [join(ROOT, "src", "cli.ts"), "docs", "--out", "docs"], { cwd: DIR });
+
 let final: { findings: { severity: string; rule: string; message: string }[] };
 try {
   final = JSON.parse(execFileSync(process.execPath, [join(ROOT, "src", "cli.ts"), "validate", "--all", "--json"], { cwd: DIR, encoding: "utf8" }));
