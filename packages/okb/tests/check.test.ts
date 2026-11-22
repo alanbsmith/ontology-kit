@@ -97,6 +97,15 @@ describe("okb check", () => {
     assert.match(r.out, /Serve red wine at room temperature/);
   });
 
+  it("passes when a quote only moved (a heading was added above it), and says so", () => {
+    const dir = makeKb(work, "moved");
+    writeFileSync(join(dir, "guide.md"), "# Guide\n\nA new line.\n\nAnother new line.\n\nServe red wine at room temperature.\n");
+    const r = okb(dir, "check");
+    assert.equal(r.code, 0, r.out + r.err);
+    assert.deepEqual(failing(check(dir)), []);
+    assert.match(r.out, /1 quote moved; okb source refresh --all updates them/);
+  });
+
   it("fails when a source file is missing, because then nothing proves the quote", () => {
     const dir = makeKb(work, "missing");
     rmSync(join(dir, "guide.md"));

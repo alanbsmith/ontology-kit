@@ -71,9 +71,16 @@ export const CHECK_STEPS: CheckStep[] = [
     rules: QUOTE_RULES,
     run({ ont, findings }) {
       // A quote that can't be checked fails too: in CI a missing source file means the check proved nothing.
-      const bad = open(findings).filter((f) => QUOTE_RULES.includes(f.rule));
+      // A quote that only moved is still in its source (the validator reports it at info level), so it doesn't fail.
+      const found = open(findings).filter((f) => QUOTE_RULES.includes(f.rule));
+      const bad = found.filter((f) => f.severity !== "info");
+      const moved = found.length - bad.length;
       const unchecked = ont.ofType("Source").filter((s) => !s.localPath && ont.sources(s.id, "PART_OF").some((i) => ont.get(i)?.type === "SourceLocation")).length;
-      const note = unchecked ? ` (${plural(unchecked, "source")} with quotes has no localPath, so its quotes weren't checked)` : "";
+      const notes = [
+        unchecked ? `${plural(unchecked, "source")} with quotes has no localPath, so its quotes weren't checked` : "",
+        moved ? `${plural(moved, "quote")} moved; okb source refresh --all updates them` : "",
+      ].filter(Boolean);
+      const note = notes.length ? ` (${notes.join("; ")})` : "";
       return bad.length
         ? { status: "fail", summary: `${plural(bad.length, "quote")} can't be matched${note}`, problems: bad.map((f) => f.message) }
         : { status: unchecked ? "warn" : "pass", summary: `every checked quote is still in its source${note}`, problems: [] };
