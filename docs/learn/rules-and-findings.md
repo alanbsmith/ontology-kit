@@ -75,7 +75,7 @@ Run `okb validate` again and the warning is gone. Or say the café's point-of-sa
 okb decision add --title "Prices stay out of the ontology" \
   --decision "The point-of-sale system owns prices, so no competency question about cost is answered here." \
   --why "Prices change weekly and the ontology describes drinks, not the price list." \
-  --about cq.4mz6a9 --waives scope-cq-coverage
+  --about "question:How much does each drink cost?" --waives scope-cq-coverage
 ```
 
 ```text

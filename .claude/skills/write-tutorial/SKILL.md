@@ -84,7 +84,7 @@ Each item names the mistake in bold, then says what goes wrong. Put no links in 
 
 The commands in the sources create the ontology files. Reordering a command, changing an option or editing a quoted description changes `nodes.jsonl` or `edges.jsonl`. That includes the prose inside `--desc` and `--why` text, since okb stores it.
 
-- After a rebuild, run `git diff --stat -- 'packages/okb/examples/<name>/*.json'`. For the wine example it must be empty. For a new tutorial, the diff is the whole point, so check the files by reading them.
+- After a rebuild, run `git diff --stat -- 'packages/okb/examples/<name>/*.json' 'packages/okb/examples/<name>/*.jsonl'`. For the wine example it must be empty. For a new tutorial, the diff is the whole point, so check the files by reading them.
 - Add commands to a page that only read (`status`, `validate`, `show`, `tree`) freely. They don't change the files, but they do change the page output.
 - Remember `okb step next` changes `currentStep` and what `validate` shows. Keep the same order the real work would have.
 

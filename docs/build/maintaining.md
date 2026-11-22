@@ -55,6 +55,8 @@ The class keeps its id (`c.winery`) and `okb` records `Winery` as a former name.
 When a document that the KB quotes changes, the quotes that point into it may have moved or vanished. First, register the source and quote it. This is also how you add a source:
 
 ```bash
+mkdir sources
+printf '# Serving wine\n\n## Chilling\n\nChill white wine before serving.\n' > sources/serving.md
 okb source add sources/serving.md
 okb source outline src.serving-wine --quotable
 okb quote add src.serving-wine "Chill white wine before serving." --cites WhiteWine
@@ -137,18 +139,18 @@ okb release 1.0.0
 okb release verify
 ```
 
-`okb release 1.0.0` writes `manifest.json`, `RELEASES.md` (the change log) and a `releases/1.0.0/` folder. `okb release verify` checks that the files on disk still match the manifest. Commit the result and tag the commit if you want a git ref:
+`okb release 1.0.0` writes `manifest.json`, `RELEASES.md` (the change log) and a `releases/1.0.0/` folder. `okb release verify` checks that the files on disk still match the manifest. If you keep reference pages in the repository, regenerate them now so the committed copy matches what you release:
+
+```bash
+okb docs --out docs/kb
+```
+
+Then commit the result and tag the commit if you want a git ref:
 
 ```bash
 git add -A
 git commit -m "Release 1.0.0"
 git tag v1.0.0
-```
-
-Before you tag the release, regenerate the KB's reference pages so the committed copy matches what you release:
-
-```bash
-okb docs --out docs/kb
 ```
 
 The pages have no dates, so `git diff` shows only real changes.
