@@ -14,6 +14,8 @@ import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
 import { PACKAGE_VERSION } from "./version.ts";
+import { diffMarkdown, diffOntologies } from "./diff.ts";
+import { loadSide } from "./ontology-ref.ts";
 import { installSkills, skillsStatus, type SkillState } from "./skills.ts";
 
 type Opts = NonNullable<ParseArgsConfig["options"]>;
@@ -630,6 +632,16 @@ async function main(argvIn: string[]) {
         if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
         for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
       });
+    }
+
+    case "diff": {
+      const { v, p } = parse(rest);
+      if (p.length < 1 || p.length > 2) throw new OkbError("Usage: okb diff <old> [<new>]   (each a folder or a git ref; with one, <new> is the current folder)");
+      const here = v.C ?? ".";
+      const a = loadSide(p[0], here);
+      const b = p[1] ? loadSide(p[1], here) : { ont: Ontology.load(here), name: "working folder" };
+      const d = diffOntologies(a.ont, b.ont, a.name, b.name);
+      return output(v, () => d, () => process.stdout.write(diffMarkdown(d)));
     }
 
     case "skills": {

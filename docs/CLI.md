@@ -1082,6 +1082,26 @@ $ okb drift ../wine ../food
 | --- | --- | --- |
 | `[folder]...` | paths | The ontology folders to check. |
 
+<a id="cmd-diff"></a>
+### okb diff
+
+Shows what changed in the knowledge between two versions of an ontology: added, removed, renamed and changed things, rules side by side, moved quotes and changed links, in words rather than JSON lines.
+
+```bash
+$ okb diff main
+$ okb diff v1.0 v1.1
+$ okb diff ../wine-old .
+$ okb diff main --json
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `<old>` | folder or git ref | The earlier version. An existing folder is read as it is; anything else is a branch, tag or commit in the repository around the current folder. A name that is both is an error that shows both spellings (`./name` for the folder, `refs/heads/name` for the branch). |
+| `[new]` | folder or git ref | The later version. Defaults to the current folder. |
+| `--json` | flag | Print the changes as JSON for other tools. |
+
 <a id="cmd-help"></a>
 ### okb help
 

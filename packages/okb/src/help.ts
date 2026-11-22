@@ -53,5 +53,6 @@ Skills                 okb skills install [--copy] [--dir <folder>] [--force]   
                        okb skills status [--dir <folder>]                         which are installed, where, and whether they match this okb
 
 Also: okb show <name> · okb rename <old> <new> · okb remove <name> · okb drift <folder>...
+       okb diff <old> [<new>] [--json]   what changed in the knowledge between two folders or git refs (okb diff main)
 Names: when a class and a slot share a name, say which: class:Genre / slot:genre
 Global options: -C <folder> (default: current folder) · --json (machine-readable output where supported)`;
