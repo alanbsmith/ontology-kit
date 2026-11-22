@@ -230,7 +230,7 @@ export function resync(ont: Ontology, pages: Map<string, string[] | MdDoc | Erro
         continue;
       }
       const near = hits.reduce((a, b) => (Math.abs(b.startLine - (loc.startLine ?? 0)) < Math.abs(a.startLine - (loc.startLine ?? 0)) ? b : a));
-      if (near.startLine === loc.startLine && near.locator === loc.locator) continue;
+      if (near.startLine === loc.startLine && near.endLine === (loc.endLine ?? loc.startLine) && near.locator === loc.locator) continue;
       status.moved++;
       const was = issue(loc);
       if (write) {
@@ -262,8 +262,10 @@ export function resync(ont: Ontology, pages: Map<string, string[] | MdDoc | Erro
       }
     }
     if (o.record) {
-      src.blocks = current;
-      ont.touch(src);
+      if (JSON.stringify(src.blocks) !== JSON.stringify(current)) {
+        src.blocks = current;
+        ont.touch(src);
+      }
     }
   }
   if (report.gone.length) report.ok = false;

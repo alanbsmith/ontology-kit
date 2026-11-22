@@ -507,7 +507,7 @@ export const COMMANDS: Command[] = [
       },
       {
         sub: "refresh",
-        description: "Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. It exits with code 1 when a quote is gone or a source can't be read.",
+        description: "Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. With `--all` it exits with code 1 when a quote is gone or a source can't be read (a single source only reports).",
         examples: ["okb source refresh button", "okb source refresh --all", "okb source refresh --all --json --dry-run"],
         args: [
           ["[<source>]", "name", "The source to check (leave it out with --all)."],

@@ -874,7 +874,7 @@ $ okb source outline button --quotable
 <a id="cmd-source-refresh"></a>
 #### okb source refresh
 
-Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. It exits with code 1 when a quote is gone or a source can't be read.
+Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. With `--all` it exits with code 1 when a quote is gone or a source can't be read (a single source only reports).
 
 ```bash
 $ okb source refresh button
