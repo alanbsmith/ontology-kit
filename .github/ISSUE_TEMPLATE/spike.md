@@ -30,4 +30,4 @@ A spike never ships code, so it never becomes a commit or a PR. It ends in one o
 
 - [ ] Each question above has an answer
 - [ ] The findings are written up on this issue or in a doc
-- [ ] The outcome is recorded: follow-up issues for any work that comes out of it, or a decision not to proceed
+- [ ] The outcome is recorded: a written answer or doc, follow-up issues for any work that comes out of it, or a decision not to proceed
