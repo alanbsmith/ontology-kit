@@ -63,7 +63,12 @@ export interface WorklistItem {
   oldPreview: string | null;
 }
 
-const words = (s: string) => new Set(s.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 2));
+const wordCache = new Map<string, Set<string>>();
+const words = (s: string): Set<string> => {
+  let w = wordCache.get(s);
+  if (!w) wordCache.set(s, (w = new Set(s.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((x) => x.length > 2))));
+  return w;
+};
 function similarity(a: string, b: string): number {
   const x = words(a), y = words(b);
   if (!x.size || !y.size) return 0;
@@ -96,18 +101,32 @@ export function diffBlocks(baseline: BlockRecord[], current: BlockRecord[]): Blo
   const oldOnes = new Set([...left.values()].flat());
 
   const out: BlockDiff[] = [];
+  const oldKeys = baseline.map(keyOf);
+  const newKeys = current.map(keyOf);
+  // How many unmatched blocks share each place (heading path, kind, row key), on each side. A block that is
+  // alone in its place on both sides is the same block, edited. Counted once, not per comparison.
+  const placeCount = (idxs: Iterable<number>, keys: string[]) => {
+    const m = new Map<string, number>();
+    for (const i of idxs) m.set(keys[i], (m.get(keys[i]) ?? 0) + 1);
+    return m;
+  };
   const pair = (minScore: number, sameKey: boolean) => {
+    const oldPlaces = placeCount(oldOnes, oldKeys);
+    const newPlaces = placeCount(newOnes, newKeys);
     for (const j of [...newOnes]) {
       const c = current[j];
+      const place = newKeys[j];
+      const alone = sameKey && oldPlaces.get(place) === 1 && newPlaces.get(place) === 1;
       let best: { i: number; score: number } | null = null;
       for (const i of oldOnes) {
         const o = baseline[i];
-        if (sameKey !== (keyOf(o) === keyOf(c))) continue;
-        const alone = sameKey && [...oldOnes].filter((x) => keyOf(baseline[x]) === keyOf(c)).length === 1 && newOnes.filter((x) => keyOf(current[x]) === keyOf(c)).length === 1;
+        if (sameKey !== (oldKeys[i] === place)) continue;
         const score = alone ? 1 : similarity(o.preview, c.preview);
         if (score >= minScore && (!best || score > best.score)) best = { i, score };
       }
       if (best) {
+        oldPlaces.set(oldKeys[best.i], (oldPlaces.get(oldKeys[best.i]) ?? 1) - 1);
+        newPlaces.set(place, (newPlaces.get(place) ?? 1) - 1);
         oldOnes.delete(best.i);
         newOnes.splice(newOnes.indexOf(j), 1);
         out.push({ change: "changed", old: baseline[best.i], current: j });

@@ -42,6 +42,13 @@ describe("diffBlocks", () => {
     const d = diffBlocks(rec(DOC), rec(DOC.replace("Store bottles on their sides in a dark place.\n", "")));
     assert.deepEqual(d.map((x) => x.change), ["removed"]);
   });
+  it("stays fast when many blocks under one heading all change", () => {
+    const block = (p: string, i: number) => ({ hash: `${p}${i}`, kind: "paragraph", headingPath: ["Top"], preview: `${p} paragraph number ${i} words here` });
+    const mk = (p: string) => Array.from({ length: 800 }, (_, i) => block(p, i));
+    const t = Date.now();
+    assert.equal(diffBlocks(mk("a"), mk("b")).length, 800);
+    assert.ok(Date.now() - t < 5000, `took ${Date.now() - t} ms`);
+  });
   it("hashes the normalized text with SHA-256", () => {
     assert.equal(hashText("Serve  *red* wine."), hashText("serve red WINE"));
     assert.match(hashText("x"), /^[0-9a-f]{64}$/);
