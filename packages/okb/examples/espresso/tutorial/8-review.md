@@ -225,15 +225,15 @@ Review: what only a person can judge (step 8 and anything already visible)
    Ontology 101 §4.6 An instance or a class?, p.18
 
 ? slot-domain-fits-all (MUST)  For each slot, check every class it's inherited by. Does each one really have this property?
-   · contains applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · espressoToMilkRatio applies to MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · fatPercent applies to Milk, WholeMilk, HalfAndHalf, CondensedMilk. Does every one of these really have it?
-   · origin applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · pourOrder applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · pullVolumeMl applies to EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · texture applies to MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
-   · usedIn applies to Ingredient, WhippedCream, Water, Milk, WholeMilk, HalfAndHalf, CondensedMilk, Gelato, Foam, Coffee, Chocolate. Does every one of these really have it?
-   · variationOf applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · contains applies to Drink, EspressoDrink, MilkDrink, PureEspresso, SweetenedDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Americano, Espresso, LongBlack, Lungo, Ristretto, Affogato, CafeBombon, ConPanna, Mocha, Breve. Does every one of these really have it?
+   · espressoToMilkRatio applies to MilkDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Breve. Does every one of these really have it?
+   · fatPercent applies to Milk, CondensedMilk, HalfAndHalf, WholeMilk. Does every one of these really have it?
+   · origin applies to Drink, EspressoDrink, MilkDrink, PureEspresso, SweetenedDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Americano, Espresso, LongBlack, Lungo, Ristretto, Affogato, CafeBombon, ConPanna, Mocha, Breve. Does every one of these really have it?
+   · pourOrder applies to Drink, EspressoDrink, MilkDrink, PureEspresso, SweetenedDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Americano, Espresso, LongBlack, Lungo, Ristretto, Affogato, CafeBombon, ConPanna, Mocha, Breve. Does every one of these really have it?
+   · pullVolumeMl applies to EspressoDrink, MilkDrink, PureEspresso, SweetenedDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Americano, Espresso, LongBlack, Lungo, Ristretto, Affogato, CafeBombon, ConPanna, Mocha, Breve. Does every one of these really have it?
+   · texture applies to MilkDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Breve. Does every one of these really have it?
+   · usedIn applies to Ingredient, Chocolate, Coffee, Foam, Gelato, Milk, Water, WhippedCream, CondensedMilk, HalfAndHalf, WholeMilk. Does every one of these really have it?
+   · variationOf applies to Drink, EspressoDrink, MilkDrink, PureEspresso, SweetenedDrink, Cappuccino, Cortado, FlatWhite, Latte, Macchiato, Americano, Espresso, LongBlack, Lungo, Ristretto, Affogato, CafeBombon, ConPanna, Mocha, Breve. Does every one of these really have it?
    Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
 ? scope-cq-families (SHOULD)  For each answered competency question: what's its family (the same question about sibling classes or other instances, and the questions next to it about the same subject)? Would the ontology answer them? Is each one you don't want recorded as out of scope?

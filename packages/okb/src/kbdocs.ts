@@ -193,8 +193,9 @@ function classPage(ont: Ontology, c: ClassNode): string {
   if (bullets.length) out.push(...bullets, "");
 
   // Slots: own first, then inherited from the nearest ancestors.
-  const ancestors = [...ont.ancestors(c.id)].sort(byText);
-  const context = [c.id, ...ancestors];
+  const nearest = [...ont.ancestors(c.id)]; // nearest first: it decides which class's value applies
+  const ancestors = [...nearest].sort(byText);
+  const context = [c.id, ...nearest];
   const slotIds = ont.applicableSlots(c.id);
   if (slotIds.length) {
     out.push("## Slots", "", "| Slot | Kind | From | Type | Allowed values | Count | Class value |", "| --- | --- | --- | --- | --- | --- | --- |");

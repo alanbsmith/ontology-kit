@@ -487,13 +487,20 @@ export class Ontology {
     return this.walk(id, (x) => this.children(x));
   }
 
+  /**
+   * Everything reachable with `next`, nearest first (a parent before its own parents), and among classes
+   * the same distance away in id order, so the order is the same in memory and after a save and reload.
+   * Cycle-safe.
+   */
   private walk(id: string, next: (x: string) => string[]): Set<string> {
     const seen = new Set<string>();
-    const stack = [...next(id)];
-    for (let c = stack.pop(); c !== undefined; c = stack.pop()) {
-      if (seen.has(c) || c === id) continue;
-      seen.add(c);
-      stack.push(...next(c));
+    const queue = [id];
+    for (let i = 0; i < queue.length; i++) {
+      for (const c of [...next(queue[i])].sort(compareNatural)) {
+        if (seen.has(c) || c === id) continue;
+        seen.add(c);
+        queue.push(c);
+      }
     }
     return seen;
   }

@@ -39,4 +39,4 @@ A latte or cappuccino made with half-and-half instead of milk.
 
 ## Instances
 
-- <a id="i-vertex-breve-7fvaz3"></a>**Vertex breve** (espressoToMilkRatio: 0.2; texture: silky; contains: [Double shot](c-coffee.md#i-double-shot-t7wr67), [Milk foam](c-foam.md#i-milk-foam-ap9t4r), [Steamed half-and-half](c-half-and-half.md#i-steamed-half-and-half-r364hz); origin: USA; pourOrder: Shot, half-and-half, then foam)
+- <a id="i-vertex-breve-7fvaz3"></a>**Vertex breve** (espressoToMilkRatio: 0.33; texture: foamy; contains: [Double shot](c-coffee.md#i-double-shot-t7wr67), [Milk foam](c-foam.md#i-milk-foam-ap9t4r), [Steamed half-and-half](c-half-and-half.md#i-steamed-half-and-half-r364hz); origin: USA; pourOrder: Shot, half-and-half, then foam)

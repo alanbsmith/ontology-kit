@@ -177,3 +177,17 @@ describe("export: rules", () => {
     assert.match(g.notes.join("\n"), /--no-rules/);
   });
 });
+
+describe("ancestors order", () => {
+  it("is nearest first, and the same whatever order the edges were stored in", async () => {
+    const { Ontology } = await import("@ontology-kit/format");
+    const cls = (id: string) => ({ id, type: "Class", name: id.slice(2) }) as never;
+    const e = (from: string, to: string) => ({ from, type: "IS_A", to });
+    // d is a c and a b; b is an a; c is a z. Both parents come before a and z.
+    const nodes = ["c.a", "c.b", "c.c", "c.d", "c.z"].map(cls);
+    const edges = [e("c.d", "c.c"), e("c.d", "c.b"), e("c.b", "c.a"), e("c.c", "c.z")];
+    const order = (es: typeof edges) => [...Ontology.fromData(nodes, es, { name: "t" }).ancestors("c.d")];
+    assert.deepEqual(order(edges), ["c.b", "c.c", "c.a", "c.z"]);
+    assert.deepEqual(order([...edges].reverse()), order(edges));
+  });
+});

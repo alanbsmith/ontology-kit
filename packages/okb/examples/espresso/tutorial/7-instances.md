@@ -84,8 +84,8 @@ Filled in default origin = "Italy".
 Added Vertex breve (a Breve).
 Vertex breve.contains = Double shot, Steamed half-and-half, Milk foam
 Vertex breve.pourOrder = "Shot, half-and-half, then foam"
-Filled in default espressoToMilkRatio = 0.2.
-Filled in default texture = "silky".
+Filled in default espressoToMilkRatio = 0.33.
+Filled in default texture = "foamy".
 Filled in default origin = "USA".
 
 Added Vertex mocha (a Mocha).
@@ -131,8 +131,8 @@ Vertex breve  Instance · i.vertex-breve-7fvaz3
   instance of    Breve
 
   Values
-    espressoToMilkRatio 0.2
-    texture            silky
+    espressoToMilkRatio 0.33
+    texture            foamy
     pullVolumeMl       —
     contains           Double shot, Milk foam, Steamed half-and-half
     origin             USA
