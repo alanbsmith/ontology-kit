@@ -39,6 +39,19 @@ describe("suggestNote", () => {
 });
 
 describe("verify notes and ref", () => {
+  it("running OVERREACH again to add a note keeps the original wording", () => {
+    const ont = fixture();
+    verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
+    const again = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall.", note: "narrowed MUST to SHOULD; changed 44 to 24" });
+    const rule = ont.require("rule.size", "Rule");
+    assert.equal(rule._originalDraft, "A Button MUST be at least 44px tall.");
+    assert.equal(rule.statement, "A Button SHOULD be at least 24px tall.");
+    assert.ok(!again.some((n) => n.startsWith("Suggested note")));
+    const suggested = verify(fixture(), "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
+    const rerun = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
+    assert.deepEqual(rerun.filter((n) => n.startsWith("Suggested note")), suggested.filter((n) => n.startsWith("Suggested note")));
+  });
+
   it("suggests a note after OVERREACH without --note, and stores nothing", () => {
     const ont = fixture();
     const notes = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });

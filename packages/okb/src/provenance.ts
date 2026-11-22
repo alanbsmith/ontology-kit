@@ -283,15 +283,14 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
   const noteTips: Notes = [];
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
-    const before = n.type === "Rule" ? n.statement : n.description ?? "";
-    if (!o.note) noteTips.push(...overreachNoteTips(n.id, before, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
-    if (n.type === "Rule") {
-      n._originalDraft = n.statement;
-      n.statement = o.corrected;
-    } else {
-      n._originalDraft = n.description;
-      n.description = o.corrected;
-    }
+    const current = n.type === "Rule" ? n.statement : n.description ?? "";
+    // Running OVERREACH again on an item that is still waiting for approval (to add a note or a link, as the
+    // suggested command does) must not replace the original wording with the earlier correction.
+    const original = n.verification?.status === "OVERREACH" && n._originalDraft !== undefined ? n._originalDraft : current;
+    if (!o.note) noteTips.push(...overreachNoteTips(n.id, original, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
+    n._originalDraft = original;
+    if (n.type === "Rule") n.statement = o.corrected;
+    else n.description = o.corrected;
     n.extractionConfidence = "corrected";
     notes.push(`Corrected ${field}: "${o.corrected}" (original kept in _originalDraft).`);
     notes.push(`It stays blocked (prov-verified) until a person checks the correction: okb verify ${n.id} --approve`);
