@@ -57,7 +57,8 @@ If a step fails, go back to the step before it. A failed check in step 4 means t
 Every page in this section uses the [wine example](../../packages/okb/examples/wine/). Copy it into a new git repository and follow along:
 
 ```bash
-cp -R packages/okb/examples/wine/{okb.json,nodes.jsonl,edges.jsonl} my-kb/
+mkdir my-kb
+cp packages/okb/examples/wine/{okb.json,nodes.jsonl,edges.jsonl} my-kb/
 cd my-kb
 git init -b main && git add -A && git commit -m "Start"
 okb check
