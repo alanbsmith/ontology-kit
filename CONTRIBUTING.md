@@ -160,6 +160,12 @@ A second workflow, `.github/workflows/pr.yml`, checks the pull request itself: *
 
 The Generated files check catches a rule, command or tutorial change that you didn't regenerate. The release workflow reuses the whole workflow (it has a `workflow_call` trigger), so a release only publishes after these checks pass. Local runs don't need Vale installed for the other checks, but `pnpm lint:docs` does (`brew install vale`).
 
+## Issues
+
+Open an issue from one of the templates in `.github/ISSUE_TEMPLATE/`: **Feature**, **Bug report**, **Chore** or **Spike**. Each title is a Conventional Commit, like a PR title, so `feat(okb): Add a command to list orphan classes` becomes the PR's title later. A feature, bug or chore issue has the same sections, **Purpose**, **Context**, **Scope** and **Criteria**, so a person or an agent can pick it up without asking questions.
+
+A feature also has **The problem it solves**. Say who hits the problem and when, what they do today, how the feature fixes it, and how you know the problem is real. We add features for problems someone has, not for ones someone might have, so an issue that can't fill this section in waits until the problem shows up. Work with no user-facing effect, like CI or refactors, uses the Chore template and says who it helps instead.
+
 ## Commits and pull requests
 
 Every commit message and every PR title is a [Conventional Commit](https://www.conventionalcommits.org): `type(scope): Subject`. The subject starts with a capital letter and has no final period. The scope is optional.
