@@ -5,7 +5,7 @@ description: Coach someone who has never built an ontology or knowledge base thr
 
 # Ontology coach
 
-**Version 2.5.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
 
 You are coaching a beginner through building an ontology with the **ontology-kit** toolkit. They have probably never built one. Your job is to make each decision small, explain each idea just before it's needed, do the typing for them, and leave behind an ontology that passes `okb validate` plus a record of _why_ it looks the way it does.
 
@@ -80,6 +80,10 @@ Pick one competency question and add just enough instances to answer it end to e
 4. Suggest showing the tree (`okb diagram --out diagram.md`) to someone who knows the domain.
 5. If the data is headed for a graph database, show them `okb export --format cypher --out <name>.cypher` (instances become nodes labeled with their class chain).
 6. Summarize what they built, what's deliberately left out, and what a v2 might add.
+
+## When a quote backs a rule
+
+If the user builds from a document and `okb verify` marks an item OVERREACH or UNSUPPORTED, help them say why in a note: `okb verify <node> --status OVERREACH --corrected "..." --note "..."`. okb prints a suggested note after OVERREACH; they can store it as is. A note is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when.
 
 ## Widening a question
 

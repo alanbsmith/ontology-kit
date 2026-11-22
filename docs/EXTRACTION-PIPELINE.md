@@ -74,6 +74,8 @@ okb verify <node> --status OVERREACH --corrected "<narrower statement>"   # orig
 okb verify <node> --status UNSUPPORTED                                     # then: okb remove <node>
 ```
 
+Say why an OVERREACH or UNSUPPORTED result came out that way, so a reviewer sees more than the verdict. Add `--note "<one sentence>"` that names the word or number (`narrowed MUST to SHOULD`, `the quote gives no 24px minimum`), without restating the verdict. Add `--ref <url>` (an `http` or `https` link to the PR comment, issue or review thread) when the reasoning happened in a conversation. A note helps most on an OVERREACH or UNSUPPORTED result and on an approval that depends on a discussion; a SUPPORTED result rarely needs one. Nothing is required. When you correct a statement without a note, okb prints a suggested note, built from what changed between `_originalDraft` and the correction (a changed MUST, SHOULD or MAY, a changed number, or a few words), plus the command that stores it. It stores nothing itself. If the difference can't be named that way, or for UNSUPPORTED, okb prints a tip about what a useful note says. `--approve` keeps the earlier note and `ref` unless you pass new ones. Names, emails and dates stay out of the graph; git and the PR keep who and when.
+
 Anything extracted but not yet verified, and every OVERREACH correction, **blocks** `okb validate` until it's resolved. A person checks each correction and signs it off with `okb verify <node> --approve`.
 
 `okb export` follows the same line: only SUPPORTED rules (including approved corrections) leave the toolkit, along with the quotes they cite. Unverified rules, and links whose `rule` points at one, stay out unless you pass `--include-unverified` (see [Export](build/export.md)).

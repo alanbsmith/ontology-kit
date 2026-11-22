@@ -116,6 +116,10 @@
         "note": {
           "type": "string"
         },
+        "ref": {
+          "type": "string",
+          "pattern": "^https?://\\S+$"
+        },
         "approvedAfter": {
           "enum": [
             "SUPPORTED",

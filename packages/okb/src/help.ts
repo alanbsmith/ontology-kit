@@ -46,7 +46,7 @@ Documents              okb source add docs/button.md [--repo-url https://github.
                        okb rule add --statement "..." --modality SHOULD --governs Button --cites <quote id> [--authored] [--value slot=value] [--refines <rule> --adds "..."]
                        okb rule refines <rule> <broader rule> [--adds "..."]     okb fulfills <instance> <rule>
                        okb cite <node> <quote id>                                attach an existing quote to a node
-                       okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] · okb verify <node> --approve
+                       okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--note "..."] [--ref <url>] · okb verify <node> --approve
                        okb source refresh <source> | --all [--dry-run] [--record] [--strict] [--json]   after the document changes (--all: worklist)
 
 Skills                 okb skills install [--copy] [--dir <folder>] [--force]    link (or copy) the packaged skills into ~/.claude/skills

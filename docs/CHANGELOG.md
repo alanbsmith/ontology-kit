@@ -11,6 +11,7 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 #### Review views
 
 - `okb docs --out <folder> --changed <ref>` writes only the reference pages whose text differs from a git ref or folder, so a change to a rule on a class includes the pages of the subclasses that inherit it, plus a `changes.md` that lists them and the quotes and source blocks that changed but haven't been re-synced. `--hops N` adds neighboring class pages for context.
+- `okb verify` suggests a note after an OVERREACH correction (a changed MUST, SHOULD or MAY, a changed number, or a few words) with the command that stores it, and tips what a useful note says for UNSUPPORTED. `--ref <url>` stores an `http` or `https` link to the discussion as `verification.ref` (a new optional field on `Verification` in `@ontology-kit/format`); `--approve` keeps it. `okb docs --context` shows it beside the note.
 - `okb docs --out <folder> --context` writes `rules-in-context.md`: each rule with its verification status, the verifier note, its quote and the source lines around it, problem cases first.
 
 ### 0.1.0 (2026-11-21)
@@ -81,3 +82,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.5.0
 
 - **A skill for maintainers.** The new `ontology-maintainer` skill looks after an existing KB that is kept in git with `okb check` in CI. It starts from `okb status`, `okb check` and `okb source refresh --all --json`, then runs one of six flows: the source documents changed, a requested fix, a new rule or source, a rename, a pull request for a reviewer, and a release. It hands extraction and verification to `build-domain-kb-from-docs` and modeling questions to `ontology-review`, and it never runs `okb verify --approve`. No rule changed.
+
+### v2.6.0
+
+- **Verification notes are cheap to write.** The four skills now say when a note helps (OVERREACH, UNSUPPORTED, an approval that rests on a conversation) and what a good one looks like, and `docs/EXTRACTION-PIPELINE.md` and the maintaining guide match. No rule changed.

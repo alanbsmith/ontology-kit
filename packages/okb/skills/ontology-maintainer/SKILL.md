@@ -5,7 +5,7 @@ description: Use when someone looks after an existing okb knowledge base that is
 
 # Maintain an existing KB
 
-**Version 2.5.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
 
 For the person (or the agent working for them) who looks after a KB that was built once and is now kept in git with `okb check` in CI. It works out what is open, does the routine update, and finishes with the pull request text. It adds no commands of its own: everything goes through `okb`. The same sequences, with their output, are in the maintainer guide (<https://ontology-kit.dev/build/maintaining/>) and the CI guide (<https://ontology-kit.dev/build/check-in-ci/>); read those when a step here is not enough.
 
@@ -62,7 +62,7 @@ For the person (or the agent working for them) who looks after a KB that was bui
    ```
 
 3. **Then the worklist.** A `changed` block that holds a gone quote is already handled in step 2; don't do it twice. For any other `changed` block, compare `oldPreview` with `preview`: is a quote or fact drawn from the old text now wrong? For each `new` block that states a fact or a rule, hand off to **build-domain-kb-from-docs** (Steps 1 to 3: quote, draft, one claim per quote). `removed` blocks usually appear as gone quotes already. Skip blocks that state nothing the KB needs, and keep a list of what you skipped and why.
-4. **Verify what changed.** `okb check` passes as soon as a citation points at text that exists; it can't tell that the new wording means something else. Every node you re-cited, and every new node, needs a fresh, separate verification pass (build-domain-kb-from-docs, Step 3), even if `okb check` is already green. Record each result with `okb verify <node> --status SUPPORTED`, or `--status OVERREACH --corrected "..."`. **Stop for a person** on every OVERREACH item: tell them to read the quote and the corrected statement, then run `okb verify <node> --approve`. Do not run it.
+4. **Verify what changed.** `okb check` passes as soon as a citation points at text that exists; it can't tell that the new wording means something else. Every node you re-cited, and every new node, needs a fresh, separate verification pass (build-domain-kb-from-docs, Step 3), even if `okb check` is already green. Record each result with `okb verify <node> --status SUPPORTED`, or `--status OVERREACH --corrected "..." --note "..."`. Add a note to every OVERREACH and UNSUPPORTED result: It is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when. okb prints a suggested note after OVERREACH; use it when it is right. **Stop for a person** on every OVERREACH item: tell them to read the quote and the corrected statement, then run `okb verify <node> --approve`. Do not run it.
 5. Record the new baseline only after the worklist is handled, so the next refresh lists only what changes after this one:
 
    ```bash

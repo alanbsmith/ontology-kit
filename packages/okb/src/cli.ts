@@ -640,9 +640,9 @@ async function main(argvIn: string[]) {
     }
 
     case "verify": {
-      const { v, p } = parse(rest, { status: str, corrected: str, confidence: str, note: str, approve: bool });
-      if (!p[0]) throw new OkbError('Usage: okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--confidence verbatim|paraphrased]  ·  okb verify <node> --approve');
-      return mutate(v, (ont) => prov.verify(ont, p[0], { status: v.status, corrected: v.corrected, confidence: v.confidence, note: v.note, approve: v.approve }));
+      const { v, p } = parse(rest, { status: str, corrected: str, confidence: str, note: str, ref: str, approve: bool });
+      if (!p[0]) throw new OkbError('Usage: okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--confidence verbatim|paraphrased] [--note "..."] [--ref <url>]  ·  okb verify <node> --approve');
+      return mutate(v, (ont) => prov.verify(ont, p[0], { status: v.status, corrected: v.corrected, confidence: v.confidence, note: v.note, ref: v.ref, approve: v.approve }));
     }
 
     case "drift": {

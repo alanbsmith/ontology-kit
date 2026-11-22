@@ -105,7 +105,7 @@ A corrected statement stays blocked until a person confirms the correction is ri
 ✗ Rule 'White wine SHOULD be chilled before' was corrected after claiming more than its quote supports. A person must check it: okb verify rule.white-wine-should-be-chilled-before --approve
 ```
 
-The reviewer reads the corrected statement next to the quote. If it holds, they run:
+The reviewer reads the corrected statement next to the quote, and the note and link the verifier left beside it, if any. When the verifier corrects a statement, `okb verify` prints a suggested note (for example `narrowed MUST to SHOULD`) and the command that stores it. Pass it with `--note "..."`, and add `--ref <url>` to link the PR comment or review thread where the reasoning happened. If it holds, the reviewer runs:
 
 ```bash
 okb verify rule.white-wine-should-be-chilled-before --approve
@@ -208,6 +208,6 @@ The folder holds the pages whose text differs from `main`, and nothing else. If 
 okb docs --out review --context
 ```
 
-`review/rules-in-context.md` shows each rule's statement, modality, verification status, the note the verifier recorded, if any (`okb verify --note "..."`), the quote and a few lines of the source around it. The quoted lines are marked. Rules that need a person come first: `UNSUPPORTED`, `OVERREACH` corrections nobody approved yet, unverified rules, and rules whose quote is gone. Read the lines around the quote of every `OVERREACH` rule. A neighboring sentence often narrows the quote, and that is the kind of thing that makes a correction wrong.
+`review/rules-in-context.md` shows each rule's statement, modality, verification status, the note the verifier recorded and its `--ref` link, if any (`okb verify --note "..." --ref <url>`), the quote and a few lines of the source around it. The quoted lines are marked. Rules that need a person come first: `UNSUPPORTED`, `OVERREACH` corrections nobody approved yet, unverified rules, and rules whose quote is gone. Read the lines around the quote of every `OVERREACH` rule. A neighboring sentence often narrows the quote, and that is the kind of thing that makes a correction wrong.
 
 `SUPPORTED` results have no assigned reviewer: `okb check` blocks only on unverified, `UNSUPPORTED` and unapproved corrected rules. The context view puts them in front of the person who owns the KB, after the flagged ones.

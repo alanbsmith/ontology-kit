@@ -8,6 +8,7 @@ import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
 import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
 import { isOneOf } from "./types.ts";
+import { UNSUPPORTED_NOTE_TIP, overreachNoteTips, shellQuote } from "./verifynote.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { assign } from "./ops/values.ts";
@@ -254,7 +255,16 @@ export function fulfill(ont: Ontology, instanceRef: string, ruleRef: string, o: 
   return [`${inst.name} fulfills ${rule.id}.`];
 }
 
-export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; approve?: boolean }): Notes {
+/** `--ref`: a link to the discussion behind a verification. Only web links, so nothing local or private leaks into the graph. */
+function checkRef(ref: string | undefined): void {
+  if (ref === undefined) return;
+  let ok = /^https?:\/\/\S+$/i.test(ref);
+  if (ok) try { new URL(ref); } catch { ok = false; }
+  if (!ok) throw new OkbError(`--ref must be an http:// or https:// link (to a PR comment, issue or review thread), not "${ref}".`);
+}
+
+export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; ref?: string; approve?: boolean }): Notes {
+  checkRef(o.ref);
   const n = ont.find(ref, ["Rule", "Class", "Slot", "Instance"]);
   const cited = ont.targets(n.id, "CITES");
   if (!cited.length) throw new OkbError(`${n.id} doesn't cite a quote, so there's nothing to verify it against.`);
@@ -263,15 +273,18 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     // A person has looked at a corrected (or otherwise flagged) item and accepts it.
     if (!n.verification) throw new OkbError(`${n.id} hasn't been through verification yet.`);
     if (n.verification.status === "UNSUPPORTED") throw new OkbError("An UNSUPPORTED item can't be approved; remove it or re-extract from a quote that supports it.");
-    n.verification = { ...n.verification, status: "SUPPORTED", approvedAfter: n.verification.status, ...(o.note ? { note: o.note } : {}) };
+    n.verification = { ...n.verification, status: "SUPPORTED", approvedAfter: n.verification.status, ...(o.note ? { note: o.note } : {}), ...(o.ref ? { ref: o.ref } : {}) };
     ont.touch(n);
     return [`${n.id}: approved by a person (was ${n.verification.approvedAfter}).`];
   }
   const status = (o.status ?? "").toUpperCase();
   if (!isOneOf(STATUSES, status)) throw new OkbError(`--status must be one of ${STATUSES.join(", ")} (or use --approve after a human review).`);
   const notes: Notes = [];
+  const noteTips: Notes = [];
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
+    const before = n.type === "Rule" ? n.statement : n.description ?? "";
+    if (!o.note) noteTips.push(...overreachNoteTips(n.id, before, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
     if (n.type === "Rule") {
       n._originalDraft = n.statement;
       n.statement = o.corrected;
@@ -286,9 +299,13 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     if (!isOneOf(["verbatim", "paraphrased"], o.confidence)) throw new OkbError("--confidence must be verbatim or paraphrased.");
     n.extractionConfidence = o.confidence;
   } else n.extractionConfidence ??= "paraphrased";
-  n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}) };
+  n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}), ...(o.ref ? { ref: o.ref } : {}) };
   ont.touch(n);
-  if (status === "UNSUPPORTED") notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
+  if (status === "UNSUPPORTED") {
+    notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
+    if (!o.note) noteTips.push(UNSUPPORTED_NOTE_TIP);
+  }
+  notes.push(...noteTips);
   notes.unshift(`${n.id}: ${status}.`);
   return notes;
 }

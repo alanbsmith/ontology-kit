@@ -212,7 +212,7 @@ function ruleInContext(ont: Ontology, rule: RuleNode, problems: Problem[], shown
   const governs = ont.targets(rule.id, "GOVERNS").map((g) => nameOrText(ont.require(g)) ?? g).sort(byText);
   if (governs.length) bullets.push(`- Governs: ${governs.join(", ")}`);
   bullets.push(`- Verification: ${v ? v.status.toLowerCase() : "not verified"}${v?.approvedAfter ? ` (a person approved it after ${v.approvedAfter.toLowerCase()})` : ""}${rule.extractionConfidence ? `, confidence ${rule.extractionConfidence}` : ""}`);
-  if (v?.note) bullets.push(`- Verifier's note: ${oneLine(v.note)}`);
+  if (v?.note || v?.ref) bullets.push(`- Verifier's note: ${[v.note ? oneLine(v.note) : "", v.ref ? `<${v.ref}>` : ""].filter(Boolean).join(" ")}`);
   if (rule._originalDraft) bullets.push(`- Original draft, before the correction: ${oneLine(rule._originalDraft)}`);
   out.push(...bullets, "");
   for (const { loc, context } of shown) {

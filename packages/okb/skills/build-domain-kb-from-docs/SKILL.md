@@ -5,7 +5,7 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.5.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `packages/okb/meta-kb/` and the pipeline in `docs/EXTRACTION-PIPELINE.md` (both in the ontology-kit repository, usually `~/Projects/ontology-kit`).
 
@@ -62,6 +62,8 @@ Record each result:
 - `okb verify <node> --status SUPPORTED [--confidence verbatim|paraphrased]`
 - `okb verify <node> --status OVERREACH --corrected "<narrower statement>"`: the original is kept in `_originalDraft`, and the node stays blocked until a person runs `okb verify <node> --approve`.
 - `okb verify <node> --status UNSUPPORTED`, then `okb remove <node>`. It never ships.
+
+**Say why, briefly.** Add `--note "..."` to every OVERREACH and UNSUPPORTED result, and to an approval that rests on a conversation. For OVERREACH, okb prints a suggested note and the exact command that stores it (a changed modality, number or few words); check it says what you meant, then pass it. For UNSUPPORTED, name the part of the statement the quote doesn't support. A note is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when. A SUPPORTED result needs no note.
 
 ## Step 4: Spot-check sources
 

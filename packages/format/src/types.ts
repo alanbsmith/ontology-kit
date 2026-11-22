@@ -65,6 +65,8 @@ export interface Verification {
   status: VerificationStatus;
   checkedAgainst?: string[];
   note?: string;
+  /** A link (http or https) to the PR comment, issue or review thread where the reasoning happened. Never a name or a date. */
+  ref?: string;
   /** Set by `okb verify --approve`: the status a person approved it from. */
   approvedAfter?: VerificationStatus;
 }
