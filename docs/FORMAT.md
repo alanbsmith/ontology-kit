@@ -2,11 +2,11 @@
 
 An ontology built with okb is a folder with three plain-text files:
 
-| File          | Contents                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------ |
-| `okb.json`    | Tool state: format version, name, `currentStep`, the meta-KB version it was created with.  |
-| `nodes.jsonl` | The nodes, one per line, sorted by id. Each has `id`, `type` and type-specific properties. |
-| `edges.jsonl` | The edges, one per line, sorted by `from`, `type`, `to`. Each may have more properties.    |
+| File          | Contents                                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| `okb.json`    | Tool state: format version, name, `currentStep`, the meta-KB version, and the KB's release `version`. |
+| `nodes.jsonl` | The nodes, one per line, sorted by id. Each has `id`, `type` and type-specific properties.            |
+| `edges.jsonl` | The edges, one per line, sorted by `from`, `type`, `to`. Each may have more properties.               |
 
 It's a labeled property graph (LPG). In this file the **schema is data**: [classes](GLOSSARY.md#concept-class) and [slots](GLOSSARY.md#concept-slot) are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
 
@@ -40,7 +40,7 @@ The authoritative list of node and edge types lives in `packages/okb/meta-kb/src
 | `SourceLocation`     | `loc.<source>-<tag>`     | `quote` (verbatim), `locator` (heading path, or `p.N`), `headingPath[]`, `startLine`, `endLine`, `lines`, `blockKind`, `sourceLink`, `pageLink`, `page`                                                                                                                                                                                                                                                           |
 | `Rule`               | `rule.<slug>`            | `modality`, `statement`, `authored`, `extracted`, `verification{status, checkedAgainst}`, `extractionConfidence`, `_originalDraft`, `values{slotId: value}`. A domain rule, extracted from documentation or authored by the owner; see [EXTRACTION-PIPELINE.md](EXTRACTION-PIPELINE.md) and [Rules](#rules).                                                                                                      |
 
-Ids never change when you rename something, so edges stay valid.
+Ids never change when you rename something, so edges stay valid. `okb rename` keeps the old name on the node, as `formerNames` (see [Former names](#former-names)).
 
 ### Ids
 
@@ -52,6 +52,12 @@ An id is a readable prefix, a dot, and a part that says which node it is. Two pe
 - **Ids made before `okb-lpg/3` stay as they are** (`cq.1`, `d.2`, `i.margaux-2`, `loc.guide.1`). The number in an old `cq.3` still answers to `3`, and nothing is renamed.
 
 Set `SOURCE_DATE_EPOCH` (seconds since 1970, the reproducible-builds convention) and the tag is derived from it, the type, the name and a counter instead of being random, so a generated folder like `packages/okb/examples/wine` rebuilds byte for byte. Don't set it when several people edit one ontology: the same name then gives the same tag on every branch.
+
+### Former names
+
+`okb rename` keeps what a thing was called. A `Class`, `Slot` or `Instance` that has been renamed carries `formerNames`, an array of its earlier names, oldest first. A relationship `Slot` whose rename changed its edge type also carries `formerRelTypes`, the earlier edge types (`["MAKER"]` after `maker` became `producer`), oldest first. Renaming a thing back to a former name removes it from the list. Both are optional, so older okb versions load the files and keep the properties.
+
+The id is still the identity: nothing reads `formerNames` to find a node. They are for people and for tools that hold old names, such as a saved Cypher query that matches `:MAKER`. `okb diff` and a release's change log use them to say "also named" and to map an old edge type to the new one.
 
 ### Timestamps
 
@@ -236,6 +242,41 @@ A team keeps an ontology folder in git, so a branch is a copy of the knowledge b
 Two commands on one folder at the same time can't lose a write either. Every command that changes the folder takes the lock file `.okb.lock` first (created exclusively, holding the process id), loads, changes and saves, then removes it. A second command waits up to ten seconds and then stops with an error that says which process holds the lock. A lock left by a crashed command is taken over when its process is gone, or after ten minutes. If one is stuck, delete `.okb.lock`. `okb init` writes a `.gitignore` with `.okb.lock` and `*.tmp`, so neither is committed. Commands that only read wait briefly for the lock, so they never read half a save.
 
 After a merge, run `okb validate`. A merge can leave things that no single branch had: an edge whose node the other branch deleted, or two nodes with one id. Both are reported with the likely cause named (rule `struct-well-formed`), and the fix is to keep one node or remove the edge. If git stopped with a conflict, the file holds conflict markers; okb refuses to read it and says so. Keep the lines you want from both sides, delete the markers, and run `okb validate`.
+
+## Releases
+
+A team that wants other tools to pin a version of its knowledge base cuts releases with `okb release <version>`. It writes these files into the KB folder, and they are meant to be committed:
+
+| File                  | Contents                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `manifest.json`       | The pin for the latest release: id, version, and the SHA-256 of each file.                                                      |
+| `RELEASES.md`         | Every release's change log, newest first.                                                                                       |
+| `releases/<version>/` | The release as it was: `manifest.json`, `okb.json`, `nodes.jsonl`, `edges.jsonl`, plus `CHANGES.md` and `changes.json` (below). |
+
+`okb.json` gets `"version": "<version>"`. The version is semver (`1.2.0`, `2.0.0-rc.1`). It must be higher than the last release's, and okb refuses a release when `okb validate` reports an error, when a registered source file is missing, or when nothing has changed. A refused release writes nothing.
+
+**The change log.** The last release is the `version` in `manifest.json`, and its snapshot is `releases/<version>/`. `CHANGES.md` is `okb diff` between that snapshot and the folder: added, removed and renamed classes, slots and instances (with old and new names), renamed edge types (`:MAKER` to `:PRODUCER`), changed rules and links, and changed source files. `changes.json` is the same as data (`diff --json` plus the source changes) for tools. Nothing needs git, and the output depends only on the files and `SOURCE_DATE_EPOCH` (the date in the heading), so the same release is the same bytes. The first release has no previous version and says so.
+
+**The manifest.** It has the shape the Canvas KB's consumers read:
+
+```json
+{
+  "id": "wine-and-food",
+  "version": "1.1.0",
+  "title": "Wine and Food",
+  "datasets": {
+    "docs": { "path": "docs", "description": "...", "files": { "guide.md": "<sha-256>" } },
+    "ontology": { "path": ".", "description": "...", "files": { "edges.jsonl": "<sha-256>", "nodes.jsonl": "<sha-256>", "okb.json": "<sha-256>" } }
+  },
+  "provenance": {}
+}
+```
+
+`docs` lists the files registered as sources (`okb source add`) with paths relative to the folder they share, and is left out when there are none. `ontology` lists the three graph files. `id` comes from the ontology's name the first time and is kept after that, and `description` and `provenance` are carried forward from the previous manifest if you wrote them by hand. Keys and files are sorted.
+
+Where it differs from the Canvas KB's manifest: the Canvas KB keeps `manifest.json` next to its `ontology/` and `docs-<date>/` folders and requires each dataset folder to hold exactly the files listed. An okb manifest lives inside the ontology folder, so its `ontology` dataset has `path: "."` and the folder also holds files the manifest doesn't pin (`manifest.json`, `RELEASES.md`, `releases/`, and in `docs` anything else in the folder). A verifier that treats unlisted files as an error will report them. A verifier that checks the listed files (what `okb release verify` does) works unchanged. The version is semver where the Canvas KB's is a date and a tag (`2026-10-14-v3`); `verify` accepts any string. To use a Canvas-style layout, put the KB folder inside a folder, name it `ontology`, and copy `manifest.json` up one level with `path: "ontology"`.
+
+`okb release verify` checks that every pinned file exists and matches its SHA-256, and that `okb.json` carries the manifest's version. It changes nothing and exits 1 on a difference, so a server or CI job can run it before it trusts the files. After a release, any edit to the folder makes it fail until the next release, which is the point: the version names exact bytes.
 
 ## Exporting to a graph database
 

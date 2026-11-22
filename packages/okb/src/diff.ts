@@ -24,6 +24,8 @@ export interface NodeRef {
 export interface NodeChange extends NodeRef {
   /** The old name, when it differs from `name`. */
   renamedFrom?: string;
+  /** Other names it has had (from `formerNames`, oldest first): earlier ones, or ones it passed through on the way here. */
+  otherFormerNames?: string[];
   fields: FieldChange[];
   /** For a quote: how it changed in words ("moved", "text changed"). */
   note?: string;
@@ -55,6 +57,8 @@ export interface TypeRename {
   to: string;
   /** How many edges carry the type. */
   edges: number;
+  /** Other edge types the slot has used (from `formerRelTypes`, oldest first), when there are any. */
+  otherFormerTypes?: string[];
 }
 
 export interface OntologyDiff {
@@ -78,6 +82,8 @@ export interface OntologyDiff {
 }
 
 const STAMPS = new Set(["createdAt", "updatedAt"]);
+/** Bookkeeping that `okb rename` keeps; the rename itself is what a reader needs, so these aren't listed as field changes. */
+const RENAME_TRAIL = new Set(["formerNames", "formerRelTypes"]);
 const isPlain = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === "object" && !Array.isArray(v);
 
 /** What a node is called, for a reader. */
@@ -175,14 +181,18 @@ export function diffOntologies(a: Ontology, b: Ontology, oldName = "old", newNam
       bucket(nb.type).added.push(ref(nb, b));
       continue;
     }
-    const fields = fieldChanges(na, nb, nameOf);
+    const fields = fieldChanges(na, nb, nameOf).filter((f) => !RENAME_TRAIL.has(f.path[0]));
     if (!fields.length) {
       if (!same(na, nb)) stampOnly++;
       continue;
     }
     const change: NodeChange = { ...ref(nb, b), fields };
     const was = label(na, a);
-    if (was !== change.name) change.renamedFrom = was;
+    if (was !== change.name) {
+      change.renamedFrom = was;
+      const earlier = ((nb as { formerNames?: unknown }).formerNames as string[] | undefined)?.filter((x) => x !== was && x !== change.name);
+      if (Array.isArray(earlier) && earlier.length) change.otherFormerNames = earlier;
+    }
     if (nb.type === "SourceLocation") {
       const parts: string[] = [];
       if (fields.some((f) => LOCATION_FIELDS.has(f.path[0]))) parts.push("moved");
@@ -218,7 +228,10 @@ export function diffOntologies(a: Ontology, b: Ontology, oldName = "old", newNam
     // Skip if the old type is still some slot's type in the new version (types swapped or reused).
     if (slotTypesB.has(oldType)) continue;
     retype.set(oldType, nb.relType);
-    renames.push({ slot: label(nb, b), from: oldType, to: nb.relType, edges: countA.get(oldType) ?? 0 });
+    const rename: TypeRename = { slot: label(nb, b), from: oldType, to: nb.relType, edges: countA.get(oldType) ?? 0 };
+    const earlier = nb.formerRelTypes?.filter((x) => x !== oldType && x !== nb.relType);
+    if (Array.isArray(earlier) && earlier.length) rename.otherFormerTypes = earlier;
+    renames.push(rename);
   }
   renames.sort((x, y) => (x.from < y.from ? -1 : 1));
 
@@ -331,7 +344,8 @@ export function diffMarkdown(d: OntologyDiff): string {
     for (const n of t.removed) out.push(`- **Removed** ${code(n.name)}${type === "SourceLocation" ? " (the quote disappeared)" : ""}`);
     for (const c of t.changed) {
       const head = c.renamedFrom !== undefined ? `**Renamed** ${code(c.renamedFrom)} → ${code(c.name)}` : `**Changed** ${code(c.name)}`;
-      out.push(`- ${head}${c.note ? ` (${c.note})` : ""}`);
+      const others = c.otherFormerNames ? ` (also named ${c.otherFormerNames.map(code).join(", ")})` : "";
+      out.push(`- ${head}${c.note ? ` (${c.note})` : ""}${others}`);
       if (type === "Rule") {
         out.push("", ...ruleTable(c), "");
         continue;
@@ -345,7 +359,7 @@ export function diffMarkdown(d: OntologyDiff): string {
   }
   if (d.relationshipTypeRenames.length) {
     out.push("## Relationship edge types renamed", "");
-    for (const r of d.relationshipTypeRenames) out.push(`- ${code(":" + r.from)} → ${code(":" + r.to)} (slot ${code(r.slot)}, ${r.edges} edge(s) keep their meaning)`);
+    for (const r of d.relationshipTypeRenames) out.push(`- ${code(":" + r.from)} → ${code(":" + r.to)} (slot ${code(r.slot)}, ${r.edges} edge(s) keep their meaning${r.otherFormerTypes ? `; also used ${r.otherFormerTypes.map((t) => code(":" + t)).join(", ")}` : ""})`);
     out.push("");
   }
   const links = (title: string, list: EdgeRef[], mark: string) => {

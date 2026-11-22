@@ -29,11 +29,11 @@ nodeTypes:
   - {name: ReusedOntology, origin: ontology101, models: concept.ontology, required: [id, name, decision],
      description: "An existing ontology/vocabulary considered in Step 2. decision: reuse | adapt | reference | rejected."}
   - {name: Class, origin: ontology101, models: concept.class, required: [id, name],
-     description: "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
+     description: "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
   - {name: Slot, origin: ontology101, models: concept.slot, required: [id, name],
-     description: "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."}
+     description: "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."}
   - {name: Instance, origin: ontology101, models: concept.instance, required: [id, name],
-     description: "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
+     description: "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
   - {name: DesignDecision, origin: ontology101, models: concept.design-decision, required: [id, title, decision],
      description: "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date."}
   - {name: Source, origin: operational, models: concept.lpg, required: [id, title],
@@ -137,6 +137,7 @@ nodeProperties:
   Class:
     $extracted: true
     name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
     description: {type: string}
     synonyms: {$ref: "#/$defs/Strings"}
     abstract: {type: boolean}
@@ -155,6 +156,7 @@ nodeProperties:
   Slot:
     $extracted: true
     name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
     description: {type: string}
     valueType: {enum: [String, Integer, Float, Number, Boolean, Enumerated, Instance]}
     allowedValues: {$ref: "#/$defs/Strings"}
@@ -163,6 +165,9 @@ nodeProperties:
     maxCardinality: {type: integer, minimum: 0}
     default: {$ref: "#/$defs/StoredValue"}
     relType: {type: string, pattern: "^[A-Z][A-Z0-9_]*$"}
+    formerRelTypes:
+      type: array
+      items: {type: string, pattern: "^[A-Z][A-Z0-9_]*$"}
     edgeProperties:
       type: array
       items:
@@ -178,6 +183,7 @@ nodeProperties:
   Instance:
     $extracted: true
     name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
     description: {type: string}
     values: {$ref: "#/$defs/ValueMap"}
   DesignDecision:

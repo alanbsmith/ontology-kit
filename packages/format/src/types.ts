@@ -28,6 +28,8 @@ export interface Manifest {
   name?: string;
   created?: string;
   metaKbVersion?: string;
+  /** The knowledge base's own release version (`okb release`), semver; absent until the first release. */
+  version?: string;
 }
 
 export interface Conventions {
@@ -133,6 +135,8 @@ export interface ClassNode extends ExtractedFields, Stamps {
   type: "Class";
   id: string;
   name: string;
+  /** Names this had before `okb rename`, oldest first. Identity is the id; this is for people and for mapping old queries. */
+  formerNames?: string[];
   description?: string;
   synonyms?: string[];
   abstract?: boolean;
@@ -156,6 +160,8 @@ export interface SlotNode extends ExtractedFields, Stamps {
   type: "Slot";
   id: string;
   name: string;
+  /** Names this had before `okb rename`, oldest first. Identity is the id; this is for people and for mapping old queries. */
+  formerNames?: string[];
   description?: string;
   /** "Instance" makes the slot a relationship (see RelationshipSlot). Missing until declared. */
   valueType?: ValueType;
@@ -166,6 +172,8 @@ export interface SlotNode extends ExtractedFields, Stamps {
   default?: StoredValue;
   /** Relationships only: the edge type its values are stored as (maker -> MAKER). */
   relType?: string;
+  /** Relationships only: edge types this slot's links were stored as before a rename, oldest first. Old Cypher queries use these. */
+  formerRelTypes?: string[];
   /** Relationships only: properties its edges can carry. */
   edgeProperties?: EdgePropertyDecl[];
   /** The slot applies to every Rule (qualifier values in Rule.values). Rules have no classes and no inheritance. */
@@ -179,6 +187,8 @@ export interface InstanceNode extends ExtractedFields, Stamps {
   type: "Instance";
   id: string;
   name: string;
+  /** Names this had before `okb rename`, oldest first. Identity is the id; this is for people and for mapping old queries. */
+  formerNames?: string[];
   description?: string;
   /** Property values only; relationship values are edges. */
   values?: Record<string, StoredValue>;

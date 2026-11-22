@@ -1102,6 +1102,39 @@ $ okb diff main --json
 | `[new]` | folder or git ref | The later version. Defaults to the current folder. |
 | `--json` | flag | Print the changes as JSON for other tools. |
 
+<a id="cmd-release"></a>
+### okb release
+
+Cuts a numbered release of the knowledge base that other tools can pin: a manifest with the SHA-256 of every file and source, and a change log of what changed since the last release.
+
+```bash
+$ okb release 1.0.0
+$ okb release 1.1.0 --json
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `<version>` | semver | The new version: `1.0.0`, `1.2.3` or `2.0.0-rc.1`. It must be higher than the version in `manifest.json`. |
+| `--json` | flag | Print the version and the manifest as JSON. |
+
+<a id="cmd-release-verify"></a>
+#### okb release verify
+
+Checks the files against `manifest.json`: every pinned file must exist and match its SHA-256, and `okb.json` must carry the manifest's version. It changes nothing. It exits 1 when something differs, so it can run in CI or before a server starts.
+
+```bash
+$ okb release verify
+$ okb release verify -C ../wine --json
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--json` | flag | Print the result as JSON. |
+
 <a id="cmd-help"></a>
 ### okb help
 

@@ -82,6 +82,7 @@ export function buildSchemas(fmt: any): SchemaFiles {
       name: { type: "string" },
       created: { type: "string" },
       metaKbVersion: { type: "string" },
+      version: { type: "string", description: "The knowledge base's release version, set by okb release." },
     },
   };
 

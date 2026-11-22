@@ -613,6 +613,27 @@ export const COMMANDS: Command[] = [
     }],
   },
   {
+    name: "release",
+    group: "Housekeeping",
+    description: "Cuts a numbered release of the knowledge base that other tools can pin: a manifest with the SHA-256 of every file and source, and a change log of what changed since the last release.",
+    forms: [
+      {
+        description: "Writes `manifest.json` (the pin), `RELEASES.md` (every release's change log, newest first) and `releases/<version>/` (the files as released, plus `CHANGES.md` and `changes.json`), and records the version in `okb.json`. The change log is `okb diff` against the previous release's snapshot, so it lists renames with old and new names and renamed edge types. It stops, and writes nothing, if `okb validate` reports an error, if the version isn't newer than the last release, if a registered source file is missing or if nothing changed. Commit the files it writes.",
+        examples: ["okb release 1.0.0", "okb release 1.1.0 --json"],
+        args: [
+          ["<version>", "semver", "The new version: `1.0.0`, `1.2.3` or `2.0.0-rc.1`. It must be higher than the version in `manifest.json`."],
+          ["--json", "flag", "Print the version and the manifest as JSON."],
+        ],
+      },
+      {
+        sub: "verify",
+        description: "Checks the files against `manifest.json`: every pinned file must exist and match its SHA-256, and `okb.json` must carry the manifest's version. It changes nothing. It exits 1 when something differs, so it can run in CI or before a server starts.",
+        examples: ["okb release verify", "okb release verify -C ../wine --json"],
+        args: [["--json", "flag", "Print the result as JSON."]],
+      },
+    ],
+  },
+  {
     name: "help",
     group: "Housekeeping",
     description: "Prints a one-screen summary of the commands. `okb --help` and `okb -h` do the same.",

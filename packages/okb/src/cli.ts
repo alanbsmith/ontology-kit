@@ -16,6 +16,7 @@ import { HELP } from "./help.ts";
 import { PACKAGE_VERSION } from "./version.ts";
 import { diffMarkdown, diffOntologies } from "./diff.ts";
 import { loadSide } from "./ontology-ref.ts";
+import { cutRelease, verifyRelease } from "./release.ts";
 import { installSkills, skillsStatus, type SkillState } from "./skills.ts";
 
 type Opts = NonNullable<ParseArgsConfig["options"]>;
@@ -632,6 +633,31 @@ async function main(argvIn: string[]) {
         if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
         for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
       });
+    }
+
+    case "release": {
+      if (sub === "verify") {
+        const { v, p } = parse(rest.slice(1));
+        if (p.length) throw new OkbError("Usage: okb release verify   (checks the folder against its manifest.json; read-only)");
+        const r = verifyRelease(resolve(v.C ?? "."));
+        output(v, () => r, () => {
+          if (r.ok) return void console.log(`${SYMBOL.ok} ${r.id} ${r.version} matches its manifest (${r.checked} files).`);
+          console.log(`${SYMBOL.error} ${r.id} ${r.version} doesn't match its manifest:`);
+          for (const pr of r.problems) console.log(`  - ${pr}`);
+          console.log(c.dim("  If the changes are intended, cut a new release: okb release <version>. If not, restore the files (git checkout)."));
+        });
+        process.exitCode = r.ok ? 0 : 1;
+        return;
+      }
+      const { v, p } = parse(rest);
+      if (p.length !== 1) throw new OkbError("Usage: okb release <version>  ·  okb release verify   (version is semver, like 1.0.0)");
+      const dir = v.C ?? ".";
+      const result = await Ontology.edit(dir, async (ont) => {
+        const findings = runChecks(ont, { all: false }, { pages: await loadSourcePages(ont) }).findings;
+        return cutRelease(ont, p[0], findings);
+      });
+      output(v, () => ({ version: result.version, previous: result.previous ?? null, manifest: result.manifest }), () => say(result.notes));
+      return;
     }
 
     case "diff": {

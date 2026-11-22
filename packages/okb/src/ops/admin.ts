@@ -61,13 +61,22 @@ export function rename(ont: Ontology, ref: string, next: string, force = false):
   }
   const old = n.name;
   if (n.type === "Slot" && n.valueType === "Instance") {
+    const oldType = n.relType;
     const retyped = ont.rel.rename(n, next);
     if (retyped) notes.push(`Its links are now stored as ${retyped.to} (were ${retyped.from}).`);
+    if (oldType && n.relType && n.relType !== oldType) n.formerRelTypes = remember(n.formerRelTypes, oldType, n.relType);
   }
+  if (n.type !== "ReusedOntology" && old !== next) n.formerNames = remember(n.formerNames, old, next);
   n.name = next;
   ont.touch(n);
   notes.unshift(`Renamed ${n.type} '${old}' → '${next}' (id ${n.id} unchanged).`);
+  if (n.type !== "ReusedOntology" && old !== next) notes.push(`Kept '${old}' as a former name, so a release's change log can map old to new.`);
   return notes;
+}
+
+/** The former names after a rename: `old` goes on the end (oldest first), and a name that comes back is no longer former. */
+function remember(former: string[] | undefined, old: string, next: string): string[] {
+  return [...(former ?? []).filter((x) => x !== old && x !== next), old];
 }
 
 export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {

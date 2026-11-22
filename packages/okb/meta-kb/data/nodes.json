@@ -3230,7 +3230,7 @@
       "id",
       "name"
     ],
-    "description": "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."
+    "description": "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."
   },
   {
     "type": "NodeType",
@@ -3241,7 +3241,7 @@
       "id",
       "name"
     ],
-    "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."
+    "description": "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."
   },
   {
     "type": "NodeType",
@@ -3252,7 +3252,7 @@
       "id",
       "name"
     ],
-    "description": "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."
+    "description": "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."
   },
   {
     "type": "NodeType",

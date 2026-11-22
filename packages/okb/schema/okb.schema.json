@@ -28,6 +28,10 @@
     },
     "metaKbVersion": {
       "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "description": "The knowledge base's release version, set by okb release."
     }
   }
 }

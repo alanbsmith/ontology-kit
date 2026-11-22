@@ -320,7 +320,7 @@
     },
     "Class": {
       "title": "Class",
-      "description": "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}.",
+      "description": "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}.",
       "type": "object",
       "required": [
         "id",
@@ -362,6 +362,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
         },
         "description": {
           "type": "string"
@@ -410,7 +413,7 @@
     },
     "Slot": {
       "title": "Slot",
-      "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule).",
+      "description": "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule).",
       "type": "object",
       "required": [
         "id",
@@ -453,6 +456,9 @@
         "name": {
           "type": "string"
         },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
+        },
         "description": {
           "type": "string"
         },
@@ -490,6 +496,13 @@
         "relType": {
           "type": "string",
           "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "formerRelTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          }
         },
         "edgeProperties": {
           "type": "array",
@@ -532,7 +545,7 @@
     },
     "Instance": {
       "title": "Instance",
-      "description": "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges.",
+      "description": "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges.",
       "type": "object",
       "required": [
         "id",
@@ -574,6 +587,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
         },
         "description": {
           "type": "string"
