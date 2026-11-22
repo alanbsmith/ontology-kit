@@ -164,7 +164,7 @@ The Generated files check catches a rule, command or tutorial change that you di
 
 Open an issue from one of the templates in `.github/ISSUE_TEMPLATE/`: **Feature**, **Bug report**, **Chore** or **Spike**. Each title is a Conventional Commit, like a PR title, so `feat(okb): Add a command to list orphan classes` becomes the PR's title later. A feature, bug or chore issue has the same sections, **Purpose**, **Context**, **Scope** and **Criteria**, so a person or an agent can pick it up without asking questions.
 
-A feature also has **The problem it solves**. Say who hits the problem and when, what they do today, how the feature fixes it, and how you know the problem is real. We add features for problems someone has, not for ones someone might have, so an issue that can't fill this section in waits until the problem shows up. Work with no user-facing effect, like CI or refactors, uses the Chore template and says who it helps instead.
+A feature also has **The problem it solves**. Say who hits the problem and when, what they do today, how the feature fixes it, and how you know the problem is real. We add features for problems someone has, not for ones someone might have, so an issue that can't fill this section in waits until the problem shows up. Work with no user-facing effect, like CI or refactors, usually fits the Chore template. A feature that is not user-facing can stay on the Feature template: write "Not user-facing" in that section and say who it helps instead, such as maintainers.
 
 ## Commits and pull requests
 
