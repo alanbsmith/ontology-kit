@@ -1,7 +1,7 @@
 ---
 name: Spike
 about: Time-boxed research to answer a question before committing to a design
-title: 'chore: '
+title: 'Spike: '
 ---
 
 ## Purpose
@@ -24,8 +24,10 @@ title: 'chore: '
 
 ## Criteria
 
-<!-- What the spike delivers: usually a written recommendation and follow-up issues. -->
+<!--
+A spike never ships code, so it never becomes a commit or a PR. It ends in one of: a written answer on this issue, a doc, follow-up issues, or a decision not to proceed. A decision not to proceed is a good result.
+-->
 
 - [ ] Each question above has an answer
-- [ ] The findings are written up on this issue
-- [ ] Follow-up issues exist for any work that comes out of it
+- [ ] The findings are written up on this issue or in a doc
+- [ ] The outcome is recorded: a written answer or doc, follow-up issues for any work that comes out of it, or a decision not to proceed
