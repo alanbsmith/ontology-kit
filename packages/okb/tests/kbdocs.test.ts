@@ -1,10 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Ontology, type GraphEdge, type OkbNode } from "@ontology-kit/format";
-import { kbDocs, type DocFiles } from "../src/kbdocs.ts";
+import { BANNER, kbDocs, writePages, type DocFiles } from "../src/kbdocs.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const FOLDERS = ["wine", "espresso"];
@@ -144,6 +145,23 @@ describe("the committed example pages", () => {
       const anchor = loc.replace(/\./g, "-");
       assert.ok(files["rules.md"].includes(`(sources.md#${anchor})`));
       assert.ok(anchors(files["sources.md"]).has(anchor));
+    }
+  });
+});
+
+describe("writePages", () => {
+  it("won't replace a file okb didn't write, and writes nothing then", () => {
+    const dir = mkdtempSync(join(tmpdir(), "okb-pages-"));
+    try {
+      writeFileSync(join(dir, "index.md"), "# My own index\n");
+      assert.throws(() => writePages(dir, { "a.md": `${BANNER}\n`, "index.md": `${BANNER}\n` }), /already has index\.md/);
+      assert.equal(readFileSync(join(dir, "index.md"), "utf8"), "# My own index\n");
+      assert.ok(!existsSync(join(dir, "a.md")), "nothing else was written");
+      writeFileSync(join(dir, "index.md"), `${BANNER}\nold\n`);
+      assert.deepEqual(writePages(dir, { "index.md": `${BANNER}\nnew\n` }), ["index.md"]);
+      assert.match(readFileSync(join(dir, "index.md"), "utf8"), /new/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });
