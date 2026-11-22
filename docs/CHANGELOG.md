@@ -66,3 +66,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.4.2
 
 - **Skills install with `okb skills install`.** The setup step in the three shipped skills now asks the user to install okb from npm, and offers `okb skills status` and `okb skills install` when the skill and okb versions differ. No rule changed.
+
+### v2.4.3
+
+- **A "docs changed" path in the extraction skill.** `build-domain-kb-from-docs` now starts a re-sync from `okb source refresh --all --json`: gone quotes first (with the rules and facts that cite them), then the worklist of new, changed and removed blocks. A Source node gets an optional `blocks` list (a hash per quotable block) to compare against.

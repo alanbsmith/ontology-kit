@@ -1,6 +1,6 @@
 # The method: eight steps
 
-<!-- Generated from the meta-KB (v2.4.2) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.4.3) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
 
 Ontology 101 (Noy & McGuinness, 2001) describes seven steps. The toolkit adds an eighth, **Review and iterate**, which makes explicit Ontology 101's instruction to stand back, test the ontology against its competency questions, and revise it.
 

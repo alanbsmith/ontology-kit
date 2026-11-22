@@ -21,5 +21,5 @@ export type {
   Cardinality, ClassNode, CompetencyQuestionNode, Conventions, DesignDecisionNode, Disposition, EdgePropertyDecl,
   ExtractedFields, Facets, FacetOverride, GraphEdge, GraphNode, InstanceNode, Literal, LiteralType, Manifest, Modality, NodeOf,
   NodeType, OkbNode, OntologyNode, RelationshipSlot, ReusedOntologyNode, RuleNode, SlotNode, SourceLocationNode,
-  SourceNode, StoredValue, TermNode, ValueType, Verification, VerificationStatus,
+  SourceBlock, SourceNode, StoredValue, TermNode, ValueType, Verification, VerificationStatus,
 } from "./types.ts";

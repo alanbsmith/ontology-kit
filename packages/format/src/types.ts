@@ -219,6 +219,23 @@ export interface SourceNode extends Stamps {
   repoUrl?: string;
   /** Markdown frontmatter. */
   meta?: Record<string, unknown>;
+  /**
+   * The quotable blocks the KB last saw, one record per block (`okb source add`, `okb source refresh --all --record`).
+   * `okb source refresh --all` compares the file with it to list new, changed and removed blocks.
+   */
+  blocks?: SourceBlock[];
+}
+
+/** One quotable block of a markdown source: a hash of its text and enough to find it and pair it with an edited version. */
+export interface SourceBlock {
+  /** SHA-256 (hex) of the block's plain text with layout, case and punctuation folded away. */
+  hash: string;
+  kind: string;
+  headingPath: string[];
+  /** A table row's first cell. */
+  rowKey?: string;
+  /** The first 120 characters of the block's text. */
+  preview: string;
 }
 
 export interface SourceLocationNode extends Stamps {

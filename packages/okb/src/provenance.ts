@@ -12,6 +12,7 @@ import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { assign } from "./ops/values.ts";
 import { findQuote, loadPages } from "./quotes.ts";
+import { blockRecords } from "./resync.ts";
 /** Suggest the closest block for a failed quote only if it shares at least this share of the quote's words. */
 const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 
@@ -42,6 +43,7 @@ export function addSource(ont: Ontology, file: string, o: { title?: string; url?
     node.format = "markdown";
     node.title ||= doc.title ?? file;
     if (doc.frontmatter) node.meta = doc.frontmatter;
+    node.blocks = blockRecords(doc);
     const quotable = doc.blocks.filter((b) => b.quotable).length;
     notes.push(`Read ${doc.blocks.length} blocks (${quotable} quotable) under ${doc.headings.length} headings.`);
     for (const p of doc.problems) notes.push(`Warning (line ${p.line}): ${p.message}`);
@@ -119,7 +121,7 @@ export function cite(ont: Ontology, nodeRef: string, locRef: string): Notes {
   return [had ? `${n.type} ${nameOrText(n) ?? n.id} already cited ${loc.id}.` : `${n.type} ${nameOrText(n) ?? n.id} now cites ${loc.id}.`];
 }
 
-function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
+export function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
   const links = deepLinks(hit, src.repoUrl, src.url);
   return Object.fromEntries(Object.entries({
     locator: hit.locator,

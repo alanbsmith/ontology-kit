@@ -2,7 +2,7 @@
   {
     "type": "MetaKB",
     "id": "metakb",
-    "version": "2.4.2",
+    "version": "2.4.3",
     "formatVersion": "okb-lpg/3",
     "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
   },
@@ -3275,7 +3275,7 @@
       "id",
       "title"
     ],
-    "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."
+    "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks)."
   },
   {
     "type": "NodeType",

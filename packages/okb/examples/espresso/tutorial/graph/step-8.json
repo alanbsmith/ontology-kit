@@ -428,6 +428,26 @@
     {
       "id": "house-guide",
       "type": "Source",
+      "blocks": [
+        {
+          "hash": "1ec8d0d8be5bf3da92877e1b2324732c6062e336751af128c13c780945cf4f67",
+          "headingPath": [
+            "Vertex Coffee house guide",
+            "Milk drinks"
+          ],
+          "kind": "paragraph",
+          "preview": "Every milk drink must contain milk or cream. A milk drink without milk is a different drink."
+        },
+        {
+          "hash": "01d615572c06e4ff19b786ce2f16714ed1e2edbf031e48be8105194cbce9ab08",
+          "headingPath": [
+            "Vertex Coffee house guide",
+            "Breve"
+          ],
+          "kind": "paragraph",
+          "preview": "A breve is a latte or cappuccino made with half-and-half. A breve must use half-and-half, never whole milk."
+        }
+      ],
       "createdAt": "2026-09-23T00:00:00Z",
       "format": "markdown",
       "localPath": "tutorial-src/sources/house-guide.md",

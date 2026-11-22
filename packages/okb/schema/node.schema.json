@@ -71,6 +71,32 @@
         "type": "string"
       }
     },
+    "SourceBlock": {
+      "type": "object",
+      "required": [
+        "hash",
+        "kind",
+        "headingPath",
+        "preview"
+      ],
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "headingPath": {
+          "$ref": "#/$defs/Strings"
+        },
+        "rowKey": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string"
+        }
+      }
+    },
     "Verification": {
       "type": "object",
       "required": [
@@ -667,7 +693,7 @@
     },
     "Source": {
       "title": "Source",
-      "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter).",
+      "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks).",
       "type": "object",
       "required": [
         "id",
@@ -712,6 +738,12 @@
         },
         "meta": {
           "type": "object"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceBlock"
+          }
         }
       }
     },

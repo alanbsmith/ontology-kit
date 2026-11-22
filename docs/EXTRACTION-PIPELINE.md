@@ -89,6 +89,16 @@ okb validate --all
 okb source refresh src.button     # after the doc changes: re-locates every quote, updates lines and links
 ```
 
+### When the docs change: the worklist
+
+`okb source refresh --all` is the re-sync step for a whole KB. It re-locates every quote in every source and prints one report:
+
+- **gone**: quotes no longer in the text, each with the nodes that cite it (rules, facts, classes). The command exits with code 1 so a script or CI notices. A quote it can't find is never modified.
+- **moved**: quotes that only changed lines or heading. They're updated in place (`--dry-run` skips every write).
+- **worklist**: the quotable blocks that are `new`, `changed` or `removed` since the KB last recorded the document.
+
+The worklist rests on a baseline: `okb source add` stores a SHA-256 of each quotable block's text (`blocks` on the Source node). The hash ignores markup, line wrapping, case and punctuation, so changing the line breaks in a paragraph or moving it under another heading isn't a change, and changing a word is. It's per block because "the file changed" doesn't say what to extract again. A KB from before hashes has no baseline, and the report says so; `okb source refresh --all --record` stores one. Run it again after you've dealt with the worklist, not before, so the next run lists only what changes later. `--json` prints the report in the `okb-resync/1` shape, one item per block with `id`, `source`, `change`, `headingPath`, `lines`, `hash`, `oldHash`, `preview` and `oldPreview`, so a ledger can record an outcome per block. The skill's "When the docs change" path starts from it.
+
 | Rule                                | What it catches                                                                                                             |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `prov-verified` (error)             | extracted nodes that were never verified, UNSUPPORTED results, and corrections not yet approved                             |

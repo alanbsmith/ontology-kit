@@ -37,7 +37,7 @@ nodeTypes:
   - {name: DesignDecision, origin: ontology101, models: concept.design-decision, required: [id, title, decision],
      description: "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date."}
   - {name: Source, origin: operational, models: concept.lpg, required: [id, title],
-     description: "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."}
+     description: "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks)."}
   - {name: SourceLocation, origin: operational, models: concept.lpg, required: [id, quote],
      description: "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."}
   - {name: Rule, origin: operational, models: concept.lpg, required: [id, modality, statement],
@@ -89,6 +89,15 @@ definitions:
       - {type: array, items: {$ref: "#/$defs/Literal"}}
   ValueMap: {type: object, additionalProperties: {$ref: "#/$defs/StoredValue"}}
   Strings: {type: array, items: {type: string}}
+  SourceBlock:
+    type: object
+    required: [hash, kind, headingPath, preview]
+    properties:
+      hash: {type: string}
+      kind: {type: string}
+      headingPath: {$ref: "#/$defs/Strings"}
+      rowKey: {type: string}
+      preview: {type: string}
   Verification:
     type: object
     required: [status]
@@ -202,6 +211,7 @@ nodeProperties:
     url: {type: string}
     repoUrl: {type: string}
     meta: {type: object}
+    blocks: {type: array, items: {$ref: "#/$defs/SourceBlock"}}
   SourceLocation:
     quote: {type: string}
     locator: {type: string}

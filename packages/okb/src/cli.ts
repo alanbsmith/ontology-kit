@@ -15,6 +15,7 @@ import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
 import { PACKAGE_VERSION } from "./version.ts";
 import { runCheck } from "./check.ts";
+import { renderResync, resync } from "./resync.ts";
 import { diffMarkdown, diffOntologies } from "./diff.ts";
 import { loadSide } from "./ontology-ref.ts";
 import { cutRelease, verifyRelease } from "./release.ts";
@@ -513,8 +514,25 @@ async function main(argvIn: string[]) {
         return mutate(v, (ont) => prov.addSource(ont, p[0], { title: v.title, url: v.url, repoUrl: v["repo-url"], id: v.id }));
       }
       if (sub === "refresh") {
-        const { v, p } = parse(rest2);
-        return mutate(v, (ont) => prov.refreshSource(ont, p[0]));
+        const { v, p } = parse(rest2, { all: bool, record: bool, "dry-run": bool, strict: bool });
+        if (!v.all) return mutate(v, (ont) => prov.refreshSource(ont, p[0]));
+        if (p.length) throw new OkbError("--all re-checks every source; leave out the source name (or drop --all).");
+        const ont = load(v);
+        const pages = await loadSourcePages(ont);
+        const o = { write: !v["dry-run"], record: !!v.record && !v["dry-run"] };
+        let report = resync(ont, pages, { write: false, record: false });
+        // Take the lock only when something has to be written.
+        if (o.write && (report.moved.length || o.record)) {
+          report = Ontology.edit(v.C ?? ".", (locked) => {
+            const r = locked.tick(() => resync(locked, pages, o));
+            locked.save();
+            return r;
+          });
+        }
+        output(v, () => report, () => say(renderResync(report, { dryRun: !o.write })));
+        // 1 when the KB no longer matches its documents (a quote is gone or a source can't be read); --strict also when blocks need work.
+        if (!report.ok || (v.strict && report.worklist.length)) process.exitCode = 1;
+        return;
       }
       if (sub === "outline") {
         const { v, p } = parse(rest2, { quotable: bool, problems: bool });
