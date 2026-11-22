@@ -19,14 +19,14 @@ Prefer pnpm? `pnpm add --global @ontology-kit/okb` installs the same package. To
 
 ## Skills
 
-`okb skills install` links the three skills into `~/.claude/skills/`, which Claude Code and Cursor both load skills from. The links point into your okb install, so the skills stay current when okb updates. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
+`okb skills install` links the four skills into `~/.claude/skills/`, which Claude Code and Cursor both load skills from. The links point into your okb install, so the skills stay current when okb updates. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
 
 ## Updating
 
 Check which version you have:
 
 ```bash
-okb version          # okb 0.1.0 · meta-KB 2.4.3
+okb version          # okb 0.1.0 · meta-KB 2.5.0
 ```
 
 The [meta-KB](../learn/meta-kb.md) version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each package release and each meta-KB version. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).

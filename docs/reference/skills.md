@@ -1,12 +1,13 @@
 # Skills
 
-A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships three, in the `packages/okb/skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
+A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships four, in the `packages/okb/skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
 
-| Skill                                                   | Use it to                                                         | Page                                            |
-| ------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------- |
-| [ontology-coach](#ontology-coach)                       | Build an ontology from a blank page.                              | [Build with Claude](../build/with-claude.md)    |
-| [ontology-review](#ontology-review)                     | Get a second opinion on an ontology you've built.                 | [Review and iterate](../build/review.md)        |
-| [build-domain-kb-from-docs](#build-domain-kb-from-docs) | Extract an ontology from documentation, with every claim checked. | [From existing docs](../EXTRACTION-PIPELINE.md) |
+| Skill                                                   | Use it to                                                              | Page                                                 |
+| ------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |
+| [ontology-coach](#ontology-coach)                       | Build an ontology from a blank page.                                   | [Build with Claude](../build/with-claude.md)         |
+| [ontology-review](#ontology-review)                     | Get a second opinion on an ontology you've built.                      | [Review and iterate](../build/review.md)             |
+| [build-domain-kb-from-docs](#build-domain-kb-from-docs) | Extract an ontology from documentation, with every claim checked.      | [From existing docs](../EXTRACTION-PIPELINE.md)      |
+| [ontology-maintainer](#ontology-maintainer)             | Keep an existing KB current: docs changed, a fix, a rename, a release. | [Maintain a KB with a team](../build/maintaining.md) |
 
 ## ontology-coach
 
@@ -26,6 +27,12 @@ Turns documentation, usually markdown, into an ontology. It quotes the document 
 
 See [From existing docs](../EXTRACTION-PIPELINE.md) for the pipeline.
 
+## ontology-maintainer
+
+Looks after a KB that is already built and kept in git. It starts from what the KB says is open (`okb status`, `okb check`, `okb source refresh --all --json`), picks one of six flows, and finishes with text for a pull request: the source documents changed, a reviewer or CI asked for a fix, a new rule or source, a rename, a PR for a reviewer, and a release. It hands extraction and verification to build-domain-kb-from-docs and modeling questions to ontology-review. It stops for a person wherever one must decide, and it never runs `okb verify --approve`: a person does that after reading the quote.
+
+Start it by asking `the docs changed, update the KB`. See [Maintain a KB with a team](../build/maintaining.md) for the commands it runs.
+
 ## Install the skills
 
 The skills come in the same package as `okb`, so one command installs them all at the version that matches your okb:
@@ -39,6 +46,7 @@ okb skills install
   build-domain-kb-from-docs: linked
   ontology-coach: linked
   ontology-review: linked
+  ontology-maintainer: linked
 
   Start a new Claude Code or Cursor session to load them.
 ```
@@ -54,10 +62,11 @@ okb skills status
 ```
 
 ```text
-Skills in /Users/you/.claude/skills  (okb meta-KB 2.4.3)
-  ✓ build-domain-kb-from-docs  linked to this okb, version 2.4.3
-  ✓ ontology-coach             linked to this okb, version 2.4.3
-  ✓ ontology-review            linked to this okb, version 2.4.3
+Skills in /Users/you/.claude/skills  (okb meta-KB 2.5.0)
+  ✓ build-domain-kb-from-docs  linked to this okb, version 2.5.0
+  ✓ ontology-coach             linked to this okb, version 2.5.0
+  ✓ ontology-maintainer        linked to this okb, version 2.5.0
+  ✓ ontology-review            linked to this okb, version 2.5.0
 ```
 
 Start a new Claude session after you install or update the skills, so it loads the new version. The [Installation](../getting-started/installation.md) page has the rest of the update steps.
@@ -67,17 +76,17 @@ Start a new Claude session after you install or update the skills, so it loads t
 Near the top of each `SKILL.md`, under its title, a line says which version it is:
 
 ```text
-**Version 2.4.3.** It should match the meta-KB version that `okb version` prints.
+**Version 2.5.0.** It should match the meta-KB version that `okb version` prints.
 ```
 
-All three skills share the meta-KB's version number, and `okb version` prints it:
+All four skills share the meta-KB's version number, and `okb version` prints it:
 
 ```bash
 okb version
 ```
 
 ```text
-okb 0.1.0 · meta-KB 2.4.3
+okb 0.1.0 · meta-KB 2.5.0
 ```
 
 Each skill checks the two numbers when it starts, and `okb skills status` checks them for you. If they differ, run `okb skills install` to refresh the skills. A skill that finds a mismatch tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.

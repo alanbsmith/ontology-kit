@@ -70,3 +70,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.4.3
 
 - **A "docs changed" path in the extraction skill.** `build-domain-kb-from-docs` now starts a re-sync from `okb source refresh --all --json`: gone quotes first (with the rules and facts that cite them), then the worklist of new, changed and removed blocks. A Source node gets an optional `blocks` list (a hash per quotable block) to compare against.
+
+### v2.5.0
+
+- **A skill for maintainers.** The new `ontology-maintainer` skill looks after an existing KB that is kept in git with `okb check` in CI. It starts from `okb status`, `okb check` and `okb source refresh --all --json`, then runs one of six flows: the source documents changed, a requested fix, a new rule or source, a rename, a pull request for a reviewer, and a release. It hands extraction and verification to `build-domain-kb-from-docs` and modeling questions to `ontology-review`, and it never runs `okb verify --approve`. No rule changed.

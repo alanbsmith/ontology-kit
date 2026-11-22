@@ -1,7 +1,7 @@
 {
   "format": "okb-export/2",
   "ontology": "Wine and Food",
-  "metaKbVersion": "2.4.3",
+  "metaKbVersion": "2.5.0",
   "nodes": [
     {
       "id": "i.beaujolais-region-jz521c",

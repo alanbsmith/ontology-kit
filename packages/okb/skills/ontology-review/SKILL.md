@@ -5,7 +5,7 @@ description: Review an ontology built with ontology-kit (okb) against the Ontolo
 
 # Ontology review
 
-**Version 2.4.3.** It should match the meta-KB version that `okb version` prints.
+**Version 2.5.0.** It should match the meta-KB version that `okb version` prints.
 
 Give an okb ontology a second opinion. `okb validate` already covers the mechanical rules. The value of this review is in the rules **only a person can judge** (is this really a kind-of? are these siblings equally general? should this class be a slot value?) and in **double-checking heuristic findings**, which can be false positives. The reader may be a beginner, so every finding must be understandable without prior ontology knowledge.
 

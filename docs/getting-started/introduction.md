@@ -14,6 +14,7 @@ The kit has three parts. You use all three, but you only type to one of them.
   - **ontology-coach** guides you from a blank page.
   - **ontology-review** gives a second opinion on the judgment calls a script can't check.
   - **build-domain-kb-from-docs** pulls an ontology out of existing docs, and checks every quote before it keeps it.
+  - **ontology-maintainer** keeps an existing knowledge base current: it brings it up to date when the docs change, fixes what a reviewer or CI flags, and prepares the pull request.
 
 ## Your path
 

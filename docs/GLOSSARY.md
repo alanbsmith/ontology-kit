@@ -1,6 +1,6 @@
 # Glossary
 
-<!-- Generated from the meta-KB (v2.4.3) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.5.0) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
 
 > **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.
 
