@@ -70,12 +70,12 @@ okb skills status
 ```
 
 ```text
-Skills in /Users/you/.claude/skills  (okb meta-KB 2.6.0)
-  ✓ build-domain-kb-from-docs  linked to this okb, version 2.6.0
-  ✓ ontology-coach             linked to this okb, version 2.6.0
-  ✓ ontology-maintainer        linked to this okb, version 2.6.0
-  ✓ ontology-review            linked to this okb, version 2.6.0
-  ✓ ontology-signoff           linked to this okb, version 2.6.0
+Skills in /Users/you/.claude/skills  (okb meta-KB 2.6.1)
+  ✓ build-domain-kb-from-docs  linked to this okb, version 2.6.1
+  ✓ ontology-coach             linked to this okb, version 2.6.1
+  ✓ ontology-maintainer        linked to this okb, version 2.6.1
+  ✓ ontology-review            linked to this okb, version 2.6.1
+  ✓ ontology-signoff           linked to this okb, version 2.6.1
 ```
 
 Start a new Claude session after you install or update the skills, so it loads the new version. The [Installation](../getting-started/installation.md) page has the rest of the update steps.
@@ -85,7 +85,7 @@ Start a new Claude session after you install or update the skills, so it loads t
 Near the top of each `SKILL.md`, under its title, a line says which version it is:
 
 ```text
-**Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.1.** It should match the meta-KB version that `okb version` prints.
 ```
 
 All five skills share the meta-KB's version number, and `okb version` prints it:
@@ -95,7 +95,7 @@ okb version
 ```
 
 ```text
-okb 0.1.0 · meta-KB 2.6.0
+okb 0.1.0 · meta-KB 2.6.1
 ```
 
 Each skill checks the two numbers when it starts, and `okb skills status` checks them for you. If they differ, run `okb skills install` to refresh the skills. A skill that finds a mismatch tells you the skill or okb is out of date before it goes on. A new meta-KB version means a rule's meaning changed, or a skill's instructions did. The [changelog](../CHANGELOG.md) lists what changed in each one.
