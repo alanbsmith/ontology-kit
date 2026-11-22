@@ -7,13 +7,14 @@ import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
 import { MetaKB, explainName } from "./metakb.ts";
 import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNode } from "@ontology-kit/format";
 import * as ops from "./ops.ts";
-import { c, explain, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
+import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
 import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
 import { PACKAGE_VERSION } from "./version.ts";
+import { runCheck } from "./check.ts";
 import { diffMarkdown, diffOntologies } from "./diff.ts";
 import { loadSide } from "./ontology-ref.ts";
 import { cutRelease, verifyRelease } from "./release.ts";
@@ -657,6 +658,27 @@ async function main(argvIn: string[]) {
         return cutRelease(ont, p[0], findings);
       });
       output(v, () => ({ version: result.version, previous: result.previous ?? null, manifest: result.manifest }), () => say(result.notes));
+      return;
+    }
+
+    case "pin": {
+      const { v, p } = parse(rest);
+      if (p.length) throw new OkbError("Usage: okb pin   (records the installed okb version in okb.json)");
+      Ontology.edit(v.C ?? ".", (ont) => {
+        ont.manifest.okbVersion = PACKAGE_VERSION;
+        ont.save();
+      });
+      console.log(`${SYMBOL.ok} Pinned okb ${PACKAGE_VERSION} in okb.json. okb check warns anyone with an older okb, and the CI workflow installs this version.`);
+      return;
+    }
+
+    case "check": {
+      const { v, p } = parse(rest);
+      if (p.length) throw new OkbError("Usage: okb check [--json]   (checks the current folder; use -C <folder> for another)");
+      const ont = load(v);
+      const report = await runCheck(ont, PACKAGE_VERSION);
+      output(v, () => report, () => console.log(formatCheck(report, ont.meta.name)));
+      process.exitCode = report.ok ? 0 : 1;
       return;
     }
 

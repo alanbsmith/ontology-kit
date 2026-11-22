@@ -4,6 +4,7 @@ import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
 import { edgeProps, nodeLabel, type Ontology, type OkbNode, type SlotNode } from "@ontology-kit/format";
 import { type Finding } from "./types.ts";
 import * as naming from "./naming.ts";
+import type { CheckReport } from "./check.ts";
 
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const wrap = (code: number) => (s: string) => (useColor ? `\x1b[${code}m${s}\x1b[0m` : s);
@@ -362,5 +363,18 @@ export function mermaid(ont: Ontology): string {
   out.push("```");
   const disj = ont.edgesOf("DISJOINT_WITH").map((e) => `${ont.label(e.from)} ⟂ ${ont.label(e.to)}`);
   if (disj.length) out.push("", `Disjoint: ${disj.join(" · ")}`);
+  return out.join("\n");
+}
+
+/** The `okb check` summary: one line per check, the problems under the ones that failed, and a verdict. */
+export function formatCheck(report: CheckReport, name: string): string {
+  const out = [c.bold(`okb check: ${name}`) + c.dim(`  (okb ${report.installed}${report.pinned ? `, KB pins ${report.pinned}` : ""})`), ""];
+  const mark = { pass: SYMBOL.ok, warn: SYMBOL.warning, fail: SYMBOL.error };
+  for (const s of report.steps) {
+    out.push(`${mark[s.status]} ${c.bold(s.title)}: ${s.summary}`);
+    for (const p of s.problems) out.push(`    ${SYMBOL.error} ${p}`);
+  }
+  const failed = report.steps.filter((s) => s.status === "fail").length;
+  out.push("", report.ok ? `${SYMBOL.ok} Safe to merge: every check passed.` : `${SYMBOL.error} Not safe to merge: ${failed} of ${report.steps.length} checks failed.`);
   return out.join("\n");
 }

@@ -30,6 +30,8 @@ export interface Manifest {
   metaKbVersion?: string;
   /** The knowledge base's own release version (`okb release`), semver; absent until the first release. */
   version?: string;
+  /** The okb version the KB was built with; `okb check` warns when the installed okb is older, and the CI workflow installs it. */
+  okbVersion?: string;
 }
 
 export interface Conventions {

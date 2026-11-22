@@ -2,11 +2,11 @@
 
 An ontology built with okb is a folder with three plain-text files:
 
-| File          | Contents                                                                                              |
-| ------------- | ----------------------------------------------------------------------------------------------------- |
-| `okb.json`    | Tool state: format version, name, `currentStep`, the meta-KB version, and the KB's release `version`. |
-| `nodes.jsonl` | The nodes, one per line, sorted by id. Each has `id`, `type` and type-specific properties.            |
-| `edges.jsonl` | The edges, one per line, sorted by `from`, `type`, `to`. Each may have more properties.               |
+| File          | Contents                                                                                                                                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `okb.json`    | Tool state: format version, name, `currentStep`, the meta-KB version it was created with, the KB's release `version`, and the optional `okbVersion` pin (`okb pin`). |
+| `nodes.jsonl` | The nodes, one per line, sorted by id. Each has `id`, `type` and type-specific properties.                                                                           |
+| `edges.jsonl` | The edges, one per line, sorted by `from`, `type`, `to`. Each may have more properties.                                                                              |
 
 It's a labeled property graph (LPG). In this file the **schema is data**: [classes](GLOSSARY.md#concept-class) and [slots](GLOSSARY.md#concept-slot) are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
 

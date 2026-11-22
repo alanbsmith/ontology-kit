@@ -1082,6 +1082,32 @@ $ okb drift ../wine ../food
 | --- | --- | --- |
 | `[folder]...` | paths | The ontology folders to check. |
 
+<a id="cmd-check"></a>
+### okb check
+
+Says whether a knowledge base is safe to merge: no validation errors, every quote still in its source, and nothing unverified, unsupported or waiting for approval. Exits non-zero when a check fails, so a CI job can gate on it.
+
+```bash
+$ okb check
+$ okb check --json
+$ okb check -C ../wine
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--json` | flag | Print the result as JSON: `ok`, the installed and pinned versions, and each check with its status, summary and problems. |
+
+<a id="cmd-pin"></a>
+### okb pin
+
+Records the installed okb version in okb.json as `okbVersion`, so `okb check` warns anyone with an older okb and the CI workflow installs that version. Run it again after you upgrade okb.
+
+```bash
+$ okb pin
+```
+
 <a id="cmd-diff"></a>
 ### okb diff
 

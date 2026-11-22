@@ -32,6 +32,7 @@
     "dist",
     "meta-kb/data",
     "schema",
+    "templates",
     "!meta-kb/README.md",
     "skills",
     "README.md",

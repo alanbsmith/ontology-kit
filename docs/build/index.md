@@ -19,7 +19,8 @@ All three follow the same [eight-step method](../METHOD.md). You don't give up t
 
 ## After you build
 
-Once you have something that runs, two pages cover the rest of the loop:
+Once you have something that runs, three pages cover the rest of the loop:
 
 - [Review and iterate](review.md) checks the ontology against the rules a script can't judge.
+- [Check a KB before you merge](check-in-ci.md) shows `okb check` and the workflow that runs it on every pull request.
 - [Export](export.md) writes it as JSON or openCypher for a graph database or an app.

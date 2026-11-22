@@ -599,6 +599,22 @@ export const COMMANDS: Command[] = [
     forms: [{ description: "Checks one or more ontology folders. With none it checks the current folder.", examples: ["okb drift .", "okb drift ../wine ../food"], args: [["[folder]...", "paths", "The ontology folders to check."]] }],
   },
   {
+    name: "check",
+    group: "Housekeeping",
+    description: "Says whether a knowledge base is safe to merge: no validation errors, every quote still in its source, and nothing unverified, unsupported or waiting for approval. Exits non-zero when a check fails, so a CI job can gate on it.",
+    forms: [{
+      description: "Checks the current folder. It reads the folder and its source files and never changes them or takes the write lock. Warnings from `okb validate` don't block a merge. It also warns when the installed okb is older than the `okbVersion` the KB pins in okb.json.",
+      examples: ["okb check", "okb check --json", "okb check -C ../wine"],
+      args: [["--json", "flag", "Print the result as JSON: `ok`, the installed and pinned versions, and each check with its status, summary and problems."]],
+    }],
+  },
+  {
+    name: "pin",
+    group: "Housekeeping",
+    description: "Records the installed okb version in okb.json as `okbVersion`, so `okb check` warns anyone with an older okb and the CI workflow installs that version. Run it again after you upgrade okb.",
+    forms: [{ description: "Pins the installed version.", examples: ["okb pin"], args: [] }],
+  },
+  {
     name: "diff",
     group: "Housekeeping",
     description: "Shows what changed in the knowledge between two versions of an ontology: added, removed, renamed and changed things, rules side by side, moved quotes and changed links, in words rather than JSON lines.",

@@ -56,11 +56,11 @@ describe("published packages", { skip: SKIP }, () => {
 
   it("ships dist, the compiled meta-KB, the JSON Schema files, skills and bin, and nothing else", () => {
     for (const f of ["package.json", "README.md", "LICENSE", "bin/okb.js", "dist/cli.js", "dist/metakb.js",
-      "meta-kb/data/nodes.json", "meta-kb/data/edges.json", "schema/node.schema.json", "schema/edge.schema.json", "schema/okb.schema.json", "skills/ontology-coach/SKILL.md"]) {
+      "meta-kb/data/nodes.json", "meta-kb/data/edges.json", "schema/node.schema.json", "schema/edge.schema.json", "schema/okb.schema.json", "templates/okb-check.yml", "skills/ontology-coach/SKILL.md"]) {
       assert.ok(okbFiles.includes(f), `${f} is in the tarball`);
     }
-    for (const f of okbFiles) {
-      assert.match(f, /^(package\.json|README\.md|LICENSE|bin\/|dist\/|meta-kb\/data\/|schema\/|skills\/)/, `unexpected file ${f}`);
+    for (const f of okbFiles.filter((f) => f !== "templates/okb-check.yml")) {
+      assert.match(f, /^(package\.json|README\.md|LICENSE|bin\/|dist\/|meta-kb\/data\/|schema\/|skills\/|templates\/)/, `unexpected file ${f}`);
       assert.doesNotMatch(f, /(^|\/)(tests|examples|docs|site|sources)\/|\.ya?ml$|\.pdf$|(?<!\.d)\.ts$|\.map$/, `unwanted file ${f}`);
     }
     assert.ok(!okbFiles.includes("dist/gendocs.js"), "the docs generator stays out of the package");
