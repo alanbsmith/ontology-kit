@@ -78,9 +78,10 @@ export function acquireLock(root: string, waitMs = Number(process.env.OKB_LOCK_W
     } catch (e) {
       if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e;
     }
+    // Read the lock before judging it, so the check below can tell it from a fresh one that took its place.
+    const seen = readOwner(path).raw;
     if (isStale(path)) {
-      // Remove it only if it is still the stale one we looked at.
-      const seen = readOwner(path).raw;
+      // Remove it only if it is still the stale one we looked at, not a new lock another command just made.
       if (readOwner(path).raw === seen) try { unlinkSync(path); } catch { /* someone else removed it */ }
       continue;
     }
