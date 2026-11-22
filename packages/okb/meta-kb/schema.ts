@@ -33,7 +33,7 @@ export function buildSchemas(fmt: any): SchemaFiles {
       ...($extracted ? defs.Extracted : {}),
       ...own,
     };
-    return { title: nt.name, description: nt.description, type: "object", required: nt.required, properties };
+    return { title: nt.name, description: nt.description, type: "object", required: [...new Set(["id", "type", ...(nt.required ?? [])])], properties };
   };
   const nodeDefs = Object.fromEntries(fmt.nodeTypes.map((nt: any) => [nt.name, nodeDef(nt)]));
   const { Extracted: _e, ...sharedDefs } = defs;

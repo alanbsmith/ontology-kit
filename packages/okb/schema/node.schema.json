@@ -118,7 +118,7 @@
         },
         "ref": {
           "type": "string",
-          "pattern": "^https?://\\S+$"
+          "pattern": "^[hH][tT][tT][pP][sS]?://\\S+$"
         },
         "approvedAfter": {
           "enum": [
@@ -135,6 +135,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "name"
       ],
       "properties": {
@@ -226,6 +227,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "text"
       ],
       "properties": {
@@ -263,6 +265,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "text"
       ],
       "properties": {
@@ -308,6 +311,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "name",
         "decision"
       ],
@@ -354,6 +358,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "name"
       ],
       "properties": {
@@ -447,6 +452,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "name"
       ],
       "properties": {
@@ -579,6 +585,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "name"
       ],
       "properties": {
@@ -635,6 +642,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "title",
         "decision"
       ],
@@ -701,6 +709,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "title"
       ],
       "properties": {
@@ -757,6 +766,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "quote"
       ],
       "properties": {
@@ -818,6 +828,7 @@
       "type": "object",
       "required": [
         "id",
+        "type",
         "modality",
         "statement"
       ],
