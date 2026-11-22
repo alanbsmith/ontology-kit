@@ -53,4 +53,5 @@ To block merges on a failing check, require the job `Check the knowledge base` i
 ## What to read next
 
 - [Review and iterate](review.md) covers the judgment rules a script can't check.
+- [Maintain a KB with a team](maintaining.md) is the guide for the people who change the KB, with the common changes, their commands and a pull request checklist.
 - [File format](../FORMAT.md) describes `okb.json`.
