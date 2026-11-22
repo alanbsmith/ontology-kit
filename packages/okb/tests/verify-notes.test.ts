@@ -47,9 +47,12 @@ describe("verify notes and ref", () => {
     assert.equal(rule._originalDraft, "A Button MUST be at least 44px tall.");
     assert.equal(rule.statement, "A Button SHOULD be at least 24px tall.");
     assert.ok(!again.some((n) => n.startsWith("Suggested note")));
-    const suggested = verify(fixture(), "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
-    const rerun = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
-    assert.deepEqual(rerun.filter((n) => n.startsWith("Suggested note")), suggested.filter((n) => n.startsWith("Suggested note")));
+    // Running it again with only a link keeps the note already stored, and doesn't suggest one.
+    const rerun = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall.", ref: "https://example.test/pr/1#c2" });
+    assert.ok(!rerun.some((n) => n.startsWith("Suggested note")));
+    assert.equal(rule.verification?.note, "narrowed MUST to SHOULD; changed 44 to 24");
+    assert.equal(rule.verification?.ref, "https://example.test/pr/1#c2");
+    assert.equal(rule._originalDraft, "A Button MUST be at least 44px tall.");
   });
 
   it("suggests a note after OVERREACH without --note, and stores nothing", () => {

@@ -281,13 +281,15 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
   if (!isOneOf(STATUSES, status)) throw new OkbError(`--status must be one of ${STATUSES.join(", ")} (or use --approve after a human review).`);
   const notes: Notes = [];
   const noteTips: Notes = [];
+  // The earlier result, when this runs again on an item still waiting for approval: its note and link stay unless replaced.
+  const again = n.verification?.status === "OVERREACH" ? n.verification : undefined;
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
     const current = n.type === "Rule" ? n.statement : n.description ?? "";
     // Running OVERREACH again on an item that is still waiting for approval (to add a note or a link, as the
     // suggested command does) must not replace the original wording with the earlier correction.
     const original = n.verification?.status === "OVERREACH" && n._originalDraft !== undefined ? n._originalDraft : current;
-    if (!o.note) noteTips.push(...overreachNoteTips(n.id, original, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
+    if (!o.note && !again?.note) noteTips.push(...overreachNoteTips(n.id, original, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
     n._originalDraft = original;
     if (n.type === "Rule") n.statement = o.corrected;
     else n.description = o.corrected;
@@ -298,7 +300,9 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     if (!isOneOf(["verbatim", "paraphrased"], o.confidence)) throw new OkbError("--confidence must be verbatim or paraphrased.");
     n.extractionConfidence = o.confidence;
   } else n.extractionConfidence ??= "paraphrased";
-  n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}), ...(o.ref ? { ref: o.ref } : {}) };
+  const note = o.note ?? (status === "OVERREACH" ? again?.note : undefined);
+  const link = o.ref ?? (status === "OVERREACH" ? again?.ref : undefined);
+  n.verification = { status, checkedAgainst: cited, ...(note ? { note } : {}), ...(link ? { ref: link } : {}) };
   ont.touch(n);
   if (status === "UNSUPPORTED") {
     notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
