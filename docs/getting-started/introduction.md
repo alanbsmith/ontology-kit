@@ -15,6 +15,7 @@ The kit has three parts. You use all three, but you only type to one of them.
   - **ontology-review** gives a second opinion on the judgment calls a script can't check.
   - **build-domain-kb-from-docs** pulls an ontology out of existing docs, and checks every quote before it keeps it.
   - **ontology-maintainer** keeps an existing knowledge base current: it brings it up to date when the docs change, fixes what a reviewer or CI flags, and prepares the pull request.
+  - **ontology-signoff** walks a subject-matter expert or reviewer through confirming a knowledge base's rules, one decision at a time, with each rule shown beside its source.
 
 ## Your path
 

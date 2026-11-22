@@ -145,7 +145,7 @@ describe("published packages", { skip: SKIP }, () => {
     assert.match(okb("skills", "install", "--dir", skillsDir), /ontology-coach: linked/);
     assert.equal(realpathSync(join(skillsDir, "ontology-coach")), realpathSync(join(pkgDir, "skills", "ontology-coach")));
     assert.match(okb("skills", "status", "--dir", skillsDir), new RegExp(`ontology-review +linked to this okb, version ${meta.replace(/\./g, "\\.")}`));
-    for (const n of ["ontology-coach", "ontology-review", "ontology-maintainer", "build-domain-kb-from-docs"]) {
+    for (const n of ["ontology-coach", "ontology-review", "ontology-maintainer", "ontology-signoff", "build-domain-kb-from-docs"]) {
       assert.match(readFileSync(join(skillsDir, n, "SKILL.md"), "utf8"), new RegExp(`^\\*\\*Version ${meta.replace(/\./g, "\\.")}\\.\\*\\*`, "m"));
     }
     const copies = join(work, "skill-copies");

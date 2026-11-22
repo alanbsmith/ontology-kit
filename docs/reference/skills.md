@@ -1,6 +1,6 @@
 # Skills
 
-A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships four, in the `packages/okb/skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
+A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job. ontology-kit ships five, in the `packages/okb/skills/` folder. Each one drives the `okb` command, so it does the typing while you make the decisions.
 
 | Skill                                                   | Use it to                                                              | Page                                                 |
 | ------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |
@@ -8,6 +8,7 @@ A skill is a folder with a `SKILL.md` file that teaches Claude how to do one job
 | [ontology-review](#ontology-review)                     | Get a second opinion on an ontology you've built.                      | [Review and iterate](../build/review.md)             |
 | [build-domain-kb-from-docs](#build-domain-kb-from-docs) | Extract an ontology from documentation, with every claim checked.      | [From existing docs](../EXTRACTION-PIPELINE.md)      |
 | [ontology-maintainer](#ontology-maintainer)             | Keep an existing KB current: docs changed, a fix, a rename, a release. | [Maintain a KB with a team](../build/maintaining.md) |
+| [ontology-signoff](#ontology-signoff)                   | Confirm that a KB's rules are right: a first review, or a change.      | [Maintain a KB with a team](../build/maintaining.md) |
 
 ## ontology-coach
 
@@ -33,6 +34,12 @@ Looks after a KB that is already built and kept in git. It starts from what the 
 
 Start it by asking `the docs changed, update the KB`. See [Maintain a KB with a team](../build/maintaining.md) for the commands it runs.
 
+## ontology-signoff
+
+Walks a subject-matter expert or a pull request reviewer through confirming that a KB's rules are right. It shows each rule beside its quote and the source text around it, riskiest first (rules the checker could not support, then corrected rules waiting for approval, then rules not yet checked), asks for one decision at a time in plain language, and ends with a summary the person can paste as a review comment. It covers a first review of a freshly extracted KB, the review of a change (using `okb diff` and `okb docs --changed`), and a short session that stops early with what is left listed. The only thing it writes is `okb verify --approve`, and only after the person says yes to that rule by name; it prints the command it ran. Everything else they say (reject, reword, "this doesn't fit together") goes on a follow-up list for the maintainer. It says what was not reviewed, and sends the maintainer to ontology-maintainer when a source changed without a re-sync.
+
+Start it by asking `I'm the subject-matter expert, help me review the KB`. See [Maintain a KB with a team](../build/maintaining.md) for the commands it runs.
+
 ## Install the skills
 
 The skills come in the same package as `okb`, so one command installs them all at the version that matches your okb:
@@ -47,6 +54,7 @@ okb skills install
   ontology-coach: linked
   ontology-review: linked
   ontology-maintainer: linked
+  ontology-signoff: linked
 
   Start a new Claude Code or Cursor session to load them.
 ```
@@ -67,6 +75,7 @@ Skills in /Users/you/.claude/skills  (okb meta-KB 2.6.0)
   ✓ ontology-coach             linked to this okb, version 2.6.0
   ✓ ontology-maintainer        linked to this okb, version 2.6.0
   ✓ ontology-review            linked to this okb, version 2.6.0
+  ✓ ontology-signoff           linked to this okb, version 2.6.0
 ```
 
 Start a new Claude session after you install or update the skills, so it loads the new version. The [Installation](../getting-started/installation.md) page has the rest of the update steps.
@@ -79,7 +88,7 @@ Near the top of each `SKILL.md`, under its title, a line says which version it i
 **Version 2.6.0.** It should match the meta-KB version that `okb version` prints.
 ```
 
-All four skills share the meta-KB's version number, and `okb version` prints it:
+All five skills share the meta-KB's version number, and `okb version` prints it:
 
 ```bash
 okb version

@@ -19,7 +19,7 @@ Prefer pnpm? `pnpm add --global @ontology-kit/okb` installs the same package. To
 
 ## Skills
 
-`okb skills install` links the four skills into `~/.claude/skills/`, which Claude Code and Cursor both load skills from. The links point into your okb install, so the skills stay current when okb updates. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
+`okb skills install` links the five skills into `~/.claude/skills/`, which Claude Code and Cursor both load skills from. The links point into your okb install, so the skills stay current when okb updates. Start the coach by asking `coach me through building an ontology`, or with `/ontology-coach`. `okb skills status` shows what's installed. The [skills reference](../reference/skills.md) has the options, such as `--copy` and `--dir`.
 
 ## Updating
 
