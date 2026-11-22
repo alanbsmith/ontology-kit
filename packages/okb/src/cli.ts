@@ -9,7 +9,7 @@ import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNod
 import * as ops from "./ops.ts";
 import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
-import { kbDocs, writeKbDocs, writePages } from "./kbdocs.ts";
+import { kbDocs, writeChangedPages, writeKbDocs, writePages } from "./kbdocs.ts";
 import { changedPageSet, changesPage, contextPage } from "./reviewdocs.ts";
 import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
@@ -734,7 +734,7 @@ async function main(argvIn: string[]) {
         const files = Object.fromEntries(pages.map((n) => [n, after[n]]));
         files["changes.md"] = changesPage({ against: v.changed, name: ont.meta.name, changes, hops, resync: report });
         const stale = report.gone.length + report.moved.length + report.worklist.length;
-        return done(writePages(out, files), `${pages.length} changed ${pages.length === 1 ? "page" : "pages"} and changes.md (${stale} source ${stale === 1 ? "change" : "changes"} not yet in the KB)`, " (start at changes.md)", changes);
+        return done(writeChangedPages(out, files), `${pages.length} changed ${pages.length === 1 ? "page" : "pages"} and changes.md (${stale} source ${stale === 1 ? "change" : "changes"} not yet in the KB)`, " (start at changes.md)", changes);
       }
       const files = writeKbDocs(load(v), out);
       return done(files, `${files.length} pages`, " (start at index.md)");

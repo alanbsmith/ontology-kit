@@ -165,3 +165,21 @@ describe("writePages", () => {
     }
   });
 });
+
+describe("writeChangedPages", () => {
+  it("removes pages an earlier changed view wrote, keeps hand-written files and rules-in-context.md", async () => {
+    const { writeChangedPages } = await import("../src/kbdocs.ts");
+    const dir = mkdtempSync(join(tmpdir(), "okb-changed-"));
+    try {
+      writePages(dir, { "classes/c-old.md": `${BANNER}\nold\n`, "changes.md": `${BANNER}\nfirst\n`, "rules-in-context.md": `${BANNER}\nctx\n` });
+      writeFileSync(join(dir, "notes.md"), "mine\n");
+      writeChangedPages(dir, { "changes.md": `${BANNER}\nsecond\n` });
+      assert.ok(!existsSync(join(dir, "classes/c-old.md")), "the old changed page is gone");
+      assert.ok(existsSync(join(dir, "rules-in-context.md")));
+      assert.equal(readFileSync(join(dir, "notes.md"), "utf8"), "mine\n");
+      assert.match(readFileSync(join(dir, "changes.md"), "utf8"), /second/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

@@ -344,6 +344,19 @@ export function writePages(dir: string, files: DocFiles): string[] {
   return Object.keys(files).sort();
 }
 
+/**
+ * Write a changed-only view into `dir`, first removing pages an earlier run wrote there (they carry the banner)
+ * that this view doesn't include, so a folder reused for a second `--changed` doesn't keep the first one's pages.
+ * `rules-in-context.md` is a separate view of the same folder and stays.
+ */
+export function writeChangedPages(dir: string, files: DocFiles): string[] {
+  for (const old of listMarkdown(dir)) {
+    if (old in files || old === "rules-in-context.md") continue;
+    if (readFileSync(join(dir, old), "utf8").startsWith(BANNER)) rmSync(join(dir, old));
+  }
+  return writePages(dir, files);
+}
+
 function listMarkdown(dir: string): string[] {
   const out: string[] = [];
   const walk = (rel: string) => {
