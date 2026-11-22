@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { OkbError } from "./errors.ts";
 import { compareNatural, readGraph, writeGraph } from "./layout.ts";
-import { acquireLock, waitUnlocked } from "./lock.ts";
+import { acquireLock, isLocked, waitUnlocked } from "./lock.ts";
 import { FORMAT_VERSION } from "./registry.ts";
 import * as naming from "./naming.ts";
 import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
@@ -114,8 +114,13 @@ export class Ontology {
 
   static load(start: string): Ontology {
     const root = Ontology.rootOf(start);
-    waitUnlocked(root); // a command that is saving writes several files; don't read in the middle
-    return Ontology.read(root);
+    // A command that is saving writes several files: don't read in the middle. If one took the lock while
+    // this was reading, the files may be a mix of old and new, so read again.
+    for (let attempt = 0; ; attempt++) {
+      waitUnlocked(root);
+      const ont = Ontology.read(root);
+      if (attempt >= 3 || !isLocked(root)) return ont;
+    }
   }
 
   /**
@@ -400,7 +405,9 @@ export class Ontology {
    * @internal
    */
   touch(node: OkbNode): void {
-    node.updatedAt = this.opTime ?? timestamp();
+    // Never before createdAt: a question or decision added in the same second as another was stamped a second later.
+    const now = this.opTime ?? timestamp();
+    node.updatedAt = node.createdAt && node.createdAt > now ? node.createdAt : now;
   }
 
   /** @internal */

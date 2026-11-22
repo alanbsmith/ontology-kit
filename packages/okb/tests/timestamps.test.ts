@@ -236,3 +236,14 @@ describe("timestamps", () => {
     assert.match(show(root, root.find("1", "CompetencyQuestion")), new RegExp(`created +${T1}`));
   });
 });
+
+describe("updatedAt is never before createdAt", () => {
+  it("holds for a question added in the same second as another and then edited", () => {
+    at(T1);
+    const ont = Ontology.fromData([], []);
+    ops.addCQ(ont, "First question here?");
+    ops.addCQ(ont, "Second question here?");
+    ops.setCQ(ont, "2", { text: "Second question, reworded?" });
+    for (const q of ont.ofType("CompetencyQuestion")) assert.ok(q.updatedAt! >= q.createdAt!, `${q.id}: ${q.updatedAt} < ${q.createdAt}`);
+  });
+});
