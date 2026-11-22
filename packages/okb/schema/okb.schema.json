@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-kit.dev/schema/okb-lpg-3/okb.schema.json",
+  "title": "An okb manifest (okb-lpg/3): okb.json",
+  "type": "object",
+  "required": [
+    "format",
+    "currentStep"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer for editors; okb ignores it."
+    },
+    "format": {
+      "const": "okb-lpg/3"
+    },
+    "currentStep": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8
+    },
+    "name": {
+      "type": "string"
+    },
+    "created": {
+      "type": "string"
+    },
+    "metaKbVersion": {
+      "type": "string"
+    }
+  }
+}

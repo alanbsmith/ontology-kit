@@ -76,3 +76,146 @@ edgeTypes:
      description: "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."}
   - {name: FULFILLS, provenance: true, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
      description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfill one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}
+
+# The shape of each node type's properties, as JSON Schema fragments. The meta-KB build turns these
+# (with `required` above and the stamps) into packages/okb/schema/*.schema.json, which ships with
+# @ontology-kit/okb. A node may also carry keys not listed here (okb keeps them), so the schema
+# doesn't forbid extra properties. Fragments may $ref the `definitions` below.
+definitions:
+  Literal: {type: [string, number, boolean]}
+  StoredValue:
+    anyOf:
+      - {$ref: "#/$defs/Literal"}
+      - {type: array, items: {$ref: "#/$defs/Literal"}}
+  ValueMap: {type: object, additionalProperties: {$ref: "#/$defs/StoredValue"}}
+  Strings: {type: array, items: {type: string}}
+  Verification:
+    type: object
+    required: [status]
+    properties:
+      status: {enum: [SUPPORTED, OVERREACH, UNSUPPORTED]}
+      checkedAgainst: {$ref: "#/$defs/Strings"}
+      note: {type: string}
+      approvedAfter: {enum: [SUPPORTED, OVERREACH, UNSUPPORTED]}
+  Extracted:
+    extracted: {type: boolean}
+    verification: {$ref: "#/$defs/Verification"}
+    extractionConfidence: {enum: [verbatim, paraphrased, corrected]}
+    _originalDraft: {type: string}
+
+nodeProperties:
+  Ontology:
+    name: {type: string}
+    domain: {type: string}
+    purpose: {type: string}
+    users: {$ref: "#/$defs/Strings"}
+    maintainers: {$ref: "#/$defs/Strings"}
+    outOfScope: {$ref: "#/$defs/Strings"}
+    kind: {enum: [application, terminological]}
+    reuseReviewed: {type: boolean}
+    conventions:
+      type: object
+      properties:
+        classCase: {type: string}
+        slotCase: {type: string}
+        instanceCase: {type: [string, "null"]}
+        classNumber: {enum: [singular, plural]}
+        slotAffix: {enum: [none, has-prefix, of-suffix]}
+        source: {enum: [chosen, default]}
+  CompetencyQuestion:
+    text: {type: string}
+    status: {enum: [draft, answerable]}
+  Term:
+    text: {type: string}
+    disposition: {enum: [undecided, class, slot, instance, value, synonym, out-of-scope]}
+    note: {type: string}
+  ReusedOntology:
+    name: {type: string}
+    url: {type: string}
+    decision: {enum: [reuse, adapt, reference, rejected]}
+    notes: {type: string}
+  Class:
+    $extracted: true
+    name: {type: string}
+    description: {type: string}
+    synonyms: {$ref: "#/$defs/Strings"}
+    abstract: {type: boolean}
+    terminological: {type: boolean}
+    fixedValues: {$ref: "#/$defs/ValueMap"}
+    defaults: {$ref: "#/$defs/ValueMap"}
+    facetOverrides:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          allowedValues: {type: array, items: {$ref: "#/$defs/Literal"}}
+          minCardinality: {type: integer, minimum: 0}
+          maxCardinality: {type: integer, minimum: 0}
+          range: {$ref: "#/$defs/Strings"}
+  Slot:
+    $extracted: true
+    name: {type: string}
+    description: {type: string}
+    valueType: {enum: [String, Integer, Float, Number, Boolean, Enumerated, Instance]}
+    allowedValues: {$ref: "#/$defs/Strings"}
+    cardinality: {enum: [single, multiple]}
+    minCardinality: {type: integer, minimum: 0}
+    maxCardinality: {type: integer, minimum: 0}
+    default: {$ref: "#/$defs/StoredValue"}
+    relType: {type: string, pattern: "^[A-Z][A-Z0-9_]*$"}
+    edgeProperties:
+      type: array
+      items:
+        type: object
+        required: [name, valueType]
+        properties:
+          name: {type: string}
+          valueType: {enum: [String, Integer, Float, Number, Boolean, Enumerated]}
+          allowedValues: {$ref: "#/$defs/Strings"}
+          required: {type: boolean}
+          description: {type: string}
+    appliesToRules: {type: boolean}
+  Instance:
+    $extracted: true
+    name: {type: string}
+    description: {type: string}
+    values: {$ref: "#/$defs/ValueMap"}
+  DesignDecision:
+    $extracted: true
+    title: {type: string}
+    decision: {type: string}
+    question: {type: string}
+    rationale: {type: string}
+    alternatives: {$ref: "#/$defs/Strings"}
+    metaRules: {$ref: "#/$defs/Strings"}
+    date: {type: string}
+  Source:
+    title: {type: string}
+    localPath: {type: string}
+    format: {enum: [markdown, pdf, text]}
+    url: {type: string}
+    repoUrl: {type: string}
+    meta: {type: object}
+  SourceLocation:
+    quote: {type: string}
+    locator: {type: string}
+    headingPath: {$ref: "#/$defs/Strings"}
+    startLine: {type: integer}
+    endLine: {type: integer}
+    lines: {type: string}
+    blockKind: {type: string}
+    sourceLink: {type: string}
+    pageLink: {type: string}
+    page: {type: [integer, string]}
+  Rule:
+    $extracted: true
+    name: {type: string}
+    modality: {enum: [MUST, MUST_NOT, SHOULD, SHOULD_NOT, MAY]}
+    statement: {type: string}
+    authored: {type: boolean}
+    values: {$ref: "#/$defs/ValueMap"}
+
+# Edge properties beyond from, type and to are free-form (a relationship slot declares its own,
+# see Slot.edgeProperties); these are the ones the format reserves, with their shapes.
+reservedEdgeProperties:
+  rule: {type: string, description: "The Rule node whose quote and verification justify this link."}

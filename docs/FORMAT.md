@@ -181,6 +181,50 @@ Where the line falls:
 
 A tool that kept its own copy of the node types and its own list of structural edge types (okb-mcp, for example) replaces them with imports from `@ontology-kit/format`: the node types, `STRUCTURAL_EDGE_TYPES` in place of a hand-written list, and `ont.rel.values` in place of its own edge walking. A new edge type like `REFINES` then reaches it with an upgrade, not a copy edit. A changed `rel.values` result, a removed export or a node property that went away in a new major version are the breaking changes to watch for.
 
+## JSON Schema and editors
+
+The files are described by JSON Schema (draft 2020-12), generated from `packages/okb/meta-kb/src/format.yaml` by `pnpm build:meta` and committed in `packages/okb/schema/`. The package ships them, so an install has them at `node_modules/@ontology-kit/okb/schema/`.
+
+| Schema              | Describes                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| `okb.schema.json`   | `okb.json`.                                                                                  |
+| `node.schema.json`  | One line of `nodes.jsonl`: an object whose `type` picks one of the node types below.         |
+| `edge.schema.json`  | One line of `edges.jsonl`: `from`, `type` (UPPER_SNAKE case), `to` and free-form properties. |
+| `nodes.schema.json` | An older `nodes.json`: an array of nodes. `edges.schema.json` is the same for `edges.json`.  |
+
+The schema checks what one line can show: the shape of each node type, required properties, value types and allowed values, and the timestamp format. It doesn't check what needs the whole graph (an edge's ends exist, ids are unique, a Class's parents exist, the rules); that's `okb validate`. A node may carry keys the schema doesn't list, because okb keeps them, so the schema doesn't forbid extra properties. Run the schema in a KB repo's CI to catch a hand edit before `okb validate` does, or use it from a tool that has no okb.
+
+To point an editor at it, add this to the KB repo's `.vscode/settings.json` (VS Code and other editors that read `json.schemas`):
+
+```json
+{
+  "json.schemas": [
+    { "fileMatch": ["okb.json"], "url": "./node_modules/@ontology-kit/okb/schema/okb.schema.json" }
+  ]
+}
+```
+
+`okb.json` may also carry a `"$schema"` key with the same path; okb ignores it, and keeps it when it saves. Editors have no standard way to attach a schema to each line of a `.jsonl` file, so for `nodes.jsonl` and `edges.jsonl` validate with a tool that reads lines, that checks each line against `node.schema.json` or `edge.schema.json` (`packages/okb/tests/schema.test.ts` does this with Ajv, in a few lines). The `$id` URLs in the schemas name them; they aren't hosted yet, so reference the files in the package.
+
+## Compatibility policy
+
+The file format has a version of its own, the `format` in `okb.json` (`okb-lpg/3`), separate from the package's. A package can release many times with no format change; the package's [semver rules](../CONTRIBUTING.md#releases) say what each release promises about the CLI and the library, and this section says what the files promise.
+
+**What a format version promises.** A folder written as `okb-lpg/N` has the node and edge types, properties and meanings that this page and `schema/` describe for `N`. Within a version, okb may add optional properties, node types and edge types, and a file that was valid stays valid. It never changes what an existing property means or its id.
+
+**okb reads older formats and migrates them.** Every okb release loads folders written in an older format and converts them in memory; the next command that saves writes the current format. Nothing is lost, no id is renamed, and no data is invented (a missing timestamp stays unknown). The conversions so far are in the [changelog](CHANGELOG.md): `okb-lpg/1` to `/2` (relationship values) and `/2` to `/3` (ids, timestamps and layout). The older array layout (`nodes.json`, `edges.json`) loads too.
+
+**How long an old format is read.** A format version is read for at least two major package releases after the release that replaced it, and the changelog announces a removal one release before it happens. Before 1.0 the package promises nothing (see [What 0.x means](../CONTRIBUTING.md#releases)), but okb reads every format back to `okb-lpg/1` today. Dropping the conversion of an older format is a breaking change.
+
+**What counts as breaking.** The format version number goes up, and the package makes a major release from 1.0 on, when:
+
+- a node type, edge type or property is removed or renamed, or its meaning changes;
+- a property that was optional becomes required, or a value that was allowed becomes invalid, so a file that was valid is rejected;
+- the id scheme or the file layout changes so that an older okb can't read the new files (the one-node-per-line layout was this; it still reads the old one);
+- okb stops reading an older format.
+
+Adding an optional property or a new node or edge type is not breaking, and doesn't change the version. The schema files are regenerated with it, and the changelog says so. Older okb versions keep unknown properties but report an unknown node type as an error (`struct-well-formed`), so a team that adds a type should upgrade everyone together. A new format version is announced in the [changelog](CHANGELOG.md) with its conversion, and the policy for the library that reads it is under [Versions and semver](#versions-and-semver).
+
 ## Working in a team: git is the database
 
 A team keeps an ontology folder in git, so a branch is a copy of the knowledge base and a pull request is a change to it. That works only if two people's unrelated edits merge without a conflict, so the files are laid out for it:

@@ -23,6 +23,10 @@ okb skills install
 
 `okb skills install` adds the Claude skills (Claude Code and Cursor both load them), and `okb init my-ontology` starts an ontology. See the [introduction](https://ontology-kit.dev/getting-started/) and the [installation guide](https://ontology-kit.dev/getting-started/installation/), and [CONTRIBUTING.md](CONTRIBUTING.md) to work on the kit itself.
 
+## The file format
+
+A knowledge base is a folder of plain files in git, so what a version of the format promises matters. [The format reference](docs/FORMAT.md) describes the files, ships a [JSON Schema](docs/FORMAT.md#json-schema-and-editors) for them, and sets the [compatibility policy](docs/FORMAT.md#compatibility-policy): what counts as a breaking change, and how long okb keeps reading an older format.
+
 ## License
 
 [MIT](LICENSE)

@@ -15,7 +15,8 @@
  *   - (with --pdf) a quote isn't found verbatim, or is on a different page than declared
  *
  * It also writes the file-format registry's names (from src/format.yaml) into the
- * @ontology-kit/format package, which ships them as data so the reader needs no meta-KB.
+ * @ontology-kit/format package, which ships them as data so the reader needs no meta-KB,
+ * and the JSON Schema files for the format into packages/okb/schema/ (see schema.ts).
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -24,6 +25,7 @@ import { parseArgs } from "node:util";
 import { parse } from "yaml";
 import { CHECKS } from "../src/checks.ts";
 import { findQuote, loadPages } from "../src/quotes.ts";
+import { buildSchemas, schemaText } from "./schema.ts";
 import { STEP_CHECKS } from "../src/status.ts";
 import type { GraphEdge, GraphNode } from "@ontology-kit/format";
 
@@ -35,6 +37,7 @@ const CHECK_KINDS = ["mechanical", "heuristic", "judgment"];
 const SEVERITIES = ["error", "warning", "info"];
 const DEFAULT_SEVERITY: Record<string, string> = { MUST: "error", MUST_NOT: "error", SHOULD: "warning", SHOULD_NOT: "warning", MAY: "info" };
 
+const SCHEMA_DIR = join(HERE, "..", "schema");
 const REGISTRY_OUT = join(HERE, "..", "..", "format", "src", "registry.ts");
 
 const load = (name: string): any => parse(readFileSync(join(HERE, "src", name), "utf8"));
@@ -251,6 +254,8 @@ async function main() {
   }
 
   writeFileSync(REGISTRY_OUT, registrySource(fmt));
+  mkdirSync(SCHEMA_DIR, { recursive: true });
+  for (const [file, schema] of Object.entries(buildSchemas(fmt))) writeFileSync(join(SCHEMA_DIR, file), schemaText(schema));
   const out = join(HERE, "data");
   mkdirSync(out, { recursive: true });
   writeFileSync(join(out, "nodes.json"), JSON.stringify(nodes, null, 2) + "\n");

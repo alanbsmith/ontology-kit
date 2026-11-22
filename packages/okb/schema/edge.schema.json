@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-kit.dev/schema/okb-lpg-3/edge.schema.json",
+  "title": "An okb edge (okb-lpg/3): one line of edges.jsonl",
+  "description": "An edge is {from, type, to} plus optional properties. The type is one of the reserved types below or the relType of a relationship slot (UPPER_SNAKE case). Whether the ends exist and have the right node types is checked by `okb validate`.",
+  "type": "object",
+  "required": [
+    "from",
+    "type",
+    "to"
+  ],
+  "properties": {
+    "from": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "examples": [
+        "IS_A",
+        "INSTANCE_OF",
+        "HAS_SLOT",
+        "RANGE",
+        "INVERSE_OF",
+        "DISJOINT_WITH",
+        "NEEDS",
+        "BECAME",
+        "ABOUT",
+        "CITES",
+        "PART_OF",
+        "GOVERNS",
+        "REFINES",
+        "FULFILLS"
+      ]
+    },
+    "to": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rule": {
+      "type": "string",
+      "description": "The Rule node whose quote and verification justify this link."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "REFINES"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "adds": {
+            "type": "string"
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}
