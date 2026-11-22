@@ -150,6 +150,17 @@ function countsLine(ont: Ontology): string {
   return `${n("Class")} classes, ${n("Slot")} slots, ${n("Instance")} instances and ${n("Source")} sources.`;
 }
 
+/** Whether okb.json differs from the released copy in anything but its version (`okb pin` changes okbVersion alone, and that is pinned too). */
+function manifestChanged(snap: string, ont: Ontology): boolean {
+  try {
+    const was = JSON.parse(readFileSync(join(snap, "okb.json"), "utf8"));
+    const strip = (m: Record<string, unknown>) => JSON.stringify(Object.entries(m).filter(([k]) => k !== "version").sort(([a], [b]) => (a < b ? -1 : 1)));
+    return strip(was) !== strip(ont.manifest as unknown as Record<string, unknown>);
+  } catch {
+    return false;
+  }
+}
+
 /** One release's section of the change log (also the whole of CHANGES.md). */
 function changesMarkdown(version: string, previous: string | undefined, date: string, diff: OntologyDiff | undefined, sources: SourceChanges, ont: Ontology, note?: string): string {
   const out: string[] = [`## ${version} (${date})`, ""];
@@ -223,10 +234,11 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
     } else note = `There's no snapshot of ${last.version} in ${RELEASES_DIR}/, so this release can't list what changed in the knowledge.`;
   }
   const sources = sourceChanges(last?.datasets.docs, docs);
-  if (diff && isEmpty(diff) && !diff.summary.stampOnly && noSourceChanges(sources)) {
+  if (diff && isEmpty(diff) && !diff.summary.stampOnly && noSourceChanges(sources) && !manifestChanged(join(root, RELEASES_DIR, last!.version), ont)) {
     throw new OkbError(`Nothing has changed since ${last!.version}, so there is nothing to release.`);
   }
 
+  const date = today(); // an invalid SOURCE_DATE_EPOCH stops here, before anything is written
   // Everything is checked; from here on it writes.
   ont.manifest.version = version;
   ont.save();
@@ -250,10 +262,12 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
   mkdirSync(snap, { recursive: true });
   for (const f of ONTOLOGY_FILES) copyFileSync(join(root, f), join(snap, f));
   writeFileSync(join(snap, "changes.json"), json({ version, previous: last?.version ?? null, changes: diff ?? null, sources }));
-  writeFileSync(join(snap, "CHANGES.md"), changesMarkdown(version, last?.version, today(), diff, sources, ont, note));
+  writeFileSync(join(snap, "CHANGES.md"), changesMarkdown(version, last?.version, date, diff, sources, ont, note));
   writeReleasesMd(root, manifest.title ?? manifest.id);
   // The manifests go last: they are what makes the release exist, so a failure above leaves nothing pinned.
-  writeFileSync(join(snap, MANIFEST_FILE), json(manifest));
+  // Dataset paths are relative to the manifest, so the snapshot's copy points at the sources from its own folder.
+  const snapManifest = { ...manifest, datasets: { ...manifest.datasets, ...(docs ? { docs: { ...docs, path: posix(relative(snap, resolve(root, docs.path))) || "." } } : {}) } };
+  writeFileSync(join(snap, MANIFEST_FILE), json(snapManifest));
   writeFileSync(lastFile, json(manifest));
 
   const notes: Notes = [`Released ${version}${last ? ` (was ${last.version})` : ""}: ${countsLine(ont)}`];

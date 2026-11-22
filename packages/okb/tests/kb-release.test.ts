@@ -171,6 +171,9 @@ describe("sources are pinned", () => {
     const m = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8"));
     assert.equal(m.datasets.docs.path, "docs");
     assert.deepEqual(Object.keys(m.datasets.docs.files), ["guide.md"]);
+    // The snapshot's own manifest verifies too: its source path is rebased to point from the snapshot folder.
+    const snapVerify = spawnSync(process.execPath, [CLI, "-C", join(dir, "releases", "1.0.0"), "release", "verify"], { encoding: "utf8", env: ENV });
+    assert.equal(snapVerify.status, 0, snapVerify.stdout + snapVerify.stderr);
     writeFileSync(join(dir, "docs", "guide.md"), "# Guide\n\nServe red wine slightly cool.\n");
     assert.equal(run("release", "verify").status, 1);
     const r = run("release", "1.0.1");
@@ -233,5 +236,22 @@ describe("release verify refuses a manifest that pins too little", () => {
     const r = verify(d);
     assert.equal(r.status, 1);
     assert.match(r.stdout, /\.\.\/outside\.txt points outside its folder/);
+  });
+});
+
+describe("a release after okb pin", () => {
+  it("is allowed when only okbVersion changed, and a bad SOURCE_DATE_EPOCH writes nothing", () => {
+    const dir = join(tmp, "pinned");
+    mkdirSync(dir);
+    for (const f of ["okb.json", "nodes.jsonl", "edges.jsonl"]) cpSync(join(WINE, f), join(dir, f));
+    const run = (env: NodeJS.ProcessEnv, ...a: string[]) => spawnSync(process.execPath, [CLI, "-C", dir, ...a], { encoding: "utf8", env });
+    assert.equal(run(ENV, "release", "1.0.0").status, 0);
+    assert.equal(run(ENV, "pin").status, 0);
+    assert.equal(run(ENV, "release", "verify").status, 1, "okb.json changed, so it no longer matches");
+    const bad = run({ ...ENV, SOURCE_DATE_EPOCH: "soon" }, "release", "1.0.1");
+    assert.equal(bad.status, 2);
+    assert.equal(existsSync(join(dir, "releases", "1.0.1")), false);
+    assert.equal(run(ENV, "release", "1.0.1").status, 0, "nothing else changed, but the pinned okb.json did");
+    assert.equal(run(ENV, "release", "verify").status, 0);
   });
 });
