@@ -1,7 +1,7 @@
 ---
 name: Spike
 about: Time-boxed research to answer a question before committing to a design
-title: 'spike: '
+title: 'chore: '
 ---
 
 ## Purpose
