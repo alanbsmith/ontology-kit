@@ -54,3 +54,10 @@ export function setInstanceClasses(ont: Ontology, ref: string, classes: string[]
   if (lost.length) notes.push(`Warning: its values for ${[...new Set(lost)].map((s) => ont.label(s)).join(", ")} don't apply to the new class. Remove them (okb instance set "${inst.name}" <slot>=) or pick another class.`);
   return notes;
 }
+
+export function setInstanceDescription(ont: Ontology, ref: string, description: string): Notes {
+  const inst = ont.find(ref, "Instance");
+  inst.description = description;
+  ont.touch(inst);
+  return ["Updated description."];
+}

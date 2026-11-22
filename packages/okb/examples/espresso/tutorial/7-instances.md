@@ -126,6 +126,8 @@ okb show "Milk foam"
 
 ```text
 Vertex breve  Instance · i.vertex-breve-7fvaz3
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Breve
 
   Values
@@ -138,6 +140,8 @@ Vertex breve  Instance · i.vertex-breve-7fvaz3
     variationOf        Latte, Cappuccino (fixed by Breve)
 
 Milk foam  Instance · i.milk-foam-ap9t4r
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Foam
 
   Values

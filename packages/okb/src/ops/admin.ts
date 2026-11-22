@@ -5,7 +5,7 @@ import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
 import { today } from "../clock.ts";
 import { MetaKB } from "../metakb.ts";
-import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType, type OkbNode } from "@ontology-kit/format";
+import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType } from "@ontology-kit/format";
 import type { Notes } from "./common.ts";
 import { checkName } from "./naming.ts";
 
@@ -14,11 +14,11 @@ export function createOntology(root: string, name: string): Ontology {
   mkdirSync(root, { recursive: true });
   if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
   const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: today() };
-  const nodes: OkbNode[] = [{
+  const ont = new Ontology(resolve(root), manifest, [], []);
+  ont.addNode({
     type: "Ontology", id: "ontology", name, domain: "", purpose: "", users: [], maintainers: [],
     outOfScope: [], kind: "application", reuseReviewed: false,
-  }];
-  const ont = new Ontology(resolve(root), manifest, nodes, []);
+  });
   ont.save();
   return ont;
 }
@@ -62,6 +62,7 @@ export function rename(ont: Ontology, ref: string, next: string, force = false):
     if (retyped) notes.push(`Its links are now stored as ${retyped.to} (were ${retyped.from}).`);
   }
   n.name = next;
+  ont.touch(n);
   notes.unshift(`Renamed ${n.type} '${old}' → '${next}' (id ${n.id} unchanged).`);
   return notes;
 }
@@ -91,6 +92,7 @@ export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
   for (const t of ont.ofType("Term")) {
     if (ont.targets(t.id, "BECAME").includes(n.id)) {
       t.disposition = "undecided";
+      ont.touch(t);
       notes.push(`Term '${t.text}' is undecided again.`);
     }
   }

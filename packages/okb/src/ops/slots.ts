@@ -46,6 +46,7 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
     if (!t) throw new OkbError(`--type must be one of ${VALUE_TYPES.join(", ")}.`);
     const wasRel = s.valueType === "Instance";
     s.valueType = t;
+    ont.touch(s);
     if (t !== "Enumerated") delete s.allowedValues;
     if (t !== "Instance") {
       ont.removeEdges((e) => e.from === s.id && e.type === "RANGE");
@@ -62,22 +63,27 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
   if (o.values?.length) {
     if (s.valueType !== "Enumerated") throw new OkbError("--values only applies to Enumerated slots (use --type Enumerated).");
     s.allowedValues = list(o.values);
+    ont.touch(s);
   }
   const setRange = (refs: string[], replace: boolean) => {
     if (s.valueType !== "Instance") throw new OkbError("A range only applies to Instance slots (use --type Instance).");
     if (replace) ont.removeEdges((e) => e.from === s.id && e.type === "RANGE");
     for (const r of refs) ont.addEdge(s.id, "RANGE", ont.find(r, "Class").id);
+    ont.touch(s); // a slot's range is a facet, so it counts even though it's stored as edges
   };
   if (o.range?.length) setRange(o.range, true);
   if (o.addRange?.length) setRange(o.addRange, false);
   for (const r of o.removeRange ?? []) {
     const rc = ont.find(r, "Class");
     ont.removeEdges((e) => e.from === s.id && e.type === "RANGE" && e.to === rc.id);
+    ont.touch(s);
   }
   if (o.card) {
     if (!isOneOf(CARDINALITIES, o.card)) throw new OkbError("--card must be single or multiple.");
     s.cardinality = o.card;
+    ont.touch(s);
   }
+  if (o.min !== undefined || o.max !== undefined || o.description !== undefined) ont.touch(s);
   if (o.min !== undefined) s.minCardinality = o.min;
   if (o.max !== undefined) s.maxCardinality = o.max;
   if (o.description !== undefined) s.description = o.description;
@@ -99,9 +105,14 @@ export function updateSlot(ont: Ontology, ref: string, o: SlotOpts, creating = f
   if (o.onRules) {
     if (s.valueType === "Instance") throw new OkbError(`${s.name} is a relationship. A rule's qualifiers must be properties; link rules with okb rule refines.`);
     s.appliesToRules = true;
+    ont.touch(s);
   }
-  if (o.offRules) delete s.appliesToRules;
+  if (o.offRules) {
+    delete s.appliesToRules;
+    ont.touch(s);
+  }
   if (o.default !== undefined) {
+    ont.touch(s);
     if (o.default === "") delete s.default;
     else s.default = coerce(ont, s, o.default);
   }
@@ -144,6 +155,7 @@ export function declareEdgeProperty(ont: Ontology, relRef: string, name: string,
   const decls = (rel.edgeProperties ??= []);
   if (o.remove) {
     rel.edgeProperties = decls.filter((d) => d.name !== name);
+    ont.touch(rel);
     return [`Removed edge property ${name} from ${rel.name}. Existing values stay on the edges until you remove them.`];
   }
   if (RESERVED_EDGE_KEYS.has(name)) throw new OkbError(`'${name}' is reserved on edges.${name === "rule" ? " Every relationship edge can already point at a Rule with --rule." : ""}`);
@@ -156,5 +168,6 @@ export function declareEdgeProperty(ont: Ontology, relRef: string, name: string,
   const i = decls.findIndex((d) => d.name === name);
   if (i >= 0) decls[i] = decl;
   else decls.push(decl);
+  ont.touch(rel);
   return [`${rel.name} edges can now carry ${name} (${t}${decl.required ? ", required" : ""}): (…)-[:${rel.relType} {${name}: …}]->(…)`];
 }

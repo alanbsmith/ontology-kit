@@ -96,6 +96,7 @@ export function assign(ont: Ontology, ownerId: string, assignments: string[], mo
       if (slot.cardinality !== "multiple" && next.length > 1) throw new OkbError(`${slot.name} holds a single value; got ${next.length}.`);
       if (next.length === 0) delete stored[slot.id];
       else stored[slot.id] = slot.cardinality === "multiple" ? next : next[0];
+      ont.touch(owner);
       notes.push(`${owner.name}.${slot.name} ${mode === "fixed" ? "fixed to" : "="} ${next.map((v) => JSON.stringify(v)).join(", ") || "(nothing)"}`);
     }
   }
@@ -111,6 +112,7 @@ export function classDefault(ont: Ontology, ref: string, assignments: string[]):
     cl.defaults ??= {};
     if (a.raw === "") delete cl.defaults[slot.id];
     else cl.defaults[slot.id] = coerce(ont, slot, a.raw);
+    ont.touch(cl);
     notes.push(`New ${cl.name} instances will start with ${slot.name} = ${JSON.stringify(cl.defaults[slot.id] ?? null)} (can be changed per instance).`);
   }
   return notes;
@@ -122,6 +124,7 @@ export function restrict(ont: Ontology, ref: string, slotRef: string, o: { value
   cl.facetOverrides ??= {};
   if (o.clear) {
     delete cl.facetOverrides[slot.id];
+    ont.touch(cl);
     return [`Removed ${cl.name}'s restrictions on ${slot.name}.`];
   }
   const ov = (cl.facetOverrides[slot.id] ??= {});
@@ -129,6 +132,7 @@ export function restrict(ont: Ontology, ref: string, slotRef: string, o: { value
   if (o.min !== undefined) ov.minCardinality = o.min;
   if (o.max !== undefined) ov.maxCardinality = o.max;
   if (o.range?.length) ov.range = o.range.map((r) => ont.find(r, "Class").id);
+  ont.touch(cl);
   const notes = [`${cl.name} now restricts ${slot.name}: ${JSON.stringify(ov)}.`];
   if (o.max === 0) notes.push(`Maximum 0 means ${cl.name} never has a ${slot.name} (Ontology 101 §3, Step 6).`);
   return notes;

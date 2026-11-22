@@ -53,6 +53,22 @@ An id is a readable prefix, a dot, and a part that says which node it is. Two pe
 
 Set `SOURCE_DATE_EPOCH` (seconds since 1970, the reproducible-builds convention) and the tag is derived from it, the type, the name and a counter instead of being random, so a generated folder like `packages/okb/examples/wine` rebuilds byte for byte. Don't set it when several people edit one ontology: the same name then gives the same tag on every branch.
 
+### Timestamps
+
+Every node carries `createdAt` and `updatedAt`, UTC to the second (`2026-11-21T14:03:22Z`). Ids no longer say when a node was made, and array order after a git merge is merge order, so these two fields are the clock. Both are set when the node is created, and they're equal then. Ties in `createdAt` (several nodes made in the same second, or under `SOURCE_DATE_EPOCH`) fall back to array order.
+
+`updatedAt` changes only when something stored **on the node** changes:
+
+- its own fields: name, description, text, statement, modality, status, disposition and so on;
+- its property values: `Instance.values`, `Class.fixedValues` and `defaults`;
+- its facets: `Class.facetOverrides`, and a slot's cardinality, allowed values and range.
+
+Anything stored as an **edge** doesn't count: `IS_A`, `INSTANCE_OF`, `HAS_SLOT`, `NEEDS`, `CITES`, `GOVERNS`, `REFINES`, `FULFILLS`, and relationship values such as `MAKER`. Edges have no timestamps. Setting `body=light` on an instance updates it, because the value lives in the instance's `values`, but linking it to a winery doesn't, because that link is an edge. Adding a slot to a class doesn't update the class (`HAS_SLOT`), and linking a rule to a quote doesn't update the rule. A slot's `RANGE` is an edge too, but it's a facet of the slot, so changing it does update the slot. A rule's `authored` flag and a node's `verification` are fields, so they count.
+
+`okb show` prints both, and every `--json` output that includes a node includes them. `okb cq list` and `okb decision list` still number by position in the file, not by `createdAt`. Two branches that edit different nodes change different lines of `nodes.json`, so git merges them without a conflict on the stamps.
+
+A file with no stamps (written before they existed) loads as it is. okb never invents a timestamp for a node it didn't create: read a missing field as "unknown". The first edit of such a node sets `updatedAt` and leaves `createdAt` missing.
+
 ## Edge types
 
 | Type                          | From → To                                      | Meaning                                                                                                     |
@@ -169,7 +185,7 @@ A tool that kept its own copy of the node types and its own list of structural e
 
 `okb export` writes the data as JSON or as an openCypher script for Neo4j, Neptune and Memgraph (the `okb-export/2` format). What it writes, its options and an example are on the [Export](build/export.md) page.
 
-Files from the previous formats are converted automatically the next time okb loads them. `okb-lpg/1` used `HAS_VALUE` edges. `okb-lpg/2` to `okb-lpg/3` changes only how new ids are made, so no id changes and only the version in `okb.json` moves.
+Files from the previous formats are converted automatically the next time okb loads them. `okb-lpg/1` used `HAS_VALUE` edges. `okb-lpg/2` to `okb-lpg/3` changes how new ids are made and adds [timestamps](#timestamps) to new nodes, so no id changes, no timestamps are added to existing nodes, and only the version in `okb.json` moves.
 
 ## Example (from packages/okb/examples/wine)
 

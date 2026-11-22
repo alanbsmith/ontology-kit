@@ -20,6 +20,8 @@
       ],
       "kind": "application",
       "reuseReviewed": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "conventions": {
         "classCase": "PascalCase",
         "slotCase": "camelCase",
@@ -33,37 +35,49 @@
       "type": "CompetencyQuestion",
       "id": "cq.an5hqz",
       "text": "Which wine characteristics should I consider when choosing a wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.ffbmq8",
       "text": "Is Bordeaux a red or white wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.tmq6hs",
       "text": "Does Cabernet Sauvignon go well with seafood?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.pv8gg4",
       "text": "What is the best choice of wine for grilled meat?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.s7b99r",
       "text": "Which characteristics of a wine affect its appropriateness for a dish?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.4mz6a9",
       "text": "Which wines does a given winery produce?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -71,158 +85,210 @@
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.wine",
       "text": "wine",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.grape",
       "text": "grape",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.winery",
       "text": "winery",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.location",
       "text": "location",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.color",
       "text": "color",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.body",
       "text": "body",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.flavor",
       "text": "flavor",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.sugar",
       "text": "sugar",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.tannin-level",
       "text": "tannin level",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.red-wine",
       "text": "red wine",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.white-wine",
       "text": "white wine",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.rose-wine",
       "text": "rosé wine",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.dessert-wine",
       "text": "dessert wine",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.port",
       "text": "port",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.bordeaux",
       "text": "bordeaux",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.beaujolais",
       "text": "beaujolais",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.food",
       "text": "food",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.seafood",
       "text": "seafood",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.red-meat",
       "text": "red meat",
-      "disposition": "class"
+      "disposition": "class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.goes-well-with",
       "text": "goes well with",
-      "disposition": "slot"
+      "disposition": "slot",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.vintage-year",
       "text": "vintage year",
       "disposition": "out-of-scope",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "note": "Vintage questions deferred to v2"
     },
     {
       "type": "Term",
       "id": "t.label-paper",
       "text": "label paper",
-      "disposition": "out-of-scope"
+      "disposition": "out-of-scope",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.wine",
       "name": "Wine",
-      "description": "A specific wine produced by a specific winery (not an individual bottle)."
+      "description": "A specific wine produced by a specific winery (not an individual bottle).",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.red-wine",
       "name": "RedWine",
-      "description": "Wine made from dark-skinned grapes with skin contact; described by tannin level."
+      "description": "Wine made from dark-skinned grapes with skin contact; described by tannin level.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.white-wine",
       "name": "WhiteWine",
-      "description": "Wine fermented without grape skins."
+      "description": "Wine fermented without grape skins.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
@@ -231,78 +297,102 @@
       "description": "Wine with brief skin contact giving a pink color.",
       "synonyms": [
         "Rosé"
-      ]
+      ],
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.dessert-wine",
       "name": "DessertWine",
-      "description": "Sweet wine served with or as dessert."
+      "description": "Sweet wine served with or as dessert.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.bordeaux",
       "name": "Bordeaux",
       "description": "Red wine from the Bordeaux region of France.",
-      "terminological": true
+      "terminological": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.medoc",
       "name": "Medoc",
       "description": "Bordeaux from the Médoc sub-region.",
-      "terminological": true
+      "terminological": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.pauillac",
       "name": "Pauillac",
       "description": "Médoc wine from the Pauillac appellation.",
-      "terminological": true
+      "terminological": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.margaux",
       "name": "Margaux",
       "description": "Médoc wine from the Margaux appellation.",
-      "terminological": true
+      "terminological": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.beaujolais",
       "name": "Beaujolais",
       "description": "Light red wine from the Beaujolais region, made from Gamay.",
-      "terminological": true
+      "terminological": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.merlot",
       "name": "Merlot",
-      "description": "Red wine made from the Merlot grape."
+      "description": "Red wine made from the Merlot grape.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.port",
       "name": "Port",
-      "description": "Fortified sweet red wine from Portugal. (Only red Ports are modeled, as in the paper.)"
+      "description": "Fortified sweet red wine from Portugal. (Only red Ports are modeled, as in the paper.)",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.chardonnay",
       "name": "Chardonnay",
-      "description": "White wine made from the Chardonnay grape."
+      "description": "White wine made from the Chardonnay grape.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.riesling",
       "name": "Riesling",
-      "description": "White wine made from the Riesling grape."
+      "description": "White wine made from the Riesling grape.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.sauternes",
       "name": "Sauternes",
-      "description": "Sweet white wine from the Sauternes area of Bordeaux."
+      "description": "Sweet white wine from the Sauternes area of Bordeaux.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -313,13 +403,17 @@
       "metaRules": [
         "naming-singular-plural-consistent"
       ],
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.winery",
       "name": "Winery",
-      "description": "A business that makes wine."
+      "description": "A business that makes wine.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
@@ -328,32 +422,42 @@
       "description": "A grape variety used to make wine.",
       "synonyms": [
         "Varietal"
-      ]
+      ],
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.wine-region",
       "name": "WineRegion",
-      "description": "A geographic area wines are named after or come from."
+      "description": "A geographic area wines are named after or come from.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.food",
       "name": "Food",
       "description": "A kind of dish or ingredient a wine can be paired with.",
-      "abstract": true
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.seafood",
       "name": "Seafood",
-      "description": "Fish and shellfish dishes."
+      "description": "Fish and shellfish dishes.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Class",
       "id": "c.red-meat",
       "name": "RedMeat",
-      "description": "Beef, lamb and similar dishes, including grilled meat."
+      "description": "Beef, lamb and similar dishes, including grilled meat.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -364,12 +468,16 @@
       "metaRules": [
         "hier-single-child"
       ],
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Slot",
       "id": "s.color",
       "name": "color",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Enumerated",
       "allowedValues": [
         "red",
@@ -383,6 +491,8 @@
       "type": "Slot",
       "id": "s.body",
       "name": "body",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Enumerated",
       "allowedValues": [
         "light",
@@ -396,6 +506,8 @@
       "type": "Slot",
       "id": "s.flavor",
       "name": "flavor",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Enumerated",
       "allowedValues": [
         "delicate",
@@ -409,6 +521,8 @@
       "type": "Slot",
       "id": "s.sugar",
       "name": "sugar",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Enumerated",
       "allowedValues": [
         "dry",
@@ -422,6 +536,8 @@
       "type": "Slot",
       "id": "s.tannin-level",
       "name": "tanninLevel",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Enumerated",
       "allowedValues": [
         "low",
@@ -435,6 +551,8 @@
       "type": "Slot",
       "id": "s.maker",
       "name": "maker",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Instance",
       "relType": "MAKER",
       "cardinality": "single",
@@ -445,6 +563,8 @@
       "type": "Slot",
       "id": "s.produces",
       "name": "produces",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Instance",
       "relType": "PRODUCES",
       "cardinality": "multiple",
@@ -454,6 +574,8 @@
       "type": "Slot",
       "id": "s.grape",
       "name": "grape",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Instance",
       "relType": "GRAPE",
       "cardinality": "multiple",
@@ -464,6 +586,8 @@
       "type": "Slot",
       "id": "s.region",
       "name": "region",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Instance",
       "relType": "REGION",
       "cardinality": "single",
@@ -473,6 +597,8 @@
       "type": "Slot",
       "id": "s.location",
       "name": "location",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "String",
       "cardinality": "single",
       "description": "Where the winery is."
@@ -481,6 +607,8 @@
       "type": "Slot",
       "id": "s.goes-well-with",
       "name": "goesWellWith",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "valueType": "Instance",
       "relType": "GOES_WELL_WITH",
       "cardinality": "multiple",

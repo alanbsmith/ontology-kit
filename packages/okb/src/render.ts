@@ -253,6 +253,8 @@ export function show(ont: Ontology, n: OkbNode): string {
   const line = (k: string, v: string) => out.push(`  ${c.dim(k.padEnd(14))} ${v}`);
   out.push(`${c.bold(nodeLabel(n))}  ${c.dim(`${n.type} · ${n.id}`)}`);
   if ("description" in n && n.description) out.push(indent(n.description, "  "));
+  if (n.createdAt) line("created", n.createdAt);
+  if (n.updatedAt) line("updated", n.updatedAt);
   if (n.type === "Class") {
     line("parents", ont.parents(n.id).map((p) => ont.label(p)).join(", ") || "(top level)");
     line("subclasses", ont.children(n.id).map((p) => ont.label(p)).join(", ") || "—");
@@ -299,7 +301,7 @@ export function show(ont: Ontology, n: OkbNode): string {
       out.push(`    ${ont.label(sid).padEnd(18)} ${shown}`);
     }
   } else {
-    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name", "values", "authored"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
+    for (const [k, v] of Object.entries(n)) if (!["id", "type", "name", "values", "authored", "createdAt", "updatedAt"].includes(k)) line(k, typeof v === "string" ? v : JSON.stringify(v));
     if (n.type === "Rule") {
       if (n.authored) line("authored", "yes (written by the ontology's owner)");
       for (const sid of ont.applicableSlots(n.id)) {

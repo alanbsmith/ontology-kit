@@ -19,43 +19,57 @@
         "coffee beans and roasting"
       ],
       "kind": "application",
-      "reuseReviewed": false
+      "reuseReviewed": false,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.an5hqz",
       "text": "Which drinks have no milk?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.ffbmq8",
       "text": "What's the difference between a cortado and a latte?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.tmq6hs",
       "text": "What goes into a cappuccino?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.pv8gg4",
       "text": "Which drinks are a variation of another drink?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.s7b99r",
       "text": "Which drinks on the menu come with chocolate?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.4mz6a9",
       "text": "How much does each drink cost?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     }
   ],
   "edges": []

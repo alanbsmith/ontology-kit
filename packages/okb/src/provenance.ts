@@ -112,7 +112,10 @@ export function cite(ont: Ontology, nodeRef: string, locRef: string): Notes {
   const loc = ont.find(locRef, "SourceLocation");
   const had = ont.targets(n.id, "CITES").includes(loc.id);
   ont.addEdge(n.id, "CITES", loc.id);
-  if (!(n.type === "Rule" && n.authored)) n.extracted = true;
+  if (!(n.type === "Rule" && n.authored) && !n.extracted) {
+    n.extracted = true;
+    ont.touch(n);
+  }
   return [had ? `${n.type} ${nameOrText(n) ?? n.id} already cited ${loc.id}.` : `${n.type} ${nameOrText(n) ?? n.id} now cites ${loc.id}.`];
 }
 
@@ -170,6 +173,7 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
       moved++;
       notes.push(`  ${loc.id}: line ${loc.lines} → ${hit.startLine}${hit.locator !== loc.locator ? ` (now under ${hit.locator})` : ""}`);
       Object.assign(loc, locFields(hit, src));
+      ont.touch(loc);
     }
   }
   notes.unshift(`${src.id}: ${moved} quote(s) moved, ${missing} missing.${missing ? " Missing quotes are errors in okb validate (prov-quote-current); re-extract them from the current text." : ""}`);
@@ -258,6 +262,7 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     if (!n.verification) throw new OkbError(`${n.id} hasn't been through verification yet.`);
     if (n.verification.status === "UNSUPPORTED") throw new OkbError("An UNSUPPORTED item can't be approved; remove it or re-extract from a quote that supports it.");
     n.verification = { ...n.verification, status: "SUPPORTED", approvedAfter: n.verification.status, ...(o.note ? { note: o.note } : {}) };
+    ont.touch(n);
     return [`${n.id}: approved by a person (was ${n.verification.approvedAfter}).`];
   }
   const status = (o.status ?? "").toUpperCase();
@@ -280,6 +285,7 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     n.extractionConfidence = o.confidence;
   } else n.extractionConfidence ??= "paraphrased";
   n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}) };
+  ont.touch(n);
   if (status === "UNSUPPORTED") notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
   notes.unshift(`${n.id}: ${status}.`);
   return notes;

@@ -24,6 +24,7 @@ export function setConventions(ont: Ontology, o: Partial<Conventions>): Notes {
   }
   conv.source = "chosen";
   ont.meta.conventions = conv;
+  ont.touch(ont.meta);
   const notes: Notes = [];
   const bad = [...ont.ofType("Class"), ...ont.ofType("Slot")].filter(
     (n) => n.name && naming.conventionalName(n.name, n.type as "Class", conv) !== n.name,
@@ -35,6 +36,7 @@ export function setConventions(ont: Ontology, o: Partial<Conventions>): Notes {
 function ensureConventions(ont: Ontology, notes: Notes): Conventions {
   if (!ont.conventions) {
     ont.meta.conventions = { ...naming.DEFAULT_CONVENTIONS, source: "default" };
+    ont.touch(ont.meta);
     notes.push("No naming convention was set, so okb is using its defaults: classes PascalCase and singular, slots camelCase. Confirm them with `okb convention` (or pick your own).");
   }
   return ont.conventions!;

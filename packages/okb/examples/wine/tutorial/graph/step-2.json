@@ -19,43 +19,57 @@
         "restaurant staff"
       ],
       "kind": "application",
-      "reuseReviewed": true
+      "reuseReviewed": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.an5hqz",
       "text": "Which wine characteristics should I consider when choosing a wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.ffbmq8",
       "text": "Is Bordeaux a red or white wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.tmq6hs",
       "text": "Does Cabernet Sauvignon go well with seafood?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.pv8gg4",
       "text": "What is the best choice of wine for grilled meat?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.s7b99r",
       "text": "Which characteristics of a wine affect its appropriateness for a dish?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.4mz6a9",
       "text": "Which wines does a given winery produce?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -63,7 +77,9 @@
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     }
   ],
   "edges": [

@@ -19,43 +19,57 @@
         "coffee beans and roasting"
       ],
       "kind": "application",
-      "reuseReviewed": true
+      "reuseReviewed": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.an5hqz",
       "text": "Which drinks have no milk?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.ffbmq8",
       "text": "What's the difference between a cortado and a latte?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.tmq6hs",
       "text": "What goes into a cappuccino?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.pv8gg4",
       "text": "Which drinks are a variation of another drink?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.s7b99r",
       "text": "Which drinks on the menu come with chocolate?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.4mz6a9",
       "text": "How much does each drink cost?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -63,217 +77,289 @@
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.drink",
       "text": "drink",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.espresso",
       "text": "espresso",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.ristretto",
       "text": "ristretto",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.lungo",
       "text": "lungo",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.americano",
       "text": "americano",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.long-black",
       "text": "long black",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.macchiato",
       "text": "macchiato",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.cortado",
       "text": "cortado",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.flat-white",
       "text": "flat white",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.cappuccino",
       "text": "cappuccino",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.latte",
       "text": "latte",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.breve",
       "text": "breve",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.mocha",
       "text": "mocha",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.con-panna",
       "text": "con panna",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.affogato",
       "text": "affogato",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.cafe-bombon",
       "text": "cafe bombon",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.ingredient",
       "text": "ingredient",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.coffee",
       "text": "coffee",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.water",
       "text": "water",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.milk",
       "text": "milk",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.whole-milk",
       "text": "whole milk",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.half-and-half",
       "text": "half and half",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.condensed-milk",
       "text": "condensed milk",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.foam",
       "text": "foam",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.chocolate",
       "text": "chocolate",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.whipped-cream",
       "text": "whipped cream",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.gelato",
       "text": "gelato",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.pull-volume",
       "text": "pull volume",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.espresso-to-milk-ratio",
       "text": "espresso to milk ratio",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.texture",
       "text": "texture",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.pour-order",
       "text": "pour order",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.contains",
       "text": "contains",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.variation-of",
       "text": "variation of",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.origin",
       "text": "origin",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.tip-jar",
       "text": "tip jar",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     }
   ],
   "edges": [

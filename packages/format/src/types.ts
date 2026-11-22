@@ -65,6 +65,16 @@ export interface Verification {
   approvedAfter?: VerificationStatus;
 }
 
+/**
+ * When a node was made and when something stored on it last changed: UTC to the second
+ * (`2026-11-21T14:03:22Z`). Missing on nodes from files written before they existed;
+ * read that as unknown, never as zero. Edges carry no stamps (see docs/FORMAT.md).
+ */
+export interface Stamps {
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 /** Fields the extraction pipeline adds to nodes drafted from a document. */
 export interface ExtractedFields {
   extracted?: boolean;
@@ -73,7 +83,7 @@ export interface ExtractedFields {
   _originalDraft?: string;
 }
 
-export interface OntologyNode {
+export interface OntologyNode extends Stamps {
   type: "Ontology";
   id: string;
   name: string;
@@ -87,14 +97,14 @@ export interface OntologyNode {
   conventions?: Conventions;
 }
 
-export interface CompetencyQuestionNode {
+export interface CompetencyQuestionNode extends Stamps {
   type: "CompetencyQuestion";
   id: string;
   text: string;
   status?: "draft" | "answerable";
 }
 
-export interface TermNode {
+export interface TermNode extends Stamps {
   type: "Term";
   id: string;
   text: string;
@@ -102,7 +112,7 @@ export interface TermNode {
   note?: string;
 }
 
-export interface ReusedOntologyNode {
+export interface ReusedOntologyNode extends Stamps {
   type: "ReusedOntology";
   id: string;
   name: string;
@@ -119,7 +129,7 @@ export interface FacetOverride {
   range?: string[];
 }
 
-export interface ClassNode extends ExtractedFields {
+export interface ClassNode extends ExtractedFields, Stamps {
   type: "Class";
   id: string;
   name: string;
@@ -142,7 +152,7 @@ export interface EdgePropertyDecl {
   description?: string;
 }
 
-export interface SlotNode extends ExtractedFields {
+export interface SlotNode extends ExtractedFields, Stamps {
   type: "Slot";
   id: string;
   name: string;
@@ -165,7 +175,7 @@ export interface SlotNode extends ExtractedFields {
 /** A slot whose values link to other things; they're stored as edges of type relType. */
 export type RelationshipSlot = SlotNode & { valueType: "Instance"; relType: string };
 
-export interface InstanceNode extends ExtractedFields {
+export interface InstanceNode extends ExtractedFields, Stamps {
   type: "Instance";
   id: string;
   name: string;
@@ -174,7 +184,7 @@ export interface InstanceNode extends ExtractedFields {
   values?: Record<string, StoredValue>;
 }
 
-export interface DesignDecisionNode extends ExtractedFields {
+export interface DesignDecisionNode extends ExtractedFields, Stamps {
   type: "DesignDecision";
   id: string;
   title: string;
@@ -187,7 +197,7 @@ export interface DesignDecisionNode extends ExtractedFields {
   date: string;
 }
 
-export interface SourceNode {
+export interface SourceNode extends Stamps {
   type: "Source";
   id: string;
   title: string;
@@ -199,7 +209,7 @@ export interface SourceNode {
   meta?: Record<string, unknown>;
 }
 
-export interface SourceLocationNode {
+export interface SourceLocationNode extends Stamps {
   type: "SourceLocation";
   id: string;
   quote: string;
@@ -222,7 +232,7 @@ export type Modality = (typeof MODALITIES)[number];
  * A domain rule: a requirement on any implementation, extracted from documentation
  * (docs/EXTRACTION-PIPELINE.md) or written by the ontology's owner.
  */
-export interface RuleNode extends ExtractedFields {
+export interface RuleNode extends ExtractedFields, Stamps {
   type: "Rule";
   id: string;
   name: string;

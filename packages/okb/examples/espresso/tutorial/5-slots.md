@@ -59,6 +59,8 @@ Added relationship usedIn: (Ingredient)-[:USED_IN]->(Drink).
 
 MilkDrink  Class · c.milk-drink
   An espresso drink with milk.
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   parents        EspressoDrink
   subclasses     Macchiato, Cortado, FlatWhite, Cappuccino, Latte
   flags          abstract

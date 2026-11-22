@@ -94,6 +94,8 @@ okb show "Chateau Morgon"
 
 ```text
 Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Beaujolais
 
   Values
@@ -108,6 +110,8 @@ Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
     goesWellWith       RedMeat (fixed by RedWine)
 
 Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Winery
 
   Values

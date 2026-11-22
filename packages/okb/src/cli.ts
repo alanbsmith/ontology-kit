@@ -52,7 +52,7 @@ function load(v: Record<string, any>): Ontology {
 
 function mutate(v: Record<string, any>, fn: (ont: Ontology) => string[]) {
   const ont = load(v);
-  const notes = fn(ont);
+  const notes = ont.tick(() => fn(ont));
   ont.save();
   say(notes);
 }
@@ -146,15 +146,7 @@ async function main(argvIn: string[]) {
       }
       if (sub === "set") {
         const { v, p } = parse(rest.slice(1), { text: str, status: str });
-        return mutate(v, (ont) => {
-          const q = ont.find(p[0], "CompetencyQuestion");
-          if (v.text) q.text = v.text;
-          if (v.status) {
-            if (!["draft", "answerable"].includes(v.status)) throw new OkbError("--status must be draft or answerable.");
-            q.status = v.status;
-          }
-          return v.status === "answerable" ? [`Updated ${q.id}.`, ops.familyTip(ont, q.id)] : [`Updated ${q.id}.`];
-        });
+        return mutate(v, (ont) => ops.setCQ(ont, p[0], { text: v.text, status: v.status }));
       }
       if (sub === "remove") {
         const { v, p } = parse(rest.slice(1));
@@ -293,8 +285,7 @@ async function main(argvIn: string[]) {
             ...(p.length > 1 ? ops.assign(ont, ont.find(p[0], "Instance").id, p.slice(1)) : []),
           ];
           if (v.desc !== undefined) {
-            ont.find(p[0], "Instance").description = v.desc;
-            notes.push("Updated description.");
+            notes.push(...ops.setInstanceDescription(ont, p[0], v.desc));
           }
           return notes;
         });

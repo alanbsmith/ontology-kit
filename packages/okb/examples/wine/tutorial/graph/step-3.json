@@ -19,43 +19,57 @@
         "restaurant staff"
       ],
       "kind": "application",
-      "reuseReviewed": true
+      "reuseReviewed": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.an5hqz",
       "text": "Which wine characteristics should I consider when choosing a wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.ffbmq8",
       "text": "Is Bordeaux a red or white wine?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.tmq6hs",
       "text": "Does Cabernet Sauvignon go well with seafood?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.pv8gg4",
       "text": "What is the best choice of wine for grilled meat?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.s7b99r",
       "text": "Which characteristics of a wine affect its appropriateness for a dish?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "CompetencyQuestion",
       "id": "cq.4mz6a9",
       "text": "Which wines does a given winery produce?",
-      "status": "draft"
+      "status": "draft",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "DesignDecision",
@@ -63,139 +77,185 @@
       "title": "No existing ontology reused",
       "decision": "Build from scratch.",
       "rationale": "Following Ontology 101, which builds the wine ontology from scratch for teaching; a French-wine knowledge base or retailer vocabulary would be candidates in a real project.",
-      "date": "2026-09-23"
+      "date": "2026-09-23",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.wine",
       "text": "wine",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.grape",
       "text": "grape",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.winery",
       "text": "winery",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.location",
       "text": "location",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.color",
       "text": "color",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.body",
       "text": "body",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.flavor",
       "text": "flavor",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.sugar",
       "text": "sugar",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.tannin-level",
       "text": "tannin level",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.red-wine",
       "text": "red wine",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.white-wine",
       "text": "white wine",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.rose-wine",
       "text": "rosé wine",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.dessert-wine",
       "text": "dessert wine",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.port",
       "text": "port",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.bordeaux",
       "text": "bordeaux",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.beaujolais",
       "text": "beaujolais",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.food",
       "text": "food",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.seafood",
       "text": "seafood",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.red-meat",
       "text": "red meat",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.goes-well-with",
       "text": "goes well with",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.vintage-year",
       "text": "vintage year",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
       "type": "Term",
       "id": "t.label-paper",
       "text": "label paper",
-      "disposition": "undecided"
+      "disposition": "undecided",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "updatedAt": "2026-09-23T00:00:00Z"
     }
   ],
   "edges": [

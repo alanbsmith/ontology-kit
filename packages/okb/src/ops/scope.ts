@@ -21,6 +21,7 @@ export function setScope(ont: Ontology, o: { name?: string; domain?: string; pur
     if (!isOneOf(["application", "terminological"], o.kind)) throw new OkbError("--kind must be 'application' or 'terminological'.");
     m.kind = o.kind;
   }
+  if (Object.values(o).some((v) => v !== undefined && (!Array.isArray(v) || v.length))) ont.touch(m);
   return [];
 }
 
@@ -30,6 +31,15 @@ export function addCQ(ont: Ontology, text: string): Notes {
   const notes = [`Added ${id}.`];
   if (!text.trim().endsWith("?")) notes.push("Tip: phrase competency questions as actual questions.");
   return notes;
+}
+
+export function setCQ(ont: Ontology, ref: string, o: { text?: string; status?: string }): Notes {
+  const q = ont.find(ref, "CompetencyQuestion");
+  if (o.status && !["draft", "answerable"].includes(o.status)) throw new OkbError("--status must be draft or answerable.");
+  if (o.text) q.text = o.text;
+  if (o.status) q.status = o.status as "draft" | "answerable";
+  if (o.text || o.status) ont.touch(q);
+  return o.status === "answerable" ? [`Updated ${q.id}.`, familyTip(ont, q.id)] : [`Updated ${q.id}.`];
 }
 
 export function linkCQ(ont: Ontology, cqRef: string, refs: string[], unlink = false): Notes {
@@ -79,6 +89,7 @@ export function setTerm(ont: Ontology, ref: string, as: string, nodeRef?: string
   if (!isOneOf(DISPOSITIONS, as)) throw new OkbError(`--as must be one of: ${DISPOSITIONS.join(", ")}.`);
   t.disposition = as;
   if (note) t.note = note;
+  ont.touch(t);
   ont.removeEdges((e) => e.from === t.id && e.type === "BECAME");
   const notes: Notes = [`'${t.text}' → ${as}.`];
   const typeFor: Partial<Record<Disposition, ("Class" | "Slot" | "Instance")[]>> = { class: ["Class"], slot: ["Slot"], instance: ["Instance"], value: ["Slot"], synonym: ["Class"] };
@@ -101,11 +112,13 @@ export function addReuse(ont: Ontology, o: { name: string; url?: string; decisio
   if (!isOneOf(decisions, o.decision)) throw new OkbError(`--decision must be one of: ${decisions.join(", ")}.`);
   ont.addNode({ type: "ReusedOntology", id: ont.newId("ReusedOntology", o.name), name: o.name, url: o.url, decision: o.decision, notes: o.notes });
   ont.meta.reuseReviewed = true;
+  ont.touch(ont.meta);
   return [`Recorded '${o.name}' (${o.decision}).`];
 }
 
 export function reuseNone(ont: Ontology, why: string): Notes {
   ont.meta.reuseReviewed = true;
+  ont.touch(ont.meta);
   addDecision(ont, { title: "No existing ontology reused", decision: "Build from scratch.", rationale: why, about: ["ontology"] });
   return ["Recorded that no existing ontology was reused, with your reason as a design decision."];
 }
@@ -114,6 +127,7 @@ export function linkTermIfAny(ont: Ontology, name: string, nodeId: string, as: D
   const t = ont.ofType("Term").find((x) => naming.key(naming.withHead(x.text, naming.singularize)) === naming.key(naming.withHead(name, naming.singularize)));
   if (t && (!t.disposition || t.disposition === "undecided")) {
     t.disposition = as;
+    ont.touch(t);
     ont.addEdge(t.id, "BECAME", nodeId);
   }
 }

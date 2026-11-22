@@ -38,6 +38,14 @@ function idTag(type: NodeType, name: string | undefined, attempt: number): strin
   return tag;
 }
 
+/** Now as `2026-11-21T14:03:22Z`. SOURCE_DATE_EPOCH pins it, like the id tags, so generated output is the same on every run. */
+function timestamp(): string {
+  const epoch = process.env.SOURCE_DATE_EPOCH;
+  if (epoch !== undefined && epoch !== "" && !/^\d+$/.test(epoch)) throw new OkbError(`SOURCE_DATE_EPOCH must be whole seconds since 1970; got '${epoch}'.`);
+  const ms = epoch ? Number(epoch) * 1000 : Date.now();
+  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
 /** `okb show class:Genre` etc.: prefixes that say which kind of node a name refers to. */
 const REF_PREFIX: Record<string, NodeType> = {
   class: "Class", slot: "Slot", instance: "Instance", term: "Term", cq: "CompetencyQuestion", question: "CompetencyQuestion", decision: "DesignDecision",
@@ -328,9 +336,41 @@ export class Ontology {
     return this.nodes.filter((x) => x.type === n.type).indexOf(n) + 1;
   }
 
+  private opTime: string | null = null;
+
+  /**
+   * Run one command with a single clock read: every stamp it writes (createdAt, updatedAt) is
+   * the same value, so a command that creates a node and edits it afterwards leaves the two
+   * equal. The CLI wraps each command in this; nesting reuses the outer read. A library caller
+   * that calls ops directly without it still gets a fresh read per addNode/touch, which is fine.
+   * @internal
+   */
+  tick<T>(fn: () => T): T {
+    if (this.opTime !== null) return fn();
+    this.opTime = timestamp();
+    try {
+      return fn();
+    } finally {
+      this.opTime = null;
+    }
+  }
+
+  /**
+   * Record that something stored ON the node changed (its own fields, property values or
+   * facets). Every op that changes a node's content calls this; ops that only add or remove
+   * edges don't.
+   * @internal
+   */
+  touch(node: OkbNode): void {
+    node.updatedAt = this.opTime ?? timestamp();
+  }
+
   /** @internal */
   addNode<T extends OkbNode>(node: T): T {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
+    const now = this.opTime ?? timestamp();
+    node.createdAt = now;
+    node.updatedAt = now;
     this._nodes.push(node);
     this.byId.set(node.id, node);
     return node;
@@ -368,12 +408,19 @@ export class Ontology {
   removeNode(id: string): void {
     this._nodes = this._nodes.filter((x) => x.id !== id);
     this._edges = this._edges.filter((e) => e.from !== id && e.to !== id);
+    // Values and facets stored under the removed id are content of the nodes that hold them.
+    const drop = (x: OkbNode, map: Record<string, unknown> | undefined): void => {
+      if (map && id in map) {
+        delete map[id];
+        this.touch(x);
+      }
+    };
     for (const x of this.nodes) {
-      if (x.type === "Instance" || x.type === "Rule") delete x.values?.[id];
+      if (x.type === "Instance" || x.type === "Rule") drop(x, x.values);
       else if (x.type === "Class") {
-        delete x.fixedValues?.[id];
-        delete x.defaults?.[id];
-        delete x.facetOverrides?.[id];
+        drop(x, x.fixedValues);
+        drop(x, x.defaults);
+        drop(x, x.facetOverrides);
       }
     }
     this.reindex();

@@ -12,6 +12,13 @@
 
 version: "okb-lpg/3"
 
+# Every node type also has two optional properties, set by okb (not listed per type below):
+#   createdAt - when the node was made, UTC to the second ("2026-11-21T14:03:22Z")
+#   updatedAt - when something stored ON the node last changed: its own fields, property
+#               values and facets. Edges (IS_A, HAS_SLOT, CITES, relationship values, ...)
+#               carry no stamps and changing them doesn't count. Missing on nodes from
+#               files written before okb-lpg/3: read that as unknown.
+
 nodeTypes:
   - {name: Ontology, origin: operational, models: concept.scope, required: [id, name],
      description: "Exactly one per ontology (id 'ontology'). Holds scope (domain, purpose, users, maintainers, outOfScope), conventions, reuseReviewed, and kind ('application' or 'terminological')."}

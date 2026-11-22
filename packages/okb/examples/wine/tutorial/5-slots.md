@@ -79,6 +79,8 @@ okb show RedWine
 ```text
 RedWine  Class · c.red-wine
   Wine made from dark-skinned grapes with skin contact; described by tannin level.
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   parents        Wine
   subclasses     Bordeaux, Beaujolais, Merlot, Port
   disjoint with  WhiteWine, RoseWine
