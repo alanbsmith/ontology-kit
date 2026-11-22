@@ -5,7 +5,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
 import { MetaKB, explainName } from "./metakb.ts";
-import { OkbError, Ontology } from "@ontology-kit/format";
+import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNode } from "@ontology-kit/format";
 import * as ops from "./ops.ts";
 import { c, explain, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
@@ -50,11 +50,13 @@ function load(v: Record<string, any>): Ontology {
   return Ontology.load(v.C ?? ".");
 }
 
+/** Load the folder, change it, save it and print the notes, all with the folder's lock held. */
 function mutate(v: Record<string, any>, fn: (ont: Ontology) => string[]) {
-  const ont = load(v);
-  const notes = ont.tick(() => fn(ont));
-  ont.save();
-  say(notes);
+  Ontology.edit(v.C ?? ".", (ont) => {
+    const notes = ont.tick(() => fn(ont));
+    ont.save();
+    say(notes);
+  });
 }
 
 async function main(argvIn: string[]) {
@@ -105,11 +107,13 @@ async function main(argvIn: string[]) {
     case "scope": {
       const { v } = parse(rest, { name: str, domain: str, purpose: str, users: strs, maintainers: strs, "out-of-scope": strs, kind: str });
       const touched = ["name", "domain", "purpose", "users", "maintainers", "out-of-scope", "kind"].some((k) => v[k] !== undefined);
-      const ont = load(v);
-      if (touched) {
-        ops.setScope(ont, { name: v.name, domain: v.domain, purpose: v.purpose, users: v.users, maintainers: v.maintainers, outOfScope: v["out-of-scope"], kind: v.kind });
-        ont.save();
-      }
+      const ont = touched
+        ? Ontology.edit(v.C ?? ".", (o) => {
+          ops.setScope(o, { name: v.name, domain: v.domain, purpose: v.purpose, users: v.users, maintainers: v.maintainers, outOfScope: v["out-of-scope"], kind: v.kind });
+          o.save();
+          return o;
+        })
+        : load(v);
       const m = ont.meta;
       const row = (k: string, val: unknown) => console.log(`  ${c.dim(k.padEnd(13))} ${Array.isArray(val) ? val.join(", ") || c.yellow("—") : val || c.yellow("—")}`);
       return output(v, () => m, () => {
@@ -154,7 +158,7 @@ async function main(argvIn: string[]) {
       }
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
-      const qs = ont.ofType("CompetencyQuestion");
+      const qs = ont.numbered("CompetencyQuestion") as CompetencyQuestionNode[];
       return output(v, () => qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), () => {
         if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
         for (const q of qs) {
@@ -301,7 +305,7 @@ async function main(argvIn: string[]) {
       }
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
-      const ds = ont.ofType("DesignDecision");
+      const ds = ont.numbered("DesignDecision") as DesignDecisionNode[];
       return output(v, () => ds, () => {
         for (const d of ds) {
           console.log(`${c.bold(String(ont.displayNumber(d)).padEnd(3))} ${d.title}`);
@@ -394,13 +398,15 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(rest);
       const meta = MetaKB.get();
       if (p[0]) {
-        const ont = load(v);
-        const target = p[0] === "next" ? ont.step + 1 : p[0] === "prev" ? ont.step - 1 : Number(p[0]);
-        if (!meta.step(target)) throw new OkbError(`There is no step ${p[0]}. Steps are 1–${meta.steps.length}.`);
-        const st = computeStatus(ont);
-        const leaving = st.steps.find((s) => s.order === ont.step)!;
-        ont.manifest.currentStep = target;
-        ont.save();
+        const { target, leaving } = Ontology.edit(v.C ?? ".", (ont) => {
+          const target = p[0] === "next" ? ont.step + 1 : p[0] === "prev" ? ont.step - 1 : Number(p[0]);
+          if (!meta.step(target)) throw new OkbError(`There is no step ${p[0]}. Steps are 1–${meta.steps.length}.`);
+          const st = computeStatus(ont);
+          const leaving = st.steps.find((s) => s.order === ont.step)!;
+          ont.manifest.currentStep = target;
+          ont.save();
+          return { target, leaving };
+        });
         if (target > leaving.order && !leaving.complete) {
           console.log(c.yellow(`Moving on with step ${leaving.order} unfinished (${leaving.items.filter((i) => i.done === false).map((i) => i.text).join("; ")}). That's allowed; the method is iterative.`));
         }
@@ -559,9 +565,11 @@ async function main(argvIn: string[]) {
       if (sub === "add") {
         const { v, p } = parse(rest.slice(1), { cites: strs, line: str, "allow-code": bool });
         if (p.length < 2) throw new OkbError('Usage: okb quote add <source> "verbatim text" [--cites <node>] [--line N]');
-        const ont = load(v);
-        const notes = await prov.addQuote(ont, p[0], p.slice(1).join(" "), { cites: v.cites, line: num(v.line, "--line"), allowCode: v["allow-code"] });
-        ont.save();
+        const notes = await Ontology.edit(v.C ?? ".", async (ont) => {
+          const notes = await prov.addQuote(ont, p[0], p.slice(1).join(" "), { cites: v.cites, line: num(v.line, "--line"), allowCode: v["allow-code"] });
+          ont.save();
+          return notes;
+        });
         return void say(notes);
       }
       const { v, p } = parse(sub === "list" ? rest.slice(1) : rest);

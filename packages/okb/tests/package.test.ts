@@ -103,7 +103,7 @@ describe("published packages", { skip: SKIP }, () => {
     assert.match(okb("version"), new RegExp(`^okb ${pkgVersion.replace(/\./g, "\\.")} · meta-KB \\d+\\.\\d+\\.\\d+`));
     okb("init", "my-ontology");
     const dir = join(install, "my-ontology");
-    for (const f of ["okb.json", "nodes.json", "edges.json"]) assert.ok(existsSync(join(dir, f)), f);
+    for (const f of ["okb.json", "nodes.jsonl", "edges.jsonl"]) assert.ok(existsSync(join(dir, f)), f);
     cwd = dir; // okb finds the ontology from the folder it runs in
     assert.match(okb("validate"), /./);
     const out = join(install, "export.json");

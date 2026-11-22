@@ -94,7 +94,7 @@ A question like "When should I use a PrimaryButton?" is one example of a type. A
 
 - Don't skip scope or competency questions. Every later decision leans on them.
 - Don't make them list every possible question up front. A few examples are enough; widen each one once it's answered.
-- Don't edit nodes.json/edges.json by hand. Use okb, which enforces naming, stores each relationship once, fills in defaults, and keeps ids stable.
+- Don't edit nodes.jsonl/edges.jsonl by hand. Use okb, which enforces naming, stores each relationship once, fills in defaults, and keeps ids stable.
 - Don't add classes, slots or instances the user didn't agree to. Suggest them and let the user decide.
 - Don't dump the glossary. Explain one idea at the moment it's needed.
 - Don't `--force` a name or waive a warning without saying why and recording a decision.

@@ -34,7 +34,7 @@ cd espresso
 
 ## Read the output
 
-- okb made a folder with three files: `okb.json`, `nodes.json` and `edges.json`. Every command from here on changes them.
+- okb made a folder with three files: `okb.json`, `nodes.jsonl` and `edges.jsonl`. Every command from here on changes them.
 - Each command appears in a block you can copy. What okb printed appears in a separate block under it.
 
 > **Common mistakes**

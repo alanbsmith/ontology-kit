@@ -214,7 +214,7 @@ $ okb term add drink espresso ristretto lungo americano "long black" macchiato c
 
 ```console
 $ okb term list
-undecided     drink · espresso · ristretto · lungo · americano · long black · macchiato · cortado · flat white · cappuccino · latte · breve · mocha · con panna · affogato · cafe bombon · ingredient · coffee · water · milk · whole milk · half and half · condensed milk · foam · chocolate · whipped cream · gelato · pull volume · espresso to milk ratio · texture · pour order · contains · variation of · origin · tip jar
+undecided     affogato · americano · breve · cafe bombon · cappuccino · chocolate · coffee · con panna · condensed milk · contains · cortado · drink · espresso · espresso to milk ratio · flat white · foam · gelato · half and half · ingredient · latte · long black · lungo · macchiato · milk · mocha · origin · pour order · pull volume · ristretto · texture · tip jar · variation of · water · whipped cream · whole milk
 ```
 
 ```console
@@ -515,7 +515,7 @@ MilkDrink  Class · c.milk-drink
   created        2026-09-23T00:00:00Z
   updated        2026-09-23T00:00:00Z
   parents        EspressoDrink
-  subclasses     Macchiato, Cortado, FlatWhite, Cappuccino, Latte
+  subclasses     Cappuccino, Cortado, FlatWhite, Latte, Macchiato
   flags          abstract
   disjoint with  SweetenedDrink, PureEspresso
 
@@ -523,9 +523,9 @@ MilkDrink  Class · c.milk-drink
     espressoToMilkRatio Float, single
     texture            Enumerated, {silky, foamy, thick}, single
     pullVolumeMl       Integer, single (from EspressoDrink)
-    pourOrder          String, single (from Drink)
-    origin             String, single (from Drink)
     contains           Instance, → Ingredient (:CONTAINS), multiple, min 1 (from Drink)
+    origin             String, single (from Drink)
+    pourOrder          String, single (from Drink)
     variationOf        Instance, → Drink (:VARIATION_OF), multiple (from Drink)
 ```
 
@@ -692,23 +692,23 @@ $ okb validate
 ✗ 0 error(s)   ! 0 warning(s)   i 4 hint(s)   · checks for steps 1–6 (use --all for the rest)
 
 HINTS: worth a look
-  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
   i 'Latte' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i The subclasses of 'MilkDrink' ('Macchiato', 'Cortado', 'FlatWhite', 'Cappuccino', 'Latte') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'MilkDrink' ('Cappuccino', 'Cortado', 'FlatWhite', 'Latte', 'Macchiato') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.8wg5vc
+  · Subclasses of 'Milk' are named inconsistently: 'CondensedMilk', 'WholeMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Americano', 'LongBlack', 'Lungo', 'Ristretto' don't. [naming-subclass-names-consistent] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)
@@ -816,8 +816,8 @@ $ okb instance add "Vertex breve" --of Breve "contains=Double shot,Steamed half-
 Added Vertex breve (a Breve).
 Vertex breve.contains = Double shot, Steamed half-and-half, Milk foam
 Vertex breve.pourOrder = "Shot, half-and-half, then foam"
-Filled in default espressoToMilkRatio = 0.33.
-Filled in default texture = "foamy".
+Filled in default espressoToMilkRatio = 0.2.
+Filled in default texture = "silky".
 Filled in default origin = "USA".
 $ okb instance add "Vertex mocha" --of Mocha "contains=Double shot,Chocolate syrup,Steamed whole milk" "pourOrder=Chocolate, shot, then milk"
 Added Vertex mocha (a Mocha).
@@ -847,13 +847,13 @@ Vertex breve  Instance · i.vertex-breve-7fvaz3
   instance of    Breve
 
   Values
-    espressoToMilkRatio 0.33
-    texture            foamy
+    espressoToMilkRatio 0.2
+    texture            silky
     pullVolumeMl       —
-    pourOrder          Shot, half-and-half, then foam
+    contains           Double shot, Milk foam, Steamed half-and-half
     origin             USA
-    contains           Double shot, Steamed half-and-half, Milk foam
-    variationOf        Latte, Cappuccino (fixed by Breve)
+    pourOrder          Shot, half-and-half, then foam
+    variationOf        Cappuccino, Latte (fixed by Breve)
 $ okb show "Milk foam"
 Milk foam  Instance · i.milk-foam-ap9t4r
   created        2026-09-23T00:00:00Z
@@ -861,7 +861,7 @@ Milk foam  Instance · i.milk-foam-ap9t4r
   instance of    Foam
 
   Values
-    usedIn             Vertex cappuccino, Vertex breve, Vertex macchiato {amount: "splash"}
+    usedIn             Vertex breve, Vertex cappuccino, Vertex macchiato {amount: "splash"}
 ```
 
 ```console
@@ -869,23 +869,23 @@ $ okb validate
 ✗ 0 error(s)   ! 0 warning(s)   i 4 hint(s)   · checks for steps 1–7 (use --all for the rest)
 
 HINTS: worth a look
-  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
   i 'Latte' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i The subclasses of 'MilkDrink' ('Macchiato', 'Cortado', 'FlatWhite', 'Cappuccino', 'Latte') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'MilkDrink' ('Cappuccino', 'Cortado', 'FlatWhite', 'Latte', 'Macchiato') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.8wg5vc
+  · Subclasses of 'Milk' are named inconsistently: 'CondensedMilk', 'WholeMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Americano', 'LongBlack', 'Lungo', 'Ristretto' don't. [naming-subclass-names-consistent] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)
@@ -955,26 +955,26 @@ $ okb cq link 1 Drink contains Milk
 Linked cq.an5hqz → Drink (Class).
 Linked cq.an5hqz → contains (Slot).
 Linked cq.an5hqz → Milk (Class).
-  Tip: cq.an5hqz is one example of a family of questions. Would you also ask the same question about EspressoDrink, or more about Drink (pourOrder, origin, variationOf); the same question about Coffee, Water, Foam, Chocolate, or more about Milk (fatPercent, usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.an5hqz is one example of a family of questions. Would you also ask the same question about EspressoDrink, or more about Drink (origin, pourOrder, variationOf); the same question about Chocolate, Coffee, Foam, Gelato, or more about Milk (fatPercent, usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 2 Cortado Latte espressoToMilkRatio texture
 Linked cq.ffbmq8 → Cortado (Class).
 Linked cq.ffbmq8 → Latte (Class).
 Linked cq.ffbmq8 → espressoToMilkRatio (Slot).
 Linked cq.ffbmq8 → texture (Slot).
-  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Cappuccino, or more about Cortado (pullVolumeMl, pourOrder, origin, variationOf); the same question about Breve? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Cappuccino, FlatWhite, Macchiato, or more about Cortado (pullVolumeMl, origin, pourOrder, variationOf); the same question about Breve? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 3 Cappuccino contains
 Linked cq.tmq6hs → Cappuccino (Class).
 Linked cq.tmq6hs → contains (Slot).
-  Tip: cq.tmq6hs is one example of a family of questions. Would you also ask the same question about Macchiato, FlatWhite, Breve, or more about Cappuccino (pullVolumeMl, pourOrder, origin, variationOf)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.tmq6hs is one example of a family of questions. Would you also ask the same question about FlatWhite, Macchiato, Breve, or more about Cappuccino (pullVolumeMl, origin, pourOrder, variationOf)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 4 variationOf Breve
 Linked cq.pv8gg4 → variationOf (Slot).
 Linked cq.pv8gg4 → Breve (Class).
-  Tip: cq.pv8gg4 is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); more about Breve (pullVolumeMl)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.pv8gg4 is one example of a family of questions. Would you also ask more about Drink (origin, pourOrder); more about Breve (pullVolumeMl)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 5 contains Chocolate Mocha
 Linked cq.s7b99r → contains (Slot).
 Linked cq.s7b99r → Chocolate (Class).
 Linked cq.s7b99r → Mocha (Class).
-  Tip: cq.s7b99r is one example of a family of questions. Would you also ask more about Drink (pourOrder, origin); the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate (usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.s7b99r is one example of a family of questions. Would you also ask more about Drink (origin, pourOrder); the same question about Coffee, Foam, Gelato, Water, or more about Chocolate (usedIn)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 ```
 
 ```console
@@ -998,12 +998,12 @@ Added authored rule rule.breve-uses-half-and-half (MUST): A Breve MUST be made w
 rule.breve-uses-half-and-half refines rule.milk-drinks-have-milk (adds: The milk must be half-and-half.).
 Next: verify it in a fresh context, then okb verify rule.breve-uses-half-and-half --status SUPPORTED|OVERREACH|UNSUPPORTED
 $ okb rule list
-rule.milk-drinks-have-milk [MUST · authored · unverified]
-   A MilkDrink MUST contain a milk ingredient.
-   governs: MilkDrink · cites: loc.vertex-coffee-house-guide-bdsph9
 rule.breve-uses-half-and-half [MUST · authored · unverified]
    A Breve MUST be made with HalfAndHalf.
    governs: Breve · cites: loc.vertex-coffee-house-guide-q2hn8f
+rule.milk-drinks-have-milk [MUST · authored · unverified]
+   A MilkDrink MUST contain a milk ingredient.
+   governs: MilkDrink · cites: loc.vertex-coffee-house-guide-bdsph9
 ```
 
 ```console
@@ -1033,67 +1033,67 @@ WARNINGS: fix, or record a design decision explaining why not
       Fix: `okb cq link <cq> <Class|slot>...`, or add what's missing.
 
 HINTS: worth a look
-  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
   i 'Latte' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i The subclasses of 'MilkDrink' ('Macchiato', 'Cortado', 'FlatWhite', 'Cappuccino', 'Latte') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'MilkDrink' ('Cappuccino', 'Cortado', 'FlatWhite', 'Latte', 'Macchiato') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i No competency question needs these classes (or their parent/child): 'Espresso', 'Ristretto', 'Lungo', 'Americano', 'LongBlack'. [scope-no-unneeded]
+  i No competency question needs these classes (or their parent/child): 'Americano', 'Espresso', 'LongBlack', 'Lungo', 'Ristretto'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
-  i No competency question needs these slots: 'pullVolumeMl', 'pourOrder', 'fatPercent', 'origin'. [scope-no-unneeded]
+  i No competency question needs these slots: 'fatPercent', 'origin', 'pourOrder', 'pullVolumeMl'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.386rne
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.8wg5vc
+  · Subclasses of 'Milk' are named inconsistently: 'CondensedMilk', 'WholeMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Americano', 'LongBlack', 'Lungo', 'Ristretto' don't. [naming-subclass-names-consistent] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 $ okb review
 Review: what only a person can judge (step 8 and anything already visible)
 
 ? hier-is-a-means-kind-of (MUST)  For each IS_A edge, say out loud: 'Every <child> is, by definition, a <parent>.' If you hesitate, or the honest word is 'part of' / 'has' / 'usually', it is not an is-a.
-   · Every EspressoDrink is, by definition, a Drink?
-   · Every PureEspresso is, by definition, an EspressoDrink?
-   · Every MilkDrink is, by definition, an EspressoDrink?
-   · Every SweetenedDrink is, by definition, an EspressoDrink?
-   · Every Espresso is, by definition, a PureEspresso?
-   · Every Ristretto is, by definition, a PureEspresso?
-   · Every Lungo is, by definition, a PureEspresso?
+   · Every Affogato is, by definition, a SweetenedDrink?
    · Every Americano is, by definition, a PureEspresso?
-   · Every LongBlack is, by definition, a PureEspresso?
-   · Every Macchiato is, by definition, a MilkDrink?
+   · Every Breve is, by definition, a Cappuccino?
+   · Every Breve is, by definition, a Latte?
+   · Every CafeBombon is, by definition, a SweetenedDrink?
+   · Every Cappuccino is, by definition, a MilkDrink?
+   · Every Chocolate is, by definition, an Ingredient?
+   · Every Coffee is, by definition, an Ingredient?
+   · Every ConPanna is, by definition, a SweetenedDrink?
+   · Every CondensedMilk is, by definition, a Milk?
    · Every Cortado is, by definition, a MilkDrink?
-   · Every FlatWhite is, by definition, a MilkDrink?
+   · Every Espresso is, by definition, a PureEspresso?
    · ...and 18 more (okb review --json)
    Ontology 101 §4.1 Ensuring that the class hierarchy is correct, p.12
 
 ? hier-siblings-same-generality (MUST)  For each parent with 2+ children, ask: 'Is any of these a kind of another one?' and 'Would an expert put these on the same level?'
-   · EspressoDrink → PureEspresso, MilkDrink, SweetenedDrink: equally general? Is any one a kind of another?
-   · PureEspresso → Espresso, Ristretto, Lungo, Americano, LongBlack: equally general? Is any one a kind of another?
-   · MilkDrink → Macchiato, Cortado, FlatWhite, Cappuccino, Latte: equally general? Is any one a kind of another?
-   · SweetenedDrink → Mocha, ConPanna, Affogato, CafeBombon: equally general? Is any one a kind of another?
-   · Ingredient → Coffee, Water, Milk, Foam, Chocolate, WhippedCream, Gelato: equally general? Is any one a kind of another?
-   · Milk → WholeMilk, HalfAndHalf, CondensedMilk: equally general? Is any one a kind of another?
+   · EspressoDrink → MilkDrink, PureEspresso, SweetenedDrink: equally general? Is any one a kind of another?
+   · Ingredient → Chocolate, Coffee, Foam, Gelato, Milk, Water, WhippedCream: equally general? Is any one a kind of another?
+   · Milk → CondensedMilk, HalfAndHalf, WholeMilk: equally general? Is any one a kind of another?
+   · MilkDrink → Cappuccino, Cortado, FlatWhite, Latte, Macchiato: equally general? Is any one a kind of another?
+   · PureEspresso → Americano, Espresso, LongBlack, Lungo, Ristretto: equally general? Is any one a kind of another?
+   · SweetenedDrink → Affogato, CafeBombon, ConPanna, Mocha: equally general? Is any one a kind of another?
    Ontology 101 §4.2 Analyzing siblings in a class hierarchy, p.14
 
 ? hier-no-subclass-per-restriction (SHOULD NOT)  For each class created mainly to hold one value of one slot, ask whether it's really just that slot's value.
-   · Espresso differs from its parent only by pullVolumeMl = 30. Is it a real kind of thing experts distinguish, or just that value?
-   · Macchiato differs from its parent only by origin = "Italy". Is it a real kind of thing experts distinguish, or just that value?
-   · Mocha differs from its parent only by origin = "USA". Is it a real kind of thing experts distinguish, or just that value?
-   · ConPanna differs from its parent only by origin = "Italy". Is it a real kind of thing experts distinguish, or just that value?
    · Affogato differs from its parent only by origin = "Italy". Is it a real kind of thing experts distinguish, or just that value?
    · CafeBombon differs from its parent only by origin = "Spain". Is it a real kind of thing experts distinguish, or just that value?
-   · WholeMilk differs from its parent only by fatPercent = 3. Is it a real kind of thing experts distinguish, or just that value?
-   · HalfAndHalf differs from its parent only by fatPercent = 12. Is it a real kind of thing experts distinguish, or just that value?
+   · ConPanna differs from its parent only by origin = "Italy". Is it a real kind of thing experts distinguish, or just that value?
    · CondensedMilk differs from its parent only by fatPercent = 8. Is it a real kind of thing experts distinguish, or just that value?
+   · Espresso differs from its parent only by pullVolumeMl = 30. Is it a real kind of thing experts distinguish, or just that value?
+   · HalfAndHalf differs from its parent only by fatPercent = 12. Is it a real kind of thing experts distinguish, or just that value?
+   · Macchiato differs from its parent only by origin = "Italy". Is it a real kind of thing experts distinguish, or just that value?
+   · Mocha differs from its parent only by origin = "USA". Is it a real kind of thing experts distinguish, or just that value?
+   · WholeMilk differs from its parent only by fatPercent = 3. Is it a real kind of thing experts distinguish, or just that value?
    Ontology 101 §4.4 When to introduce a new class (or not), p.16
 
 ? hier-class-or-value (SHOULD)  Use decision guide decision.class-or-value on each suspicious class/value.
@@ -1110,31 +1110,29 @@ Review: what only a person can judge (step 8 and anything already visible)
    Ontology 101 §4.6 An instance or a class?, p.18
 
 ? inst-granularity (SHOULD)  What are the most specific things that appear in answers to your competency questions? Those should be instances.
-   · Instances currently live under: Espresso, Macchiato, Cortado, FlatWhite, Cappuccino, Breve, Mocha, Affogato, Coffee, Water, WholeMilk, HalfAndHalf, Foam, Chocolate, WhippedCream, Gelato. Are these the things your competency questions ask about?
+   · Instances currently live under: Affogato, Breve, Cappuccino, Chocolate, Coffee, Cortado, Espresso, FlatWhite, Foam, Gelato, HalfAndHalf, Macchiato, Mocha, Water, WhippedCream, WholeMilk. Are these the things your competency questions ask about?
    Ontology 101 §4.6 An instance or a class?, p.18
 
 ? slot-domain-fits-all (MUST)  For each slot, check every class it's inherited by. Does each one really have this property?
-   · pullVolumeMl applies to EspressoDrink, SweetenedDrink, CafeBombon, Affogato, ConPanna, Mocha, MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato, PureEspresso, LongBlack, Americano, Lungo, Ristretto, Espresso. Does every one of these really have it?
-   · espressoToMilkRatio applies to MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato. Does every one of these really have it?
-   · texture applies to MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato. Does every one of these really have it?
-   · pourOrder applies to Drink, EspressoDrink, SweetenedDrink, CafeBombon, Affogato, ConPanna, Mocha, MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato, PureEspresso, LongBlack, Americano, Lungo, Ristretto, Espresso. Does every one of these really have it?
-   · fatPercent applies to Milk, CondensedMilk, HalfAndHalf, WholeMilk. Does every one of these really have it?
-   · origin applies to Drink, EspressoDrink, SweetenedDrink, CafeBombon, Affogato, ConPanna, Mocha, MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato, PureEspresso, LongBlack, Americano, Lungo, Ristretto, Espresso. Does every one of these really have it?
-   · contains applies to Drink, EspressoDrink, SweetenedDrink, CafeBombon, Affogato, ConPanna, Mocha, MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato, PureEspresso, LongBlack, Americano, Lungo, Ristretto, Espresso. Does every one of these really have it?
-   · variationOf applies to Drink, EspressoDrink, SweetenedDrink, CafeBombon, Affogato, ConPanna, Mocha, MilkDrink, Latte, Breve, Cappuccino, FlatWhite, Cortado, Macchiato, PureEspresso, LongBlack, Americano, Lungo, Ristretto, Espresso. Does every one of these really have it?
-   · usedIn applies to Ingredient, Gelato, WhippedCream, Chocolate, Foam, Milk, CondensedMilk, HalfAndHalf, WholeMilk, Water, Coffee. Does every one of these really have it?
+   · contains applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · espressoToMilkRatio applies to MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · fatPercent applies to Milk, WholeMilk, HalfAndHalf, CondensedMilk. Does every one of these really have it?
+   · origin applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · pourOrder applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · pullVolumeMl applies to EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · texture applies to MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
+   · usedIn applies to Ingredient, WhippedCream, Water, Milk, WholeMilk, HalfAndHalf, CondensedMilk, Gelato, Foam, Coffee, Chocolate. Does every one of these really have it?
+   · variationOf applies to Drink, EspressoDrink, SweetenedDrink, Mocha, ConPanna, CafeBombon, Affogato, PureEspresso, Ristretto, Lungo, LongBlack, Espresso, Americano, MilkDrink, Macchiato, Latte, Breve, FlatWhite, Cortado, Cappuccino. Does every one of these really have it?
    Ontology 101 §3 Step 6, Domain and range of a slot, p.11
 
 ? scope-cq-families (SHOULD)  For each answered competency question: what's its family (the same question about sibling classes or other instances, and the questions next to it about the same subject)? Would the ontology answer them? Is each one you don't want recorded as out of scope?
-   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about EspressoDrink, or more about Drink: pourOrder, origin?
-   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Milk: fatPercent, usedIn?
-   · cq.ffbmq8 "What's the difference between a cortado and a latte?": would you also ask the same question about Macchiato, FlatWhite, or more about Cortado: pullVolumeMl, pourOrder, origin?
-   · cq.tmq6hs "What goes into a cappuccino?": would you also ask the same question about Macchiato, FlatWhite, or more about Cappuccino: pullVolumeMl, pourOrder, origin?
-   · cq.pv8gg4 "Which drinks are a variation of another drink?": would you also ask more about Drink: pourOrder, origin?
-   · cq.pv8gg4 "Which drinks are a variation of another drink?": would you also ask more about Breve: pullVolumeMl?
-   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask more about Drink: pourOrder, origin?
-   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about Coffee, Water, Foam, WhippedCream, or more about Chocolate: usedIn?
-   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about ConPanna, Affogato, CafeBombon, or more about Mocha: pullVolumeMl?
+   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about EspressoDrink, or more about Drink: origin, pourOrder?
+   · cq.an5hqz "Which drinks have no milk?": would you also ask the same question about Coffee, Foam, Gelato, Water, or more about Milk: fatPercent, usedIn?
+   · cq.ffbmq8 "What's the difference between a cortado and a latte?": would you also ask the same question about FlatWhite, Macchiato, or more about Cortado: pullVolumeMl, origin, pourOrder?
+   · cq.pv8gg4 "Which drinks are a variation of another drink?": would you also ask more about Breve: pullVolumeMl, origin, pourOrder?
+   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about Coffee, Foam, Gelato, Water, or more about Chocolate: usedIn?
+   · cq.s7b99r "Which drinks on the menu come with chocolate?": would you also ask the same question about Affogato, CafeBombon, ConPanna, or more about Mocha: pullVolumeMl, origin, pourOrder?
+   · cq.tmq6hs "What goes into a cappuccino?": would you also ask the same question about FlatWhite, Macchiato, or more about Cappuccino: pullVolumeMl, origin, pourOrder?
    · For each family you don't want: record it as out of scope (out of scope so far: brewing equipment, coffee beans and roasting).
    Ontology 101 §3 Step 1, Competency questions, p.5
 

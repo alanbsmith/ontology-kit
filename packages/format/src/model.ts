@@ -1,8 +1,10 @@
-/** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). Part of @ontology-kit/format. */
+/** Loading, saving and navigating an ontology folder (okb.json + nodes.jsonl + edges.jsonl; see layout.ts). Part of @ontology-kit/format. */
 import { createHash, randomBytes } from "node:crypto";
-import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { OkbError } from "./errors.ts";
+import { compareNatural, readGraph, writeGraph } from "./layout.ts";
+import { acquireLock, waitUnlocked } from "./lock.ts";
 import { FORMAT_VERSION } from "./registry.ts";
 import * as naming from "./naming.ts";
 import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
@@ -111,19 +113,45 @@ export class Ontology {
   }
 
   static load(start: string): Ontology {
+    const root = Ontology.rootOf(start);
+    waitUnlocked(root); // a command that is saving writes several files; don't read in the middle
+    return Ontology.read(root);
+  }
+
+  /**
+   * Load, change and save one folder with its lock held, so a second command running at the same time
+   * waits instead of overwriting this one's work. `fn` may be async; it should call `save()` itself.
+   * @internal
+   */
+  static edit<T>(start: string, fn: (ont: Ontology) => T): T {
+    const root = Ontology.rootOf(start);
+    const release = acquireLock(root);
+    let result: T;
+    try {
+      result = fn(Ontology.read(root));
+    } catch (e) {
+      release();
+      throw e;
+    }
+    if (result instanceof Promise) return result.finally(release) as T;
+    release();
+    return result;
+  }
+
+  private static rootOf(start: string): string {
     const root = findRoot(start);
     if (!root) {
       throw new OkbError(
         `No ontology found in ${resolve(start)} or its parents. Create one with: okb init <folder> --name "My Ontology"`,
       );
     }
+    return root;
+  }
+
+  private static read(root: string): Ontology {
     // Trusted as typed; struct-well-formed reports what a hand edit got wrong.
-    const ont = new Ontology(
-      root,
-      readJson<Manifest>(join(root, MANIFEST), { format: FORMAT, currentStep: 1 }),
-      readJson<OkbNode[]>(join(root, "nodes.json"), []),
-      readJson<GraphEdge[]>(join(root, "edges.json"), []),
-    );
+    const { nodes, edges } = readGraph(root);
+    const ont = new Ontology(root, readJson<Manifest>(join(root, MANIFEST), { format: FORMAT, currentStep: 1 }), nodes, edges);
     if (ont.manifest.format === "okb-lpg/1") ont.migrateFromV1();
     // okb-lpg/2 -> /3 changes how new ids are made, not any existing id, so only the version moves.
     if (ont.manifest.format === "okb-lpg/2") ont.manifest.format = FORMAT;
@@ -150,12 +178,7 @@ export class Ontology {
 
   /** @internal */
   save(): void {
-    const files: [string, unknown][] = [[MANIFEST, this.manifest], ["nodes.json", this.nodes], ["edges.json", this.edges]];
-    for (const [fname, data] of files) {
-      const tmp = join(this.root, fname + ".tmp");
-      writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf8");
-      renameSync(tmp, join(this.root, fname));
-    }
+    writeGraph(this.root, this.manifest, this.nodes, this.edges);
   }
 
   // addNode/addEdge update the indexes in place; everything else that changes
@@ -262,12 +285,12 @@ export class Ontology {
     const k = naming.key(ref);
     let hits = this.nodes.filter((n) => ok(n) && k && lookupNames(n).some((x) => naming.key(x) === k));
     if (hits.length === 0 && /^\d+$/.test(ref) && ts) {
-      // A bare number is a position in `okb cq list` / `okb decision list` (ids carry no number),
+      // A bare number is a position in `okb cq list` / `okb decision list` (display order; ids carry no number),
       // or, for ids made before okb-lpg/3, the number inside `cq.3` / `d.3`.
       for (const [t, p] of [["CompetencyQuestion", "cq"], ["DesignDecision", "d"]] as const) {
         if (!ts.includes(t)) continue;
         const legacy = this.byId.get(`${p}.${ref}`);
-        const nth = this.nodes.filter((n) => n.type === t)[Number(ref) - 1];
+        const nth = this.numbered(t)[Number(ref) - 1];
         hits = hits.concat(legacy?.type === t ? [legacy] : nth ? [nth] : []);
       }
     }
@@ -328,12 +351,27 @@ export class Ontology {
   }
 
   /**
+   * Competency questions or design decisions in display order, the order their numbers follow:
+   * oldest first by `createdAt`, nodes with no `createdAt` (made before timestamps) before those that
+   * have one, in id order with numbers compared as numbers (`cq.2` before `cq.10`), and ties by id.
+   * File order is sorted by id and says nothing about age.
+   * @internal
+   */
+  numbered(type: NodeType): OkbNode[] {
+    return this.nodes.filter((n) => n.type === type).sort((a, b) => {
+      const ca = a.createdAt ?? "";
+      const cb = b.createdAt ?? "";
+      return (ca < cb ? -1 : ca > cb ? 1 : 0) || compareNatural(a.id, b.id);
+    });
+  }
+
+  /**
    * The number a person types for a competency question or design decision (`okb cq link 2 ...`):
-   * its position in file order, counting from 1. Ids no longer carry it.
+   * its position in display order (see `numbered`), counting from 1. Ids carry no number.
    */
   /** @internal */
   displayNumber(n: OkbNode): number {
-    return this.nodes.filter((x) => x.type === n.type).indexOf(n) + 1;
+    return this.numbered(n.type).indexOf(n) + 1;
   }
 
   private opTime: string | null = null;
@@ -368,7 +406,13 @@ export class Ontology {
   /** @internal */
   addNode<T extends OkbNode>(node: T): T {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
-    const now = this.opTime ?? timestamp();
+    let now = this.opTime ?? timestamp();
+    if (node.type === "CompetencyQuestion" || node.type === "DesignDecision") {
+      // These are numbered by age (see `numbered`), and stamps have one-second resolution: a new one
+      // always sorts after the existing ones, even when two are added in the same second.
+      const newest = this.nodes.reduce((m, n) => (n.type === node.type && n.createdAt && n.createdAt > m ? n.createdAt : m), "");
+      if (newest >= now) now = new Date(Date.parse(newest) + 1000).toISOString().replace(/\.\d{3}Z$/, "Z");
+    }
     node.createdAt = now;
     node.updatedAt = now;
     this._nodes.push(node);

@@ -68,10 +68,10 @@ describe("tutorial engine", () => {
   it("rebuilds from nothing and gives identical files each time", () => {
     const dir = demo({ "0-intro.md": intro, "1-scope.md": "# Step 1\n\n```okb\nokb cq add \"Is it hot?\"\n```\n" });
     build(dir);
-    const before = readFileSync(join(dir, "nodes.json"), "utf8");
+    const before = readFileSync(join(dir, "nodes.jsonl"), "utf8");
     writeFileSync(join(dir, "stale.txt"), "left over");
     build(dir);
-    assert.equal(readFileSync(join(dir, "nodes.json"), "utf8"), before);
+    assert.equal(readFileSync(join(dir, "nodes.jsonl"), "utf8"), before);
     assert.ok(!existsSync(join(dir, "stale.txt")), "everything but the sources is deleted first");
     assert.match(before, /2026-09-23|Tea|Demo/);
     assert.match(readFileSync(join(dir, "okb.json"), "utf8"), /"created": "2026-09-23"/, "dates are pinned");

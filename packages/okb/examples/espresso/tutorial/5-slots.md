@@ -62,7 +62,7 @@ MilkDrink  Class · c.milk-drink
   created        2026-09-23T00:00:00Z
   updated        2026-09-23T00:00:00Z
   parents        EspressoDrink
-  subclasses     Macchiato, Cortado, FlatWhite, Cappuccino, Latte
+  subclasses     Cappuccino, Cortado, FlatWhite, Latte, Macchiato
   flags          abstract
   disjoint with  SweetenedDrink, PureEspresso
 
@@ -70,9 +70,9 @@ MilkDrink  Class · c.milk-drink
     espressoToMilkRatio Float, single
     texture            Enumerated, {silky, foamy, thick}, single
     pullVolumeMl       Integer, single (from EspressoDrink)
-    pourOrder          String, single (from Drink)
-    origin             String, single (from Drink)
     contains           Instance, → Ingredient (:CONTAINS), multiple, min 1 (from Drink)
+    origin             String, single (from Drink)
+    pourOrder          String, single (from Drink)
     variationOf        Instance, → Drink (:VARIATION_OF), multiple (from Drink)
 ```
 

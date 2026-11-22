@@ -1,12 +1,12 @@
 # The okb file format (`okb-lpg/3`)
 
-An ontology built with okb is a folder with three JSON files:
+An ontology built with okb is a folder with three plain-text files:
 
-| File         | Contents                                                                                  |
-| ------------ | ----------------------------------------------------------------------------------------- |
-| `okb.json`   | Tool state: format version, name, `currentStep`, the meta-KB version it was created with. |
-| `nodes.json` | A list of nodes. Each has `id`, `type` and type-specific properties.                      |
-| `edges.json` | A list of edges. Each has `from`, `type`, `to` and sometimes properties.                  |
+| File          | Contents                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| `okb.json`    | Tool state: format version, name, `currentStep`, the meta-KB version it was created with.  |
+| `nodes.jsonl` | The nodes, one per line, sorted by id. Each has `id`, `type` and type-specific properties. |
+| `edges.jsonl` | The edges, one per line, sorted by `from`, `type`, `to`. Each may have more properties.    |
 
 It's a labeled property graph (LPG). In this file the **schema is data**: [classes](GLOSSARY.md#concept-class) and [slots](GLOSSARY.md#concept-slot) are nodes, so the ontology can be validated, queried and versioned. For loading into Neo4j, Neptune or Memgraph, `okb export` flips that around (see [Export](build/export.md)). Either way, model the _meaning_ first (see _Model the domain, not the database_ in [METHOD.md](METHOD.md)).
 
@@ -48,7 +48,7 @@ An id is a readable prefix, a dot, and a part that says which node it is. Two pe
 
 - **Questions, decisions, instances and quotes carry a tag.** `<tag>` is six random characters from the lowercase alphabet `0-9a-z` without `i`, `l`, `o` and `u` (30 bits, so `cq.k7x2mq`, `d.3fh9xe`, `i.margaux-4t8wzn`). The slug part, where there is one, is only there to read.
 - **Classes, slots, terms, reused ontologies, sources and rules keep a plain slug** (`c.wine`, `s.maker`), because the name is the identity: two branches that both add a class `Wine` added the same thing, and git reports that as a conflict for a person to resolve. If the plain slug is taken in the folder you're editing, the new id gets a tag instead of a counter (`c.wine-4t8wzn`), because a counter would depend on what that branch already holds.
-- **The short numbers people type are positions, not ids.** `okb cq list` and `okb decision list` number the entries 1, 2, 3 in file order, and `okb cq link 2 Wine` or `ont.find("2", "CompetencyQuestion")` takes the second. The numbers shift when something earlier is removed, so a script that needs a stable reference uses the id.
+- **The short numbers people type are positions, not ids.** `okb cq list` and `okb decision list` number the entries 1, 2, 3 in the order they were created (by `createdAt`; older nodes without one come first, in id order), not in file order, and `okb cq link 2 Wine` or `ont.find("2", "CompetencyQuestion")` takes the second. Adding a question doesn't change the numbers of the ones before it, but removing one does shift the later numbers, so a script that needs a stable reference uses the id.
 - **Ids made before `okb-lpg/3` stay as they are** (`cq.1`, `d.2`, `i.margaux-2`, `loc.guide.1`). The number in an old `cq.3` still answers to `3`, and nothing is renamed.
 
 Set `SOURCE_DATE_EPOCH` (seconds since 1970, the reproducible-builds convention) and the tag is derived from it, the type, the name and a counter instead of being random, so a generated folder like `packages/okb/examples/wine` rebuilds byte for byte. Don't set it when several people edit one ontology: the same name then gives the same tag on every branch.
@@ -65,7 +65,7 @@ Every node carries `createdAt` and `updatedAt`, UTC to the second (`2026-11-21T1
 
 Anything stored as an **edge** doesn't count: `IS_A`, `INSTANCE_OF`, `HAS_SLOT`, `NEEDS`, `CITES`, `GOVERNS`, `REFINES`, `FULFILLS`, and relationship values such as `MAKER`. Edges have no timestamps. Setting `body=light` on an instance updates it, because the value lives in the instance's `values`, but linking it to a winery doesn't, because that link is an edge. Adding a slot to a class doesn't update the class (`HAS_SLOT`), and linking a rule to a quote doesn't update the rule. A slot's `RANGE` is an edge too, but it's a facet of the slot, so changing it does update the slot. A rule's `authored` flag and a node's `verification` are fields, so they count.
 
-`okb show` prints both, and every `--json` output that includes a node includes them. `okb cq list` and `okb decision list` still number by position in the file, not by `createdAt`. Two branches that edit different nodes change different lines of `nodes.json`, so git merges them without a conflict on the stamps.
+`okb show` prints both, and every `--json` output that includes a node includes them. `okb cq list` and `okb decision list` number by `createdAt`, not by position in the file. Two nodes created in the same second are ordered by id. Two branches that edit different nodes change different lines of `nodes.json`, so git merges them without a conflict on the stamps.
 
 A file with no stamps (written before they existed) loads as it is. okb never invents a timestamp for a node it didn't create: read a missing field as "unknown". The first edit of such a node sets `updatedAt` and leaves `createdAt` missing.
 
@@ -136,7 +136,7 @@ Everything is exported from `packages/format/src/index.ts`, and nothing else in 
 
 | Export                                                                                                         | What it is                                                                                                                                                                                                                                                                                                                 |
 | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Ontology`                                                                                                     | An ontology folder. `Ontology.load(folder)` reads `okb.json`, `nodes.json` and `edges.json` from the folder or a parent, and converts an `okb-lpg/1` folder in memory. `Ontology.fromData(nodes, edges)` builds one from data you already have.                                                                            |
+| `Ontology`                                                                                                     | An ontology folder. `Ontology.load(folder)` reads `okb.json`, `nodes.jsonl` and `edges.jsonl` (or the older `nodes.json` and `edges.json`) from the folder or a parent, and converts an `okb-lpg/1` folder in memory. `Ontology.fromData(nodes, edges)` builds one from data you already have.                             |
 | Reading methods of `Ontology`                                                                                  | `nodes`, `edges`, `manifest`, `meta`, `get`, `require`, `find`, `ofType`, `label`, `outEdges`, `inEdges`, `targets`, `sources`, `edgesOf`, `parents`, `children`, `ancestors`, `descendants`, `roots`, `ownSlots`, `applicableSlots`, `domain`, `range`, `inverses`, `effectiveFacets`, `statedValues`, `instanceClasses`. |
 | `ont.rel` (`Relationships`)                                                                                    | `values(id, slotId)`, `edge(id, slotId, target)`, `spec(slotId)`, `primary`, `isPrimary`, `edgeTypes()`, `slotsWithValues` and `edgeProperties`. This is how to read a relationship value without knowing how it's stored.                                                                                                 |
 | `OkbNode` and the node types                                                                                   | The typed union of every node (`ClassNode`, `SlotNode`, `InstanceNode`, `RuleNode`, ...), plus `NodeType`, `NodeOf<T>`, `GraphEdge`, `GraphNode`, `Manifest`, `Conventions`, `StoredValue`, `Facets` and the other types in the node tables above.                                                                         |
@@ -181,11 +181,23 @@ Where the line falls:
 
 A tool that kept its own copy of the node types and its own list of structural edge types (okb-mcp, for example) replaces them with imports from `@ontology-kit/format`: the node types, `STRUCTURAL_EDGE_TYPES` in place of a hand-written list, and `ont.rel.values` in place of its own edge walking. A new edge type like `REFINES` then reaches it with an upgrade, not a copy edit. A changed `rel.values` result, a removed export or a node property that went away in a new major version are the breaking changes to watch for.
 
+## Working in a team: git is the database
+
+A team keeps an ontology folder in git, so a branch is a copy of the knowledge base and a pull request is a change to it. That works only if two people's unrelated edits merge without a conflict, so the files are laid out for it:
+
+- **One node or edge per line.** `nodes.jsonl` and `edges.jsonl` hold one JSON object per line. A line is the unit git merges, so a class added on one branch and instances added on another touch different lines. A reviewer can read a diff as "these nodes changed".
+- **Sorted, with a fixed key order.** Nodes are sorted by id (numbers compare as numbers, so `cq.2` comes before `cq.10`) and edges by `from`, `type`, `to`. Each node starts with `id` and `type`, each edge with `from`, `type` and `to`, and every other key follows alphabetically, so saving a file twice gives the same text and a save never moves a line it didn't change. Keys okb doesn't know are kept. Because the file is in id order, lists such as `okb term list` are no longer in the order you added things; questions and decisions are numbered by `createdAt` instead (see above).
+- **Ids that two branches can't both make.** Questions, decisions, instances and quotes carry a random six-character tag, so two branches that each add a node never pick the same id. A class with the same name on two branches gets the same id on purpose: git then shows one conflict on that line, which is the real disagreement.
+
+Two commands on one folder at the same time can't lose a write either. Every command that changes the folder takes the lock file `.okb.lock` first (created exclusively, holding the process id), loads, changes and saves, then removes it. A second command waits up to ten seconds and then stops with an error that says which process holds the lock. A lock left by a crashed command is taken over when its process is gone, or after ten minutes. If one is stuck, delete `.okb.lock`. `okb init` writes a `.gitignore` with `.okb.lock` and `*.tmp`, so neither is committed. Commands that only read wait briefly for the lock, so they never read half a save.
+
+After a merge, run `okb validate`. A merge can leave things that no single branch had: an edge whose node the other branch deleted, or two nodes with one id. Both are reported with the likely cause named (rule `struct-well-formed`), and the fix is to keep one node or remove the edge. If git stopped with a conflict, the file holds conflict markers; okb refuses to read it and says so. Keep the lines you want from both sides, delete the markers, and run `okb validate`.
+
 ## Exporting to a graph database
 
 `okb export` writes the data as JSON or as an openCypher script for Neo4j, Neptune and Memgraph (the `okb-export/2` format). What it writes, its options and an example are on the [Export](build/export.md) page.
 
-Files from the previous formats are converted automatically the next time okb loads them. `okb-lpg/1` used `HAS_VALUE` edges. `okb-lpg/2` to `okb-lpg/3` changes how new ids are made and adds [timestamps](#timestamps) to new nodes, so no id changes, no timestamps are added to existing nodes, and only the version in `okb.json` moves.
+Files from the previous formats are converted automatically the next time okb loads them. `okb-lpg/1` used `HAS_VALUE` edges. `okb-lpg/2` to `okb-lpg/3` changes how new ids are made and adds [timestamps](#timestamps) to new nodes, so no id changes, no timestamps are added to existing nodes, and only the version in `okb.json` moves. The same release changes the file layout (see below): a folder with `nodes.json` and `edges.json` loads as it is, and the next command that saves writes `nodes.jsonl` and `edges.jsonl` and removes the two old files.
 
 ## Example (from packages/okb/examples/wine)
 

@@ -27,7 +27,7 @@ concepts:
     definition: "An ontology together with a set of individual instances of classes. The line between where the ontology ends and the knowledge base begins is a fine one."
     plainLanguage: "The ontology is the empty form: which fields exist and what's allowed in them. The knowledge base is the form filled in with real things."
     example: "The ontology defines the Wine class and its slots; adding 'Château Morgon Beaujolais' with body=light turns it into a knowledge base."
-    inThisToolkit: "The same nodes.json/edges.json hold both. Instance nodes are the knowledge-base part."
+    inThisToolkit: "The same nodes.jsonl/edges.jsonl hold both. Instance nodes are the knowledge-base part."
     cites: [src.o101/def-kb]
 
   - id: concept.class
@@ -274,7 +274,7 @@ concepts:
     definition: "The storage format used by this toolkit: nodes and edges that each carry a type label and a set of key/value properties."
     plainLanguage: "Your ontology is saved as two JSON lists, nodes and edges, which is how graph databases like Neo4j and Neptune think. Classes, slots and instances are nodes. Structural links (IS_A, HAS_SLOT...) and relationship values ((wine)-[:MAKER]->(winery)) are edges. `okb export` writes the data the way a graph database expects it: instances as nodes labeled with their classes. It's still just the storage format, so model the meaning first (see principle.knowledge-level)."
     example: '{"type": "Class", "id": "c.red-wine", "name": "RedWine"} and {"from": "c.red-wine", "type": "IS_A", "to": "c.wine"}'
-    inThisToolkit: "nodes.json and edges.json in your ontology folder. See docs/FORMAT.md."
+    inThisToolkit: "nodes.jsonl and edges.jsonl in your ontology folder. See docs/FORMAT.md."
 
   - id: concept.edge-property
     name: Edge property (relationship property)

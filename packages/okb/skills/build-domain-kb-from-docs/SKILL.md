@@ -9,7 +9,7 @@ description: Use when extracting design-system (or other) documentation, usually
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `packages/okb/meta-kb/` and the pipeline in `docs/EXTRACTION-PIPELINE.md` (both in the ontology-kit repository, usually `~/Projects/ontology-kit`).
 
-The point of this skill is to be deterministic where possible and to stop for human review everywhere else. Never auto-merge a finding this pipeline can't fully verify itself. Everything goes through okb commands; don't hand-edit nodes.json/edges.json.
+The point of this skill is to be deterministic where possible and to stop for human review everywhere else. Never auto-merge a finding this pipeline can't fully verify itself. Everything goes through okb commands; don't hand-edit nodes.jsonl/edges.jsonl.
 
 ## Step 0: Set up
 

@@ -31,7 +31,7 @@ okb term list
 ```
 
 ```text
-undecided     drink · espresso · ristretto · lungo · americano · long black · macchiato · cortado · flat white · cappuccino · latte · breve · mocha · con panna · affogato · cafe bombon · ingredient · coffee · water · milk · whole milk · half and half · condensed milk · foam · chocolate · whipped cream · gelato · pull volume · espresso to milk ratio · texture · pour order · contains · variation of · origin · tip jar
+undecided     affogato · americano · breve · cafe bombon · cappuccino · chocolate · coffee · con panna · condensed milk · contains · cortado · drink · espresso · espresso to milk ratio · flat white · foam · gelato · half and half · ingredient · latte · long black · lungo · macchiato · milk · mocha · origin · pour order · pull volume · ristretto · texture · tip jar · variation of · water · whipped cream · whole milk
 ```
 
 ## Read the output

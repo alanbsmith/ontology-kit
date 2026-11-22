@@ -2,74 +2,74 @@
   "step": 1,
   "nodes": [
     {
-      "type": "Ontology",
+      "id": "cq.4mz6a9",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:05Z",
+      "status": "draft",
+      "text": "How much does each drink cost?",
+      "updatedAt": "2026-09-23T00:00:05Z"
+    },
+    {
+      "id": "cq.an5hqz",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "status": "draft",
+      "text": "Which drinks have no milk?",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "cq.ffbmq8",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:01Z",
+      "status": "draft",
+      "text": "What's the difference between a cortado and a latte?",
+      "updatedAt": "2026-09-23T00:00:01Z"
+    },
+    {
+      "id": "cq.pv8gg4",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:03Z",
+      "status": "draft",
+      "text": "Which drinks are a variation of another drink?",
+      "updatedAt": "2026-09-23T00:00:03Z"
+    },
+    {
+      "id": "cq.s7b99r",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:04Z",
+      "status": "draft",
+      "text": "Which drinks on the menu come with chocolate?",
+      "updatedAt": "2026-09-23T00:00:04Z"
+    },
+    {
+      "id": "cq.tmq6hs",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:02Z",
+      "status": "draft",
+      "text": "What goes into a cappuccino?",
+      "updatedAt": "2026-09-23T00:00:02Z"
+    },
+    {
       "id": "ontology",
-      "name": "Espresso drinks",
+      "type": "Ontology",
+      "createdAt": "2026-09-23T00:00:00Z",
       "domain": "Espresso-based coffee drinks and what goes in them",
-      "purpose": "Help baristas and customers compare drinks on a café menu",
-      "users": [
-        "baristas",
-        "customers"
-      ],
+      "kind": "application",
       "maintainers": [
         "head barista"
       ],
+      "name": "Espresso drinks",
       "outOfScope": [
         "brewing equipment",
         "coffee beans and roasting"
       ],
-      "kind": "application",
+      "purpose": "Help baristas and customers compare drinks on a café menu",
       "reuseReviewed": false,
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.an5hqz",
-      "text": "Which drinks have no milk?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.ffbmq8",
-      "text": "What's the difference between a cortado and a latte?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.tmq6hs",
-      "text": "What goes into a cappuccino?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.pv8gg4",
-      "text": "Which drinks are a variation of another drink?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.s7b99r",
-      "text": "Which drinks on the menu come with chocolate?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.4mz6a9",
-      "text": "How much does each drink cost?",
-      "status": "draft",
-      "createdAt": "2026-09-23T00:00:00Z",
-      "updatedAt": "2026-09-23T00:00:00Z"
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "users": [
+        "baristas",
+        "customers"
+      ]
     }
   ],
   "edges": []

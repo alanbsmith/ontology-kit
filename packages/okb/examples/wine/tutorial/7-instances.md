@@ -100,14 +100,14 @@ Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
 
   Values
     tanninLevel        low
-    color              red (fixed by RedWine)
     body               light
+    color              red (fixed by RedWine)
     flavor             delicate
-    sugar              dry
-    maker              Chateau Morgon
-    grape              Gamay
-    region             Beaujolais region
     goesWellWith       RedMeat (fixed by RedWine)
+    grape              Gamay
+    maker              Chateau Morgon
+    region             Beaujolais region
+    sugar              dry
 
 Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   created        2026-09-23T00:00:00Z
@@ -115,8 +115,8 @@ Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   instance of    Winery
 
   Values
-    produces           Chateau Morgon Beaujolais
     location           Beaujolais, France
+    produces           Chateau Morgon Beaujolais
 ```
 
 ## Read the output
@@ -136,10 +136,10 @@ okb status
 ✗ 0 error(s)   ! 0 warning(s)   i 2 hint(s)   · checks for steps 1–7 (use --all for the rest)
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 

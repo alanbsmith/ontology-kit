@@ -240,10 +240,10 @@ Winery
 ✗ 0 error(s)   ! 0 warning(s)   i 2 hint(s)   · checks for steps 1–4 (use --all for the rest)
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 

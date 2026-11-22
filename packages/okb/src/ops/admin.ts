@@ -1,5 +1,5 @@
 /** Creating an ontology, design decisions, renaming and removing. */
-import { existsSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
@@ -20,6 +20,9 @@ export function createOntology(root: string, name: string): Ontology {
     outOfScope: [], kind: "application", reuseReviewed: false,
   });
   ont.save();
+  // Keep the lock file and half-written temp files out of git (a team keeps the folder in a repository).
+  const ignore = join(root, ".gitignore");
+  if (!existsSync(ignore)) writeFileSync(ignore, ".okb.lock\n*.tmp\n");
   return ont;
 }
 

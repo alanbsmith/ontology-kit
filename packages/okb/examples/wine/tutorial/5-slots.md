@@ -82,19 +82,19 @@ RedWine  Class · c.red-wine
   created        2026-09-23T00:00:00Z
   updated        2026-09-23T00:00:00Z
   parents        Wine
-  subclasses     Bordeaux, Beaujolais, Merlot, Port
-  disjoint with  WhiteWine, RoseWine
+  subclasses     Beaujolais, Bordeaux, Merlot, Port
+  disjoint with  RoseWine, WhiteWine
 
   Slots  (properties hold values; relationships → link to other things)
     tanninLevel        Enumerated, {low, moderate, high}, single
-    color              Enumerated, {red, white, rose}, single (from Wine)
     body               Enumerated, {light, medium, full}, single (from Wine)
+    color              Enumerated, {red, white, rose}, single (from Wine)
     flavor             Enumerated, {delicate, moderate, strong}, single (from Wine)
-    sugar              Enumerated, {dry, offDry, sweet}, single (from Wine)
-    maker              Instance, → Winery (:MAKER), single, min 1 (from Wine)
-    grape              Instance, → WineGrape (:GRAPE), multiple, min 1 (from Wine)
-    region             Instance, → WineRegion (:REGION), single (from Wine)
     goesWellWith       Instance, → Food (:GOES_WELL_WITH), multiple (from Wine)
+    grape              Instance, → WineGrape (:GRAPE), multiple, min 1 (from Wine)
+    maker              Instance, → Winery (:MAKER), single, min 1 (from Wine)
+    region             Instance, → WineRegion (:REGION), single (from Wine)
+    sugar              Enumerated, {dry, offDry, sweet}, single (from Wine)
 ```
 
 ## Read the output

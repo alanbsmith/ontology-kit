@@ -37,5 +37,8 @@ export function loadGraph(root: string, name: string): RawGraph {
   }
   const dir = name === "meta-kb" ? `${PKG}/meta-kb/data` : name === "espresso" || name === "wine" ? `${PKG}/examples/${name}` : undefined;
   if (!dir) throw new Error(`No graph named ${name}`);
-  return { nodes: readJson(root, `${dir}/nodes.json`), edges: readJson(root, `${dir}/edges.json`) };
+  if (name === "meta-kb") return { nodes: readJson(root, `${dir}/nodes.json`), edges: readJson(root, `${dir}/edges.json`) };
+  // The example ontologies are okb folders: one node or edge per line.
+  const lines = (file: string) => readFileSync(join(root, dir, file), "utf8").split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
+  return { nodes: lines("nodes.jsonl"), edges: lines("edges.jsonl") };
 }

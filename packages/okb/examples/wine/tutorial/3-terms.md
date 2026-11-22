@@ -31,7 +31,7 @@ okb term list
 ```
 
 ```text
-undecided     wine · grape · winery · location · color · body · flavor · sugar · tannin level · red wine · white wine · rosé wine · dessert wine · port · bordeaux · beaujolais · food · seafood · red meat · goes well with · vintage year · label paper
+undecided     beaujolais · body · bordeaux · color · dessert wine · flavor · food · goes well with · grape · label paper · location · port · red meat · red wine · rosé wine · seafood · sugar · tannin level · vintage year · white wine · wine · winery
 ```
 
 ## Read the output

@@ -217,7 +217,7 @@ $ okb term add wine grape winery location color body flavor sugar "tannin level"
 
 ```console
 $ okb term list
-undecided     wine · grape · winery · location · color · body · flavor · sugar · tannin level · red wine · white wine · rosé wine · dessert wine · port · bordeaux · beaujolais · food · seafood · red meat · goes well with · vintage year · label paper
+undecided     beaujolais · body · bordeaux · color · dessert wine · flavor · food · goes well with · grape · label paper · location · port · red meat · red wine · rosé wine · seafood · sugar · tannin level · vintage year · white wine · wine · winery
 ```
 
 ```console
@@ -422,10 +422,10 @@ $ okb validate
 ✗ 0 error(s)   ! 0 warning(s)   i 2 hint(s)   · checks for steps 1–4 (use --all for the rest)
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
@@ -541,19 +541,19 @@ RedWine  Class · c.red-wine
   created        2026-09-23T00:00:00Z
   updated        2026-09-23T00:00:00Z
   parents        Wine
-  subclasses     Bordeaux, Beaujolais, Merlot, Port
-  disjoint with  WhiteWine, RoseWine
+  subclasses     Beaujolais, Bordeaux, Merlot, Port
+  disjoint with  RoseWine, WhiteWine
 
   Slots  (properties hold values; relationships → link to other things)
     tanninLevel        Enumerated, {low, moderate, high}, single
-    color              Enumerated, {red, white, rose}, single (from Wine)
     body               Enumerated, {light, medium, full}, single (from Wine)
+    color              Enumerated, {red, white, rose}, single (from Wine)
     flavor             Enumerated, {delicate, moderate, strong}, single (from Wine)
-    sugar              Enumerated, {dry, offDry, sweet}, single (from Wine)
-    maker              Instance, → Winery (:MAKER), single, min 1 (from Wine)
-    grape              Instance, → WineGrape (:GRAPE), multiple, min 1 (from Wine)
-    region             Instance, → WineRegion (:REGION), single (from Wine)
     goesWellWith       Instance, → Food (:GOES_WELL_WITH), multiple (from Wine)
+    grape              Instance, → WineGrape (:GRAPE), multiple, min 1 (from Wine)
+    maker              Instance, → Winery (:MAKER), single, min 1 (from Wine)
+    region             Instance, → WineRegion (:REGION), single (from Wine)
+    sugar              Enumerated, {dry, offDry, sweet}, single (from Wine)
 ```
 
 ```console
@@ -668,10 +668,10 @@ WARNINGS: fix, or record a design decision explaining why not
       `terminological`; or merge it into its parent.
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
@@ -796,14 +796,14 @@ Chateau Morgon Beaujolais  Instance · i.chateau-morgon-beaujolais-ygb1b8
 
   Values
     tanninLevel        low
-    color              red (fixed by RedWine)
     body               light
+    color              red (fixed by RedWine)
     flavor             delicate
-    sugar              dry
-    maker              Chateau Morgon
-    grape              Gamay
-    region             Beaujolais region
     goesWellWith       RedMeat (fixed by RedWine)
+    grape              Gamay
+    maker              Chateau Morgon
+    region             Beaujolais region
+    sugar              dry
 $ okb show "Chateau Morgon"
 Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   created        2026-09-23T00:00:00Z
@@ -811,8 +811,8 @@ Chateau Morgon  Instance · i.chateau-morgon-ypqfhf
   instance of    Winery
 
   Values
-    produces           Chateau Morgon Beaujolais
     location           Beaujolais, France
+    produces           Chateau Morgon Beaujolais
 ```
 
 ```console
@@ -820,10 +820,10 @@ $ okb validate
 ✗ 0 error(s)   ! 0 warning(s)   i 2 hint(s)   · checks for steps 1–7 (use --all for the rest)
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
@@ -901,12 +901,12 @@ Linked cq.an5hqz → body (Slot).
 Linked cq.an5hqz → flavor (Slot).
 Linked cq.an5hqz → sugar (Slot).
 Linked cq.an5hqz → tanninLevel (Slot).
-  Tip: cq.an5hqz is one example of a family of questions. Would you also ask more about Wine (maker, grape, region, goesWellWith)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.an5hqz is one example of a family of questions. Would you also ask more about Wine (goesWellWith, grape, maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 2 Bordeaux RedWine WhiteWine
 Linked cq.ffbmq8 → Bordeaux (Class).
 Linked cq.ffbmq8 → RedWine (Class).
 Linked cq.ffbmq8 → WhiteWine (Class).
-  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (maker, grape, region, goesWellWith); the same question about RoseWine, DessertWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (goesWellWith, grape, maker, region); the same question about DessertWine, RoseWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 $ okb cq link 3 goesWellWith grape Seafood
 Linked cq.tmq6hs → goesWellWith (Slot).
 Linked cq.tmq6hs → grape (Slot).
@@ -930,17 +930,17 @@ Linked cq.4mz6a9 → Winery (Class).
 ```console
 $ okb cq list
 1   Which wine characteristics should I consider when choosing a wine? [draft]
-       needs: color, body, flavor, sugar, tanninLevel
+       needs: body, color, flavor, sugar, tanninLevel
 2   Is Bordeaux a red or white wine? [draft]
        needs: Bordeaux, RedWine, WhiteWine
 3   Does Cabernet Sauvignon go well with seafood? [draft]
-       needs: goesWellWith, grape, Seafood
+       needs: Seafood, goesWellWith, grape
 4   What is the best choice of wine for grilled meat? [draft]
        needs: RedMeat, goesWellWith
 5   Which characteristics of a wine affect its appropriateness for a dish? [draft]
-       needs: goesWellWith, body, flavor
+       needs: body, flavor, goesWellWith
 6   Which wines does a given winery produce? [draft]
-       needs: produces, Winery
+       needs: Winery, produces
 ```
 
 ```console
@@ -948,15 +948,15 @@ $ okb validate --all
 ✗ 0 error(s)   ! 0 warning(s)   i 4 hint(s)   · all checks
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
   i No competency question needs these classes (or their parent/child): 'WineRegion'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
-  i No competency question needs these slots: 'region', 'location'. [scope-no-unneeded]
+  i No competency question needs these slots: 'location', 'region'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (2)

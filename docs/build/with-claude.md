@@ -36,7 +36,7 @@ It starts with scope and [competency questions](../GLOSSARY.md#concept-competenc
 ## What the coach won't do
 
 - It won't add a class, property or instance you didn't agree to. It suggests, and you decide.
-- It won't edit `nodes.json` or `edges.json` by hand. Every change goes through `okb`, which enforces the naming convention and keeps ids stable.
+- It won't edit `nodes.jsonl` or `edges.jsonl` by hand. Every change goes through `okb`, which enforces the naming convention and keeps ids stable.
 - It won't skip scope and competency questions. Every later decision leans on them.
 - It won't pick a "right" model for you. There's rarely one, and it points you back to your competency questions to choose.
 

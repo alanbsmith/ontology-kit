@@ -50,10 +50,10 @@ Run `pnpm tsc` and `pnpm test` after every change. There's no code linter. `pnpm
 
 ## Architecture
 
-okb is a CLI that guides a beginner through the 8-step Ontology 101 method. It has two graphs, and both use the same labeled property graph (LPG) shape (`nodes.json` + `edges.json`):
+okb is a CLI that guides a beginner through the 8-step Ontology 101 method. It has two graphs, and both use the same labeled property graph (LPG) shape (the meta-KB as `nodes.json` + `edges.json` arrays, an ontology folder as `nodes.jsonl` + `edges.jsonl`, one node or edge per line):
 
 1. **The meta-KB** (`packages/okb/meta-kb/`) holds the method, glossary, principles, decision guides, rules, and the file-format registry. It is authored as YAML in `packages/okb/meta-kb/src/`, compiled by `packages/okb/meta-kb/build.ts` into committed JSON in `packages/okb/meta-kb/data/`, and read at runtime by `packages/okb/src/metakb.ts` (`MetaKB.get()` singleton).
-2. **A user's ontology**: a folder with `okb.json`, `nodes.json`, and `edges.json`, loaded by `Ontology` in `packages/format/src/model.ts` (the `@ontology-kit/format` package; okb imports it by name). In this file the schema is data: classes, slots, and instances are all nodes.
+2. **A user's ontology**: a folder with `okb.json`, `nodes.jsonl`, and `edges.jsonl` (layout in `packages/format/src/layout.ts`, lock in `lock.ts`; commands that write run through `Ontology.edit`, which holds `.okb.lock`), loaded by `Ontology` in `packages/format/src/model.ts` (the `@ontology-kit/format` package; okb imports it by name). In this file the schema is data: classes, slots, and instances are all nodes.
 
 ### The meta-KB is the source of truth; the build enforces it
 

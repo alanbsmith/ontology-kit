@@ -31,12 +31,12 @@ Linked cq.an5hqz → body (Slot).
 Linked cq.an5hqz → flavor (Slot).
 Linked cq.an5hqz → sugar (Slot).
 Linked cq.an5hqz → tanninLevel (Slot).
-  Tip: cq.an5hqz is one example of a family of questions. Would you also ask more about Wine (maker, grape, region, goesWellWith)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.an5hqz is one example of a family of questions. Would you also ask more about Wine (goesWellWith, grape, maker, region)? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
 Linked cq.ffbmq8 → Bordeaux (Class).
 Linked cq.ffbmq8 → RedWine (Class).
 Linked cq.ffbmq8 → WhiteWine (Class).
-  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (maker, grape, region, goesWellWith); the same question about RoseWine, DessertWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
+  Tip: cq.ffbmq8 is one example of a family of questions. Would you also ask the same question about Beaujolais, Merlot, Port, Medoc, or more about Bordeaux (goesWellWith, grape, maker, region); the same question about DessertWine, RoseWine? Add the ones you want (okb cq add "..."), note the rest as out of scope (okb scope --out-of-scope "..."), or keep it narrow.
 
 Linked cq.tmq6hs → goesWellWith (Slot).
 Linked cq.tmq6hs → grape (Slot).
@@ -65,17 +65,17 @@ okb cq list
 
 ```text
 1   Which wine characteristics should I consider when choosing a wine? [draft]
-       needs: color, body, flavor, sugar, tanninLevel
+       needs: body, color, flavor, sugar, tanninLevel
 2   Is Bordeaux a red or white wine? [draft]
        needs: Bordeaux, RedWine, WhiteWine
 3   Does Cabernet Sauvignon go well with seafood? [draft]
-       needs: goesWellWith, grape, Seafood
+       needs: Seafood, goesWellWith, grape
 4   What is the best choice of wine for grilled meat? [draft]
        needs: RedMeat, goesWellWith
 5   Which characteristics of a wine affect its appropriateness for a dish? [draft]
-       needs: goesWellWith, body, flavor
+       needs: body, flavor, goesWellWith
 6   Which wines does a given winery produce? [draft]
-       needs: produces, Winery
+       needs: Winery, produces
 ```
 
 Then run every check, including the ones hidden until now:
@@ -88,15 +88,15 @@ okb validate --all
 ✗ 0 error(s)   ! 0 warning(s)   i 4 hint(s)   · all checks
 
 HINTS: worth a look
-  i The subclasses of 'RedWine' ('Bordeaux', 'Beaujolais', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'Medoc' ('Margaux', 'Pauillac') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
-  i The subclasses of 'Medoc' ('Pauillac', 'Margaux') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'RedWine' ('Beaujolais', 'Bordeaux', 'Merlot', 'Port') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
   i No competency question needs these classes (or their parent/child): 'WineRegion'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
-  i No competency question needs these slots: 'region', 'location'. [scope-no-unneeded]
+  i No competency question needs these slots: 'location', 'region'. [scope-no-unneeded]
       Fix: Link it to (or add) the question that needs it, or remove it.
 
 EXPLAINED by design decisions (2)
@@ -161,81 +161,81 @@ okb wrote the diagram to `diagram.md` in Mermaid, a text format that GitHub and 
 classDiagram
   accTitle: Wine and Food classes
   accDescr: Class diagram of the Wine and Food ontology: 21 classes, arrows from each class to its parent, and 5 relationships between classes.
-  class Wine {
-    red|white|rose color
-    light|medium|full body
-    delicate|moderate|strong flavor
-    dry|offDry|sweet sugar
+  class Beaujolais {
+  }
+  class Bordeaux {
+  }
+  class Chardonnay {
+  }
+  class DessertWine {
+  }
+  class Food {
+    <<abstract>>
+  }
+  class Margaux {
+  }
+  class Medoc {
+  }
+  class Merlot {
+  }
+  class Pauillac {
+  }
+  class Port {
+  }
+  class RedMeat {
   }
   class RedWine {
     low|moderate|high tanninLevel
   }
-  class WhiteWine {
+  class Riesling {
   }
   class RoseWine {
   }
-  class DessertWine {
-  }
-  class Bordeaux {
-  }
-  class Medoc {
-  }
-  class Pauillac {
-  }
-  class Margaux {
-  }
-  class Beaujolais {
-  }
-  class Merlot {
-  }
-  class Port {
-  }
-  class Chardonnay {
-  }
-  class Riesling {
-  }
   class Sauternes {
   }
-  class Winery {
-    String location
+  class Seafood {
+  }
+  class WhiteWine {
+  }
+  class Wine {
+    light|medium|full body
+    red|white|rose color
+    delicate|moderate|strong flavor
+    dry|offDry|sweet sugar
   }
   class WineGrape {
   }
   class WineRegion {
   }
-  class Food {
-    <<abstract>>
+  class Winery {
+    String location
   }
-  class Seafood {
-  }
-  class RedMeat {
-  }
-  Wine <|-- RedWine
-  Wine <|-- WhiteWine
-  Wine <|-- RoseWine
-  Wine <|-- DessertWine
-  RedWine <|-- Bordeaux
-  Bordeaux <|-- Medoc
-  Medoc <|-- Pauillac
-  Medoc <|-- Margaux
   RedWine <|-- Beaujolais
-  RedWine <|-- Merlot
-  RedWine <|-- Port
-  DessertWine <|-- Port
+  RedWine <|-- Bordeaux
   WhiteWine <|-- Chardonnay
-  WhiteWine <|-- Riesling
-  WhiteWine <|-- Sauternes
-  DessertWine <|-- Sauternes
-  Food <|-- Seafood
+  Wine <|-- DessertWine
+  Medoc <|-- Margaux
+  Bordeaux <|-- Medoc
+  RedWine <|-- Merlot
+  Medoc <|-- Pauillac
+  DessertWine <|-- Port
+  RedWine <|-- Port
   Food <|-- RedMeat
+  Wine <|-- RedWine
+  WhiteWine <|-- Riesling
+  Wine <|-- RoseWine
+  DessertWine <|-- Sauternes
+  WhiteWine <|-- Sauternes
+  Food <|-- Seafood
+  Wine <|-- WhiteWine
+  Wine --> Food : goesWellWith
+  Wine --> WineGrape : grape
   Wine --> Winery : maker
   Winery --> Wine : produces
-  Wine --> WineGrape : grape
   Wine --> WineRegion : region
-  Wine --> Food : goesWellWith
 ```
 
-Disjoint: RedWine ⟂ WhiteWine · RedWine ⟂ RoseWine · WhiteWine ⟂ RoseWine · Chardonnay ⟂ Riesling · Seafood ⟂ RedMeat
+Disjoint: Chardonnay ⟂ Riesling · RedWine ⟂ RoseWine · RedWine ⟂ WhiteWine · Seafood ⟂ RedMeat · WhiteWine ⟂ RoseWine
 
 A graph database wants the data the other way round: each [instance](../../../../../docs/GLOSSARY.md#concept-instance) becomes a node labeled with its class and all its parents. Write that out as Cypher and as JSON:
 
