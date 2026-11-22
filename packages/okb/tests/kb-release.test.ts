@@ -193,3 +193,20 @@ describe("the same release twice gives the same bytes", () => {
     assert.deepEqual(outs[0], outs[1]);
   });
 });
+
+describe("a release that stopped half-way", () => {
+  it("leaves nothing pinned, and the same version can be cut again", () => {
+    const pinned = read("manifest.json");
+    mkdirSync(join(kb, "releases", "1.2.0"), { recursive: true });
+    writeFileSync(join(kb, "releases", "1.2.0", "nodes.jsonl"), "leftover\n");
+    const add = okb("class", "add", "PetNatWine", "--parent", "Wine");
+    assert.equal(add.status, 0, add.out);
+    const r = okb("release", "1.2.0");
+    assert.equal(r.status, 0, r.out);
+    assert.notEqual(read("manifest.json"), pinned);
+    assert.equal(JSON.parse(read("manifest.json")).version, "1.2.0");
+    assert.match(read("releases/1.2.0/nodes.jsonl"), /PetNatWine/);
+    assert.equal(okb("release", "verify").status, 0);
+    assert.match(okb("release", "1.2.0").out, /isn't newer/);
+  });
+});

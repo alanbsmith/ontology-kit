@@ -210,7 +210,8 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
   if (last && isVersion(last.version) && compareVersions(version, last.version) <= 0) {
     throw new OkbError(`Version ${version} isn't newer than the last release, ${last.version}. Pick a higher version.`);
   }
-  if (existsSync(join(root, RELEASES_DIR, version))) throw new OkbError(`${join(RELEASES_DIR, version)} already exists. Releases are never rewritten; pick a new version.`);
+  // A folder with no manifest.json is what a release that stopped half-way leaves; it is written over.
+  if (existsSync(join(root, RELEASES_DIR, version, MANIFEST_FILE))) throw new OkbError(`${join(RELEASES_DIR, version)} already exists. Releases are never rewritten; pick a new version.`);
 
   const docs = sourcesDataset(ont);
   let diff: OntologyDiff | undefined;
@@ -248,11 +249,12 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
   const snap = join(root, RELEASES_DIR, version);
   mkdirSync(snap, { recursive: true });
   for (const f of ONTOLOGY_FILES) copyFileSync(join(root, f), join(snap, f));
-  writeFileSync(lastFile, json(manifest));
-  writeFileSync(join(snap, MANIFEST_FILE), json(manifest));
   writeFileSync(join(snap, "changes.json"), json({ version, previous: last?.version ?? null, changes: diff ?? null, sources }));
   writeFileSync(join(snap, "CHANGES.md"), changesMarkdown(version, last?.version, today(), diff, sources, ont, note));
   writeReleasesMd(root, manifest.title ?? manifest.id);
+  // The manifests go last: they are what makes the release exist, so a failure above leaves nothing pinned.
+  writeFileSync(join(snap, MANIFEST_FILE), json(manifest));
+  writeFileSync(lastFile, json(manifest));
 
   const notes: Notes = [`Released ${version}${last ? ` (was ${last.version})` : ""}: ${countsLine(ont)}`];
   if (diff) {
