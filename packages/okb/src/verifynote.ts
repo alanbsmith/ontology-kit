@@ -43,7 +43,9 @@ export function suggestNote(original: string, corrected: string): string | null 
     const i = m0.findIndex((m, k) => m !== m1[k]);
     if (i >= 0) {
       const [r0, r1] = [RANK.indexOf(m0[i]), RANK.indexOf(m1[i])];
-      parts.push(`${r1 > r0 ? "narrowed" : "strengthened"} ${m0[i]} to ${m1[i]}`);
+      // MUST NOT to MUST (or the other way) flips the meaning; it is neither narrower nor stronger.
+      const flips = m0[i].endsWith("NOT") !== m1[i].endsWith("NOT");
+      parts.push(`${flips ? "changed" : r1 > r0 ? "narrowed" : "strengthened"} ${m0[i]} to ${m1[i]}`);
     }
   } else if (m0.join() !== m1.join()) return null;
 

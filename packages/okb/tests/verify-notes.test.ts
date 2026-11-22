@@ -24,6 +24,10 @@ function fixture(statement = "A Button MUST be at least 44px tall."): Ontology {
 
 describe("suggestNote", () => {
   it("names a narrowed modality", () => assert.equal(suggestNote("A Button MUST be big.", "A Button SHOULD be big."), "narrowed MUST to SHOULD"));
+  it("says 'changed', not 'narrowed', when a modality flips polarity", () => {
+    assert.equal(suggestNote("A Button MUST NOT be big.", "A Button MUST be big."), "changed MUST NOT to MUST");
+    assert.equal(suggestNote("A Button MUST NOT be big.", "A Button SHOULD NOT be big."), "narrowed MUST NOT to SHOULD NOT");
+  });
   it("names a strengthened modality", () => assert.equal(suggestNote("A Button MAY be big.", "A Button SHOULD be big."), "strengthened MAY to SHOULD"));
   it("names a changed number", () => assert.equal(suggestNote("Buttons are 44px tall.", "Buttons are 24px tall."), "changed 44 to 24"));
   it("names a modality and a number together", () => assert.equal(suggestNote("A Button MUST be 44px tall.", "A Button SHOULD be 24px tall."), "narrowed MUST to SHOULD; changed 44 to 24"));
