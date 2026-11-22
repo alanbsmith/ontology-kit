@@ -55,8 +55,15 @@ The class keeps its id (`c.winery`) and `okb` records `Winery` as a former name.
 When a document that the KB quotes changes, the quotes that point into it may have moved or vanished. First, register the source and quote it. This is also how you add a source:
 
 ```bash
-mkdir sources
-printf '# Serving wine\n\n## Chilling\n\nChill white wine before serving.\n' > sources/serving.md
+mkdir sources && cd sources
+cat > serving.md <<'EOF'
+# Serving wine
+
+## Chilling
+
+Chill white wine before serving.
+EOF
+cd ..
 okb source add sources/serving.md
 okb source outline src.serving-wine --quotable
 okb quote add src.serving-wine "Chill white wine before serving." --cites WhiteWine

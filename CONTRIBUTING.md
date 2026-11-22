@@ -228,7 +228,7 @@ Dependabot PRs have no template and aren't checked; the changelog files them und
 
 ### What the versions mean
 
-Two version numbers exist, and `okb version` prints both: `okb 0.1.0 · meta-KB 2.6.0`.
+Two version numbers exist, and `okb version` prints both: `okb 0.1.0 · meta-KB 2.6.1`.
 
 - **The package version** is semver over everything a user or another tool depends on: the CLI (command and flag names, exit codes and the `--json` output), the file format (`okb-lpg/3`, and reading older formats), and the `@ontology-kit/format` exports (so the format package's semver is the format API's contract). `@ontology-kit/format`, `@ontology-kit/okb` and the unscoped `ontology-kit` wrapper always release together at the same version. `okb version` reads it from `package.json`.
 - **The meta-KB version** covers the method and the rules (`VERSION` in `packages/okb/meta-kb/build.ts`). Each ontology's `okb.json` records the one it started with. [Changing rules](#changing-rules) says when to bump it.
