@@ -531,13 +531,13 @@
         },
         "relType": {
           "type": "string",
-          "pattern": "^[A-Z][A-Z0-9_]*$"
+          "pattern": "^[A-Z0-9][A-Z0-9_]*$"
         },
         "formerRelTypes": {
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^[A-Z][A-Z0-9_]*$"
+            "pattern": "^[A-Z0-9][A-Z0-9_]*$"
           }
         },
         "edgeProperties": {

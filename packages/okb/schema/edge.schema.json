@@ -16,7 +16,7 @@
     },
     "type": {
       "type": "string",
-      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "pattern": "^[A-Z0-9][A-Z0-9_]*$",
       "examples": [
         "IS_A",
         "INSTANCE_OF",

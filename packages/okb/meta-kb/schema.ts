@@ -57,7 +57,7 @@ export function buildSchemas(fmt: any): SchemaFiles {
     required: ["from", "type", "to"],
     properties: {
       from: { type: "string", minLength: 1 },
-      type: { type: "string", pattern: "^[A-Z][A-Z0-9_]*$", examples: fmt.edgeTypes.map((e: any) => e.name) },
+      type: { type: "string", pattern: "^[A-Z0-9][A-Z0-9_]*$", examples: fmt.edgeTypes.map((e: any) => e.name) },
       to: { type: "string", minLength: 1 },
       ...reserved,
     },

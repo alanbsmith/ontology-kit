@@ -35,6 +35,18 @@ function problems(dir: string): string[] {
   return out;
 }
 
+describe("relationship types that start with a digit", () => {
+  it("are accepted, because relType() makes '24 Hour Support' into 24_HOUR_SUPPORT", async () => {
+    const { relType } = await import("@ontology-kit/format");
+    const type = relType("24 Hour Support");
+    assert.equal(type, "24_HOUR_SUPPORT");
+    assert.ok(v.edge({ from: "c.a", type, to: "c.b" }), JSON.stringify(v.edge.errors));
+    const slot = { id: "s.support", type: "Slot", name: "24 Hour Support", valueType: "Instance", relType: type };
+    assert.ok(v.node(slot), JSON.stringify(v.node.errors));
+    assert.equal(v.edge({ from: "c.a", type: "lower_case", to: "c.b" }), false);
+  });
+});
+
 describe("JSON Schema for the file format", () => {
   it("is regenerated whenever format.yaml changes (run pnpm build:meta)", () => {
     const expected = buildSchemas(fmt);
