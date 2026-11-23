@@ -221,8 +221,10 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
   if (last && isVersion(last.version) && compareVersions(version, last.version) <= 0) {
     throw new OkbError(`Version ${version} isn't newer than the last release, ${last.version}. Pick a higher version.`);
   }
-  // A folder with no manifest.json is what a release that stopped half-way leaves; it is written over.
-  if (existsSync(join(root, RELEASES_DIR, version, MANIFEST_FILE))) throw new OkbError(`${join(RELEASES_DIR, version)} already exists. Releases are never rewritten; pick a new version.`);
+  // The root manifest.json is what makes a release exist, and it is written last. So a releases/<version>/
+  // folder for a version newer than the one it pins is what a release that stopped half-way leaves (even when
+  // the folder's own manifest.json got written), and it is written over. A finished release is never newer
+  // than the pinned one, so the check above already refuses to rewrite it.
 
   const docs = sourcesDataset(ont);
   let diff: OntologyDiff | undefined;

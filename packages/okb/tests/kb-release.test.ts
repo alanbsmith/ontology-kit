@@ -212,6 +212,20 @@ describe("a release that stopped half-way", () => {
     assert.equal(okb("release", "verify").status, 0);
     assert.match(okb("release", "1.2.0").out, /isn't newer/);
   });
+
+  it("can be cut again when it stopped after the snapshot's manifest but before the root one", () => {
+    const add = okb("class", "add", "PiquetteWine", "--parent", "Wine");
+    assert.equal(add.status, 0, add.out);
+    const pinned = read("manifest.json");
+    mkdirSync(join(kb, "releases", "1.3.0"), { recursive: true });
+    writeFileSync(join(kb, "releases", "1.3.0", "manifest.json"), pinned.replace(/"version": "1\.2\.0"/, '"version": "1.3.0"'));
+    const r = okb("release", "1.3.0");
+    assert.equal(r.status, 0, r.out);
+    assert.equal(JSON.parse(read("manifest.json")).version, "1.3.0");
+    assert.equal(JSON.parse(read("releases/1.3.0/manifest.json")).datasets.ontology.files["nodes.jsonl"], JSON.parse(read("manifest.json")).datasets.ontology.files["nodes.jsonl"]);
+    assert.match(read("releases/1.3.0/nodes.jsonl"), /PiquetteWine/);
+    assert.equal(okb("release", "verify").status, 0);
+  });
 });
 
 describe("release verify refuses a manifest that pins too little", () => {
