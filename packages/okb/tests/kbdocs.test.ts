@@ -182,4 +182,20 @@ describe("writeChangedPages", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+  it("removes nothing when a page would replace a hand-written file", async () => {
+    const { writeChangedPages, writeKbDocs } = await import("../src/kbdocs.ts");
+    const dir = mkdtempSync(join(tmpdir(), "okb-changed-"));
+    try {
+      writePages(dir, { "classes/c-old.md": `${BANNER}\nold\n` });
+      writeFileSync(join(dir, "changes.md"), "mine\n");
+      assert.throws(() => writeChangedPages(dir, { "changes.md": `${BANNER}\nsecond\n` }), /already has changes\.md/);
+      assert.ok(existsSync(join(dir, "classes/c-old.md")), "the refused run removed nothing");
+      writeFileSync(join(dir, "index.md"), "mine\n");
+      assert.throws(() => writeKbDocs(Ontology.load(join(ROOT, "examples", "wine")), dir), /already has index\.md/);
+      assert.ok(existsSync(join(dir, "classes/c-old.md")), "the refused run removed nothing");
+      assert.equal(readFileSync(join(dir, "changes.md"), "utf8"), "mine\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });

@@ -318,8 +318,7 @@ export function kbDocs(ont: Ontology): DocFiles {
 /** Write the pages into `dir`, removing pages an earlier run wrote (they carry the banner) that no longer exist. Other files stay. Returns the file names. */
 export function writeKbDocs(ont: Ontology, dir: string): string[] {
   const files = kbDocs(ont);
-  for (const old of listMarkdown(dir)) if (!(old in files) && readFileSync(join(dir, old), "utf8").startsWith(BANNER)) rmSync(join(dir, old));
-  return writePages(dir, files);
+  return replacePages(dir, files, (old) => !(old in files));
 }
 
 /**
@@ -327,6 +326,14 @@ export function writeKbDocs(ont: Ontology, dir: string): string[] {
  * okb didn't write (no banner): that file is named in the error and nothing is written. Returns the file names.
  */
 export function writePages(dir: string, files: DocFiles): string[] {
+  return replacePages(dir, files, () => false);
+}
+
+/**
+ * Check that no page would replace a file okb didn't write, then remove the earlier pages (banner) that `drop`
+ * picks, then write. The check comes first, so a refused run removes nothing.
+ */
+function replacePages(dir: string, files: DocFiles, drop: (name: string) => boolean): string[] {
   const yours = Object.keys(files).filter((name) => {
     try {
       return !readFileSync(join(dir, name), "utf8").startsWith(BANNER);
@@ -337,6 +344,7 @@ export function writePages(dir: string, files: DocFiles): string[] {
   if (yours.length) {
     throw new OkbError(`${dir} already has ${yours.join(", ")}, and okb didn't write ${yours.length === 1 ? "it" : "them"}, so okb docs won't replace ${yours.length === 1 ? "it" : "them"}. Write the pages to an empty or new folder (--out <folder>).`);
   }
+  for (const old of listMarkdown(dir)) if (!(old in files) && drop(old) && readFileSync(join(dir, old), "utf8").startsWith(BANNER)) rmSync(join(dir, old));
   for (const [name, text] of Object.entries(files)) {
     mkdirSync(dirname(join(dir, name)), { recursive: true });
     writeFileSync(join(dir, name), text);
@@ -345,16 +353,12 @@ export function writePages(dir: string, files: DocFiles): string[] {
 }
 
 /**
- * Write a changed-only view into `dir`, first removing pages an earlier run wrote there (they carry the banner)
+ * Write a changed-only view into `dir`, removing pages an earlier run wrote there (they carry the banner)
  * that this view doesn't include, so a folder reused for a second `--changed` doesn't keep the first one's pages.
  * `rules-in-context.md` is a separate view of the same folder and stays.
  */
 export function writeChangedPages(dir: string, files: DocFiles): string[] {
-  for (const old of listMarkdown(dir)) {
-    if (old in files || old === "rules-in-context.md") continue;
-    if (readFileSync(join(dir, old), "utf8").startsWith(BANNER)) rmSync(join(dir, old));
-  }
-  return writePages(dir, files);
+  return replacePages(dir, files, (old) => old !== "rules-in-context.md");
 }
 
 function listMarkdown(dir: string): string[] {
