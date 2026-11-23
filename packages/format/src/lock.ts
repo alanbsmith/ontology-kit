@@ -4,7 +4,7 @@
  * exclusively and holding the owner's process id. Part of @ontology-kit/format.
  */
 import { randomBytes } from "node:crypto";
-import { existsSync, readFileSync, statSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, linkSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
 import { join } from "node:path";
 import { OkbError } from "./errors.ts";
@@ -20,7 +20,8 @@ function sleep(ms: number): void {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
 
-function readOwner(path: string): { raw: string; owner?: Owner } {
+/** What the lock file says. `unreadable` is a read that failed for a reason other than the file being gone (EACCES, EIO). */
+function readOwner(path: string): { raw: string; owner?: Owner; unreadable?: boolean } {
   try {
     const raw = readFileSync(path, "utf8");
     try {
@@ -28,8 +29,8 @@ function readOwner(path: string): { raw: string; owner?: Owner } {
     } catch {
       return { raw };
     }
-  } catch {
-    return { raw: "" };
+  } catch (e) {
+    return (e as NodeJS.ErrnoException).code === "ENOENT" ? { raw: "" } : { raw: "", unreadable: true };
   }
 }
 
@@ -48,7 +49,8 @@ function alive(pid: number): boolean {
  * A command still running on this machine keeps its lock however long it takes.
  */
 function isStale(path: string): boolean {
-  const { owner } = readOwner(path);
+  const { owner, unreadable } = readOwner(path);
+  if (unreadable) return false; // not knowing who holds it is no proof that nobody does
   const mine = Boolean(owner && owner.host === hostname() && Number.isInteger(owner.pid));
   if (mine) return !alive(owner!.pid);
   try {
@@ -62,6 +64,32 @@ function isStale(path: string): boolean {
 export function isLocked(root: string): boolean {
   const path = join(root, LOCK_FILE);
   return existsSync(path) && !isStale(path);
+}
+
+/**
+ * Remove the lock at `path` if it is still `seen`, the stale one that was judged. The lock is first moved aside with a
+ * rename, which takes exactly one file and can't be undone by another command's create; only then is it read and, if it
+ * is the stale one, deleted. If it turns out to be a newer lock, it is put back. (A command that creates a lock in the
+ * instant between the move and the put-back leaves a rare, short overlap; the lock is advisory for commands that run
+ * seconds apart, not a security boundary.)
+ */
+function removeStale(path: string, seen: string, token: string): void {
+  const aside = `${path}.stale-${token}`;
+  try {
+    renameSync(path, aside);
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return; // someone else took it away first
+    throw new OkbError(`Can't remove the stale lock ${path}: ${(e as Error).message}. If no okb command is running, delete it yourself.`);
+  }
+  const moved = readOwner(aside);
+  try {
+    if (moved.unreadable || moved.raw !== seen) {
+      // Not the lock we judged: a command made a fresh one in between. Put it back, unless yet another took the spot.
+      try { linkSync(aside, path); } catch { /* the spot is taken again; the moved lock is already released or superseded */ }
+    }
+  } finally {
+    try { unlinkSync(aside); } catch { /* gone */ }
+  }
 }
 
 /** Wait (up to a few seconds) until no command holds the lock. Used by readers, who don't take it. */
@@ -89,12 +117,11 @@ export function acquireLock(root: string, waitMs = Number(process.env.OKB_LOCK_W
     } catch (e) {
       if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e;
     }
-    // Read the lock before judging it, so the check below can tell it from a fresh one that took its place.
+    // Read the lock before judging it, so the takeover can tell it from a fresh one that took its place.
     const seen = readOwner(path).raw;
     if (isStale(path)) {
-      // Remove it only if it is still the stale one we looked at, not a new lock another command just made.
-      if (readOwner(path).raw === seen) try { unlinkSync(path); } catch { /* someone else removed it */ }
-      continue;
+      removeStale(path, seen, token);
+      if (Date.now() < end) continue;
     }
     if (Date.now() >= end) {
       const { owner } = readOwner(path);

@@ -1,7 +1,7 @@
 // A file layout that merges cleanly in git, a lock for concurrent commands, and the post-merge check (issue #92, okb-lpg/3).
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, readdirSync, utimesSync, writeFileSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
@@ -191,6 +191,29 @@ describe("the lock", () => {
     writeFileSync(lock, JSON.stringify({ pid: process.pid, host: "another-machine", token: "x" }));
     utimesSync(lock, old, old);
     assert.equal(okb(dir, ["class", "add", "Wine"]).code, 0, "an old lock from another machine is taken over");
+  });
+
+  it("doesn't take over a lock it can't read, however old", { skip: process.getuid?.() === 0 }, () => {
+    const dir = newOntology();
+    const lock = join(dir, ".okb.lock");
+    writeFileSync(lock, JSON.stringify({ pid: 999999, host: hostname(), token: "x" }));
+    const old = new Date(Date.now() - 3600_000);
+    utimesSync(lock, old, old);
+    chmodSync(lock, 0o000);
+    try {
+      const r = okb(dir, ["class", "add", "Wine"], { OKB_LOCK_WAIT_MS: "300" });
+      assert.notEqual(r.code, 0, "an unreadable lock is not proof that its owner is gone");
+      assert.ok(existsSync(lock));
+    } finally {
+      chmodSync(lock, 0o600);
+    }
+  });
+
+  it("leaves no .stale file behind when it takes over a dead command's lock", () => {
+    const dir = newOntology();
+    writeFileSync(join(dir, ".okb.lock"), JSON.stringify({ pid: 999999, host: hostname(), token: "x" }));
+    assert.equal(okb(dir, ["class", "add", "Wine"]).code, 0);
+    assert.deepEqual(readdirSync(dir).filter((f) => f.includes(".stale-") || f === ".okb.lock"), []);
   });
 
   it("fails with a clear error when a running command holds the lock for too long, and changes nothing", () => {
