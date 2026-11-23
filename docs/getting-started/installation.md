@@ -26,7 +26,7 @@ Prefer pnpm? `pnpm add --global @ontology-kit/okb` installs the same package. To
 Check which version you have:
 
 ```bash
-okb version          # okb 0.1.0 · meta-KB 2.6.1
+okb version          # okb 0.1.0 · meta-KB 2.6.2
 ```
 
 The [meta-KB](../learn/meta-kb.md) version tracks changes to the method and rules; the [changelog](../CHANGELOG.md) lists what changed in each package release and each meta-KB version. Each ontology's `okb.json` records the version it started with (`metaKbVersion`).

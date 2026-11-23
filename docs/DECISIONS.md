@@ -1,6 +1,6 @@
 # Decision guides
 
-<!-- Generated from the meta-KB (v2.6.1) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.6.2) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
 
 ## What decision guides are
 

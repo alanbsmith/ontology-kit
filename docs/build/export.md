@@ -42,7 +42,7 @@ cat coffee.cypher
 
 ```text
 Wrote coffee.cypher: 1 nodes, 0 relationships (cypher).
-// Coffee Shop: exported by okb (meta-KB 2.6.1)
+// Coffee Shop: exported by okb (meta-KB 2.6.2)
 // Every node carries okbId. To re-import, first run: MATCH (n) WHERE n.okbId IS NOT NULL DETACH DELETE n;
 
 CREATE (:Latte:Espresso:Drink {okbId: "i.house-latte-x7q2mw", name: "House Latte", size: "medium"});

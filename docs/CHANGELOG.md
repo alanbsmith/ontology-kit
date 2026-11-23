@@ -91,3 +91,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.6.1
 
 - **Skill corrections.** `build-domain-kb-from-docs` now removes the old quote once every node that cited it has a new one, so a refresh doesn't report it gone again. `ontology-coach` says when to use UNSUPPORTED instead of OVERREACH and warns that `--corrected` leaves a rule's modality unchanged, so a correction from MUST to SHOULD needs the rule added again before sign-off. `ontology-maintainer` reads the rest of a changed block after a gone quote is handled and asks for a fresh verification pass after any re-cited fix. `ontology-signoff` flags a reworded rule whose strength changed instead of approving it. No rule changed.
+
+### v2.6.2
+
+- **A corrected rule keeps its strength in step.** When `okb verify --status OVERREACH --corrected` gives a rule a statement with a different MUST, SHOULD or MAY, okb now changes the rule's `modality` to match and says so. `ontology-coach` and `ontology-signoff` tell the person who approves it that the strength changed, and replace the earlier advice to remove and re-add the rule, which would have lost its links. No rule changed.
