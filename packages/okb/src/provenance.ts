@@ -8,7 +8,7 @@ import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
 import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
 import { isOneOf } from "./types.ts";
-import { UNSUPPORTED_NOTE_TIP, overreachNoteTips, shellQuote } from "./verifynote.ts";
+import { UNSUPPORTED_NOTE_TIP, overreachNoteTips, shellQuote, statedModality } from "./verifynote.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { assign } from "./ops/values.ts";
@@ -282,7 +282,9 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
   const notes: Notes = [];
   const noteTips: Notes = [];
   // The earlier result, when this runs again on an item still waiting for approval: its note and link stay unless replaced.
-  const again = n.verification?.status === "OVERREACH" ? n.verification : undefined;
+  // Only for the same correction: a different one makes the old note wrong ("changed 44 to 24" after a change to 18).
+  const waiting = n.verification?.status === "OVERREACH" ? n.verification : undefined;
+  const again = waiting && status === "OVERREACH" && (n.type === "Rule" ? n.statement : n.description) === o.corrected ? waiting : undefined;
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
     const current = n.type === "Rule" ? n.statement : n.description ?? "";
@@ -294,6 +296,13 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     if (n.type === "Rule") n.statement = o.corrected;
     else n.description = o.corrected;
     n.extractionConfidence = "corrected";
+    // A rule's strength lives in `modality`, not in the statement: keep the two in step, or approving the correction
+    // would publish a SHOULD statement as a MUST rule. The original wording (and its keyword) stays in _originalDraft.
+    const stated = n.type === "Rule" ? statedModality(o.corrected) : null;
+    if (n.type === "Rule" && stated && stated !== n.modality) {
+      notes.push(`Modality changed from ${n.modality} to ${stated} to match the corrected statement. Whoever approves it should check the new strength against the quote.`);
+      n.modality = stated;
+    }
     notes.push(`Corrected ${field}: "${o.corrected}" (original kept in _originalDraft).`);
     notes.push(`It stays blocked (prov-verified) until a person checks the correction: okb verify ${n.id} --approve`);
   } else if (o.confidence) {

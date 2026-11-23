@@ -59,6 +59,26 @@ describe("verify notes and ref", () => {
     assert.equal(rule._originalDraft, "A Button MUST be at least 44px tall.");
   });
 
+  it("drops the earlier note when the rerun changes the correction", () => {
+    const ont = fixture();
+    verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall.", note: "narrowed MUST to SHOULD; changed 44 to 24" });
+    const second = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 18px tall." });
+    assert.equal(ont.require("rule.size", "Rule").verification?.note, undefined);
+    assert.ok(second.some((n) => n.startsWith("Suggested note: ")), "a new suggestion is offered");
+    assert.equal(ont.require("rule.size", "Rule")._originalDraft, "A Button MUST be at least 44px tall.");
+  });
+  it("sets a rule's modality from its corrected statement, so approving it can't publish SHOULD as MUST", () => {
+    const ont = fixture();
+    const notes = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });
+    assert.equal(ont.require("rule.size", "Rule").modality, "SHOULD");
+    assert.ok(notes.some((n) => /Modality changed from MUST to SHOULD/.test(n)));
+    verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button MUST NOT be shorter than 24px." });
+    assert.equal(ont.require("rule.size", "Rule").modality, "MUST_NOT");
+    // no keyword, or two different ones: the stored modality stays, and nothing is guessed
+    verify(ont, "rule.size", { status: "OVERREACH", corrected: "Buttons need a minimum height." });
+    verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button MAY be tall and SHOULD be wide." });
+    assert.equal(ont.require("rule.size", "Rule").modality, "MUST_NOT");
+  });
   it("suggests a note after OVERREACH without --note, and stores nothing", () => {
     const ont = fixture();
     const notes = verify(ont, "rule.size", { status: "OVERREACH", corrected: "A Button SHOULD be at least 24px tall." });

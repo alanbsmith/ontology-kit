@@ -1,6 +1,7 @@
 // Suggested verification notes (issue #138): what a verifier could write after OVERREACH, built from
 // the difference between the original draft and the correction. Pure text in, text out; nothing here
 // stores anything.
+import type { Modality } from "@ontology-kit/format";
 
 const MODALITY = /\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b/gi;
 const NUMBER = /\d+(?:[.,]\d+)*/g;
@@ -70,6 +71,15 @@ export function suggestNote(original: string, corrected: string): string | null 
     if (newW.length) parts.push(`added ${quote(newW)}`);
   }
   return parts.length ? parts.join("; ") : null;
+}
+
+/**
+ * The one modality a statement states in capitals (`... SHOULD be ...` is SHOULD, `MUST NOT` is MUST_NOT), or null
+ * when it states none or more than one. Lower-case "may" or "should" is ordinary prose and doesn't count.
+ */
+export function statedModality(statement: string): Modality | null {
+  const found = new Set([...statement.matchAll(/\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b/g)].map((m) => m[1].replace(" ", "_")));
+  return found.size === 1 ? ([...found][0] as Modality) : null;
 }
 
 /** A double-quoted shell argument. */
