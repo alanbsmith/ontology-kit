@@ -779,6 +779,55 @@ $ okb export --format cypher --out wine.cypher
 | `--no-rules` | flag | Leave out extracted rules. |
 | `--include-unverified` | flag | Include rules and quotes that haven't been verified. |
 
+<a id="cmd-docs"></a>
+### okb docs
+
+Writes Markdown reference pages for the ontology, so people can read its structure and rules without okb: an index, one page per class, a rules page and a sources page.
+
+```bash
+$ okb docs --out docs/kb
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--out` | folder | Where to write the pages. Required; it is created if it doesn't exist. |
+
+<a id="cmd-docs---changed"></a>
+#### okb docs --changed
+
+A review view of a change: only the pages whose text differs from `<ref>` (a git ref or a folder, the same as `okb diff`). A rule changed on a class changes the page of every subclass that inherits it, so those pages come with it. It also writes `changes.md`, which lists the changed pages and the stale-quote worklist from `okb source refresh --all --dry-run` (quotes that are gone or moved, and blocks that are new or changed, each with the nodes that cite them), because a source edit that hasn't been re-synced yet changes no page. Pages are the same text as the full render, so links to pages that aren't in the folder point into the full output. It only adds and overwrites files, so write it to a scratch folder, not to the committed pages. It never changes the ontology.
+
+```bash
+$ okb docs --out review --changed main
+$ okb docs --out review --changed v1.0.0 --hops 1
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--out` | folder | Where to write the pages. Required. |
+| `--changed` | ref | The git ref (or folder) to compare the working folder with. |
+| `--hops` | number | Also write the class pages that link to or from a changed class page, this many links away. Default 0. It doesn't go through the index, rules or sources pages, which link to everything. |
+
+<a id="cmd-docs---context"></a>
+#### okb docs --context
+
+A review view of every rule beside the source text around its quote: the statement, modality, verification status, the verifier's note (when `okb verify --note` stored one), the original draft of a corrected rule, the quote, and the lines around it with the quoted lines marked. Rules that need a person come first (UNSUPPORTED, OVERREACH not yet approved, not verified, no quote, quote no longer in the source), then the rest by name. It reads the source files, so it needs them on disk. A source that isn't Markdown shows the quote alone. It writes `rules-in-context.md` and never changes the ontology.
+
+```bash
+$ okb docs --out review --context
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--out` | folder | Where to write `rules-in-context.md`. Required. |
+| `--context` | flag | Write the rules-in-context page instead of the reference pages. It doesn't combine with `--changed`. |
+
 ## Working from documents
 
 <a id="cmd-source"></a>
@@ -825,17 +874,23 @@ $ okb source outline button --quotable
 <a id="cmd-source-refresh"></a>
 #### okb source refresh
 
-Checks quotes again after the document changes.
+Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. With `--all` it exits with code 1 when a quote is gone or a source can't be read (a single source only reports).
 
 ```bash
 $ okb source refresh button
+$ okb source refresh --all
+$ okb source refresh --all --json --dry-run
 ```
 
 ##### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
-| `<source>` | name | The source. |
+| `[<source>]` | name | The source to check (leave it out with --all). |
+| `--all` | flag | Check every source and list the worklist of new, changed and removed blocks. |
+| `--dry-run` | flag | With --all: write nothing, not even moved quotes. |
+| `--record` | flag | With --all: store the current blocks as the baseline once the worklist is dealt with. |
+| `--strict` | flag | With --all: also exit with code 1 when the worklist isn't empty. |
 
 <a id="cmd-source-list"></a>
 #### okb source list
@@ -985,7 +1040,8 @@ $ okb verify rule.1 --approve
 | `--status` | SUPPORTED, OVERREACH or UNSUPPORTED | What the check found. |
 | `--corrected` | text | A corrected wording, for OVERREACH. |
 | `--confidence` | verbatim or paraphrased | How closely the node follows the quote. |
-| `--note` | text | A note about the check. |
+| `--note` | text | One sentence on why: the word or number you changed, or the part of the statement the quote doesn't support. OVERREACH prints a suggestion. |
+| `--ref` | url | An http or https link to the PR comment, issue or review thread where the reasoning happened. |
 | `--approve` | flag | Approve it after review. |
 
 ## Skills
@@ -1081,6 +1137,85 @@ $ okb drift ../wine ../food
 | Argument | Type | Description |
 | --- | --- | --- |
 | `[folder]...` | paths | The ontology folders to check. |
+
+<a id="cmd-check"></a>
+### okb check
+
+Says whether a knowledge base is safe to merge: no validation errors, every quote still in its source, and nothing unverified, unsupported or waiting for approval. Exits non-zero when a check fails, so a CI job can gate on it.
+
+```bash
+$ okb check
+$ okb check --json
+$ okb check -C ../wine
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--json` | flag | Print the result as JSON: `ok`, the installed and pinned versions, and each check with its status, summary and problems. |
+
+<a id="cmd-pin"></a>
+### okb pin
+
+Records the installed okb version in okb.json as `okbVersion`, so `okb check` warns anyone with an older okb and the CI workflow installs that version. Run it again after you upgrade okb.
+
+```bash
+$ okb pin
+```
+
+<a id="cmd-diff"></a>
+### okb diff
+
+Shows what changed in the knowledge between two versions of an ontology: added, removed, renamed and changed things, rules side by side, moved quotes and changed links, in words rather than JSON lines.
+
+```bash
+$ okb diff main
+$ okb diff v1.0 v1.1
+$ okb diff ../wine-old .
+$ okb diff main --json
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `<old>` | folder or git ref | The earlier version. An existing folder is read as it is; anything else is a branch, tag or commit in the repository around the current folder. A name that is both is an error that shows both spellings (`./name` for the folder, `refs/heads/name` for the branch). |
+| `[new]` | folder or git ref | The later version. Defaults to the current folder. |
+| `--json` | flag | Print the changes as JSON for other tools. |
+
+<a id="cmd-release"></a>
+### okb release
+
+Cuts a numbered release of the knowledge base that other tools can pin: a manifest with the SHA-256 of every file and source, and a change log of what changed since the last release.
+
+```bash
+$ okb release 1.0.0
+$ okb release 1.1.0 --json
+```
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `<version>` | semver | The new version: `1.0.0`, `1.2.3` or `2.0.0-rc.1`. It must be higher than the version in `manifest.json`. |
+| `--json` | flag | Print the version and the manifest as JSON. |
+
+<a id="cmd-release-verify"></a>
+#### okb release verify
+
+Checks the files against `manifest.json`: every pinned file must exist and match its SHA-256, and `okb.json` must carry the manifest's version. It changes nothing. It exits 1 when something differs, so it can run in CI or before a server starts.
+
+```bash
+$ okb release verify
+$ okb release verify -C ../wine --json
+```
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `--json` | flag | Print the result as JSON. |
 
 <a id="cmd-help"></a>
 ### okb help

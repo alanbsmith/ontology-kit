@@ -35,7 +35,7 @@ const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/refe
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 const DEFAULT_DOCS = [
   "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", `${PKG}/meta-kb/README.md`, "sources/README.md", "packages/format/README.md",
-  `${PKG}/skills/ontology-coach/SKILL.md`, `${PKG}/skills/ontology-review/SKILL.md`, `${PKG}/skills/build-domain-kb-from-docs/SKILL.md`, ...TUTORIAL_SOURCES,
+  `${PKG}/skills/ontology-coach/SKILL.md`, `${PKG}/skills/ontology-review/SKILL.md`, `${PKG}/skills/ontology-maintainer/SKILL.md`, `${PKG}/skills/ontology-signoff/SKILL.md`, `${PKG}/skills/build-domain-kb-from-docs/SKILL.md`, ...TUTORIAL_SOURCES,
   ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
 ];
 /** pnpm commands and tool names that aren't package.json scripts. */

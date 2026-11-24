@@ -10,7 +10,7 @@ import { PACKAGED_SKILLS_DIR, defaultSkillsDir, installSkills, packagedSkills, s
 
 const CLI = join(dirname(dirname(fileURLToPath(import.meta.url))), "src", "cli.ts");
 const META = MetaKB.get().version;
-const NAMES = ["build-domain-kb-from-docs", "ontology-coach", "ontology-review"];
+const NAMES = ["build-domain-kb-from-docs", "ontology-coach", "ontology-maintainer", "ontology-review", "ontology-signoff"];
 
 const roots: string[] = [];
 let dir = "";
@@ -66,7 +66,7 @@ describe("okb skills", () => {
     writeFileSync(join(other, "SKILL.md"), "---\nname: build-domain-kb-from-docs\ndescription: x\n---\n**Version 0.1.0.** old\n");
     rmSync(join(dir, "build-domain-kb-from-docs"), { recursive: true });
     symlinkSync(other, join(dir, "build-domain-kb-from-docs"));
-    assert.deepEqual(states(), { "build-domain-kb-from-docs": "other-install", "ontology-coach": "stale", "ontology-review": "broken-link" });
+    assert.deepEqual(states(), { "build-domain-kb-from-docs": "other-install", "ontology-coach": "stale", "ontology-maintainer": "current", "ontology-review": "broken-link", "ontology-signoff": "current" });
     const out = installSkills({ dir, metaVersion: META }).lines.join("\n");
     assert.match(out, /replaced a copy at version 0\.1\.0/);
     assert.match(out, /broken link/);
@@ -99,7 +99,7 @@ describe("okb skills", () => {
 
   it("a version that does not match this okb is stale, even when linked", () => {
     installSkills({ dir, metaVersion: META });
-    assert.deepEqual(Object.values(skillsStatus({ dir, metaVersion: "9.9.9" }).skills.map((s) => s.state)), ["stale", "stale", "stale"]);
+    assert.deepEqual(Object.values(skillsStatus({ dir, metaVersion: "9.9.9" }).skills.map((s) => s.state)), ["stale", "stale", "stale", "stale", "stale"]);
   });
 
   it("works through the command line: install, status, exit codes and --json", () => {
@@ -112,7 +112,7 @@ describe("okb skills", () => {
     assert.match(done.stdout, /ontology-coach: linked/);
     const status = run("skills", "status", "--dir", dir, "--json");
     assert.equal(status.status, 0);
-    assert.deepEqual(JSON.parse(status.stdout).skills.map((s: { state: string }) => s.state), ["current", "current", "current"]);
+    assert.deepEqual(JSON.parse(status.stdout).skills.map((s: { state: string }) => s.state), ["current", "current", "current", "current", "current"]);
     assert.match(run("skills", "status", "--dir", dir).stdout, /linked to this okb, version \d/);
     const bad = run("skills", "nope");
     assert.equal(bad.status, 2);

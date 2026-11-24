@@ -2,73 +2,89 @@
   "step": 2,
   "nodes": [
     {
-      "type": "Ontology",
+      "id": "cq.4mz6a9",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:05Z",
+      "status": "draft",
+      "text": "How much does each drink cost?",
+      "updatedAt": "2026-09-23T00:00:05Z"
+    },
+    {
+      "id": "cq.an5hqz",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "status": "draft",
+      "text": "Which drinks have no milk?",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "cq.ffbmq8",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:01Z",
+      "status": "draft",
+      "text": "What's the difference between a cortado and a latte?",
+      "updatedAt": "2026-09-23T00:00:01Z"
+    },
+    {
+      "id": "cq.pv8gg4",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:03Z",
+      "status": "draft",
+      "text": "Which drinks are a variation of another drink?",
+      "updatedAt": "2026-09-23T00:00:03Z"
+    },
+    {
+      "id": "cq.s7b99r",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:04Z",
+      "status": "draft",
+      "text": "Which drinks on the menu come with chocolate?",
+      "updatedAt": "2026-09-23T00:00:04Z"
+    },
+    {
+      "id": "cq.tmq6hs",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:02Z",
+      "status": "draft",
+      "text": "What goes into a cappuccino?",
+      "updatedAt": "2026-09-23T00:00:02Z"
+    },
+    {
+      "id": "d.h6nzmn",
+      "type": "DesignDecision",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "date": "2026-09-23",
+      "decision": "Build from scratch.",
+      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
+      "title": "No existing ontology reused",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
       "id": "ontology",
-      "name": "Espresso drinks",
+      "type": "Ontology",
+      "createdAt": "2026-09-23T00:00:00Z",
       "domain": "Espresso-based coffee drinks and what goes in them",
-      "purpose": "Help baristas and customers compare drinks on a café menu",
-      "users": [
-        "baristas",
-        "customers"
-      ],
+      "kind": "application",
       "maintainers": [
         "head barista"
       ],
+      "name": "Espresso drinks",
       "outOfScope": [
         "brewing equipment",
         "coffee beans and roasting"
       ],
-      "kind": "application",
-      "reuseReviewed": true
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.1",
-      "text": "Which drinks have no milk?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.2",
-      "text": "What's the difference between a cortado and a latte?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.3",
-      "text": "What goes into a cappuccino?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.4",
-      "text": "Which drinks are a variation of another drink?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.5",
-      "text": "Which drinks on the menu come with chocolate?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.6",
-      "text": "How much does each drink cost?",
-      "status": "draft"
-    },
-    {
-      "type": "DesignDecision",
-      "id": "d.1",
-      "title": "No existing ontology reused",
-      "decision": "Build from scratch.",
-      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
-      "date": "2026-09-23"
+      "purpose": "Help baristas and customers compare drinks on a café menu",
+      "reuseReviewed": true,
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "users": [
+        "baristas",
+        "customers"
+      ]
     }
   ],
   "edges": [
     {
-      "from": "d.1",
+      "from": "d.h6nzmn",
       "type": "ABOUT",
       "to": "ontology"
     }

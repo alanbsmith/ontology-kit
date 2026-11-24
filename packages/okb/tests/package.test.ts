@@ -54,13 +54,13 @@ describe("published packages", { skip: SKIP }, () => {
 
   after(() => rmSync(work, { recursive: true, force: true }));
 
-  it("ships dist, the compiled meta-KB, skills and bin, and nothing else", () => {
+  it("ships dist, the compiled meta-KB, the JSON Schema files, skills and bin, and nothing else", () => {
     for (const f of ["package.json", "README.md", "LICENSE", "bin/okb.js", "dist/cli.js", "dist/metakb.js",
-      "meta-kb/data/nodes.json", "meta-kb/data/edges.json", "skills/ontology-coach/SKILL.md"]) {
+      "meta-kb/data/nodes.json", "meta-kb/data/edges.json", "schema/node.schema.json", "schema/edge.schema.json", "schema/okb.schema.json", "templates/okb-check.yml", "templates/pull_request_template.md", "skills/ontology-coach/SKILL.md"]) {
       assert.ok(okbFiles.includes(f), `${f} is in the tarball`);
     }
-    for (const f of okbFiles) {
-      assert.match(f, /^(package\.json|README\.md|LICENSE|bin\/|dist\/|meta-kb\/data\/|skills\/)/, `unexpected file ${f}`);
+    for (const f of okbFiles.filter((f) => f !== "templates/okb-check.yml")) {
+      assert.match(f, /^(package\.json|README\.md|LICENSE|bin\/|dist\/|meta-kb\/data\/|schema\/|skills\/|templates\/)/, `unexpected file ${f}`);
       assert.doesNotMatch(f, /(^|\/)(tests|examples|docs|site|sources)\/|\.ya?ml$|\.pdf$|(?<!\.d)\.ts$|\.map$/, `unwanted file ${f}`);
     }
     assert.ok(!okbFiles.includes("dist/gendocs.js"), "the docs generator stays out of the package");
@@ -103,7 +103,7 @@ describe("published packages", { skip: SKIP }, () => {
     assert.match(okb("version"), new RegExp(`^okb ${pkgVersion.replace(/\./g, "\\.")} · meta-KB \\d+\\.\\d+\\.\\d+`));
     okb("init", "my-ontology");
     const dir = join(install, "my-ontology");
-    for (const f of ["okb.json", "nodes.json", "edges.json"]) assert.ok(existsSync(join(dir, f)), f);
+    for (const f of ["okb.json", "nodes.jsonl", "edges.jsonl"]) assert.ok(existsSync(join(dir, f)), f);
     cwd = dir; // okb finds the ontology from the folder it runs in
     assert.match(okb("validate"), /./);
     const out = join(install, "export.json");
@@ -126,7 +126,7 @@ describe("published packages", { skip: SKIP }, () => {
       console.log(ont.manifest.format);
       await import("@ontology-kit/okb/format").then(() => console.log("imported"), (e) => console.log(e.code));`;
     const out = run(process.execPath, ["--input-type=module", "-e", script], install).trim().split("\n");
-    assert.deepEqual(out, ["okb-lpg/2", "ERR_PACKAGE_PATH_NOT_EXPORTED"]);
+    assert.deepEqual(out, ["okb-lpg/3", "ERR_PACKAGE_PATH_NOT_EXPORTED"]);
     const dir = join(install, "node_modules", "@ontology-kit");
     assert.ok(existsSync(join(dir, "format", "dist", "index.js")));
     assert.ok(!existsSync(join(dir, "okb", "node_modules", "@ontology-kit")), "okb uses the one installed format package");
@@ -145,7 +145,7 @@ describe("published packages", { skip: SKIP }, () => {
     assert.match(okb("skills", "install", "--dir", skillsDir), /ontology-coach: linked/);
     assert.equal(realpathSync(join(skillsDir, "ontology-coach")), realpathSync(join(pkgDir, "skills", "ontology-coach")));
     assert.match(okb("skills", "status", "--dir", skillsDir), new RegExp(`ontology-review +linked to this okb, version ${meta.replace(/\./g, "\\.")}`));
-    for (const n of ["ontology-coach", "ontology-review", "build-domain-kb-from-docs"]) {
+    for (const n of ["ontology-coach", "ontology-review", "ontology-maintainer", "ontology-signoff", "build-domain-kb-from-docs"]) {
       assert.match(readFileSync(join(skillsDir, n, "SKILL.md"), "utf8"), new RegExp(`^\\*\\*Version ${meta.replace(/\./g, "\\.")}\\.\\*\\*`, "m"));
     }
     const copies = join(work, "skill-copies");

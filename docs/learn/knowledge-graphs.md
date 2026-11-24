@@ -33,7 +33,7 @@ Notice the two kinds of link. "Is a" links stack kinds on top of each other, fro
 
 ## What okb adds
 
-A graph alone doesn't stop you from linking a Milk drink to a bicycle. An [ontology](../GLOSSARY.md#concept-ontology) is the part that says which kinds exist and how they may connect. The ontology plus its real examples is a [knowledge base](../GLOSSARY.md#concept-knowledge-base). The okb files (`nodes.json` and `edges.json`) are a graph too, and every class, slot and instance in them is a node. See the [file format](../FORMAT.md) for the details.
+A graph alone doesn't stop you from linking a Milk drink to a bicycle. An [ontology](../GLOSSARY.md#concept-ontology) is the part that says which kinds exist and how they may connect. The ontology plus its real examples is a [knowledge base](../GLOSSARY.md#concept-knowledge-base). The okb files (`nodes.jsonl` and `edges.jsonl`) are a graph too, and every class, slot and instance in them is a node. See the [file format](../FORMAT.md) for the details.
 
 ## In okb
 
@@ -46,7 +46,7 @@ okb show "Vertex breve"
 You'll see the kind it belongs to, and then each fact. The links show up as values:
 
 ```text
-Vertex breve  Instance · i.vertex-breve
+Vertex breve  Instance · i.vertex-breve-7fvaz3
   instance of    Breve
 
   Values

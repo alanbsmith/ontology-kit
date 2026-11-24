@@ -29,6 +29,9 @@ buildTutorial({
   },
 });
 
+// The espresso ontology has rules and a source, so its pages show rules linked to their quotes.
+execFileSync(process.execPath, [join(ROOT, "src", "cli.ts"), "docs", "--out", "docs"], { cwd: DIR });
+
 let final: { findings: { severity: string; rule: string; message: string }[] };
 try {
   final = JSON.parse(execFileSync(process.execPath, [join(ROOT, "src", "cli.ts"), "validate", "--all", "--json"], { cwd: DIR, encoding: "utf8" }));

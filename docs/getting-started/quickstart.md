@@ -19,7 +19,7 @@ cd coffee
 ✓ Created ontology 'Coffee Shop' in /path/to/coffee
 ```
 
-`okb init` makes a folder with three plain JSON files (`okb.json`, `nodes.json` and `edges.json`), so you can commit it to git like any other code. It also prints the guide for step 1 of the method, which this page skips. The output above is trimmed to its first line, and your path will be your own. `okb step` shows it again whenever you want it.
+`okb init` makes a folder with three plain text files (`okb.json`, `nodes.jsonl` and `edges.jsonl`), so you can commit it to git like any other code. Each node and edge is one line, so two people editing different things rarely conflict. It also prints the guide for step 1 of the method, which this page skips. The output above is trimmed to its first line, and your path will be your own. `okb step` shows it again whenever you want it.
 
 ## Set the scope
 

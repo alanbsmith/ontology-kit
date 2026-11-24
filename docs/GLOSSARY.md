@@ -1,6 +1,6 @@
 # Glossary
 
-<!-- Generated from the meta-KB (v2.4.2) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
+<!-- Generated from the meta-KB (v2.6.3) by `pnpm run docs`. Don't edit by hand: change `packages/okb/meta-kb/src/*.yaml` and regenerate. -->
 
 > **Tip:** You can read any entry in your terminal too. Run `okb explain <term>` (for example `okb explain class`) while you work.
 
@@ -1043,7 +1043,7 @@ The ontology defines the Wine class and its slots; adding 'Château Morgon Beauj
 <div class="row muted">
 <span class="label">In okb</span>
 
-The same nodes.json/edges.json hold both. Instance nodes are the knowledge-base part.
+The same nodes.jsonl/edges.jsonl hold both. Instance nodes are the knowledge-base part.
 
 </div>
 
@@ -1089,7 +1089,7 @@ Your ontology is saved as two JSON lists, nodes and edges, which is how graph da
 <div class="row muted">
 <span class="label">In okb</span>
 
-nodes.json and edges.json in your ontology folder. See docs/FORMAT.md.
+nodes.jsonl and edges.jsonl in your ontology folder. See docs/FORMAT.md.
 
 </div>
 

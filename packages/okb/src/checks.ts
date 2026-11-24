@@ -93,7 +93,7 @@ export const CHECKS: Record<string, Check> = {
         hits.push({ message: `A ${n.type ?? "node"} has no id.`, nodes: [] });
         continue;
       }
-      if (seen.has(n.id)) hits.push({ message: `Two nodes share the id '${n.id}'.`, nodes: [n.id] });
+      if (seen.has(n.id)) hits.push({ message: `Two nodes share the id '${n.id}'. A git merge that kept both sides' version of a node is the likely cause; keep one and delete the other.`, nodes: [n.id] });
       seen.add(n.id);
       const nt = nodeTypes.get(n.type);
       if (!nt) {
@@ -124,7 +124,7 @@ export const CHECKS: Record<string, Check> = {
           // A relationship value: must join two Instances, or start at a Class (a fixed class-level value).
           const a = ont.get(e.from);
           const b = ont.get(e.to);
-          if (!a || !b) hits.push({ message: `Edge ${tag} points at a node that doesn't exist (${!a ? e.from : e.to}).`, nodes: [a ? e.from : e.to] });
+          if (!a || !b) hits.push({ message: `Edge ${tag} points at a node that doesn't exist (${!a ? e.from : e.to}). A git merge where one branch deleted the node and another added this edge is the likely cause; remove the edge or restore the node.`, nodes: [a ? e.from : e.to] });
           else if (!["Instance", "Class"].includes(a.type) || !["Instance", "Class"].includes(b.type) || (a.type === "Instance" && b.type === "Class")) {
             hits.push({ message: `Relationship ${tag} connects ${a.type} → ${b.type}; relationships link instances (or state a fixed value on a class).`, nodes: [e.from, e.to] });
           }
@@ -136,7 +136,7 @@ export const CHECKS: Record<string, Check> = {
       const a = ont.get(e.from);
       const b = ont.get(e.to);
       if (!a || !b) {
-        hits.push({ message: `Edge ${tag} points at a node that doesn't exist (${!a ? e.from : e.to}).`, nodes: [a ? e.from : e.to] });
+        hits.push({ message: `Edge ${tag} points at a node that doesn't exist (${!a ? e.from : e.to}). A git merge where one branch deleted the node and another added this edge is the likely cause; remove the edge or restore the node.`, nodes: [a ? e.from : e.to] });
         continue;
       }
       // Instance misuse in the hierarchy gets its own friendlier rule (inst-are-leaves).

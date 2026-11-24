@@ -125,23 +125,27 @@ okb show "Milk foam"
 ```
 
 ```text
-Vertex breve  Instance · i.vertex-breve
+Vertex breve  Instance · i.vertex-breve-7fvaz3
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Breve
 
   Values
     espressoToMilkRatio 0.33
     texture            foamy
     pullVolumeMl       —
-    pourOrder          Shot, half-and-half, then foam
+    contains           Double shot, Milk foam, Steamed half-and-half
     origin             USA
-    contains           Double shot, Steamed half-and-half, Milk foam
-    variationOf        Latte, Cappuccino (fixed by Breve)
+    pourOrder          Shot, half-and-half, then foam
+    variationOf        Cappuccino, Latte (fixed by Breve)
 
-Milk foam  Instance · i.milk-foam
+Milk foam  Instance · i.milk-foam-ap9t4r
+  created        2026-09-23T00:00:00Z
+  updated        2026-09-23T00:00:00Z
   instance of    Foam
 
   Values
-    usedIn             Vertex cappuccino, Vertex breve, Vertex macchiato {amount: "splash"}
+    usedIn             Vertex breve, Vertex cappuccino, Vertex macchiato {amount: "splash"}
 ```
 
 - **Values you didn't type.** The breve has `espressoToMilkRatio` and `texture` from the defaults on Cappuccino, and `origin` from its own default, USA. `variationOf` lists both Latte and Cappuccino, from the class.
@@ -158,23 +162,23 @@ okb status
 ✗ 0 error(s)   ! 0 warning(s)   i 4 hint(s)   · checks for steps 1–7 (use --all for the rest)
 
 HINTS: worth a look
-  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i 'Cappuccino' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
+  i 'Drink' has only one direct subclass ('EspressoDrink'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
   i 'Latte' has only one direct subclass ('Breve'). Is a sibling missing, or is the subclass really the same as its parent? [hier-single-child]
       Fix: Add the missing sibling(s), or remove the child and fold it into the parent. If
       neither applies, record a design decision.
-  i The subclasses of 'MilkDrink' ('Macchiato', 'Cortado', 'FlatWhite', 'Cappuccino', 'Latte') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
+  i The subclasses of 'MilkDrink' ('Cappuccino', 'Cortado', 'FlatWhite', 'Latte', 'Macchiato') have no disjointness declared. Can anything be more than one of them? [disjoint-consider-siblings]
       Fix: `okb class disjoint A B C`, or ignore it if the siblings can overlap (Dessert Wine
       and White Wine can).
 
 EXPLAINED by design decisions (3)
-  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Ristretto', 'Lungo', 'Americano', 'LongBlack' don't. [naming-subclass-names-consistent] → d.2
-  · Subclasses of 'Milk' are named inconsistently: 'WholeMilk', 'CondensedMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.4
+  · Subclasses of 'EspressoDrink' are named inconsistently: 'MilkDrink', 'SweetenedDrink' include 'drink' but 'PureEspresso' doesn't. [naming-subclass-names-consistent] → d.8wg5vc
+  · Subclasses of 'Milk' are named inconsistently: 'CondensedMilk', 'WholeMilk' include 'milk' but 'HalfAndHalf' doesn't. [naming-subclass-names-consistent] → d.0a44cm
+  · Subclasses of 'PureEspresso' are named inconsistently: 'Espresso' includes 'espresso' but 'Americano', 'LongBlack', 'Lungo', 'Ristretto' don't. [naming-subclass-names-consistent] → d.8wg5vc
 
 Learn about any rule: okb explain <rule-id>   ·   add --why for reasons and sources
 (6 warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)

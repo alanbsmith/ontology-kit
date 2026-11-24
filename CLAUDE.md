@@ -50,10 +50,10 @@ Run `pnpm tsc` and `pnpm test` after every change. There's no code linter. `pnpm
 
 ## Architecture
 
-okb is a CLI that guides a beginner through the 8-step Ontology 101 method. It has two graphs, and both use the same labeled property graph (LPG) shape (`nodes.json` + `edges.json`):
+okb is a CLI that guides a beginner through the 8-step Ontology 101 method. It has two graphs, and both use the same labeled property graph (LPG) shape (the meta-KB as `nodes.json` + `edges.json` arrays, an ontology folder as `nodes.jsonl` + `edges.jsonl`, one node or edge per line):
 
 1. **The meta-KB** (`packages/okb/meta-kb/`) holds the method, glossary, principles, decision guides, rules, and the file-format registry. It is authored as YAML in `packages/okb/meta-kb/src/`, compiled by `packages/okb/meta-kb/build.ts` into committed JSON in `packages/okb/meta-kb/data/`, and read at runtime by `packages/okb/src/metakb.ts` (`MetaKB.get()` singleton).
-2. **A user's ontology**: a folder with `okb.json`, `nodes.json`, and `edges.json`, loaded by `Ontology` in `packages/format/src/model.ts` (the `@ontology-kit/format` package; okb imports it by name). In this file the schema is data: classes, slots, and instances are all nodes.
+2. **A user's ontology**: a folder with `okb.json`, `nodes.jsonl`, and `edges.jsonl` (layout in `packages/format/src/layout.ts`, lock in `lock.ts`; commands that write run through `Ontology.edit`, which holds `.okb.lock`), loaded by `Ontology` in `packages/format/src/model.ts` (the `@ontology-kit/format` package; okb imports it by name). In this file the schema is data: classes, slots, and instances are all nodes.
 
 ### The meta-KB is the source of truth; the build enforces it
 
@@ -98,7 +98,7 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 
 ## Hand-written and generated docs
 
-Hand-written (the drift check covers all but the generated tutorial pages): `README.md`, `CONTRIBUTING.md`, `docs/getting-started/`, `docs/learn/` (the Learn course), `docs/build/`, `docs/reference/`, `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md`, `docs/CODE-REVIEW.md`, `packages/okb/meta-kb/README.md`, `packages/format/README.md`, `sources/README.md` and the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`. Generated (never edit): `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md`, `CLI-CHEAT-SHEET.md`, and everything in `packages/okb/examples/<name>/` except `tutorial-src/`. Pages under `docs/getting-started/`, `docs/learn/`, `docs/build/`, `docs/reference/skills.md` and `tutorial-src/` are beginner pages that get the extra `Beginner` Vale rules (`.vale.ini`). The matching development skills are `.claude/skills/write-learn-page` (`docs/learn/*.md`) and `.claude/skills/write-tutorial`.
+Hand-written (the drift check covers all but the generated tutorial pages): `README.md`, `CONTRIBUTING.md`, `docs/getting-started/`, `docs/learn/` (the Learn course), `docs/build/`, `docs/reference/`, `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md`, `docs/CODE-REVIEW.md`, `packages/okb/meta-kb/README.md`, `packages/format/README.md`, `sources/README.md` and the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`. Generated (never edit): `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md`, `CLI-CHEAT-SHEET.md`, and everything in `packages/okb/examples/<name>/` except `tutorial-src/` (that includes `docs/`, the reference pages `okb docs` writes from `packages/okb/src/kbdocs.ts`; `packages/okb/tests/kbdocs.test.ts` fails when the committed pages differ from a fresh run). Pages under `docs/getting-started/`, `docs/learn/`, `docs/build/`, `docs/reference/skills.md` and `tutorial-src/` are beginner pages that get the extra `Beginner` Vale rules (`.vale.ini`). The matching development skills are `.claude/skills/write-learn-page` (`docs/learn/*.md`) and `.claude/skills/write-tutorial`.
 
 ## Tutorials
 
@@ -106,6 +106,6 @@ Hand-written (the drift check covers all but the generated tutorial pages): `REA
 
 ## Skills in this repo
 
-`packages/okb/skills/` contains SKILL.md files that ship with the toolkit: `ontology-coach`, `ontology-review`, and `build-domain-kb-from-docs`. They drive the `okb` CLI, so a change to command names, flags, or output that they rely on must be reflected there too.
+`packages/okb/skills/` contains SKILL.md files that ship with the toolkit: `ontology-coach`, `ontology-review`, `ontology-maintainer`, `ontology-signoff` and `build-domain-kb-from-docs`. They drive the `okb` CLI, so a change to command names, flags, or output that they rely on must be reflected there too.
 
 `.claude/skills/okb-docs-drift` is a development skill (not shipped) that checks the hand-written docs and these skills against the CLI and meta-KB. After changing commands, flags, file layout or rules, run `node .claude/skills/okb-docs-drift/scripts/check-docs.ts`.

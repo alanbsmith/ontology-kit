@@ -2,977 +2,1008 @@
   "step": 7,
   "nodes": [
     {
-      "type": "Ontology",
-      "id": "ontology",
-      "name": "Espresso drinks",
-      "domain": "Espresso-based coffee drinks and what goes in them",
-      "purpose": "Help baristas and customers compare drinks on a café menu",
-      "users": [
-        "baristas",
-        "customers"
-      ],
-      "maintainers": [
-        "head barista"
-      ],
-      "outOfScope": [
-        "brewing equipment",
-        "coffee beans and roasting"
-      ],
-      "kind": "application",
-      "reuseReviewed": true,
-      "conventions": {
-        "classCase": "PascalCase",
-        "slotCase": "camelCase",
-        "instanceCase": null,
-        "classNumber": "singular",
-        "slotAffix": "none",
-        "source": "chosen"
-      }
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.1",
-      "text": "Which drinks have no milk?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.2",
-      "text": "What's the difference between a cortado and a latte?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.3",
-      "text": "What goes into a cappuccino?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.4",
-      "text": "Which drinks are a variation of another drink?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.5",
-      "text": "Which drinks on the menu come with chocolate?",
-      "status": "draft"
-    },
-    {
-      "type": "CompetencyQuestion",
-      "id": "cq.6",
-      "text": "How much does each drink cost?",
-      "status": "draft"
-    },
-    {
-      "type": "DesignDecision",
-      "id": "d.1",
-      "title": "No existing ontology reused",
-      "decision": "Build from scratch.",
-      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
-      "date": "2026-09-23"
-    },
-    {
-      "type": "Term",
-      "id": "t.drink",
-      "text": "drink",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.espresso",
-      "text": "espresso",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.ristretto",
-      "text": "ristretto",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.lungo",
-      "text": "lungo",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.americano",
-      "text": "americano",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.long-black",
-      "text": "long black",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.macchiato",
-      "text": "macchiato",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.cortado",
-      "text": "cortado",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.flat-white",
-      "text": "flat white",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.cappuccino",
-      "text": "cappuccino",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.latte",
-      "text": "latte",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.breve",
-      "text": "breve",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.mocha",
-      "text": "mocha",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.con-panna",
-      "text": "con panna",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.affogato",
-      "text": "affogato",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.cafe-bombon",
-      "text": "cafe bombon",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.ingredient",
-      "text": "ingredient",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.coffee",
-      "text": "coffee",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.water",
-      "text": "water",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.milk",
-      "text": "milk",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.whole-milk",
-      "text": "whole milk",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.half-and-half",
-      "text": "half and half",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.condensed-milk",
-      "text": "condensed milk",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.foam",
-      "text": "foam",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.chocolate",
-      "text": "chocolate",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.whipped-cream",
-      "text": "whipped cream",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.gelato",
-      "text": "gelato",
-      "disposition": "class"
-    },
-    {
-      "type": "Term",
-      "id": "t.pull-volume",
-      "text": "pull volume",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.espresso-to-milk-ratio",
-      "text": "espresso to milk ratio",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.texture",
-      "text": "texture",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.pour-order",
-      "text": "pour order",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.contains",
-      "text": "contains",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.variation-of",
-      "text": "variation of",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.origin",
-      "text": "origin",
-      "disposition": "slot"
-    },
-    {
-      "type": "Term",
-      "id": "t.tip-jar",
-      "text": "tip jar",
-      "disposition": "out-of-scope"
-    },
-    {
+      "id": "c.affogato",
       "type": "Class",
-      "id": "c.drink",
-      "name": "Drink",
-      "description": "Any coffee drink on the menu.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.espresso-drink",
-      "name": "EspressoDrink",
-      "description": "A drink built on a shot of espresso.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.pure-espresso",
-      "name": "PureEspresso",
-      "description": "An espresso drink with nothing but coffee and water.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.milk-drink",
-      "name": "MilkDrink",
-      "description": "An espresso drink with milk.",
-      "abstract": true,
-      "defaults": {
-        "s.texture": "silky"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.sweetened-drink",
-      "name": "SweetenedDrink",
-      "description": "An espresso drink with chocolate, cream or gelato.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.espresso",
-      "name": "Espresso",
-      "description": "A short, strong shot pulled through finely ground coffee.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A scoop of gelato drowned in a shot of espresso.",
       "fixedValues": {
-        "s.pull-volume-ml": 30
-      }
+        "s.origin": "Italy"
+      },
+      "name": "Affogato",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
-      "type": "Class",
-      "id": "c.ristretto",
-      "name": "Ristretto",
-      "description": "A shorter, sweeter shot pulled with less water.",
-      "fixedValues": {
-        "s.pull-volume-ml": 20
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.lungo",
-      "name": "Lungo",
-      "description": "A longer shot pulled with more water.",
-      "fixedValues": {
-        "s.pull-volume-ml": 60
-      }
-    },
-    {
-      "type": "Class",
       "id": "c.americano",
-      "name": "Americano",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
       "description": "Espresso topped up with hot water.",
       "fixedValues": {
         "s.pull-volume-ml": 30
-      }
+      },
+      "name": "Americano",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.breve",
       "type": "Class",
-      "id": "c.long-black",
-      "name": "LongBlack",
-      "description": "Hot water with espresso poured on top.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "defaults": {
+        "s.origin": "USA"
+      },
+      "description": "A latte or cappuccino made with half-and-half instead of milk.",
+      "name": "Breve",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.cafe-bombon",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Espresso layered with condensed milk.",
       "fixedValues": {
-        "s.pull-volume-ml": 30
-      }
+        "s.origin": "Spain"
+      },
+      "name": "CafeBombon",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.cappuccino",
       "type": "Class",
-      "id": "c.macchiato",
-      "name": "Macchiato",
-      "description": "Espresso marked with a spoonful of milk foam.",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "defaults": {
+        "s.espresso-to-milk-ratio": 0.33,
+        "s.origin": "Italy",
+        "s.texture": "foamy"
+      },
+      "description": "Espresso with steamed milk and a thick cap of foam.",
+      "name": "Cappuccino",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.chocolate",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Chocolate syrup or powder.",
+      "name": "Chocolate",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.coffee",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Ground coffee, pulled as espresso.",
+      "name": "Coffee",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.con-panna",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Espresso topped with whipped cream.",
       "fixedValues": {
         "s.origin": "Italy"
-      }
+      },
+      "name": "ConPanna",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.condensed-milk",
       "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Sweetened, thickened milk.",
+      "fixedValues": {
+        "s.fat-percent": 8
+      },
+      "name": "CondensedMilk",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
       "id": "c.cortado",
-      "name": "Cortado",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
       "description": "Espresso cut with an equal amount of warm milk.",
       "fixedValues": {
         "s.espresso-to-milk-ratio": 1,
         "s.origin": "Spain"
-      }
+      },
+      "name": "Cortado",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.drink",
       "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Any coffee drink on the menu.",
+      "name": "Drink",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.espresso",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A short, strong shot pulled through finely ground coffee.",
+      "fixedValues": {
+        "s.pull-volume-ml": 30
+      },
+      "name": "Espresso",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.espresso-drink",
+      "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A drink built on a shot of espresso.",
+      "name": "EspressoDrink",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
       "id": "c.flat-white",
-      "name": "FlatWhite",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
       "description": "Espresso with a thin layer of velvety milk.",
       "fixedValues": {
         "s.espresso-to-milk-ratio": 0.5,
         "s.origin": "Australia",
         "s.texture": "silky"
-      }
+      },
+      "name": "FlatWhite",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.foam",
       "type": "Class",
-      "id": "c.cappuccino",
-      "name": "Cappuccino",
-      "description": "Espresso with steamed milk and a thick cap of foam.",
-      "defaults": {
-        "s.texture": "foamy",
-        "s.espresso-to-milk-ratio": 0.33,
-        "s.origin": "Italy"
-      }
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Milk aerated with steam.",
+      "name": "Foam",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.gelato",
       "type": "Class",
-      "id": "c.latte",
-      "name": "Latte",
-      "description": "Espresso with a lot of steamed milk and a little foam.",
-      "defaults": {
-        "s.espresso-to-milk-ratio": 0.2
-      }
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Italian ice cream.",
+      "name": "Gelato",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
-      "type": "Class",
-      "id": "c.breve",
-      "name": "Breve",
-      "description": "A latte or cappuccino made with half-and-half instead of milk.",
-      "defaults": {
-        "s.origin": "USA"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.mocha",
-      "name": "Mocha",
-      "description": "Espresso with chocolate and steamed milk.",
-      "fixedValues": {
-        "s.origin": "USA"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.con-panna",
-      "name": "ConPanna",
-      "description": "Espresso topped with whipped cream.",
-      "fixedValues": {
-        "s.origin": "Italy"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.affogato",
-      "name": "Affogato",
-      "description": "A scoop of gelato drowned in a shot of espresso.",
-      "fixedValues": {
-        "s.origin": "Italy"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.cafe-bombon",
-      "name": "CafeBombon",
-      "description": "Espresso layered with condensed milk.",
-      "fixedValues": {
-        "s.origin": "Spain"
-      }
-    },
-    {
-      "type": "Class",
-      "id": "c.ingredient",
-      "name": "Ingredient",
-      "description": "Something that goes into a drink.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.coffee",
-      "name": "Coffee",
-      "description": "Ground coffee, pulled as espresso."
-    },
-    {
-      "type": "Class",
-      "id": "c.water",
-      "name": "Water",
-      "description": "Hot water."
-    },
-    {
-      "type": "Class",
-      "id": "c.milk",
-      "name": "Milk",
-      "description": "Any milk or cream added to a drink.",
-      "abstract": true
-    },
-    {
-      "type": "Class",
-      "id": "c.whole-milk",
-      "name": "WholeMilk",
-      "description": "Whole cow's milk.",
-      "fixedValues": {
-        "s.fat-percent": 3
-      }
-    },
-    {
-      "type": "Class",
       "id": "c.half-and-half",
-      "name": "HalfAndHalf",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
       "description": "Equal parts milk and cream.",
       "fixedValues": {
         "s.fat-percent": 12
-      }
+      },
+      "name": "HalfAndHalf",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.ingredient",
       "type": "Class",
-      "id": "c.condensed-milk",
-      "name": "CondensedMilk",
-      "description": "Sweetened, thickened milk.",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Something that goes into a drink.",
+      "name": "Ingredient",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.latte",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "defaults": {
+        "s.espresso-to-milk-ratio": 0.2
+      },
+      "description": "Espresso with a lot of steamed milk and a little foam.",
+      "name": "Latte",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.long-black",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Hot water with espresso poured on top.",
       "fixedValues": {
-        "s.fat-percent": 8
-      }
+        "s.pull-volume-ml": 30
+      },
+      "name": "LongBlack",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.lungo",
       "type": "Class",
-      "id": "c.foam",
-      "name": "Foam",
-      "description": "Milk aerated with steam."
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A longer shot pulled with more water.",
+      "fixedValues": {
+        "s.pull-volume-ml": 60
+      },
+      "name": "Lungo",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.macchiato",
       "type": "Class",
-      "id": "c.chocolate",
-      "name": "Chocolate",
-      "description": "Chocolate syrup or powder."
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Espresso marked with a spoonful of milk foam.",
+      "fixedValues": {
+        "s.origin": "Italy"
+      },
+      "name": "Macchiato",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
+      "id": "c.milk",
       "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Any milk or cream added to a drink.",
+      "name": "Milk",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.milk-drink",
+      "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "defaults": {
+        "s.texture": "silky"
+      },
+      "description": "An espresso drink with milk.",
+      "name": "MilkDrink",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.mocha",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Espresso with chocolate and steamed milk.",
+      "fixedValues": {
+        "s.origin": "USA"
+      },
+      "name": "Mocha",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.pure-espresso",
+      "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "An espresso drink with nothing but coffee and water.",
+      "name": "PureEspresso",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.ristretto",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A shorter, sweeter shot pulled with less water.",
+      "fixedValues": {
+        "s.pull-volume-ml": 20
+      },
+      "name": "Ristretto",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.sweetened-drink",
+      "type": "Class",
+      "abstract": true,
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "An espresso drink with chocolate, cream or gelato.",
+      "name": "SweetenedDrink",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "c.water",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Hot water.",
+      "name": "Water",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
       "id": "c.whipped-cream",
-      "name": "WhippedCream",
-      "description": "Cream whipped until light."
-    },
-    {
       "type": "Class",
-      "id": "c.gelato",
-      "name": "Gelato",
-      "description": "Italian ice cream."
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Cream whipped until light.",
+      "name": "WhippedCream",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
-      "type": "DesignDecision",
-      "id": "d.2",
-      "title": "Drinks keep their own names",
-      "decision": "Espresso, Ristretto, Lungo and the other drinks keep the names a menu uses.",
-      "rationale": "Baristas say Lungo, not LungoEspresso. The parent names group them, so the children don't repeat a word.",
-      "metaRules": [
-        "naming-subclass-names-consistent"
-      ],
-      "date": "2026-09-23"
+      "id": "c.whole-milk",
+      "type": "Class",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Whole cow's milk.",
+      "fixedValues": {
+        "s.fat-percent": 3
+      },
+      "name": "WholeMilk",
+      "updatedAt": "2026-09-23T00:00:00Z"
     },
     {
-      "type": "DesignDecision",
-      "id": "d.3",
-      "title": "Menu names for pure espressos",
-      "decision": "The pure espresso drinks keep their menu names.",
-      "rationale": "Nobody orders a LongBlackEspresso.",
-      "metaRules": [
-        "naming-subclass-names-consistent"
-      ],
-      "date": "2026-09-23"
+      "id": "cq.4mz6a9",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:05Z",
+      "status": "draft",
+      "text": "How much does each drink cost?",
+      "updatedAt": "2026-09-23T00:00:05Z"
     },
     {
+      "id": "cq.an5hqz",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "status": "draft",
+      "text": "Which drinks have no milk?",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "cq.ffbmq8",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:01Z",
+      "status": "draft",
+      "text": "What's the difference between a cortado and a latte?",
+      "updatedAt": "2026-09-23T00:00:01Z"
+    },
+    {
+      "id": "cq.pv8gg4",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:03Z",
+      "status": "draft",
+      "text": "Which drinks are a variation of another drink?",
+      "updatedAt": "2026-09-23T00:00:03Z"
+    },
+    {
+      "id": "cq.s7b99r",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:04Z",
+      "status": "draft",
+      "text": "Which drinks on the menu come with chocolate?",
+      "updatedAt": "2026-09-23T00:00:04Z"
+    },
+    {
+      "id": "cq.tmq6hs",
+      "type": "CompetencyQuestion",
+      "createdAt": "2026-09-23T00:00:02Z",
+      "status": "draft",
+      "text": "What goes into a cappuccino?",
+      "updatedAt": "2026-09-23T00:00:02Z"
+    },
+    {
+      "id": "d.0a44cm",
       "type": "DesignDecision",
-      "id": "d.4",
-      "title": "Milk names stay natural",
+      "createdAt": "2026-09-23T00:00:03Z",
+      "date": "2026-09-23",
       "decision": "HalfAndHalf keeps its everyday name.",
-      "rationale": "That's what the carton says.",
       "metaRules": [
         "naming-subclass-names-consistent"
       ],
-      "date": "2026-09-23"
+      "rationale": "That's what the carton says.",
+      "title": "Milk names stay natural",
+      "updatedAt": "2026-09-23T00:00:03Z"
     },
     {
+      "id": "d.8wg5vc",
       "type": "DesignDecision",
-      "id": "d.5",
-      "title": "Cortado is a class",
+      "createdAt": "2026-09-23T00:00:02Z",
+      "date": "2026-09-23",
+      "decision": "The pure espresso drinks keep their menu names.",
+      "metaRules": [
+        "naming-subclass-names-consistent"
+      ],
+      "rationale": "Nobody orders a LongBlackEspresso.",
+      "title": "Menu names for pure espressos",
+      "updatedAt": "2026-09-23T00:00:02Z"
+    },
+    {
+      "id": "d.386rne",
+      "type": "DesignDecision",
+      "createdAt": "2026-09-23T00:00:01Z",
+      "date": "2026-09-23",
+      "decision": "Espresso, Ristretto, Lungo and the other drinks keep the names a menu uses.",
+      "metaRules": [
+        "naming-subclass-names-consistent"
+      ],
+      "rationale": "Baristas say Lungo, not LungoEspresso. The parent names group them, so the children don't repeat a word.",
+      "title": "Drinks keep their own names",
+      "updatedAt": "2026-09-23T00:00:01Z"
+    },
+    {
+      "id": "d.h6nzmn",
+      "type": "DesignDecision",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "date": "2026-09-23",
+      "decision": "Build from scratch.",
+      "rationale": "No coffee vocabulary is small enough to teach with, so this ontology starts from scratch. A real café would look at a food or beverage vocabulary first.",
+      "title": "No existing ontology reused",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "d.jctqnh",
+      "type": "DesignDecision",
+      "createdAt": "2026-09-23T00:00:04Z",
+      "date": "2026-09-23",
       "decision": "Every drink type, Cortado included, is a class. Items on the menu are instances.",
       "rationale": "The questions compare kinds of drinks, and each kind has its own facts. A café that only listed menu items would model them as instances.",
-      "date": "2026-09-23"
+      "title": "Cortado is a class",
+      "updatedAt": "2026-09-23T00:00:04Z"
     },
     {
-      "type": "Slot",
-      "id": "s.pull-volume-ml",
-      "name": "pullVolumeMl",
-      "valueType": "Integer",
-      "cardinality": "single",
-      "description": "Milliliters of espresso pulled for one drink."
-    },
-    {
-      "type": "Slot",
-      "id": "s.espresso-to-milk-ratio",
-      "name": "espressoToMilkRatio",
-      "valueType": "Float",
-      "cardinality": "single",
-      "description": "Parts espresso per part milk, so 1 means equal parts."
-    },
-    {
-      "type": "Slot",
-      "id": "s.texture",
-      "name": "texture",
-      "valueType": "Enumerated",
-      "allowedValues": [
-        "silky",
-        "foamy",
-        "thick"
-      ],
-      "cardinality": "single",
-      "description": "How the milk feels."
-    },
-    {
-      "type": "Slot",
-      "id": "s.pour-order",
-      "name": "pourOrder",
-      "valueType": "String",
-      "cardinality": "single",
-      "description": "What goes in the cup first, and what goes on top."
-    },
-    {
-      "type": "Slot",
-      "id": "s.fat-percent",
-      "name": "fatPercent",
-      "valueType": "Integer",
-      "cardinality": "single",
-      "description": "Percent fat."
-    },
-    {
-      "type": "Slot",
-      "id": "s.origin",
-      "name": "origin",
-      "valueType": "String",
-      "cardinality": "single",
-      "description": "Where the drink was first made."
-    },
-    {
-      "type": "Slot",
-      "id": "s.contains",
-      "name": "contains",
-      "valueType": "Instance",
-      "relType": "CONTAINS",
-      "cardinality": "multiple",
-      "minCardinality": 1,
-      "description": "What goes into the drink.",
-      "edgeProperties": [
-        {
-          "name": "amount",
-          "valueType": "Enumerated",
-          "allowedValues": [
-            "splash",
-            "equal",
-            "topUp"
-          ],
-          "description": "How much of the ingredient goes in."
-        }
-      ]
-    },
-    {
-      "type": "Slot",
-      "id": "s.variation-of",
-      "name": "variationOf",
-      "valueType": "Instance",
-      "relType": "VARIATION_OF",
-      "cardinality": "multiple",
-      "description": "A drink this one is a twist on."
-    },
-    {
-      "type": "Slot",
-      "id": "s.used-in",
-      "name": "usedIn",
-      "valueType": "Instance",
-      "relType": "USED_IN",
-      "cardinality": "multiple",
-      "description": "Drinks the ingredient goes into."
-    },
-    {
+      "id": "i.chocolate-syrup-vss60w",
       "type": "Instance",
-      "id": "i.double-shot",
-      "name": "Double shot",
-      "values": {}
-    },
-    {
-      "type": "Instance",
-      "id": "i.hot-water",
-      "name": "Hot water",
-      "values": {}
-    },
-    {
-      "type": "Instance",
-      "id": "i.steamed-whole-milk",
-      "name": "Steamed whole milk",
-      "values": {}
-    },
-    {
-      "type": "Instance",
-      "id": "i.steamed-half-and-half",
-      "name": "Steamed half-and-half",
-      "values": {}
-    },
-    {
-      "type": "Instance",
-      "id": "i.milk-foam",
-      "name": "Milk foam",
-      "values": {}
-    },
-    {
-      "type": "Instance",
-      "id": "i.chocolate-syrup",
+      "createdAt": "2026-09-23T00:00:00Z",
       "name": "Chocolate syrup",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {}
     },
     {
+      "id": "i.double-shot-t7wr67",
       "type": "Instance",
-      "id": "i.whipped-cream",
-      "name": "Whipped cream",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Double shot",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {}
     },
     {
+      "id": "i.hot-water-5k070p",
       "type": "Instance",
-      "id": "i.vanilla-gelato",
-      "name": "Vanilla gelato",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Hot water",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {}
     },
     {
+      "id": "i.house-espresso-464q3e",
       "type": "Instance",
-      "id": "i.house-espresso",
+      "createdAt": "2026-09-23T00:00:00Z",
       "name": "House espresso",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {
         "s.pour-order": "Shot into a warm cup"
       }
     },
     {
+      "id": "i.milk-foam-ap9t4r",
       "type": "Instance",
-      "id": "i.vertex-cortado",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Milk foam",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {}
+    },
+    {
+      "id": "i.steamed-half-and-half-r364hz",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Steamed half-and-half",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {}
+    },
+    {
+      "id": "i.steamed-whole-milk-mxyt0r",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Steamed whole milk",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {}
+    },
+    {
+      "id": "i.vanilla-gelato-0mc3re",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Vanilla gelato",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {}
+    },
+    {
+      "id": "i.vertex-affogato-gba1f1",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Vertex affogato",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {
+        "s.pour-order": "Gelato first, shot poured over"
+      }
+    },
+    {
+      "id": "i.vertex-breve-7fvaz3",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Vertex breve",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {
+        "s.espresso-to-milk-ratio": 0.33,
+        "s.origin": "USA",
+        "s.pour-order": "Shot, half-and-half, then foam",
+        "s.texture": "foamy"
+      }
+    },
+    {
+      "id": "i.vertex-cappuccino-d0g1cz",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Vertex cappuccino",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {
+        "s.espresso-to-milk-ratio": 0.33,
+        "s.origin": "Italy",
+        "s.pour-order": "Shot, milk, then a cap of foam",
+        "s.texture": "foamy"
+      }
+    },
+    {
+      "id": "i.vertex-cortado-wb9n3x",
+      "type": "Instance",
+      "createdAt": "2026-09-23T00:00:00Z",
       "name": "Vertex cortado",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {
         "s.pour-order": "Shot first, then equal warm milk",
         "s.texture": "silky"
       }
     },
     {
+      "id": "i.vertex-flat-white-7vjzhp",
       "type": "Instance",
-      "id": "i.vertex-flat-white",
+      "createdAt": "2026-09-23T00:00:00Z",
       "name": "Vertex flat white",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {
         "s.pour-order": "Shot first, then thin milk"
       }
     },
     {
+      "id": "i.vertex-macchiato-j3z2ev",
       "type": "Instance",
-      "id": "i.vertex-cappuccino",
-      "name": "Vertex cappuccino",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Vertex macchiato",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {
-        "s.pour-order": "Shot, milk, then a cap of foam",
-        "s.espresso-to-milk-ratio": 0.33,
-        "s.texture": "foamy",
-        "s.origin": "Italy"
+        "s.pour-order": "Shot, then a spoonful of foam",
+        "s.texture": "silky"
       }
     },
     {
+      "id": "i.vertex-mocha-vya6eq",
       "type": "Instance",
-      "id": "i.vertex-breve",
-      "name": "Vertex breve",
-      "values": {
-        "s.pour-order": "Shot, half-and-half, then foam",
-        "s.espresso-to-milk-ratio": 0.33,
-        "s.texture": "foamy",
-        "s.origin": "USA"
-      }
-    },
-    {
-      "type": "Instance",
-      "id": "i.vertex-mocha",
+      "createdAt": "2026-09-23T00:00:00Z",
       "name": "Vertex mocha",
+      "updatedAt": "2026-09-23T00:00:00Z",
       "values": {
         "s.pour-order": "Chocolate, shot, then milk"
       }
     },
     {
+      "id": "i.whipped-cream-rffjm7",
       "type": "Instance",
-      "id": "i.vertex-affogato",
-      "name": "Vertex affogato",
-      "values": {
-        "s.pour-order": "Gelato first, shot poured over"
-      }
+      "createdAt": "2026-09-23T00:00:00Z",
+      "name": "Whipped cream",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "values": {}
     },
     {
-      "type": "Instance",
-      "id": "i.vertex-macchiato",
-      "name": "Vertex macchiato",
-      "values": {
-        "s.pour-order": "Shot, then a spoonful of foam",
-        "s.texture": "silky"
-      }
+      "id": "ontology",
+      "type": "Ontology",
+      "conventions": {
+        "classCase": "PascalCase",
+        "classNumber": "singular",
+        "instanceCase": null,
+        "slotAffix": "none",
+        "slotCase": "camelCase",
+        "source": "chosen"
+      },
+      "createdAt": "2026-09-23T00:00:00Z",
+      "domain": "Espresso-based coffee drinks and what goes in them",
+      "kind": "application",
+      "maintainers": [
+        "head barista"
+      ],
+      "name": "Espresso drinks",
+      "outOfScope": [
+        "brewing equipment",
+        "coffee beans and roasting"
+      ],
+      "purpose": "Help baristas and customers compare drinks on a café menu",
+      "reuseReviewed": true,
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "users": [
+        "baristas",
+        "customers"
+      ]
+    },
+    {
+      "id": "s.contains",
+      "type": "Slot",
+      "cardinality": "multiple",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "What goes into the drink.",
+      "edgeProperties": [
+        {
+          "allowedValues": [
+            "splash",
+            "equal",
+            "topUp"
+          ],
+          "description": "How much of the ingredient goes in.",
+          "name": "amount",
+          "valueType": "Enumerated"
+        }
+      ],
+      "minCardinality": 1,
+      "name": "contains",
+      "relType": "CONTAINS",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Instance"
+    },
+    {
+      "id": "s.espresso-to-milk-ratio",
+      "type": "Slot",
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Parts espresso per part milk, so 1 means equal parts.",
+      "name": "espressoToMilkRatio",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Float"
+    },
+    {
+      "id": "s.fat-percent",
+      "type": "Slot",
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Percent fat.",
+      "name": "fatPercent",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Integer"
+    },
+    {
+      "id": "s.origin",
+      "type": "Slot",
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Where the drink was first made.",
+      "name": "origin",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "String"
+    },
+    {
+      "id": "s.pour-order",
+      "type": "Slot",
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "What goes in the cup first, and what goes on top.",
+      "name": "pourOrder",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "String"
+    },
+    {
+      "id": "s.pull-volume-ml",
+      "type": "Slot",
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Milliliters of espresso pulled for one drink.",
+      "name": "pullVolumeMl",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Integer"
+    },
+    {
+      "id": "s.texture",
+      "type": "Slot",
+      "allowedValues": [
+        "silky",
+        "foamy",
+        "thick"
+      ],
+      "cardinality": "single",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "How the milk feels.",
+      "name": "texture",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Enumerated"
+    },
+    {
+      "id": "s.used-in",
+      "type": "Slot",
+      "cardinality": "multiple",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "Drinks the ingredient goes into.",
+      "name": "usedIn",
+      "relType": "USED_IN",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Instance"
+    },
+    {
+      "id": "s.variation-of",
+      "type": "Slot",
+      "cardinality": "multiple",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "description": "A drink this one is a twist on.",
+      "name": "variationOf",
+      "relType": "VARIATION_OF",
+      "updatedAt": "2026-09-23T00:00:00Z",
+      "valueType": "Instance"
+    },
+    {
+      "id": "t.affogato",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "affogato",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.americano",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "americano",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.breve",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "breve",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.cafe-bombon",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "cafe bombon",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.cappuccino",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "cappuccino",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.chocolate",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "chocolate",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.coffee",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "coffee",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.con-panna",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "con panna",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.condensed-milk",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "condensed milk",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.contains",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "contains",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.cortado",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "cortado",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.drink",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "drink",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.espresso",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "espresso",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.espresso-to-milk-ratio",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "espresso to milk ratio",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.flat-white",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "flat white",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.foam",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "foam",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.gelato",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "gelato",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.half-and-half",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "half and half",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.ingredient",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "ingredient",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.latte",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "latte",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.long-black",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "long black",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.lungo",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "lungo",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.macchiato",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "macchiato",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.milk",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "milk",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.mocha",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "mocha",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.origin",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "origin",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.pour-order",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "pour order",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.pull-volume",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "pull volume",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.ristretto",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "ristretto",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.texture",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "texture",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.tip-jar",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "out-of-scope",
+      "text": "tip jar",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.variation-of",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "slot",
+      "text": "variation of",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.water",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "water",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.whipped-cream",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "whipped cream",
+      "updatedAt": "2026-09-23T00:00:00Z"
+    },
+    {
+      "id": "t.whole-milk",
+      "type": "Term",
+      "createdAt": "2026-09-23T00:00:00Z",
+      "disposition": "class",
+      "text": "whole milk",
+      "updatedAt": "2026-09-23T00:00:00Z"
     }
   ],
   "edges": [
     {
-      "from": "d.1",
-      "type": "ABOUT",
-      "to": "ontology"
-    },
-    {
-      "from": "t.drink",
-      "type": "BECAME",
-      "to": "c.drink"
-    },
-    {
-      "from": "c.espresso-drink",
-      "type": "IS_A",
-      "to": "c.drink"
-    },
-    {
-      "from": "c.pure-espresso",
-      "type": "IS_A",
-      "to": "c.espresso-drink"
-    },
-    {
-      "from": "c.milk-drink",
-      "type": "IS_A",
-      "to": "c.espresso-drink"
-    },
-    {
-      "from": "c.sweetened-drink",
-      "type": "IS_A",
-      "to": "c.espresso-drink"
-    },
-    {
-      "from": "c.pure-espresso",
+      "from": "c.affogato",
       "type": "DISJOINT_WITH",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "c.pure-espresso",
-      "type": "DISJOINT_WITH",
-      "to": "c.sweetened-drink"
-    },
-    {
-      "from": "c.milk-drink",
-      "type": "DISJOINT_WITH",
-      "to": "c.sweetened-drink"
-    },
-    {
-      "from": "c.espresso",
-      "type": "IS_A",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "t.espresso",
-      "type": "BECAME",
-      "to": "c.espresso"
-    },
-    {
-      "from": "c.ristretto",
-      "type": "IS_A",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "t.ristretto",
-      "type": "BECAME",
-      "to": "c.ristretto"
-    },
-    {
-      "from": "c.lungo",
-      "type": "IS_A",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "t.lungo",
-      "type": "BECAME",
-      "to": "c.lungo"
-    },
-    {
-      "from": "c.americano",
-      "type": "IS_A",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "t.americano",
-      "type": "BECAME",
-      "to": "c.americano"
-    },
-    {
-      "from": "c.long-black",
-      "type": "IS_A",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "t.long-black",
-      "type": "BECAME",
-      "to": "c.long-black"
-    },
-    {
-      "from": "c.macchiato",
-      "type": "IS_A",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "t.macchiato",
-      "type": "BECAME",
-      "to": "c.macchiato"
-    },
-    {
-      "from": "c.cortado",
-      "type": "IS_A",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "t.cortado",
-      "type": "BECAME",
-      "to": "c.cortado"
-    },
-    {
-      "from": "c.flat-white",
-      "type": "IS_A",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "t.flat-white",
-      "type": "BECAME",
-      "to": "c.flat-white"
-    },
-    {
-      "from": "c.cappuccino",
-      "type": "IS_A",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "t.cappuccino",
-      "type": "BECAME",
-      "to": "c.cappuccino"
-    },
-    {
-      "from": "c.latte",
-      "type": "IS_A",
-      "to": "c.milk-drink"
-    },
-    {
-      "from": "t.latte",
-      "type": "BECAME",
-      "to": "c.latte"
-    },
-    {
-      "from": "c.breve",
-      "type": "IS_A",
-      "to": "c.latte"
-    },
-    {
-      "from": "c.breve",
-      "type": "IS_A",
-      "to": "c.cappuccino"
-    },
-    {
-      "from": "t.breve",
-      "type": "BECAME",
-      "to": "c.breve"
-    },
-    {
-      "from": "c.mocha",
-      "type": "IS_A",
-      "to": "c.sweetened-drink"
-    },
-    {
-      "from": "t.mocha",
-      "type": "BECAME",
-      "to": "c.mocha"
-    },
-    {
-      "from": "c.con-panna",
-      "type": "IS_A",
-      "to": "c.sweetened-drink"
-    },
-    {
-      "from": "t.con-panna",
-      "type": "BECAME",
-      "to": "c.con-panna"
+      "to": "c.cafe-bombon"
     },
     {
       "from": "c.affogato",
@@ -980,9 +1011,39 @@
       "to": "c.sweetened-drink"
     },
     {
-      "from": "t.affogato",
-      "type": "BECAME",
-      "to": "c.affogato"
+      "from": "c.americano",
+      "type": "DISJOINT_WITH",
+      "to": "c.long-black"
+    },
+    {
+      "from": "c.americano",
+      "type": "IS_A",
+      "to": "c.pure-espresso"
+    },
+    {
+      "from": "c.americano",
+      "type": "VARIATION_OF",
+      "to": "c.espresso"
+    },
+    {
+      "from": "c.breve",
+      "type": "IS_A",
+      "to": "c.cappuccino"
+    },
+    {
+      "from": "c.breve",
+      "type": "IS_A",
+      "to": "c.latte"
+    },
+    {
+      "from": "c.breve",
+      "type": "VARIATION_OF",
+      "to": "c.cappuccino"
+    },
+    {
+      "from": "c.breve",
+      "type": "VARIATION_OF",
+      "to": "c.latte"
     },
     {
       "from": "c.cafe-bombon",
@@ -990,14 +1051,54 @@
       "to": "c.sweetened-drink"
     },
     {
-      "from": "t.cafe-bombon",
-      "type": "BECAME",
-      "to": "c.cafe-bombon"
+      "from": "c.cappuccino",
+      "type": "IS_A",
+      "to": "c.milk-drink"
     },
     {
-      "from": "t.ingredient",
-      "type": "BECAME",
+      "from": "c.chocolate",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.chocolate",
+      "type": "DISJOINT_WITH",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "c.chocolate",
+      "type": "IS_A",
       "to": "c.ingredient"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.chocolate"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.foam"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.milk"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.water"
+    },
+    {
+      "from": "c.coffee",
+      "type": "DISJOINT_WITH",
+      "to": "c.whipped-cream"
     },
     {
       "from": "c.coffee",
@@ -1005,49 +1106,19 @@
       "to": "c.ingredient"
     },
     {
-      "from": "t.coffee",
-      "type": "BECAME",
-      "to": "c.coffee"
+      "from": "c.con-panna",
+      "type": "DISJOINT_WITH",
+      "to": "c.affogato"
     },
     {
-      "from": "c.water",
+      "from": "c.con-panna",
+      "type": "DISJOINT_WITH",
+      "to": "c.cafe-bombon"
+    },
+    {
+      "from": "c.con-panna",
       "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.water",
-      "type": "BECAME",
-      "to": "c.water"
-    },
-    {
-      "from": "c.milk",
-      "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.milk",
-      "type": "BECAME",
-      "to": "c.milk"
-    },
-    {
-      "from": "c.whole-milk",
-      "type": "IS_A",
-      "to": "c.milk"
-    },
-    {
-      "from": "t.whole-milk",
-      "type": "BECAME",
-      "to": "c.whole-milk"
-    },
-    {
-      "from": "c.half-and-half",
-      "type": "IS_A",
-      "to": "c.milk"
-    },
-    {
-      "from": "t.half-and-half",
-      "type": "BECAME",
-      "to": "c.half-and-half"
+      "to": "c.sweetened-drink"
     },
     {
       "from": "c.condensed-milk",
@@ -1055,229 +1126,9 @@
       "to": "c.milk"
     },
     {
-      "from": "t.condensed-milk",
-      "type": "BECAME",
-      "to": "c.condensed-milk"
-    },
-    {
-      "from": "c.foam",
+      "from": "c.cortado",
       "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.foam",
-      "type": "BECAME",
-      "to": "c.foam"
-    },
-    {
-      "from": "c.chocolate",
-      "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.chocolate",
-      "type": "BECAME",
-      "to": "c.chocolate"
-    },
-    {
-      "from": "c.whipped-cream",
-      "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.whipped-cream",
-      "type": "BECAME",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.gelato",
-      "type": "IS_A",
-      "to": "c.ingredient"
-    },
-    {
-      "from": "t.gelato",
-      "type": "BECAME",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.water"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.milk"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.foam"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.chocolate"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.coffee",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.water",
-      "type": "DISJOINT_WITH",
-      "to": "c.milk"
-    },
-    {
-      "from": "c.water",
-      "type": "DISJOINT_WITH",
-      "to": "c.foam"
-    },
-    {
-      "from": "c.water",
-      "type": "DISJOINT_WITH",
-      "to": "c.chocolate"
-    },
-    {
-      "from": "c.water",
-      "type": "DISJOINT_WITH",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.water",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.milk",
-      "type": "DISJOINT_WITH",
-      "to": "c.foam"
-    },
-    {
-      "from": "c.milk",
-      "type": "DISJOINT_WITH",
-      "to": "c.chocolate"
-    },
-    {
-      "from": "c.milk",
-      "type": "DISJOINT_WITH",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.milk",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.foam",
-      "type": "DISJOINT_WITH",
-      "to": "c.chocolate"
-    },
-    {
-      "from": "c.foam",
-      "type": "DISJOINT_WITH",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.foam",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.chocolate",
-      "type": "DISJOINT_WITH",
-      "to": "c.whipped-cream"
-    },
-    {
-      "from": "c.chocolate",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "c.whipped-cream",
-      "type": "DISJOINT_WITH",
-      "to": "c.gelato"
-    },
-    {
-      "from": "d.2",
-      "type": "ABOUT",
-      "to": "c.espresso-drink"
-    },
-    {
-      "from": "d.3",
-      "type": "ABOUT",
-      "to": "c.pure-espresso"
-    },
-    {
-      "from": "d.4",
-      "type": "ABOUT",
-      "to": "c.milk"
-    },
-    {
-      "from": "d.5",
-      "type": "ABOUT",
-      "to": "c.cortado"
-    },
-    {
-      "from": "c.espresso-drink",
-      "type": "HAS_SLOT",
-      "to": "s.pull-volume-ml"
-    },
-    {
-      "from": "c.milk-drink",
-      "type": "HAS_SLOT",
-      "to": "s.espresso-to-milk-ratio"
-    },
-    {
-      "from": "t.espresso-to-milk-ratio",
-      "type": "BECAME",
-      "to": "s.espresso-to-milk-ratio"
-    },
-    {
-      "from": "c.milk-drink",
-      "type": "HAS_SLOT",
-      "to": "s.texture"
-    },
-    {
-      "from": "t.texture",
-      "type": "BECAME",
-      "to": "s.texture"
-    },
-    {
-      "from": "c.drink",
-      "type": "HAS_SLOT",
-      "to": "s.pour-order"
-    },
-    {
-      "from": "t.pour-order",
-      "type": "BECAME",
-      "to": "s.pour-order"
-    },
-    {
-      "from": "c.milk",
-      "type": "HAS_SLOT",
-      "to": "s.fat-percent"
-    },
-    {
-      "from": "c.drink",
-      "type": "HAS_SLOT",
-      "to": "s.origin"
-    },
-    {
-      "from": "t.origin",
-      "type": "BECAME",
-      "to": "s.origin"
-    },
-    {
-      "from": "s.contains",
-      "type": "RANGE",
-      "to": "c.ingredient"
+      "to": "c.milk-drink"
     },
     {
       "from": "c.drink",
@@ -1285,14 +1136,14 @@
       "to": "s.contains"
     },
     {
-      "from": "t.contains",
-      "type": "BECAME",
-      "to": "s.contains"
+      "from": "c.drink",
+      "type": "HAS_SLOT",
+      "to": "s.origin"
     },
     {
-      "from": "s.variation-of",
-      "type": "RANGE",
-      "to": "c.drink"
+      "from": "c.drink",
+      "type": "HAS_SLOT",
+      "to": "s.pour-order"
     },
     {
       "from": "c.drink",
@@ -1300,59 +1151,19 @@
       "to": "s.variation-of"
     },
     {
-      "from": "t.variation-of",
-      "type": "BECAME",
-      "to": "s.variation-of"
-    },
-    {
-      "from": "s.used-in",
-      "type": "RANGE",
-      "to": "c.drink"
-    },
-    {
-      "from": "c.ingredient",
-      "type": "HAS_SLOT",
-      "to": "s.used-in"
-    },
-    {
-      "from": "t.pull-volume",
-      "type": "BECAME",
-      "to": "s.pull-volume-ml"
-    },
-    {
-      "from": "s.contains",
-      "type": "INVERSE_OF",
-      "to": "s.used-in"
-    },
-    {
-      "from": "c.breve",
-      "type": "VARIATION_OF",
-      "to": "c.latte"
-    },
-    {
-      "from": "c.breve",
-      "type": "VARIATION_OF",
-      "to": "c.cappuccino"
-    },
-    {
-      "from": "c.ristretto",
-      "type": "VARIATION_OF",
-      "to": "c.espresso"
-    },
-    {
-      "from": "c.lungo",
-      "type": "VARIATION_OF",
-      "to": "c.espresso"
-    },
-    {
-      "from": "c.americano",
-      "type": "VARIATION_OF",
-      "to": "c.espresso"
-    },
-    {
-      "from": "c.long-black",
-      "type": "VARIATION_OF",
+      "from": "c.espresso",
+      "type": "DISJOINT_WITH",
       "to": "c.americano"
+    },
+    {
+      "from": "c.espresso",
+      "type": "DISJOINT_WITH",
+      "to": "c.long-black"
+    },
+    {
+      "from": "c.espresso",
+      "type": "DISJOINT_WITH",
+      "to": "c.lungo"
     },
     {
       "from": "c.espresso",
@@ -1361,33 +1172,78 @@
     },
     {
       "from": "c.espresso",
-      "type": "DISJOINT_WITH",
-      "to": "c.lungo"
+      "type": "IS_A",
+      "to": "c.pure-espresso"
     },
     {
-      "from": "c.espresso",
+      "from": "c.espresso-drink",
+      "type": "HAS_SLOT",
+      "to": "s.pull-volume-ml"
+    },
+    {
+      "from": "c.espresso-drink",
+      "type": "IS_A",
+      "to": "c.drink"
+    },
+    {
+      "from": "c.flat-white",
+      "type": "IS_A",
+      "to": "c.milk-drink"
+    },
+    {
+      "from": "c.foam",
       "type": "DISJOINT_WITH",
+      "to": "c.chocolate"
+    },
+    {
+      "from": "c.foam",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.foam",
+      "type": "DISJOINT_WITH",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "c.foam",
+      "type": "IS_A",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "c.gelato",
+      "type": "IS_A",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "c.half-and-half",
+      "type": "DISJOINT_WITH",
+      "to": "c.condensed-milk"
+    },
+    {
+      "from": "c.half-and-half",
+      "type": "IS_A",
+      "to": "c.milk"
+    },
+    {
+      "from": "c.ingredient",
+      "type": "HAS_SLOT",
+      "to": "s.used-in"
+    },
+    {
+      "from": "c.latte",
+      "type": "IS_A",
+      "to": "c.milk-drink"
+    },
+    {
+      "from": "c.long-black",
+      "type": "IS_A",
+      "to": "c.pure-espresso"
+    },
+    {
+      "from": "c.long-black",
+      "type": "VARIATION_OF",
       "to": "c.americano"
-    },
-    {
-      "from": "c.espresso",
-      "type": "DISJOINT_WITH",
-      "to": "c.long-black"
-    },
-    {
-      "from": "c.ristretto",
-      "type": "DISJOINT_WITH",
-      "to": "c.lungo"
-    },
-    {
-      "from": "c.ristretto",
-      "type": "DISJOINT_WITH",
-      "to": "c.americano"
-    },
-    {
-      "from": "c.ristretto",
-      "type": "DISJOINT_WITH",
-      "to": "c.long-black"
     },
     {
       "from": "c.lungo",
@@ -1400,9 +1256,79 @@
       "to": "c.long-black"
     },
     {
-      "from": "c.americano",
+      "from": "c.lungo",
+      "type": "IS_A",
+      "to": "c.pure-espresso"
+    },
+    {
+      "from": "c.lungo",
+      "type": "VARIATION_OF",
+      "to": "c.espresso"
+    },
+    {
+      "from": "c.macchiato",
+      "type": "IS_A",
+      "to": "c.milk-drink"
+    },
+    {
+      "from": "c.milk",
       "type": "DISJOINT_WITH",
-      "to": "c.long-black"
+      "to": "c.chocolate"
+    },
+    {
+      "from": "c.milk",
+      "type": "DISJOINT_WITH",
+      "to": "c.foam"
+    },
+    {
+      "from": "c.milk",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.milk",
+      "type": "DISJOINT_WITH",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "c.milk",
+      "type": "HAS_SLOT",
+      "to": "s.fat-percent"
+    },
+    {
+      "from": "c.milk",
+      "type": "IS_A",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "c.milk-drink",
+      "type": "DISJOINT_WITH",
+      "to": "c.sweetened-drink"
+    },
+    {
+      "from": "c.milk-drink",
+      "type": "HAS_SLOT",
+      "to": "s.espresso-to-milk-ratio"
+    },
+    {
+      "from": "c.milk-drink",
+      "type": "HAS_SLOT",
+      "to": "s.texture"
+    },
+    {
+      "from": "c.milk-drink",
+      "type": "IS_A",
+      "to": "c.espresso-drink"
+    },
+    {
+      "from": "c.mocha",
+      "type": "DISJOINT_WITH",
+      "to": "c.affogato"
+    },
+    {
+      "from": "c.mocha",
+      "type": "DISJOINT_WITH",
+      "to": "c.cafe-bombon"
     },
     {
       "from": "c.mocha",
@@ -1411,214 +1337,494 @@
     },
     {
       "from": "c.mocha",
+      "type": "IS_A",
+      "to": "c.sweetened-drink"
+    },
+    {
+      "from": "c.pure-espresso",
       "type": "DISJOINT_WITH",
-      "to": "c.affogato"
+      "to": "c.milk-drink"
     },
     {
-      "from": "c.mocha",
+      "from": "c.pure-espresso",
       "type": "DISJOINT_WITH",
-      "to": "c.cafe-bombon"
+      "to": "c.sweetened-drink"
     },
     {
-      "from": "c.con-panna",
+      "from": "c.pure-espresso",
+      "type": "IS_A",
+      "to": "c.espresso-drink"
+    },
+    {
+      "from": "c.ristretto",
       "type": "DISJOINT_WITH",
-      "to": "c.affogato"
+      "to": "c.americano"
     },
     {
-      "from": "c.con-panna",
+      "from": "c.ristretto",
       "type": "DISJOINT_WITH",
-      "to": "c.cafe-bombon"
+      "to": "c.long-black"
     },
     {
-      "from": "c.affogato",
+      "from": "c.ristretto",
       "type": "DISJOINT_WITH",
-      "to": "c.cafe-bombon"
+      "to": "c.lungo"
     },
     {
-      "from": "c.whole-milk",
+      "from": "c.ristretto",
+      "type": "IS_A",
+      "to": "c.pure-espresso"
+    },
+    {
+      "from": "c.ristretto",
+      "type": "VARIATION_OF",
+      "to": "c.espresso"
+    },
+    {
+      "from": "c.sweetened-drink",
+      "type": "IS_A",
+      "to": "c.espresso-drink"
+    },
+    {
+      "from": "c.water",
       "type": "DISJOINT_WITH",
-      "to": "c.half-and-half"
+      "to": "c.chocolate"
     },
     {
-      "from": "c.whole-milk",
+      "from": "c.water",
       "type": "DISJOINT_WITH",
-      "to": "c.condensed-milk"
-    },
-    {
-      "from": "c.half-and-half",
-      "type": "DISJOINT_WITH",
-      "to": "c.condensed-milk"
-    },
-    {
-      "from": "i.double-shot",
-      "type": "INSTANCE_OF",
-      "to": "c.coffee"
-    },
-    {
-      "from": "i.hot-water",
-      "type": "INSTANCE_OF",
-      "to": "c.water"
-    },
-    {
-      "from": "i.steamed-whole-milk",
-      "type": "INSTANCE_OF",
-      "to": "c.whole-milk"
-    },
-    {
-      "from": "i.steamed-half-and-half",
-      "type": "INSTANCE_OF",
-      "to": "c.half-and-half"
-    },
-    {
-      "from": "i.milk-foam",
-      "type": "INSTANCE_OF",
       "to": "c.foam"
     },
     {
-      "from": "i.chocolate-syrup",
+      "from": "c.water",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.water",
+      "type": "DISJOINT_WITH",
+      "to": "c.milk"
+    },
+    {
+      "from": "c.water",
+      "type": "DISJOINT_WITH",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "c.water",
+      "type": "IS_A",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "c.whipped-cream",
+      "type": "DISJOINT_WITH",
+      "to": "c.gelato"
+    },
+    {
+      "from": "c.whipped-cream",
+      "type": "IS_A",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "c.whole-milk",
+      "type": "DISJOINT_WITH",
+      "to": "c.condensed-milk"
+    },
+    {
+      "from": "c.whole-milk",
+      "type": "DISJOINT_WITH",
+      "to": "c.half-and-half"
+    },
+    {
+      "from": "c.whole-milk",
+      "type": "IS_A",
+      "to": "c.milk"
+    },
+    {
+      "from": "d.0a44cm",
+      "type": "ABOUT",
+      "to": "c.milk"
+    },
+    {
+      "from": "d.8wg5vc",
+      "type": "ABOUT",
+      "to": "c.pure-espresso"
+    },
+    {
+      "from": "d.386rne",
+      "type": "ABOUT",
+      "to": "c.espresso-drink"
+    },
+    {
+      "from": "d.h6nzmn",
+      "type": "ABOUT",
+      "to": "ontology"
+    },
+    {
+      "from": "d.jctqnh",
+      "type": "ABOUT",
+      "to": "c.cortado"
+    },
+    {
+      "from": "i.chocolate-syrup-vss60w",
       "type": "INSTANCE_OF",
       "to": "c.chocolate"
     },
     {
-      "from": "i.whipped-cream",
+      "from": "i.double-shot-t7wr67",
       "type": "INSTANCE_OF",
-      "to": "c.whipped-cream"
+      "to": "c.coffee"
     },
     {
-      "from": "i.vanilla-gelato",
+      "from": "i.hot-water-5k070p",
       "type": "INSTANCE_OF",
-      "to": "c.gelato"
+      "to": "c.water"
     },
     {
-      "from": "i.house-espresso",
+      "from": "i.house-espresso-464q3e",
+      "type": "CONTAINS",
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.house-espresso-464q3e",
       "type": "INSTANCE_OF",
       "to": "c.espresso"
     },
     {
-      "from": "i.house-espresso",
-      "type": "CONTAINS",
-      "to": "i.double-shot"
-    },
-    {
-      "from": "i.vertex-cortado",
+      "from": "i.milk-foam-ap9t4r",
       "type": "INSTANCE_OF",
-      "to": "c.cortado"
+      "to": "c.foam"
     },
     {
-      "from": "i.vertex-cortado",
-      "type": "CONTAINS",
-      "to": "i.double-shot"
-    },
-    {
-      "from": "i.vertex-cortado",
-      "type": "CONTAINS",
-      "to": "i.steamed-whole-milk"
-    },
-    {
-      "from": "i.vertex-flat-white",
+      "from": "i.steamed-half-and-half-r364hz",
       "type": "INSTANCE_OF",
-      "to": "c.flat-white"
+      "to": "c.half-and-half"
     },
     {
-      "from": "i.vertex-flat-white",
-      "type": "CONTAINS",
-      "to": "i.double-shot"
-    },
-    {
-      "from": "i.vertex-flat-white",
-      "type": "CONTAINS",
-      "to": "i.steamed-whole-milk"
-    },
-    {
-      "from": "i.vertex-cappuccino",
+      "from": "i.steamed-whole-milk-mxyt0r",
       "type": "INSTANCE_OF",
-      "to": "c.cappuccino"
+      "to": "c.whole-milk"
     },
     {
-      "from": "i.vertex-cappuccino",
-      "type": "CONTAINS",
-      "to": "i.double-shot"
-    },
-    {
-      "from": "i.vertex-cappuccino",
-      "type": "CONTAINS",
-      "to": "i.steamed-whole-milk"
-    },
-    {
-      "from": "i.vertex-cappuccino",
-      "type": "CONTAINS",
-      "to": "i.milk-foam"
-    },
-    {
-      "from": "i.vertex-breve",
+      "from": "i.vanilla-gelato-0mc3re",
       "type": "INSTANCE_OF",
-      "to": "c.breve"
+      "to": "c.gelato"
     },
     {
-      "from": "i.vertex-breve",
+      "from": "i.vertex-affogato-gba1f1",
       "type": "CONTAINS",
-      "to": "i.double-shot"
+      "to": "i.double-shot-t7wr67"
     },
     {
-      "from": "i.vertex-breve",
+      "from": "i.vertex-affogato-gba1f1",
       "type": "CONTAINS",
-      "to": "i.steamed-half-and-half"
+      "to": "i.vanilla-gelato-0mc3re"
     },
     {
-      "from": "i.vertex-breve",
-      "type": "CONTAINS",
-      "to": "i.milk-foam"
-    },
-    {
-      "from": "i.vertex-mocha",
-      "type": "INSTANCE_OF",
-      "to": "c.mocha"
-    },
-    {
-      "from": "i.vertex-mocha",
-      "type": "CONTAINS",
-      "to": "i.double-shot"
-    },
-    {
-      "from": "i.vertex-mocha",
-      "type": "CONTAINS",
-      "to": "i.chocolate-syrup"
-    },
-    {
-      "from": "i.vertex-mocha",
-      "type": "CONTAINS",
-      "to": "i.steamed-whole-milk"
-    },
-    {
-      "from": "i.vertex-affogato",
+      "from": "i.vertex-affogato-gba1f1",
       "type": "INSTANCE_OF",
       "to": "c.affogato"
     },
     {
-      "from": "i.vertex-affogato",
+      "from": "i.vertex-breve-7fvaz3",
       "type": "CONTAINS",
-      "to": "i.double-shot"
+      "to": "i.double-shot-t7wr67"
     },
     {
-      "from": "i.vertex-affogato",
+      "from": "i.vertex-breve-7fvaz3",
       "type": "CONTAINS",
-      "to": "i.vanilla-gelato"
+      "to": "i.milk-foam-ap9t4r"
     },
     {
-      "from": "i.vertex-macchiato",
+      "from": "i.vertex-breve-7fvaz3",
+      "type": "CONTAINS",
+      "to": "i.steamed-half-and-half-r364hz"
+    },
+    {
+      "from": "i.vertex-breve-7fvaz3",
+      "type": "INSTANCE_OF",
+      "to": "c.breve"
+    },
+    {
+      "from": "i.vertex-cappuccino-d0g1cz",
+      "type": "CONTAINS",
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.vertex-cappuccino-d0g1cz",
+      "type": "CONTAINS",
+      "to": "i.milk-foam-ap9t4r"
+    },
+    {
+      "from": "i.vertex-cappuccino-d0g1cz",
+      "type": "CONTAINS",
+      "to": "i.steamed-whole-milk-mxyt0r"
+    },
+    {
+      "from": "i.vertex-cappuccino-d0g1cz",
+      "type": "INSTANCE_OF",
+      "to": "c.cappuccino"
+    },
+    {
+      "from": "i.vertex-cortado-wb9n3x",
+      "type": "CONTAINS",
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.vertex-cortado-wb9n3x",
+      "type": "CONTAINS",
+      "to": "i.steamed-whole-milk-mxyt0r"
+    },
+    {
+      "from": "i.vertex-cortado-wb9n3x",
+      "type": "INSTANCE_OF",
+      "to": "c.cortado"
+    },
+    {
+      "from": "i.vertex-flat-white-7vjzhp",
+      "type": "CONTAINS",
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.vertex-flat-white-7vjzhp",
+      "type": "CONTAINS",
+      "to": "i.steamed-whole-milk-mxyt0r"
+    },
+    {
+      "from": "i.vertex-flat-white-7vjzhp",
+      "type": "INSTANCE_OF",
+      "to": "c.flat-white"
+    },
+    {
+      "from": "i.vertex-macchiato-j3z2ev",
+      "type": "CONTAINS",
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.vertex-macchiato-j3z2ev",
+      "type": "CONTAINS",
+      "to": "i.milk-foam-ap9t4r",
+      "amount": "splash"
+    },
+    {
+      "from": "i.vertex-macchiato-j3z2ev",
       "type": "INSTANCE_OF",
       "to": "c.macchiato"
     },
     {
-      "from": "i.vertex-macchiato",
+      "from": "i.vertex-mocha-vya6eq",
       "type": "CONTAINS",
-      "to": "i.double-shot"
+      "to": "i.chocolate-syrup-vss60w"
     },
     {
-      "from": "i.vertex-macchiato",
+      "from": "i.vertex-mocha-vya6eq",
       "type": "CONTAINS",
-      "to": "i.milk-foam",
-      "amount": "splash"
+      "to": "i.double-shot-t7wr67"
+    },
+    {
+      "from": "i.vertex-mocha-vya6eq",
+      "type": "CONTAINS",
+      "to": "i.steamed-whole-milk-mxyt0r"
+    },
+    {
+      "from": "i.vertex-mocha-vya6eq",
+      "type": "INSTANCE_OF",
+      "to": "c.mocha"
+    },
+    {
+      "from": "i.whipped-cream-rffjm7",
+      "type": "INSTANCE_OF",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "s.contains",
+      "type": "INVERSE_OF",
+      "to": "s.used-in"
+    },
+    {
+      "from": "s.contains",
+      "type": "RANGE",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "s.used-in",
+      "type": "RANGE",
+      "to": "c.drink"
+    },
+    {
+      "from": "s.variation-of",
+      "type": "RANGE",
+      "to": "c.drink"
+    },
+    {
+      "from": "t.affogato",
+      "type": "BECAME",
+      "to": "c.affogato"
+    },
+    {
+      "from": "t.americano",
+      "type": "BECAME",
+      "to": "c.americano"
+    },
+    {
+      "from": "t.breve",
+      "type": "BECAME",
+      "to": "c.breve"
+    },
+    {
+      "from": "t.cafe-bombon",
+      "type": "BECAME",
+      "to": "c.cafe-bombon"
+    },
+    {
+      "from": "t.cappuccino",
+      "type": "BECAME",
+      "to": "c.cappuccino"
+    },
+    {
+      "from": "t.chocolate",
+      "type": "BECAME",
+      "to": "c.chocolate"
+    },
+    {
+      "from": "t.coffee",
+      "type": "BECAME",
+      "to": "c.coffee"
+    },
+    {
+      "from": "t.con-panna",
+      "type": "BECAME",
+      "to": "c.con-panna"
+    },
+    {
+      "from": "t.condensed-milk",
+      "type": "BECAME",
+      "to": "c.condensed-milk"
+    },
+    {
+      "from": "t.contains",
+      "type": "BECAME",
+      "to": "s.contains"
+    },
+    {
+      "from": "t.cortado",
+      "type": "BECAME",
+      "to": "c.cortado"
+    },
+    {
+      "from": "t.drink",
+      "type": "BECAME",
+      "to": "c.drink"
+    },
+    {
+      "from": "t.espresso",
+      "type": "BECAME",
+      "to": "c.espresso"
+    },
+    {
+      "from": "t.espresso-to-milk-ratio",
+      "type": "BECAME",
+      "to": "s.espresso-to-milk-ratio"
+    },
+    {
+      "from": "t.flat-white",
+      "type": "BECAME",
+      "to": "c.flat-white"
+    },
+    {
+      "from": "t.foam",
+      "type": "BECAME",
+      "to": "c.foam"
+    },
+    {
+      "from": "t.gelato",
+      "type": "BECAME",
+      "to": "c.gelato"
+    },
+    {
+      "from": "t.half-and-half",
+      "type": "BECAME",
+      "to": "c.half-and-half"
+    },
+    {
+      "from": "t.ingredient",
+      "type": "BECAME",
+      "to": "c.ingredient"
+    },
+    {
+      "from": "t.latte",
+      "type": "BECAME",
+      "to": "c.latte"
+    },
+    {
+      "from": "t.long-black",
+      "type": "BECAME",
+      "to": "c.long-black"
+    },
+    {
+      "from": "t.lungo",
+      "type": "BECAME",
+      "to": "c.lungo"
+    },
+    {
+      "from": "t.macchiato",
+      "type": "BECAME",
+      "to": "c.macchiato"
+    },
+    {
+      "from": "t.milk",
+      "type": "BECAME",
+      "to": "c.milk"
+    },
+    {
+      "from": "t.mocha",
+      "type": "BECAME",
+      "to": "c.mocha"
+    },
+    {
+      "from": "t.origin",
+      "type": "BECAME",
+      "to": "s.origin"
+    },
+    {
+      "from": "t.pour-order",
+      "type": "BECAME",
+      "to": "s.pour-order"
+    },
+    {
+      "from": "t.pull-volume",
+      "type": "BECAME",
+      "to": "s.pull-volume-ml"
+    },
+    {
+      "from": "t.ristretto",
+      "type": "BECAME",
+      "to": "c.ristretto"
+    },
+    {
+      "from": "t.texture",
+      "type": "BECAME",
+      "to": "s.texture"
+    },
+    {
+      "from": "t.variation-of",
+      "type": "BECAME",
+      "to": "s.variation-of"
+    },
+    {
+      "from": "t.water",
+      "type": "BECAME",
+      "to": "c.water"
+    },
+    {
+      "from": "t.whipped-cream",
+      "type": "BECAME",
+      "to": "c.whipped-cream"
+    },
+    {
+      "from": "t.whole-milk",
+      "type": "BECAME",
+      "to": "c.whole-milk"
     }
   ]
 }

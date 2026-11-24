@@ -46,12 +46,19 @@ Documents              okb source add docs/button.md [--repo-url https://github.
                        okb rule add --statement "..." --modality SHOULD --governs Button --cites <quote id> [--authored] [--value slot=value] [--refines <rule> --adds "..."]
                        okb rule refines <rule> <broader rule> [--adds "..."]     okb fulfills <instance> <rule>
                        okb cite <node> <quote id>                                attach an existing quote to a node
-                       okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] · okb verify <node> --approve
-                       okb source refresh <source>                            after the document changes
+                       okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--note "..."] [--ref <url>] · okb verify <node> --approve
+                       okb source refresh <source> | --all [--dry-run] [--record] [--strict] [--json]   after the document changes (--all: worklist)
 
 Skills                 okb skills install [--copy] [--dir <folder>] [--force]    link (or copy) the packaged skills into ~/.claude/skills
                        okb skills status [--dir <folder>]                         which are installed, where, and whether they match this okb
 
 Also: okb show <name> · okb rename <old> <new> · okb remove <name> · okb drift <folder>...
+       okb check [--json]                is this KB safe to merge? (validation, quotes, verification; non-zero exit if not)
+       okb pin                           record this okb version in okb.json (CI installs it; okb check warns on older)
+       okb docs --out <folder>           write Markdown reference pages: classes, slots, rules and the quotes behind them
+         --changed <ref> [--hops N]      only the pages that differ from a git ref, plus the stale-quote worklist
+         --context                       every rule beside the source text around its quote, problem cases first
+       okb diff <old> [<new>] [--json]   what changed in the knowledge between two folders or git refs (okb diff main)
+       okb release <version> · okb release verify   cut a pinned release with a manifest and change log; check files against it
 Names: when a class and a slot share a name, say which: class:Genre / slot:genre
 Global options: -C <folder> (default: current folder) · --json (machine-readable output where supported)`;

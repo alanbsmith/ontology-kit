@@ -1,6 +1,7 @@
 node_modules/
 sources/*.pdf
 *.tmp
+.okb.lock
 .DS_Store
 
 # Vale style packages (downloaded by `vale sync`)

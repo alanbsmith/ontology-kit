@@ -124,7 +124,7 @@ describe("question families", () => {
     const ont = wine();
     const notes = ops.linkCQ(ont, "1", ["RedWine", "body"]);
     const tip = notes[notes.length - 1];
-    assert.match(tip, /^Tip: cq\.1 is one example of a family/);
+    assert.match(tip, /^Tip: cq\.[0-9a-hjkmnp-tv-z]{6} is one example of a family/);
     assert.match(tip, /same question about WhiteWine, RoseWine/);
     assert.match(tip, /more about RedWine \(sugar\)/, "body is already used by the question, so it isn't suggested");
     assert.match(tip, /okb scope --out-of-scope/);
@@ -141,7 +141,7 @@ describe("question families", () => {
     const ont = wine();
     ops.linkCQ(ont, "1", ["RedWine", "body"]);
     const item = buildReview(ont, true).find((i) => i.rule === "scope-cq-families")!;
-    assert.ok(item.prompts.some((p) => p.startsWith('cq.1 "What body does a red wine have?": would you also ask the same question about WhiteWine, RoseWine')), item.prompts.join("\n"));
+    assert.ok(item.prompts.some((p) => p.startsWith(`${ont.find("1", "CompetencyQuestion").id} "What body does a red wine have?": would you also ask the same question about WhiteWine, RoseWine`)), item.prompts.join("\n"));
   });
 });
 
@@ -170,7 +170,7 @@ describe("indexes", () => {
         assert.deepEqual(ont.inEdges(n.id, t), fresh.inEdges(n.id, t), `in ${n.id} ${t}`);
       }
     }
-    assert.deepEqual(ont.rel.values("i.winery-1", "s.produces"), ["i.wine-1"]);
+    assert.deepEqual(ont.rel.values(ont.find("Winery 1", "Instance").id, "s.produces"), [ont.find("Wine 1", "Instance").id]);
   });
 });
 
@@ -210,7 +210,7 @@ describe("worked example", () => {
     const withSchema = exportGraph(ont, { schema: true });
     assert.ok(withSchema.relationships.some((r) => r.type === "GOES_WELL_WITH" && r.properties.classLevel));
     const cypher = toCypher(g);
-    assert.match(cypher, /CREATE \(:Beaujolais:RedWine:Wine \{okbId: "i\.chateau-morgon-beaujolais"/);
+    assert.match(cypher, /CREATE \(:Beaujolais:RedWine:Wine \{okbId: "i\.chateau-morgon-beaujolais-[0-9a-z]{6}"/);
     assert.match(cypher, /CREATE \(a\)-\[:MAKER\]->\(b\);/);
   });
   it("migrates okb-lpg/1 HAS_VALUE edges on load", async () => {
@@ -226,7 +226,7 @@ describe("worked example", () => {
     writeFileSync(join(dir, "edges.json"), JSON.stringify([{ from: "i.x", type: "HAS_VALUE", to: "i.y", slot: "s.knows" }]));
     const ont = Ontology.load(dir);
     assert.deepEqual(ont.edges, [{ from: "i.x", type: "KNOWS", to: "i.y" }]);
-    assert.equal(ont.manifest.format, "okb-lpg/2");
+    assert.equal(ont.manifest.format, "okb-lpg/3");
   });
 });
 

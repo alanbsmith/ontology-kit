@@ -35,8 +35,8 @@ okb quote add house-guide "A breve must use half-and-half, never whole milk."
 The second rule narrows the first. Every milk drink needs milk, and a breve needs one particular milk. That's a [refinement](../../../../../docs/GLOSSARY.md#concept-rule-refines):
 
 ```okb
-okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites loc.vertex-coffee-house-guide.1
-okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites loc.vertex-coffee-house-guide.2 --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
+okb rule add --authored --name "Milk drinks have milk" --statement "A MilkDrink MUST contain a milk ingredient." --modality MUST --governs MilkDrink --cites "Every milk drink must contain milk or cream."
+okb rule add --authored --name "Breve uses half-and-half" --statement "A Breve MUST be made with HalfAndHalf." --modality MUST --governs Breve --cites "A breve must use half-and-half, never whole milk." --refines "Milk drinks have milk" --adds "The milk must be half-and-half."
 okb rule list
 ```
 

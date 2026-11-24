@@ -1,0 +1,893 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-kit.dev/schema/okb-lpg-3/node.schema.json",
+  "title": "An okb node (okb-lpg/3): one line of nodes.jsonl",
+  "description": "Which keys a node may have depends on its type. Keys not listed are allowed (okb keeps them). Whether an edge's ends exist, ids are unique and the ontology follows the rules is checked by `okb validate`, not by this schema.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Ontology"
+    },
+    {
+      "$ref": "#/$defs/CompetencyQuestion"
+    },
+    {
+      "$ref": "#/$defs/Term"
+    },
+    {
+      "$ref": "#/$defs/ReusedOntology"
+    },
+    {
+      "$ref": "#/$defs/Class"
+    },
+    {
+      "$ref": "#/$defs/Slot"
+    },
+    {
+      "$ref": "#/$defs/Instance"
+    },
+    {
+      "$ref": "#/$defs/DesignDecision"
+    },
+    {
+      "$ref": "#/$defs/Source"
+    },
+    {
+      "$ref": "#/$defs/SourceLocation"
+    },
+    {
+      "$ref": "#/$defs/Rule"
+    }
+  ],
+  "$defs": {
+    "Literal": {
+      "type": [
+        "string",
+        "number",
+        "boolean"
+      ]
+    },
+    "StoredValue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Literal"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Literal"
+          }
+        }
+      ]
+    },
+    "ValueMap": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/StoredValue"
+      }
+    },
+    "Strings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "SourceBlock": {
+      "type": "object",
+      "required": [
+        "hash",
+        "kind",
+        "headingPath",
+        "preview"
+      ],
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "headingPath": {
+          "$ref": "#/$defs/Strings"
+        },
+        "rowKey": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string"
+        }
+      }
+    },
+    "Verification": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "OVERREACH",
+            "UNSUPPORTED"
+          ]
+        },
+        "checkedAgainst": {
+          "$ref": "#/$defs/Strings"
+        },
+        "note": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^[hH][tT][tT][pP][sS]?://\\S+$"
+        },
+        "approvedAfter": {
+          "enum": [
+            "SUPPORTED",
+            "OVERREACH",
+            "UNSUPPORTED"
+          ]
+        }
+      }
+    },
+    "Ontology": {
+      "title": "Ontology",
+      "description": "Exactly one per ontology (id 'ontology'). Holds scope (domain, purpose, users, maintainers, outOfScope), conventions, reuseReviewed, and kind ('application' or 'terminological').",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Ontology"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "name": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "users": {
+          "$ref": "#/$defs/Strings"
+        },
+        "maintainers": {
+          "$ref": "#/$defs/Strings"
+        },
+        "outOfScope": {
+          "$ref": "#/$defs/Strings"
+        },
+        "kind": {
+          "enum": [
+            "application",
+            "terminological"
+          ]
+        },
+        "reuseReviewed": {
+          "type": "boolean"
+        },
+        "conventions": {
+          "type": "object",
+          "properties": {
+            "classCase": {
+              "type": "string"
+            },
+            "slotCase": {
+              "type": "string"
+            },
+            "instanceCase": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "classNumber": {
+              "enum": [
+                "singular",
+                "plural"
+              ]
+            },
+            "slotAffix": {
+              "enum": [
+                "none",
+                "has-prefix",
+                "of-suffix"
+              ]
+            },
+            "source": {
+              "enum": [
+                "chosen",
+                "default"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "CompetencyQuestion": {
+      "title": "CompetencyQuestion",
+      "description": "A question the ontology must answer. status: draft | answerable.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "CompetencyQuestion"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "text": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "answerable"
+          ]
+        }
+      }
+    },
+    "Term": {
+      "title": "Term",
+      "description": "A Step-3 brainstorm term. disposition: undecided | class | slot | instance | value | synonym | out-of-scope.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Term"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "text": {
+          "type": "string"
+        },
+        "disposition": {
+          "enum": [
+            "undecided",
+            "class",
+            "slot",
+            "instance",
+            "value",
+            "synonym",
+            "out-of-scope"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "ReusedOntology": {
+      "title": "ReusedOntology",
+      "description": "An existing ontology/vocabulary considered in Step 2. decision: reuse | adapt | reference | rejected.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "name",
+        "decision"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "ReusedOntology"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "reuse",
+            "adapt",
+            "reference",
+            "rejected"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "Class": {
+      "title": "Class",
+      "description": "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Class"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        },
+        "extractionConfidence": {
+          "enum": [
+            "verbatim",
+            "paraphrased",
+            "corrected"
+          ]
+        },
+        "_originalDraft": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
+        },
+        "description": {
+          "type": "string"
+        },
+        "synonyms": {
+          "$ref": "#/$defs/Strings"
+        },
+        "abstract": {
+          "type": "boolean"
+        },
+        "terminological": {
+          "type": "boolean"
+        },
+        "fixedValues": {
+          "$ref": "#/$defs/ValueMap"
+        },
+        "defaults": {
+          "$ref": "#/$defs/ValueMap"
+        },
+        "facetOverrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "allowedValues": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Literal"
+                }
+              },
+              "minCardinality": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "maxCardinality": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "range": {
+                "$ref": "#/$defs/Strings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Slot": {
+      "title": "Slot",
+      "description": "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule).",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Slot"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        },
+        "extractionConfidence": {
+          "enum": [
+            "verbatim",
+            "paraphrased",
+            "corrected"
+          ]
+        },
+        "_originalDraft": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
+        },
+        "description": {
+          "type": "string"
+        },
+        "valueType": {
+          "enum": [
+            "String",
+            "Integer",
+            "Float",
+            "Number",
+            "Boolean",
+            "Enumerated",
+            "Instance"
+          ]
+        },
+        "allowedValues": {
+          "$ref": "#/$defs/Strings"
+        },
+        "cardinality": {
+          "enum": [
+            "single",
+            "multiple"
+          ]
+        },
+        "minCardinality": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxCardinality": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "default": {
+          "$ref": "#/$defs/StoredValue"
+        },
+        "relType": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_]*$"
+        },
+        "formerRelTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_]*$"
+          }
+        },
+        "edgeProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "valueType"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "valueType": {
+                "enum": [
+                  "String",
+                  "Integer",
+                  "Float",
+                  "Number",
+                  "Boolean",
+                  "Enumerated"
+                ]
+              },
+              "allowedValues": {
+                "$ref": "#/$defs/Strings"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "appliesToRules": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Instance": {
+      "title": "Instance",
+      "description": "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Instance"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        },
+        "extractionConfidence": {
+          "enum": [
+            "verbatim",
+            "paraphrased",
+            "corrected"
+          ]
+        },
+        "_originalDraft": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "formerNames": {
+          "$ref": "#/$defs/Strings"
+        },
+        "description": {
+          "type": "string"
+        },
+        "values": {
+          "$ref": "#/$defs/ValueMap"
+        }
+      }
+    },
+    "DesignDecision": {
+      "title": "DesignDecision",
+      "description": "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "title",
+        "decision"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "DesignDecision"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        },
+        "extractionConfidence": {
+          "enum": [
+            "verbatim",
+            "paraphrased",
+            "corrected"
+          ]
+        },
+        "_originalDraft": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "alternatives": {
+          "$ref": "#/$defs/Strings"
+        },
+        "metaRules": {
+          "$ref": "#/$defs/Strings"
+        },
+        "date": {
+          "type": "string"
+        }
+      }
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks).",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Source"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "title": {
+          "type": "string"
+        },
+        "localPath": {
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "markdown",
+            "pdf",
+            "text"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "repoUrl": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "object"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceBlock"
+          }
+        }
+      }
+    },
+    "SourceLocation": {
+      "title": "SourceLocation",
+      "description": "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs).",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "quote"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "SourceLocation"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "quote": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "headingPath": {
+          "$ref": "#/$defs/Strings"
+        },
+        "startLine": {
+          "type": "integer"
+        },
+        "endLine": {
+          "type": "integer"
+        },
+        "lines": {
+          "type": "string"
+        },
+        "blockKind": {
+          "type": "string"
+        },
+        "sourceLink": {
+          "type": "string"
+        },
+        "pageLink": {
+          "type": "string"
+        },
+        "page": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        }
+      }
+    },
+    "Rule": {
+      "title": "Rule",
+      "description": "A domain rule: a requirement on any implementation (prescriptive), e.g. 'Buttons meet a 24px minimum touch target'. Extracted from documentation or authored by the ontology owner (`okb rule add`). authored (Boolean: written by the owner, not extracted; still cites a quote and is verified), extracted, extractionConfidence, verification{status, checkedAgainst}, _originalDraft, values{slotId: value | [values]} for qualifier slots that apply to Rules (e.g. condition, inputModality). Not inherited through REFINES.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "modality",
+        "statement"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "Rule"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC to the second, e.g. 2026-11-21T14:03:22Z. Missing means unknown."
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        },
+        "extractionConfidence": {
+          "enum": [
+            "verbatim",
+            "paraphrased",
+            "corrected"
+          ]
+        },
+        "_originalDraft": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "modality": {
+          "enum": [
+            "MUST",
+            "MUST_NOT",
+            "SHOULD",
+            "SHOULD_NOT",
+            "MAY"
+          ]
+        },
+        "statement": {
+          "type": "string"
+        },
+        "authored": {
+          "type": "boolean"
+        },
+        "values": {
+          "$ref": "#/$defs/ValueMap"
+        }
+      }
+    }
+  }
+}

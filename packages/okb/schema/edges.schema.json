@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-kit.dev/schema/okb-lpg-3/edges.schema.json",
+  "title": "An older edges.json: an array of edges",
+  "type": "array",
+  "items": {
+    "$ref": "edge.schema.json"
+  }
+}

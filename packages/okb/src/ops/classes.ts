@@ -56,7 +56,10 @@ export function checkParents(ont: Ontology, parents: string[], name: string, not
 export function setClass(ont: Ontology, ref: string, o: { description?: string; addParents?: string[]; removeParents?: string[]; synonyms?: string[]; abstract?: boolean; terminological?: boolean }): Notes {
   const cl = ont.find(ref, "Class");
   const notes: Notes = [];
-  if (o.description !== undefined) cl.description = o.description;
+  if (o.description !== undefined) {
+    cl.description = o.description;
+    ont.touch(cl);
+  }
   for (const p of o.addParents ?? []) {
     const pn = ont.find(p, "Class");
     if (pn.id === cl.id || ont.ancestors(pn.id).has(cl.id)) throw new OkbError(`${pn.name} is ${pn.id === cl.id ? "the same class" : `already below ${cl.name}`}; that would create a cycle (a class can't be its own ancestor).`);
@@ -69,9 +72,18 @@ export function setClass(ont: Ontology, ref: string, o: { description?: string; 
     ont.removeEdges((e) => e.from === cl.id && e.type === "IS_A" && e.to === pn.id);
     notes.push(`${cl.name} is no longer under ${pn.name}.`);
   }
-  if (o.synonyms?.length) cl.synonyms = [...new Set([...(cl.synonyms ?? []), ...list(o.synonyms)])];
-  if (o.abstract !== undefined) cl.abstract = o.abstract || undefined;
-  if (o.terminological !== undefined) cl.terminological = o.terminological || undefined;
+  if (o.synonyms?.length) {
+    cl.synonyms = [...new Set([...(cl.synonyms ?? []), ...list(o.synonyms)])];
+    ont.touch(cl);
+  }
+  if (o.abstract !== undefined) {
+    cl.abstract = o.abstract || undefined;
+    ont.touch(cl);
+  }
+  if (o.terminological !== undefined) {
+    cl.terminological = o.terminological || undefined;
+    ont.touch(cl);
+  }
   return notes.length ? notes : [`Updated ${cl.name}.`];
 }
 

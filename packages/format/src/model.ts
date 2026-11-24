@@ -1,7 +1,10 @@
-/** Loading, saving and navigating an ontology folder (okb.json + nodes.json + edges.json). Part of @ontology-kit/format. */
-import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+/** Loading, saving and navigating an ontology folder (okb.json + nodes.jsonl + edges.jsonl; see layout.ts). Part of @ontology-kit/format. */
+import { createHash, randomBytes } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { OkbError } from "./errors.ts";
+import { compareNatural, readGraph, writeGraph } from "./layout.ts";
+import { acquireLock, isLocked, waitUnlocked } from "./lock.ts";
 import { FORMAT_VERSION } from "./registry.ts";
 import * as naming from "./naming.ts";
 import { Relationships, edgeProps, isRelationship } from "./relationships.ts";
@@ -15,8 +18,36 @@ export { DISPOSITIONS, VALUE_TYPES };
 export const FORMAT: string = FORMAT_VERSION;
 export const MANIFEST = "okb.json";
 const ID_PREFIX: Partial<Record<NodeType, string>> = {
-  Class: "c", Slot: "s", Instance: "i", Term: "t", ReusedOntology: "r", Source: "src", SourceLocation: "loc", Rule: "rule",
+  CompetencyQuestion: "cq", DesignDecision: "d", Class: "c", Slot: "s", Instance: "i", Term: "t", ReusedOntology: "r", Source: "src", SourceLocation: "loc", Rule: "rule",
 };
+/** Nodes whose ids always carry a tag: different people can add different ones with the same name (or none). */
+const TAGGED_TYPES = new Set<NodeType>(["CompetencyQuestion", "DesignDecision", "Instance", "SourceLocation"]);
+const TAG_ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"; // Crockford base32: lowercase, no i l o u
+
+/**
+ * Six characters (30 bits) that two branches won't pick twice. Random, except when
+ * SOURCE_DATE_EPOCH is set (a reproducible build): then a hash of the epoch, the type,
+ * the name and the attempt number, so generated output like examples/wine is identical
+ * on every run.
+ */
+function idTag(type: NodeType, name: string | undefined, attempt: number): string {
+  const epoch = process.env.SOURCE_DATE_EPOCH;
+  const bytes = epoch
+    ? createHash("sha256").update(`${epoch}\0${type}\0${name ?? ""}\0${attempt}`).digest()
+    : randomBytes(6);
+  let tag = "";
+  for (let i = 0; i < 6; i++) tag += TAG_ALPHABET[bytes[i] % 32];
+  return tag;
+}
+
+/** Now as `2026-11-21T14:03:22Z`. SOURCE_DATE_EPOCH pins it, like the id tags, so generated output is the same on every run. */
+function timestamp(): string {
+  const epoch = process.env.SOURCE_DATE_EPOCH;
+  if (epoch !== undefined && epoch !== "" && !/^\d+$/.test(epoch)) throw new OkbError(`SOURCE_DATE_EPOCH must be whole seconds since 1970; got '${epoch}'.`);
+  const ms = epoch ? Number(epoch) * 1000 : Date.now();
+  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
 /** `okb show class:Genre` etc.: prefixes that say which kind of node a name refers to. */
 const REF_PREFIX: Record<string, NodeType> = {
   class: "Class", slot: "Slot", instance: "Instance", term: "Term", cq: "CompetencyQuestion", question: "CompetencyQuestion", decision: "DesignDecision",
@@ -32,9 +63,9 @@ export function nodeLabel(n: OkbNode): string {
   return n.id;
 }
 
-/** Every name-like field a node can be looked up by. */
+/** Every name-like field a node can be looked up by (a quote's text counts: its id has a random tag). */
 function lookupNames(n: OkbNode): string[] {
-  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || ""];
+  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || "", ("quote" in n && typeof n.quote === "string" && n.quote) || ""];
 }
 
 export { isRelationship };
@@ -82,20 +113,53 @@ export class Ontology {
   }
 
   static load(start: string): Ontology {
+    const root = Ontology.rootOf(start);
+    // A command that is saving writes several files: don't read in the middle. If one took the lock while
+    // this was reading, the files may be a mix of old and new, so read again.
+    for (let attempt = 0; ; attempt++) {
+      waitUnlocked(root);
+      const ont = Ontology.read(root);
+      if (attempt >= 3 || !isLocked(root)) return ont;
+    }
+  }
+
+  /**
+   * Load, change and save one folder with its lock held, so a second command running at the same time
+   * waits instead of overwriting this one's work. `fn` may be async; it should call `save()` itself.
+   * @internal
+   */
+  static edit<T>(start: string, fn: (ont: Ontology) => T): T {
+    const root = Ontology.rootOf(start);
+    const release = acquireLock(root);
+    let result: T;
+    try {
+      result = fn(Ontology.read(root));
+    } catch (e) {
+      release();
+      throw e;
+    }
+    if (result instanceof Promise) return result.finally(release) as T;
+    release();
+    return result;
+  }
+
+  private static rootOf(start: string): string {
     const root = findRoot(start);
     if (!root) {
       throw new OkbError(
         `No ontology found in ${resolve(start)} or its parents. Create one with: okb init <folder> --name "My Ontology"`,
       );
     }
+    return root;
+  }
+
+  private static read(root: string): Ontology {
     // Trusted as typed; struct-well-formed reports what a hand edit got wrong.
-    const ont = new Ontology(
-      root,
-      readJson<Manifest>(join(root, MANIFEST), { format: FORMAT, currentStep: 1 }),
-      readJson<OkbNode[]>(join(root, "nodes.json"), []),
-      readJson<GraphEdge[]>(join(root, "edges.json"), []),
-    );
+    const { nodes, edges } = readGraph(root);
+    const ont = new Ontology(root, readJson<Manifest>(join(root, MANIFEST), { format: FORMAT, currentStep: 1 }), nodes, edges);
     if (ont.manifest.format === "okb-lpg/1") ont.migrateFromV1();
+    // okb-lpg/2 -> /3 changes how new ids are made, not any existing id, so only the version moves.
+    if (ont.manifest.format === "okb-lpg/2") ont.manifest.format = FORMAT;
     return ont;
   }
 
@@ -119,12 +183,7 @@ export class Ontology {
 
   /** @internal */
   save(): void {
-    const files: [string, unknown][] = [[MANIFEST, this.manifest], ["nodes.json", this.nodes], ["edges.json", this.edges]];
-    for (const [fname, data] of files) {
-      const tmp = join(this.root, fname + ".tmp");
-      writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf8");
-      renameSync(tmp, join(this.root, fname));
-    }
+    writeGraph(this.root, this.manifest, this.nodes, this.edges);
   }
 
   // addNode/addEdge update the indexes in place; everything else that changes
@@ -231,8 +290,14 @@ export class Ontology {
     const k = naming.key(ref);
     let hits = this.nodes.filter((n) => ok(n) && k && lookupNames(n).some((x) => naming.key(x) === k));
     if (hits.length === 0 && /^\d+$/.test(ref) && ts) {
-      if (ts.includes("CompetencyQuestion")) hits = this.nodes.filter((n) => n.id === `cq.${ref}`);
-      if (ts.includes("DesignDecision")) hits = hits.concat(this.nodes.filter((n) => n.id === `d.${ref}`));
+      // A bare number is a position in `okb cq list` / `okb decision list` (display order; ids carry no number),
+      // or, for ids made before okb-lpg/3, the number inside `cq.3` / `d.3`.
+      for (const [t, p] of [["CompetencyQuestion", "cq"], ["DesignDecision", "d"]] as const) {
+        if (!ts.includes(t)) continue;
+        const legacy = this.byId.get(`${p}.${ref}`);
+        const nth = this.numbered(t)[Number(ref) - 1];
+        hits = hits.concat(legacy?.type === t ? [legacy] : nth ? [nth] : []);
+      }
     }
     if (hits.length > 1 && !ts) {
       // Untyped lookups prefer the modeling elements over brainstorm terms, questions, etc.
@@ -276,21 +341,87 @@ export class Ontology {
 
   /** @internal */
   newId(type: NodeType, name?: string): string {
-    if (type === "CompetencyQuestion" || type === "DesignDecision") {
-      const p = type === "CompetencyQuestion" ? "cq" : "d";
-      let i = 1;
-      while (this.byId.has(`${p}.${i}`)) i++;
-      return `${p}.${i}`;
+    const prefix = ID_PREFIX[type] ?? type.toLowerCase();
+    const slug = naming.slug(name ?? type);
+    // Where two branches could each create a different node with the same id, the id carries a
+    // tag. Elsewhere a slug id is the first free one, and a clash with an existing id gets a tag too.
+    const base = type === "CompetencyQuestion" || type === "DesignDecision" ? prefix : `${prefix}.${slug}`;
+    const plain = TAGGED_TYPES.has(type) ? undefined : base;
+    if (plain && !this.byId.has(plain)) return plain;
+    for (let attempt = 0; ; attempt++) {
+      const tag = idTag(type, name, attempt);
+      const id = type === "CompetencyQuestion" || type === "DesignDecision" ? `${base}.${tag}` : `${base}-${tag}`;
+      if (!this.byId.has(id)) return id;
     }
-    const base = `${ID_PREFIX[type] ?? type.toLowerCase()}.${naming.slug(name ?? type)}`;
-    let id = base;
-    for (let i = 2; this.byId.has(id); i++) id = `${base}-${i}`;
-    return id;
+  }
+
+  /**
+   * Competency questions or design decisions in display order, the order their numbers follow:
+   * oldest first by `createdAt`, nodes with no `createdAt` (made before timestamps) before those that
+   * have one, in id order with numbers compared as numbers (`cq.2` before `cq.10`), and ties by id.
+   * File order is sorted by id and says nothing about age.
+   * @internal
+   */
+  numbered(type: NodeType): OkbNode[] {
+    return this.nodes.filter((n) => n.type === type).sort((a, b) => {
+      const ca = a.createdAt ?? "";
+      const cb = b.createdAt ?? "";
+      return (ca < cb ? -1 : ca > cb ? 1 : 0) || compareNatural(a.id, b.id);
+    });
+  }
+
+  /**
+   * The number a person types for a competency question or design decision (`okb cq link 2 ...`):
+   * its position in display order (see `numbered`), counting from 1. Ids carry no number.
+   * @internal
+   */
+  displayNumber(n: OkbNode): number {
+    return this.numbered(n.type).indexOf(n) + 1;
+  }
+
+  private opTime: string | null = null;
+
+  /**
+   * Run one command with a single clock read: every stamp it writes (createdAt, updatedAt) is
+   * the same value, so a command that creates a node and edits it afterwards leaves the two
+   * equal. The CLI wraps each command in this; nesting reuses the outer read. A library caller
+   * that calls ops directly without it still gets a fresh read per addNode/touch, which is fine.
+   * @internal
+   */
+  tick<T>(fn: () => T): T {
+    if (this.opTime !== null) return fn();
+    this.opTime = timestamp();
+    try {
+      return fn();
+    } finally {
+      this.opTime = null;
+    }
+  }
+
+  /**
+   * Record that something stored ON the node changed (its own fields, property values or
+   * facets). Every op that changes a node's content calls this; ops that only add or remove
+   * edges don't.
+   * @internal
+   */
+  touch(node: OkbNode): void {
+    // Never before createdAt: a question or decision added in the same second as another was stamped a second later.
+    const now = this.opTime ?? timestamp();
+    node.updatedAt = node.createdAt && node.createdAt > now ? node.createdAt : now;
   }
 
   /** @internal */
   addNode<T extends OkbNode>(node: T): T {
     if (this.byId.has(node.id)) throw new OkbError(`A node with id ${node.id} already exists.`);
+    let now = this.opTime ?? timestamp();
+    if (node.type === "CompetencyQuestion" || node.type === "DesignDecision") {
+      // These are numbered by age (see `numbered`), and stamps have one-second resolution: a new one
+      // always sorts after the existing ones, even when two are added in the same second.
+      const newest = this.nodes.reduce((m, n) => (n.type === node.type && n.createdAt && n.createdAt > m ? n.createdAt : m), "");
+      if (newest >= now) now = new Date(Date.parse(newest) + 1000).toISOString().replace(/\.\d{3}Z$/, "Z");
+    }
+    node.createdAt = now;
+    node.updatedAt = now;
     this._nodes.push(node);
     this.byId.set(node.id, node);
     return node;
@@ -328,12 +459,19 @@ export class Ontology {
   removeNode(id: string): void {
     this._nodes = this._nodes.filter((x) => x.id !== id);
     this._edges = this._edges.filter((e) => e.from !== id && e.to !== id);
+    // Values and facets stored under the removed id are content of the nodes that hold them.
+    const drop = (x: OkbNode, map: Record<string, unknown> | undefined): void => {
+      if (map && id in map) {
+        delete map[id];
+        this.touch(x);
+      }
+    };
     for (const x of this.nodes) {
-      if (x.type === "Instance" || x.type === "Rule") delete x.values?.[id];
+      if (x.type === "Instance" || x.type === "Rule") drop(x, x.values);
       else if (x.type === "Class") {
-        delete x.fixedValues?.[id];
-        delete x.defaults?.[id];
-        delete x.facetOverrides?.[id];
+        drop(x, x.fixedValues);
+        drop(x, x.defaults);
+        drop(x, x.facetOverrides);
       }
     }
     this.reindex();
@@ -356,13 +494,20 @@ export class Ontology {
     return this.walk(id, (x) => this.children(x));
   }
 
+  /**
+   * Everything reachable with `next`, nearest first (a parent before its own parents), and among classes
+   * the same distance away in id order, so the order is the same in memory and after a save and reload.
+   * Cycle-safe.
+   */
   private walk(id: string, next: (x: string) => string[]): Set<string> {
     const seen = new Set<string>();
-    const stack = [...next(id)];
-    for (let c = stack.pop(); c !== undefined; c = stack.pop()) {
-      if (seen.has(c) || c === id) continue;
-      seen.add(c);
-      stack.push(...next(c));
+    const queue = [id];
+    for (let i = 0; i < queue.length; i++) {
+      for (const c of [...next(queue[i])].sort(compareNatural)) {
+        if (seen.has(c) || c === id) continue;
+        seen.add(c);
+        queue.push(c);
+      }
     }
     return seen;
   }

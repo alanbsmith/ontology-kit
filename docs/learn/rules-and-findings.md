@@ -19,7 +19,7 @@ Say you add the question "How much does each drink cost?" to the Vertex Coffee o
 
 The graph is from the [espresso tutorial](../../packages/okb/examples/espresso/tutorial/0-intro.md), for the made-up café Vertex Coffee ([how to read the graphs](index.md#how-to-read-the-graphs)). Here a dot can also be a competency question or a slot. Click a node to read about it. The dashed outline marks the question that `okb validate` complains about.
 
-<okb-graph src="/data/espresso.json" focus="cq.3, cq.6" highlight="cq.6" show="CompetencyQuestion,Slot" label="Two competency questions: one linked to the classes and slots that answer it, and one linked to nothing">
+<okb-graph src="/data/espresso.json" focus="cq.tmq6hs, cq.4mz6a9" highlight="cq.4mz6a9" show="CompetencyQuestion,Slot" label="Two competency questions: one linked to the classes and slots that answer it, and one linked to nothing">
 <p>The graph shows two competency questions from the espresso ontology.</p>
 <ul>
 <li>"What goes into a cappuccino?" needs the class Cappuccino and the slot contains, so it is joined to both.</li>
@@ -51,7 +51,7 @@ You'll see one warning and some hints (the output is cut here to the warning and
 ✗ 0 error(s)   ! 1 warning(s)   i 6 hint(s)   · checks for steps 1–8 (use --all for the rest)
 
 WARNINGS: fix, or record a design decision explaining why not
-  ! Competency question cq.6 ("How much does each drink cost?") isn't linked to anything that answers it. [scope-cq-coverage]
+  ! Competency question cq.4mz6a9 ("How much does each drink cost?") isn't linked to anything that answers it. [scope-cq-coverage]
       Fix: `okb cq link <cq> <Class|slot>...`, or add what's missing.
 
 HINTS: worth a look
@@ -75,7 +75,7 @@ Run `okb validate` again and the warning is gone. Or say the café's point-of-sa
 okb decision add --title "Prices stay out of the ontology" \
   --decision "The point-of-sale system owns prices, so no competency question about cost is answered here." \
   --why "Prices change weekly and the ontology describes drinks, not the price list." \
-  --about cq.6 --waives scope-cq-coverage
+  --about "question:How much does each drink cost?" --waives scope-cq-coverage
 ```
 
 ```text

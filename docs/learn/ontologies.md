@@ -33,7 +33,7 @@ Notice the two halves. The rings and the `contains` slot are the plan. Vertex br
 
 ## What okb adds
 
-In okb, the plan and the data live in the same two files, `nodes.json` and `edges.json`. A class, a slot and an instance are all nodes. Because the plan is data, okb can check your real drinks against it and tell you when a drink breaks the plan.
+In okb, the plan and the data live in the same two files, `nodes.jsonl` and `edges.jsonl`. A class, a slot and an instance are all nodes. Because the plan is data, okb can check your real drinks against it and tell you when a drink breaks the plan.
 
 ## In okb
 

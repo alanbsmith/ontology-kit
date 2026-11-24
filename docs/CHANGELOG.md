@@ -6,6 +6,14 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 
 ## Package releases
 
+### 0.2.0 (unreleased)
+
+#### Review views
+
+- `okb docs --out <folder> --changed <ref>` writes only the reference pages whose text differs from a git ref or folder, so a change to a rule on a class includes the pages of the subclasses that inherit it, plus a `changes.md` that lists them and the quotes and source blocks that changed but haven't been re-synced. `--hops N` adds neighboring class pages for context.
+- `okb verify` suggests a note after an OVERREACH correction (a changed MUST, SHOULD or MAY, a changed number, or a few words) with the command that stores it, and tips what a useful note says for UNSUPPORTED. `--ref <url>` stores an `http` or `https` link to the discussion as `verification.ref` (a new optional field on `Verification` in `@ontology-kit/format`); `--approve` keeps it. `okb docs --context` shows it beside the note.
+- `okb docs --out <folder> --context` writes `rules-in-context.md`: each rule with its verification status, the verifier note, its quote and the source lines around it, problem cases first.
+
 ### 0.1.0 (2026-11-21)
 
 The first release. Version 0.x means anything may change between releases; see [Releases](../CONTRIBUTING.md#releases) for what 1.0 will promise.
@@ -66,3 +74,28 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.4.2
 
 - **Skills install with `okb skills install`.** The setup step in the three shipped skills now asks the user to install okb from npm, and offers `okb skills status` and `okb skills install` when the skill and okb versions differ. No rule changed.
+
+### v2.4.3
+
+- **A "docs changed" path in the extraction skill.** `build-domain-kb-from-docs` now starts a re-sync from `okb source refresh --all --json`: gone quotes first (with the rules and facts that cite them), then the worklist of new, changed and removed blocks. A Source node gets an optional `blocks` list (a hash per quotable block) to compare against.
+
+### v2.5.0
+
+- **A skill for maintainers.** The new `ontology-maintainer` skill looks after an existing KB that is kept in git with `okb check` in CI. It starts from `okb status`, `okb check` and `okb source refresh --all --json`, then runs one of six flows: the source documents changed, a requested fix, a new rule or source, a rename, a pull request for a reviewer, and a release. It hands extraction and verification to `build-domain-kb-from-docs` and modeling questions to `ontology-review`, and it never runs `okb verify --approve`. No rule changed.
+
+### v2.6.0
+
+- **Verification notes are cheap to write.** The four skills now say when a note helps (OVERREACH, UNSUPPORTED, an approval that rests on a conversation) and what a good one looks like, and `docs/EXTRACTION-PIPELINE.md` and the maintaining guide match. No rule changed.
+- **A skill for sign-off.** The new `ontology-signoff` skill walks a subject-matter expert or a pull request reviewer through confirming that a KB's rules are right. It reads `okb check`, `okb diff`, `okb docs --changed` and `okb docs --context`, shows each rule beside its quote and the source text around it (riskiest first), asks for one decision at a time and ends with a summary to paste as a review comment. It runs `okb verify --approve` only when the person says yes to that named rule, and it never changes the KB for anything else. It sends the maintainer to `ontology-maintainer` when a source changed without a re-sync. No rule changed.
+
+### v2.6.1
+
+- **Skill corrections.** `build-domain-kb-from-docs` now removes the old quote once every node that cited it has a new one, so a refresh doesn't report it gone again. `ontology-coach` says when to use UNSUPPORTED instead of OVERREACH and warns that `--corrected` leaves a rule's modality unchanged, so a correction from MUST to SHOULD needs the rule added again before sign-off. `ontology-maintainer` reads the rest of a changed block after a gone quote is handled and asks for a fresh verification pass after any re-cited fix. `ontology-signoff` flags a reworded rule whose strength changed instead of approving it. No rule changed.
+
+### v2.6.2
+
+- **A corrected rule keeps its strength in step.** When `okb verify --status OVERREACH --corrected` gives a rule a statement with a different MUST, SHOULD or MAY, okb now changes the rule's `modality` to match and says so. `ontology-coach` and `ontology-signoff` tell the person who approves it that the strength changed, and replace the earlier advice to remove and re-add the rule, which would have lost its links. No rule changed.
+
+### v2.6.3
+
+- **The skills say when okb changes a rule's strength.** `ontology-coach` and `ontology-signoff` said okb always changes a rule's `modality` to match a corrected statement. It does so only when the statement names exactly one of MUST, MUST NOT, SHOULD, SHOULD NOT or MAY and it differs; with none, or two different ones, it leaves the strength as it was. The skills now say that, and tell the approver to check the stored strength by hand in that case. `okb verify` also reads `MUST NOT` and `SHOULD NOT` split across a line break as one keyword. No rule changed.

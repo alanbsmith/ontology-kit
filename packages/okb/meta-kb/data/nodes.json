@@ -2,8 +2,8 @@
   {
     "type": "MetaKB",
     "id": "metakb",
-    "version": "2.4.2",
-    "formatVersion": "okb-lpg/2",
+    "version": "2.6.3",
+    "formatVersion": "okb-lpg/3",
     "description": "Rules, method and vocabulary for building ontologies, derived from Ontology 101 (Noy & McGuinness 2001) and Gruber (1993)."
   },
   {
@@ -1110,7 +1110,7 @@
     "definition": "An ontology together with a set of individual instances of classes. The line between where the ontology ends and the knowledge base begins is a fine one.",
     "plainLanguage": "The ontology is the empty form: which fields exist and what's allowed in them. The knowledge base is the form filled in with real things.",
     "example": "The ontology defines the Wine class and its slots; adding 'Château Morgon Beaujolais' with body=light turns it into a knowledge base.",
-    "inThisToolkit": "The same nodes.json/edges.json hold both. Instance nodes are the knowledge-base part.",
+    "inThisToolkit": "The same nodes.jsonl/edges.jsonl hold both. Instance nodes are the knowledge-base part.",
     "origin": "source"
   },
   {
@@ -1437,7 +1437,7 @@
     "definition": "The storage format used by this toolkit: nodes and edges that each carry a type label and a set of key/value properties.",
     "plainLanguage": "Your ontology is saved as two JSON lists, nodes and edges, which is how graph databases like Neo4j and Neptune think. Classes, slots and instances are nodes. Structural links (IS_A, HAS_SLOT...) and relationship values ((wine)-[:MAKER]->(winery)) are edges. `okb export` writes the data the way a graph database expects it: instances as nodes labeled with their classes. It's still just the storage format, so model the meaning first (see principle.knowledge-level).",
     "example": "{\"type\": \"Class\", \"id\": \"c.red-wine\", \"name\": \"RedWine\"} and {\"from\": \"c.red-wine\", \"type\": \"IS_A\", \"to\": \"c.wine\"}",
-    "inThisToolkit": "nodes.json and edges.json in your ontology folder. See docs/FORMAT.md.",
+    "inThisToolkit": "nodes.jsonl and edges.jsonl in your ontology folder. See docs/FORMAT.md.",
     "origin": "operational"
   },
   {
@@ -3230,7 +3230,7 @@
       "id",
       "name"
     ],
-    "description": "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."
+    "description": "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."
   },
   {
     "type": "NodeType",
@@ -3241,7 +3241,7 @@
       "id",
       "name"
     ],
-    "description": "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."
+    "description": "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."
   },
   {
     "type": "NodeType",
@@ -3252,7 +3252,7 @@
       "id",
       "name"
     ],
-    "description": "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."
+    "description": "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."
   },
   {
     "type": "NodeType",
@@ -3275,7 +3275,7 @@
       "id",
       "title"
     ],
-    "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."
+    "description": "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks)."
   },
   {
     "type": "NodeType",

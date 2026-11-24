@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-kit.dev/schema/okb-lpg-3/nodes.schema.json",
+  "title": "An older nodes.json (okb-lpg/3 folders written before the one-per-line layout): an array of nodes",
+  "type": "array",
+  "items": {
+    "$ref": "node.schema.json"
+  }
+}

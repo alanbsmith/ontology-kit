@@ -2,78 +2,78 @@
 classDiagram
   accTitle: Wine and Food classes
   accDescr: Class diagram of the Wine and Food ontology: 21 classes, arrows from each class to its parent, and 5 relationships between classes.
-  class Wine {
-    red|white|rose color
-    light|medium|full body
-    delicate|moderate|strong flavor
-    dry|offDry|sweet sugar
+  class Beaujolais {
+  }
+  class Bordeaux {
+  }
+  class Chardonnay {
+  }
+  class DessertWine {
+  }
+  class Food {
+    <<abstract>>
+  }
+  class Margaux {
+  }
+  class Medoc {
+  }
+  class Merlot {
+  }
+  class Pauillac {
+  }
+  class Port {
+  }
+  class RedMeat {
   }
   class RedWine {
     low|moderate|high tanninLevel
   }
-  class WhiteWine {
+  class Riesling {
   }
   class RoseWine {
   }
-  class DessertWine {
-  }
-  class Bordeaux {
-  }
-  class Medoc {
-  }
-  class Pauillac {
-  }
-  class Margaux {
-  }
-  class Beaujolais {
-  }
-  class Merlot {
-  }
-  class Port {
-  }
-  class Chardonnay {
-  }
-  class Riesling {
-  }
   class Sauternes {
   }
-  class Winery {
-    String location
+  class Seafood {
+  }
+  class WhiteWine {
+  }
+  class Wine {
+    light|medium|full body
+    red|white|rose color
+    delicate|moderate|strong flavor
+    dry|offDry|sweet sugar
   }
   class WineGrape {
   }
   class WineRegion {
   }
-  class Food {
-    <<abstract>>
+  class Winery {
+    String location
   }
-  class Seafood {
-  }
-  class RedMeat {
-  }
-  Wine <|-- RedWine
-  Wine <|-- WhiteWine
-  Wine <|-- RoseWine
-  Wine <|-- DessertWine
-  RedWine <|-- Bordeaux
-  Bordeaux <|-- Medoc
-  Medoc <|-- Pauillac
-  Medoc <|-- Margaux
   RedWine <|-- Beaujolais
-  RedWine <|-- Merlot
-  RedWine <|-- Port
-  DessertWine <|-- Port
+  RedWine <|-- Bordeaux
   WhiteWine <|-- Chardonnay
-  WhiteWine <|-- Riesling
-  WhiteWine <|-- Sauternes
-  DessertWine <|-- Sauternes
-  Food <|-- Seafood
+  Wine <|-- DessertWine
+  Medoc <|-- Margaux
+  Bordeaux <|-- Medoc
+  RedWine <|-- Merlot
+  Medoc <|-- Pauillac
+  DessertWine <|-- Port
+  RedWine <|-- Port
   Food <|-- RedMeat
+  Wine <|-- RedWine
+  WhiteWine <|-- Riesling
+  Wine <|-- RoseWine
+  DessertWine <|-- Sauternes
+  WhiteWine <|-- Sauternes
+  Food <|-- Seafood
+  Wine <|-- WhiteWine
+  Wine --> Food : goesWellWith
+  Wine --> WineGrape : grape
   Wine --> Winery : maker
   Winery --> Wine : produces
-  Wine --> WineGrape : grape
   Wine --> WineRegion : region
-  Wine --> Food : goesWellWith
 ```
 
-Disjoint: RedWine ⟂ WhiteWine · RedWine ⟂ RoseWine · WhiteWine ⟂ RoseWine · Chardonnay ⟂ Riesling · Seafood ⟂ RedMeat
+Disjoint: Chardonnay ⟂ Riesling · RedWine ⟂ RoseWine · RedWine ⟂ WhiteWine · Seafood ⟂ RedMeat · WhiteWine ⟂ RoseWine

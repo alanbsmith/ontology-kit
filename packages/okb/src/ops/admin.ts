@@ -1,11 +1,11 @@
 /** Creating an ontology, design decisions, renaming and removing. */
-import { existsSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
 import { today } from "../clock.ts";
 import { MetaKB } from "../metakb.ts";
-import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType, type OkbNode } from "@ontology-kit/format";
+import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType } from "@ontology-kit/format";
 import type { Notes } from "./common.ts";
 import { checkName } from "./naming.ts";
 
@@ -14,12 +14,15 @@ export function createOntology(root: string, name: string): Ontology {
   mkdirSync(root, { recursive: true });
   if (existsSync(join(root, MANIFEST))) throw new OkbError(`${root} already contains an ontology (${MANIFEST}).`);
   const manifest: Manifest = { format: FORMAT, name, currentStep: 1, created: today() };
-  const nodes: OkbNode[] = [{
+  const ont = new Ontology(resolve(root), manifest, [], []);
+  ont.addNode({
     type: "Ontology", id: "ontology", name, domain: "", purpose: "", users: [], maintainers: [],
     outOfScope: [], kind: "application", reuseReviewed: false,
-  }];
-  const ont = new Ontology(resolve(root), manifest, nodes, []);
+  });
   ont.save();
+  // Keep the lock file and half-written temp files out of git (a team keeps the folder in a repository).
+  const ignore = join(root, ".gitignore");
+  if (!existsSync(ignore)) writeFileSync(ignore, ".okb.lock\n*.tmp\n");
   return ont;
 }
 
@@ -58,12 +61,22 @@ export function rename(ont: Ontology, ref: string, next: string, force = false):
   }
   const old = n.name;
   if (n.type === "Slot" && n.valueType === "Instance") {
+    const oldType = n.relType;
     const retyped = ont.rel.rename(n, next);
     if (retyped) notes.push(`Its links are now stored as ${retyped.to} (were ${retyped.from}).`);
+    if (oldType && n.relType && n.relType !== oldType) n.formerRelTypes = remember(n.formerRelTypes, oldType, n.relType);
   }
+  if (n.type !== "ReusedOntology" && old !== next) n.formerNames = remember(n.formerNames, old, next);
   n.name = next;
+  ont.touch(n);
   notes.unshift(`Renamed ${n.type} '${old}' → '${next}' (id ${n.id} unchanged).`);
+  if (n.type !== "ReusedOntology" && old !== next) notes.push(`Kept '${old}' as a former name, so a release's change log can map old to new.`);
   return notes;
+}
+
+/** The former names after a rename: `old` goes on the end (oldest first), and a name that comes back is no longer former. */
+function remember(former: string[] | undefined, old: string, next: string): string[] {
+  return [...(former ?? []).filter((x) => x !== old && x !== next), old];
 }
 
 export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
@@ -91,6 +104,7 @@ export function remove(ont: Ontology, ref: string, types?: NodeType[]): Notes {
   for (const t of ont.ofType("Term")) {
     if (ont.targets(t.id, "BECAME").includes(n.id)) {
       t.disposition = "undecided";
+      ont.touch(t);
       notes.push(`Term '${t.text}' is undecided again.`);
     }
   }

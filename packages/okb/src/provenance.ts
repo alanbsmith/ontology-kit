@@ -8,10 +8,12 @@ import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
 import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
 import { isOneOf } from "./types.ts";
+import { UNSUPPORTED_NOTE_TIP, overreachNoteTips, shellQuote, statedModality } from "./verifynote.ts";
 import * as naming from "./naming.ts";
 import type { Notes } from "./ops.ts";
 import { assign } from "./ops/values.ts";
 import { findQuote, loadPages } from "./quotes.ts";
+import { blockRecords } from "./resync.ts";
 /** Suggest the closest block for a failed quote only if it shares at least this share of the quote's words. */
 const MIN_CLOSEST_WORD_OVERLAP = 0.4;
 
@@ -42,6 +44,7 @@ export function addSource(ont: Ontology, file: string, o: { title?: string; url?
     node.format = "markdown";
     node.title ||= doc.title ?? file;
     if (doc.frontmatter) node.meta = doc.frontmatter;
+    node.blocks = blockRecords(doc);
     const quotable = doc.blocks.filter((b) => b.quotable).length;
     notes.push(`Read ${doc.blocks.length} blocks (${quotable} quotable) under ${doc.headings.length} headings.`);
     for (const p of doc.problems) notes.push(`Warning (line ${p.line}): ${p.message}`);
@@ -112,11 +115,14 @@ export function cite(ont: Ontology, nodeRef: string, locRef: string): Notes {
   const loc = ont.find(locRef, "SourceLocation");
   const had = ont.targets(n.id, "CITES").includes(loc.id);
   ont.addEdge(n.id, "CITES", loc.id);
-  if (!(n.type === "Rule" && n.authored)) n.extracted = true;
+  if (!(n.type === "Rule" && n.authored) && !n.extracted) {
+    n.extracted = true;
+    ont.touch(n);
+  }
   return [had ? `${n.type} ${nameOrText(n) ?? n.id} already cited ${loc.id}.` : `${n.type} ${nameOrText(n) ?? n.id} now cites ${loc.id}.`];
 }
 
-function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
+export function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> {
   const links = deepLinks(hit, src.repoUrl, src.url);
   return Object.fromEntries(Object.entries({
     locator: hit.locator,
@@ -131,10 +137,7 @@ function locFields(hit: QuoteHit, src: SourceNode): Partial<SourceLocationNode> 
 }
 
 function nextLocId(ont: Ontology, src: SourceNode): string {
-  const base = `loc.${naming.slug(src.title ?? src.id).slice(0, 30)}`;
-  let i = 1;
-  while (ont.get(`${base}.${i}`)) i++;
-  return `${base}.${i}`;
+  return ont.newId("SourceLocation", naming.slug(src.title ?? src.id).slice(0, 30));
 }
 
 /** Suggest the block that shares the most words with a failed quote. */
@@ -173,6 +176,7 @@ export function refreshSource(ont: Ontology, sourceRef: string): Notes {
       moved++;
       notes.push(`  ${loc.id}: line ${loc.lines} → ${hit.startLine}${hit.locator !== loc.locator ? ` (now under ${hit.locator})` : ""}`);
       Object.assign(loc, locFields(hit, src));
+      ont.touch(loc);
     }
   }
   notes.unshift(`${src.id}: ${moved} quote(s) moved, ${missing} missing.${missing ? " Missing quotes are errors in okb validate (prov-quote-current); re-extract them from the current text." : ""}`);
@@ -251,7 +255,16 @@ export function fulfill(ont: Ontology, instanceRef: string, ruleRef: string, o: 
   return [`${inst.name} fulfills ${rule.id}.`];
 }
 
-export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; approve?: boolean }): Notes {
+/** `--ref`: a link to the discussion behind a verification. Only web links, so nothing local or private leaks into the graph. */
+function checkRef(ref: string | undefined): void {
+  if (ref === undefined) return;
+  let ok = /^https?:\/\/\S+$/i.test(ref);
+  if (ok) try { new URL(ref); } catch { ok = false; }
+  if (!ok) throw new OkbError(`--ref must be an http:// or https:// link (to a PR comment, issue or review thread), not "${ref}".`);
+}
+
+export function verify(ont: Ontology, ref: string, o: { status?: string; corrected?: string; confidence?: string; note?: string; ref?: string; approve?: boolean }): Notes {
+  checkRef(o.ref);
   const n = ont.find(ref, ["Rule", "Class", "Slot", "Instance"]);
   const cited = ont.targets(n.id, "CITES");
   if (!cited.length) throw new OkbError(`${n.id} doesn't cite a quote, so there's nothing to verify it against.`);
@@ -260,30 +273,51 @@ export function verify(ont: Ontology, ref: string, o: { status?: string; correct
     // A person has looked at a corrected (or otherwise flagged) item and accepts it.
     if (!n.verification) throw new OkbError(`${n.id} hasn't been through verification yet.`);
     if (n.verification.status === "UNSUPPORTED") throw new OkbError("An UNSUPPORTED item can't be approved; remove it or re-extract from a quote that supports it.");
-    n.verification = { ...n.verification, status: "SUPPORTED", approvedAfter: n.verification.status, ...(o.note ? { note: o.note } : {}) };
+    n.verification = { ...n.verification, status: "SUPPORTED", approvedAfter: n.verification.status, ...(o.note ? { note: o.note } : {}), ...(o.ref ? { ref: o.ref } : {}) };
+    ont.touch(n);
     return [`${n.id}: approved by a person (was ${n.verification.approvedAfter}).`];
   }
   const status = (o.status ?? "").toUpperCase();
   if (!isOneOf(STATUSES, status)) throw new OkbError(`--status must be one of ${STATUSES.join(", ")} (or use --approve after a human review).`);
   const notes: Notes = [];
+  const noteTips: Notes = [];
+  // The earlier result, when this runs again on an item still waiting for approval: its note and link stay unless replaced.
+  // Only for the same correction: a different one makes the old note wrong ("changed 44 to 24" after a change to 18).
+  const waiting = n.verification?.status === "OVERREACH" ? n.verification : undefined;
+  const again = waiting && status === "OVERREACH" && (n.type === "Rule" ? n.statement : n.description) === o.corrected ? waiting : undefined;
   if (status === "OVERREACH") {
     if (!o.corrected) throw new OkbError('OVERREACH needs --corrected "<the narrower statement the quote does support>".');
-    if (n.type === "Rule") {
-      n._originalDraft = n.statement;
-      n.statement = o.corrected;
-    } else {
-      n._originalDraft = n.description;
-      n.description = o.corrected;
-    }
+    const current = n.type === "Rule" ? n.statement : n.description ?? "";
+    // Running OVERREACH again on an item that is still waiting for approval (to add a note or a link, as the
+    // suggested command does) must not replace the original wording with the earlier correction.
+    const original = n.verification?.status === "OVERREACH" && n._originalDraft !== undefined ? n._originalDraft : current;
+    if (!o.note && !again?.note) noteTips.push(...overreachNoteTips(n.id, original, o.corrected, o.ref ? ` --ref ${shellQuote(o.ref)}` : ""));
+    n._originalDraft = original;
+    if (n.type === "Rule") n.statement = o.corrected;
+    else n.description = o.corrected;
     n.extractionConfidence = "corrected";
+    // A rule's strength lives in `modality`, not in the statement: keep the two in step, or approving the correction
+    // would publish a SHOULD statement as a MUST rule. The original wording (and its keyword) stays in _originalDraft.
+    const stated = n.type === "Rule" ? statedModality(o.corrected) : null;
+    if (n.type === "Rule" && stated && stated !== n.modality) {
+      notes.push(`Modality changed from ${n.modality} to ${stated} to match the corrected statement. Whoever approves it should check the new strength against the quote.`);
+      n.modality = stated;
+    }
     notes.push(`Corrected ${field}: "${o.corrected}" (original kept in _originalDraft).`);
     notes.push(`It stays blocked (prov-verified) until a person checks the correction: okb verify ${n.id} --approve`);
   } else if (o.confidence) {
     if (!isOneOf(["verbatim", "paraphrased"], o.confidence)) throw new OkbError("--confidence must be verbatim or paraphrased.");
     n.extractionConfidence = o.confidence;
   } else n.extractionConfidence ??= "paraphrased";
-  n.verification = { status, checkedAgainst: cited, ...(o.note ? { note: o.note } : {}) };
-  if (status === "UNSUPPORTED") notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
+  const note = o.note ?? (status === "OVERREACH" ? again?.note : undefined);
+  const link = o.ref ?? (status === "OVERREACH" ? again?.ref : undefined);
+  n.verification = { status, checkedAgainst: cited, ...(note ? { note } : {}), ...(link ? { ref: link } : {}) };
+  ont.touch(n);
+  if (status === "UNSUPPORTED") {
+    notes.push(`${n.id} is UNSUPPORTED and blocks okb validate (prov-verified). Remove it: okb remove ${n.id}`);
+    if (!o.note) noteTips.push(UNSUPPORTED_NOTE_TIP);
+  }
+  notes.push(...noteTips);
   notes.unshift(`${n.id}: ${status}.`);
   return notes;
 }

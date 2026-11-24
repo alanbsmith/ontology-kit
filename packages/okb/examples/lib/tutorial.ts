@@ -12,7 +12,7 @@
  * With `pages: false` the engine still runs every command and writes the graph snapshots and the transcript,
  * but writes no `tutorial/N-slug.md` pages, so a tutorial that isn't on the site yet leaves no pages behind.
  *
- * The ontology files themselves (okb.json, nodes.json, ...) are whatever the commands make. The sources
+ * The ontology files themselves (okb.json, nodes.jsonl, ...) are whatever the commands make. The sources
  * are the only hand-written files in the folder; everything else is rebuilt (and deleted first) each run.
  *
  * A block tagged `okb` holds one command per line (a trailing `\` continues a line). The first word is
@@ -29,6 +29,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { Ontology } from "@ontology-kit/format";
 
 const ROOT = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
 const CLI = join(ROOT, "src", "cli.ts");
@@ -207,7 +208,8 @@ export function buildTutorial(cfg: TutorialConfig): BuiltPage[] {
     pages.push({ file, number, title, blocks });
     // The graph as it stands after this step, for pages that draw it growing.
     if (number >= 1) {
-      const graph = { step: number, nodes: JSON.parse(readFileSync(join(dir, "nodes.json"), "utf8")), edges: JSON.parse(readFileSync(join(dir, "edges.json"), "utf8")) };
+      const ont = Ontology.load(dir);
+      const graph = { step: number, nodes: [...ont.nodes], edges: [...ont.edges] };
       writeFileSync(join(dir, OUT_DIR, "graph", `step-${number}.json`), JSON.stringify(graph, null, 2) + "\n");
     }
   }

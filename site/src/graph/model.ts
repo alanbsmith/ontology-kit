@@ -1,5 +1,5 @@
 /**
- * The graph explorer's model: okb `nodes.json` / `edges.json` in, a small view graph out. Plain,
+ * The graph explorer's model: okb nodes and edges (the `nodes.jsonl` and `edges.jsonl` lines, or the two arrays of a snapshot) in, a small view graph out. Plain,
  * erasable TypeScript with no DOM and no Astro imports, so `tests/graph-model.test.ts` can import it.
  *
  * It decides what the reader sees (which node types, which neighborhood), how a node reads (a label,

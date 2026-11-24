@@ -63,6 +63,10 @@ export const PAGES: readonly Page[] = [
   { route: "/build/with-the-cli/", source: "docs/build/with-the-cli.md", label: "With the CLI", summary: "How to build an ontology yourself with the okb command: the loop of running a command, reading the notes and validating, by step." },
   { route: "/build/from-docs/", source: "docs/EXTRACTION-PIPELINE.md", label: "From existing docs", summary: "The pipeline for turning existing documentation into an ontology without inventing claims, with quote-first extraction and an independent verification pass." },
   { route: "/build/review/", source: "docs/build/review.md", label: "Review and iterate", summary: "How to review an ontology beyond what okb validate can see, with okb review and the ontology-review skill." },
+  { route: "/build/check-in-ci/", source: "docs/build/check-in-ci.md", label: "Check a KB before you merge", summary: "How okb check says whether a knowledge base is safe to merge, how to pin the okb version, and the GitHub workflow that runs it on every pull request and posts okb diff." },
+  { route: "/build/maintaining/", source: "docs/build/maintaining.md", label: "Maintain a KB with a team", summary: "How people other than the builder change a knowledge base safely: a changed doc, a new rule, a fixed quote, a rename and a release, with the commands and what a reviewer needs." },
+  { route: "/build/maintainers/", source: "docs/build/maintainers.md", label: "Maintain a KB: the workflow", summary: "The whole maintenance workflow on one page: who does what, which okb command or skill to use when, and the order a change takes from a source edit to a release." },
+  { route: "/build/sign-off/", source: "docs/build/sign-off.md", label: "Sign off on a KB", summary: "How a subject-matter expert or reviewer decides whether a KB's rules are right: the problem cases to read first, the ontology-signoff skill, okb verify by hand, and what is not theirs to do." },
   { route: "/build/export/", source: "docs/build/export.md", label: "Export", summary: "How okb export writes your instances as JSON or as an openCypher script for a graph database such as Neo4j." },
   { route: "/reference/method/", source: "docs/METHOD.md", label: "Method", summary: "The eight-step method behind okb, from Ontology Development 101: its principles, and for each step the questions to ask and the checklist for being done." },
   { route: "/reference/glossary/", source: "docs/GLOSSARY.md", label: "Glossary", summary: "Plain-language definitions of every term okb uses, from abstract class to slot." },
@@ -70,7 +74,7 @@ export const PAGES: readonly Page[] = [
   { route: "/reference/decisions/", source: "docs/DECISIONS.md", label: "Decision guides", summary: "Short yes/no guides for the recurring which-way-do-I-model-this questions, such as class or instance, and property or relationship." },
   { route: "/reference/cli-reference/", source: "docs/CLI.md", label: "CLI reference", summary: "Every okb command, grouped by task, with an example and a table of arguments for each." },
   { route: "/reference/cli-cheat-sheet/", source: "docs/CLI-CHEAT-SHEET.md", label: "CLI cheat sheet", summary: "The okb commands you will use most, in the order you usually need them." },
-  { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format", summary: "The okb-lpg/2 file format: the three JSON files of an ontology, their node and edge types and how slot values are stored." },
+  { route: "/reference/format/", source: "docs/FORMAT.md", label: "File format", summary: "The okb-lpg/3 file format: the three JSON files of an ontology, their node and edge types and how slot values are stored." },
   { route: "/reference/skills/", source: "docs/reference/skills.md", label: "Skills", summary: "The three Claude skills the kit ships, what each is for, how to install and update one and how to check its version." },
   { route: "/reference/changelog/", source: "docs/CHANGELOG.md", label: "Changelog", summary: "What changed in each package release and each meta-KB version, with the reasons behind the changes to rules and the method." },
   { route: "/contributing/", source: "CONTRIBUTING.md", label: "Contributing", summary: "How to work on Ontology Kit itself: setup, repository layout, changing rules, the docs site, writing style and what to run before a commit." },
@@ -175,7 +179,7 @@ export function sidebar(nodes: readonly MetaNode[]): NavGroup[] {
   const groups: NavGroup[] = [
     { label: "Getting started", links: [link("/getting-started/"), link("/getting-started/installation/"), link("/getting-started/quickstart/"), link("/getting-started/tutorial/wine-ontology/", childrenOf("/getting-started/tutorial/wine-ontology/")), link("/getting-started/tutorial/espresso-ontology/", childrenOf("/getting-started/tutorial/espresso-ontology/"))] },
     { label: "Learn", links: [link(LEARN_OVERVIEW), ...LEARN_CHAPTERS.map(chapter), link(LEARN_CLOSING)] },
-    { label: "Build", links: [link("/build/"), link("/build/with-claude/"), link("/build/with-the-cli/"), link("/build/from-docs/"), link("/build/review/"), link("/build/export/")] },
+    { label: "Build", links: [link("/build/"), link("/build/with-claude/"), link("/build/with-the-cli/"), link("/build/from-docs/"), link("/build/review/"), link("/build/check-in-ci/"), link("/build/maintaining/"), link("/build/maintainers/"), link("/build/sign-off/"), link("/build/export/")] },
     {
       label: "Reference",
       links: [link("/reference/method/", steps), link("/reference/glossary/"), link("/reference/rules/"), link("/reference/decisions/", decisions), link("/reference/cli-cheat-sheet/"), link("/reference/cli-reference/"), link("/reference/format/"), link("/reference/skills/"), link("/reference/changelog/")],

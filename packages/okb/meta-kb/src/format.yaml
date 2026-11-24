@@ -10,7 +10,14 @@
 # The meta-KB build (meta-kb/build.ts) compiles this file into the meta-KB graph and writes the
 # type names into packages/format/src/registry.ts, which the reader package ships as data.
 
-version: "okb-lpg/2"
+version: "okb-lpg/3"
+
+# Every node type also has two optional properties, set by okb (not listed per type below):
+#   createdAt - when the node was made, UTC to the second ("2026-11-21T14:03:22Z")
+#   updatedAt - when something stored ON the node last changed: its own fields, property
+#               values and facets. Edges (IS_A, HAS_SLOT, CITES, relationship values, ...)
+#               carry no stamps and changing them doesn't count. Missing on nodes from
+#               files written before okb-lpg/3: read that as unknown.
 
 nodeTypes:
   - {name: Ontology, origin: operational, models: concept.scope, required: [id, name],
@@ -22,15 +29,15 @@ nodeTypes:
   - {name: ReusedOntology, origin: ontology101, models: concept.ontology, required: [id, name, decision],
      description: "An existing ontology/vocabulary considered in Step 2. decision: reuse | adapt | reference | rejected."}
   - {name: Class, origin: ontology101, models: concept.class, required: [id, name],
-     description: "description, synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
+     description: "description, formerNames[] (earlier names, set by okb rename), synonyms[], abstract, terminological, fixedValues{slotId: value}, defaults{slotId: value}, facetOverrides{slotId: {allowedValues, minCardinality, maxCardinality}}."}
   - {name: Slot, origin: ontology101, models: concept.slot, required: [id, name],
-     description: "description, valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."}
+     description: "description, formerNames[], formerRelTypes[] (edge types before renames), valueType (String|Integer|Float|Number|Boolean|Enumerated|Instance), allowedValues[], cardinality (single|multiple), minCardinality, maxCardinality, default, relType (Instance slots only: the edge type its values are stored as), appliesToRules (Boolean, property slots only: the slot applies to every Rule)."}
   - {name: Instance, origin: ontology101, models: concept.instance, required: [id, name],
-     description: "description, values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
+     description: "description, formerNames[], values{slotId: value | [values]} for property (non-Instance) slots. Relationship values are edges."}
   - {name: DesignDecision, origin: ontology101, models: concept.design-decision, required: [id, title, decision],
      description: "question, decision, rationale, alternatives[], metaRules[] (rule ids it resolves or waives), date."}
   - {name: Source, origin: operational, models: concept.lpg, required: [id, title],
-     description: "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter)."}
+     description: "Provenance: a document content was extracted from (`okb source add`). localPath (checked by okb validate), format (markdown | pdf | text), url (rendered page), repoUrl (GitHub file URL, for line links), meta (markdown frontmatter), blocks[] (hash, kind, headingPath, rowKey, preview of each quotable block the KB last saw, so `okb source refresh --all` can list new and changed blocks)."}
   - {name: SourceLocation, origin: operational, models: concept.lpg, required: [id, quote],
      description: "Provenance: a verbatim passage (`okb quote add`). locator (heading path, or p.N for PDFs), headingPath[], startLine/endLine/lines, blockKind, sourceLink (GitHub ?plain=1#Lx-Ly), pageLink (rendered heading anchor), page (PDFs)."}
   - {name: Rule, origin: operational, models: concept.lpg, required: [id, modality, statement],
@@ -69,3 +76,163 @@ edgeTypes:
      description: "Rule → the broader rule it narrows by adding a part, condition, key or case. Stored in one direction. Optional `adds` (String) names what it adds, so a verifier can check that detail appears in the quote."}
   - {name: FULFILLS, provenance: true, from: [Instance], to: [Rule], origin: operational, models: concept.rule-fulfills,
      description: "A descriptive fact (an Instance, e.g. of a Behavior class) → the rule it meets. Many instances may fulfill one rule; read backwards it is 'fulfilled by', not 'requires'. Stored in one direction."}
+
+# The shape of each node type's properties, as JSON Schema fragments. The meta-KB build turns these
+# (with `required` above and the stamps) into packages/okb/schema/*.schema.json, which ships with
+# @ontology-kit/okb. A node may also carry keys not listed here (okb keeps them), so the schema
+# doesn't forbid extra properties. Fragments may $ref the `definitions` below.
+definitions:
+  Literal: {type: [string, number, boolean]}
+  StoredValue:
+    anyOf:
+      - {$ref: "#/$defs/Literal"}
+      - {type: array, items: {$ref: "#/$defs/Literal"}}
+  ValueMap: {type: object, additionalProperties: {$ref: "#/$defs/StoredValue"}}
+  Strings: {type: array, items: {type: string}}
+  SourceBlock:
+    type: object
+    required: [hash, kind, headingPath, preview]
+    properties:
+      hash: {type: string}
+      kind: {type: string}
+      headingPath: {$ref: "#/$defs/Strings"}
+      rowKey: {type: string}
+      preview: {type: string}
+  Verification:
+    type: object
+    required: [status]
+    properties:
+      status: {enum: [SUPPORTED, OVERREACH, UNSUPPORTED]}
+      checkedAgainst: {$ref: "#/$defs/Strings"}
+      note: {type: string}
+      ref: {type: string, pattern: "^[hH][tT][tT][pP][sS]?://\\S+$"}
+      approvedAfter: {enum: [SUPPORTED, OVERREACH, UNSUPPORTED]}
+  Extracted:
+    extracted: {type: boolean}
+    verification: {$ref: "#/$defs/Verification"}
+    extractionConfidence: {enum: [verbatim, paraphrased, corrected]}
+    _originalDraft: {type: string}
+
+nodeProperties:
+  Ontology:
+    name: {type: string}
+    domain: {type: string}
+    purpose: {type: string}
+    users: {$ref: "#/$defs/Strings"}
+    maintainers: {$ref: "#/$defs/Strings"}
+    outOfScope: {$ref: "#/$defs/Strings"}
+    kind: {enum: [application, terminological]}
+    reuseReviewed: {type: boolean}
+    conventions:
+      type: object
+      properties:
+        classCase: {type: string}
+        slotCase: {type: string}
+        instanceCase: {type: [string, "null"]}
+        classNumber: {enum: [singular, plural]}
+        slotAffix: {enum: [none, has-prefix, of-suffix]}
+        source: {enum: [chosen, default]}
+  CompetencyQuestion:
+    text: {type: string}
+    status: {enum: [draft, answerable]}
+  Term:
+    text: {type: string}
+    disposition: {enum: [undecided, class, slot, instance, value, synonym, out-of-scope]}
+    note: {type: string}
+  ReusedOntology:
+    name: {type: string}
+    url: {type: string}
+    decision: {enum: [reuse, adapt, reference, rejected]}
+    notes: {type: string}
+  Class:
+    $extracted: true
+    name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
+    description: {type: string}
+    synonyms: {$ref: "#/$defs/Strings"}
+    abstract: {type: boolean}
+    terminological: {type: boolean}
+    fixedValues: {$ref: "#/$defs/ValueMap"}
+    defaults: {$ref: "#/$defs/ValueMap"}
+    facetOverrides:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          allowedValues: {type: array, items: {$ref: "#/$defs/Literal"}}
+          minCardinality: {type: integer, minimum: 0}
+          maxCardinality: {type: integer, minimum: 0}
+          range: {$ref: "#/$defs/Strings"}
+  Slot:
+    $extracted: true
+    name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
+    description: {type: string}
+    valueType: {enum: [String, Integer, Float, Number, Boolean, Enumerated, Instance]}
+    allowedValues: {$ref: "#/$defs/Strings"}
+    cardinality: {enum: [single, multiple]}
+    minCardinality: {type: integer, minimum: 0}
+    maxCardinality: {type: integer, minimum: 0}
+    default: {$ref: "#/$defs/StoredValue"}
+    relType: {type: string, pattern: "^[A-Z0-9][A-Z0-9_]*$"}
+    formerRelTypes:
+      type: array
+      items: {type: string, pattern: "^[A-Z0-9][A-Z0-9_]*$"}
+    edgeProperties:
+      type: array
+      items:
+        type: object
+        required: [name, valueType]
+        properties:
+          name: {type: string}
+          valueType: {enum: [String, Integer, Float, Number, Boolean, Enumerated]}
+          allowedValues: {$ref: "#/$defs/Strings"}
+          required: {type: boolean}
+          description: {type: string}
+    appliesToRules: {type: boolean}
+  Instance:
+    $extracted: true
+    name: {type: string}
+    formerNames: {$ref: "#/$defs/Strings"}
+    description: {type: string}
+    values: {$ref: "#/$defs/ValueMap"}
+  DesignDecision:
+    $extracted: true
+    title: {type: string}
+    decision: {type: string}
+    question: {type: string}
+    rationale: {type: string}
+    alternatives: {$ref: "#/$defs/Strings"}
+    metaRules: {$ref: "#/$defs/Strings"}
+    date: {type: string}
+  Source:
+    title: {type: string}
+    localPath: {type: string}
+    format: {enum: [markdown, pdf, text]}
+    url: {type: string}
+    repoUrl: {type: string}
+    meta: {type: object}
+    blocks: {type: array, items: {$ref: "#/$defs/SourceBlock"}}
+  SourceLocation:
+    quote: {type: string}
+    locator: {type: string}
+    headingPath: {$ref: "#/$defs/Strings"}
+    startLine: {type: integer}
+    endLine: {type: integer}
+    lines: {type: string}
+    blockKind: {type: string}
+    sourceLink: {type: string}
+    pageLink: {type: string}
+    page: {type: [integer, string]}
+  Rule:
+    $extracted: true
+    name: {type: string}
+    modality: {enum: [MUST, MUST_NOT, SHOULD, SHOULD_NOT, MAY]}
+    statement: {type: string}
+    authored: {type: boolean}
+    values: {$ref: "#/$defs/ValueMap"}
+
+# Edge properties beyond from, type and to are free-form (a relationship slot declares its own,
+# see Slot.edgeProperties); these are the ones the format reserves, with their shapes.
+reservedEdgeProperties:
+  rule: {type: string, description: "The Rule node whose quote and verification justify this link."}

@@ -45,7 +45,7 @@ usedIn  Slot · s.used-in
   facets         Instance, → Drink (reads :CONTAINS backwards), multiple, inverse of contains
   edge props     amount (Enumerated {splash, equal, topUp}) + rule
   attached to    Ingredient
-Double shot  Instance · i.double-shot
+Double shot  Instance · i.double-shot-t7wr67
   instance of    Coffee
 
   Values

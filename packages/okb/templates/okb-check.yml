@@ -1,0 +1,132 @@
+# Copy this file to .github/workflows/okb-check.yml in your knowledge base's repository.
+#
+# On every pull request it installs the okb version your KB pins (okbVersion in okb.json; run
+# `okb pin` to set it), runs `okb check`, and posts what the PR changes (`okb diff`) as one comment
+# that later pushes update. It needs no secrets. Make "Check the knowledge base" a required status
+# check on your main branch so a failing check blocks the merge.
+name: okb check
+
+on:
+  pull_request:
+
+# The comment needs pull-requests: write. Everything else only reads.
+permissions:
+  contents: read
+  pull-requests: write
+
+# A new push supersedes the run for the old one.
+concurrency:
+  group: okb-check-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The folder that holds okb.json. Change it if the KB isn't at the root of the repository.
+  KB_DIR: .
+
+jobs:
+  check:
+    name: Check the knowledge base
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # The full history, so `okb diff` can read the base branch.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24 # okb needs Node 24 or newer
+
+      - name: Install the okb version the KB pins
+        shell: bash
+        run: |
+          version="$(node -p "require('./$KB_DIR/okb.json').okbVersion || ''")"
+          if [ -z "$version" ]; then
+            echo "::warning::okb.json has no okbVersion, so this installs the latest okb. Run 'okb pin' and commit okb.json to pin one."
+            version=latest
+          elif ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::okbVersion '$version' in okb.json isn't a version like 1.2.3."
+            exit 1
+          fi
+          npm install --global --no-audit --no-fund "@ontology-kit/okb@$version"
+          okb version
+
+      # Never stops the job: the diff and the comment still run, and the last step fails the job.
+      - name: Run okb check
+        id: check
+        continue-on-error: true
+        shell: bash
+        run: |
+          # No pipe: the step must exit with okb check's status, not tee's.
+          status=0
+          okb check -C "$KB_DIR" > "$RUNNER_TEMP/check.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/check.txt"
+          exit "$status"
+
+      - name: Run okb diff against the base branch
+        if: always()
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        shell: bash
+        run: |
+          # The backticks are Markdown, not command substitution.
+          # shellcheck disable=SC2016
+          if ! okb diff "origin/$BASE_REF" -C "$KB_DIR" > "$RUNNER_TEMP/diff.md" 2> "$RUNNER_TEMP/diff.err"; then
+            printf 'okb diff could not compare with `%s`:\n\n```\n%s\n```\n' "$BASE_REF" "$(cat "$RUNNER_TEMP/diff.err")" > "$RUNNER_TEMP/diff.md"
+          fi
+
+      - name: Write the comment
+        if: always()
+        env:
+          RESULT: ${{ steps.check.outcome }}
+        shell: bash
+        run: |
+          # The backticks are Markdown, not command substitution.
+          # shellcheck disable=SC2016
+          {
+            echo '<!-- okb-check -->'
+            if [ "$RESULT" = success ]; then echo '## okb check: safe to merge'; else echo '## okb check: not safe to merge'; fi
+            echo
+            echo '~~~~text'
+            sed 's/\x1b\[[0-9;]*m//g' "$RUNNER_TEMP/check.txt"
+            echo '~~~~'
+            echo
+            echo '## What this PR changes'
+            echo
+            cat "$RUNNER_TEMP/diff.md"
+          } > "$RUNNER_TEMP/body.md"
+          # A comment holds at most 65536 characters.
+          if [ "$(wc -c < "$RUNNER_TEMP/body.md")" -gt 60000 ]; then
+            head -c 60000 "$RUNNER_TEMP/body.md" > "$RUNNER_TEMP/short.md"
+            # shellcheck disable=SC2016
+            printf '\n\n_(Cut short. Run `okb diff` locally for the rest.)_\n' >> "$RUNNER_TEMP/short.md"
+            mv "$RUNNER_TEMP/short.md" "$RUNNER_TEMP/body.md"
+          fi
+          cat "$RUNNER_TEMP/body.md" >> "$GITHUB_STEP_SUMMARY"
+
+      # A pull request from a fork gets a read-only token, so it only gets the job summary.
+      - name: Create or update the pull request comment
+        if: always() && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          # Read the list first: if gh fails, stop here rather than post a duplicate comment.
+          ids="$(gh api --paginate "repos/$REPO/issues/$PR/comments" --jq '.[] | select(.body | startswith("<!-- okb-check -->")) | .id')"
+          id="${ids%%$'\n'*}"
+          if [ -n "$id" ]; then
+            gh api --method PATCH "repos/$REPO/issues/comments/$id" -F body=@"$RUNNER_TEMP/body.md" > /dev/null
+          else
+            gh api --method POST "repos/$REPO/issues/$PR/comments" -F body=@"$RUNNER_TEMP/body.md" > /dev/null
+          fi
+
+      - name: Fail if okb check failed
+        if: steps.check.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "::error::okb check found problems. See the summary above or the pull request comment."
+          exit 1

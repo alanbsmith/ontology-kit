@@ -8,6 +8,7 @@ docs/CLI-CHEAT-SHEET.md
 packages/okb/examples/wine/*.json
 packages/okb/examples/wine/*.md
 packages/okb/examples/wine/tutorial/
+packages/okb/examples/*/docs/
 packages/okb/examples/wine/wine.cypher
 packages/okb/meta-kb/data/
 node_modules/

@@ -5,15 +5,22 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
 import { MetaKB, explainName } from "./metakb.ts";
-import { OkbError, Ontology } from "@ontology-kit/format";
+import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNode } from "@ontology-kit/format";
 import * as ops from "./ops.ts";
-import { c, explain, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
+import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";
+import { kbDocs, writeChangedPages, writeKbDocs, writePages } from "./kbdocs.ts";
+import { changedPageSet, changesPage, contextPage } from "./reviewdocs.ts";
 import { buildReview } from "./review.ts";
 import * as prov from "./provenance.ts";
 import { computeStatus } from "./status.ts";
 import { HELP } from "./help.ts";
 import { PACKAGE_VERSION } from "./version.ts";
+import { runCheck } from "./check.ts";
+import { renderResync, resync } from "./resync.ts";
+import { diffMarkdown, diffOntologies } from "./diff.ts";
+import { loadSide } from "./ontology-ref.ts";
+import { cutRelease, verifyRelease } from "./release.ts";
 import { installSkills, skillsStatus, type SkillState } from "./skills.ts";
 
 type Opts = NonNullable<ParseArgsConfig["options"]>;
@@ -50,11 +57,13 @@ function load(v: Record<string, any>): Ontology {
   return Ontology.load(v.C ?? ".");
 }
 
+/** Load the folder, change it, save it and print the notes, all with the folder's lock held. */
 function mutate(v: Record<string, any>, fn: (ont: Ontology) => string[]) {
-  const ont = load(v);
-  const notes = fn(ont);
-  ont.save();
-  say(notes);
+  Ontology.edit(v.C ?? ".", (ont) => {
+    const notes = ont.tick(() => fn(ont));
+    ont.save();
+    say(notes);
+  });
 }
 
 async function main(argvIn: string[]) {
@@ -105,11 +114,13 @@ async function main(argvIn: string[]) {
     case "scope": {
       const { v } = parse(rest, { name: str, domain: str, purpose: str, users: strs, maintainers: strs, "out-of-scope": strs, kind: str });
       const touched = ["name", "domain", "purpose", "users", "maintainers", "out-of-scope", "kind"].some((k) => v[k] !== undefined);
-      const ont = load(v);
-      if (touched) {
-        ops.setScope(ont, { name: v.name, domain: v.domain, purpose: v.purpose, users: v.users, maintainers: v.maintainers, outOfScope: v["out-of-scope"], kind: v.kind });
-        ont.save();
-      }
+      const ont = touched
+        ? Ontology.edit(v.C ?? ".", (o) => {
+          ops.setScope(o, { name: v.name, domain: v.domain, purpose: v.purpose, users: v.users, maintainers: v.maintainers, outOfScope: v["out-of-scope"], kind: v.kind });
+          o.save();
+          return o;
+        })
+        : load(v);
       const m = ont.meta;
       const row = (k: string, val: unknown) => console.log(`  ${c.dim(k.padEnd(13))} ${Array.isArray(val) ? val.join(", ") || c.yellow("—") : val || c.yellow("—")}`);
       return output(v, () => m, () => {
@@ -146,15 +157,7 @@ async function main(argvIn: string[]) {
       }
       if (sub === "set") {
         const { v, p } = parse(rest.slice(1), { text: str, status: str });
-        return mutate(v, (ont) => {
-          const q = ont.find(p[0], "CompetencyQuestion");
-          if (v.text) q.text = v.text;
-          if (v.status) {
-            if (!["draft", "answerable"].includes(v.status)) throw new OkbError("--status must be draft or answerable.");
-            q.status = v.status;
-          }
-          return v.status === "answerable" ? [`Updated ${q.id}.`, ops.familyTip(ont, q.id)] : [`Updated ${q.id}.`];
-        });
+        return mutate(v, (ont) => ops.setCQ(ont, p[0], { text: v.text, status: v.status }));
       }
       if (sub === "remove") {
         const { v, p } = parse(rest.slice(1));
@@ -162,13 +165,14 @@ async function main(argvIn: string[]) {
       }
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
-      const qs = ont.ofType("CompetencyQuestion");
+      const qs = ont.numbered("CompetencyQuestion") as CompetencyQuestionNode[];
       return output(v, () => qs.map((q) => ({ ...q, needs: ont.targets(q.id, "NEEDS") })), () => {
         if (!qs.length) return void console.log(c.dim('No competency questions yet. okb cq add "..."'));
         for (const q of qs) {
           const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
-          console.log(`${c.bold(q.id.padEnd(6))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
-          console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + q.id.split(".")[1] + " <Class|slot>...)"}`));
+          const num = ont.displayNumber(q);
+          console.log(`${c.bold(String(num).padEnd(3))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
+          console.log(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + num + " <Class|slot>...)"}`));
         }
       });
     }
@@ -292,8 +296,7 @@ async function main(argvIn: string[]) {
             ...(p.length > 1 ? ops.assign(ont, ont.find(p[0], "Instance").id, p.slice(1)) : []),
           ];
           if (v.desc !== undefined) {
-            ont.find(p[0], "Instance").description = v.desc;
-            notes.push("Updated description.");
+            notes.push(...ops.setInstanceDescription(ont, p[0], v.desc));
           }
           return notes;
         });
@@ -309,10 +312,10 @@ async function main(argvIn: string[]) {
       }
       const { v } = parse(sub === "list" ? rest.slice(1) : rest);
       const ont = load(v);
-      const ds = ont.ofType("DesignDecision");
+      const ds = ont.numbered("DesignDecision") as DesignDecisionNode[];
       return output(v, () => ds, () => {
         for (const d of ds) {
-          console.log(`${c.bold(d.id)} ${d.title}`);
+          console.log(`${c.bold(String(ont.displayNumber(d)).padEnd(3))} ${d.title}`);
           console.log(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
           const about = ont.targets(d.id, "ABOUT").map((x) => ont.label(x));
           if (about.length || d.metaRules) console.log(c.dim(`   about: ${about.join(", ") || "—"}${d.metaRules ? " · explains: " + d.metaRules.join(", ") : ""}`));
@@ -402,13 +405,15 @@ async function main(argvIn: string[]) {
       const { v, p } = parse(rest);
       const meta = MetaKB.get();
       if (p[0]) {
-        const ont = load(v);
-        const target = p[0] === "next" ? ont.step + 1 : p[0] === "prev" ? ont.step - 1 : Number(p[0]);
-        if (!meta.step(target)) throw new OkbError(`There is no step ${p[0]}. Steps are 1–${meta.steps.length}.`);
-        const st = computeStatus(ont);
-        const leaving = st.steps.find((s) => s.order === ont.step)!;
-        ont.manifest.currentStep = target;
-        ont.save();
+        const { target, leaving } = Ontology.edit(v.C ?? ".", (ont) => {
+          const target = p[0] === "next" ? ont.step + 1 : p[0] === "prev" ? ont.step - 1 : Number(p[0]);
+          if (!meta.step(target)) throw new OkbError(`There is no step ${p[0]}. Steps are 1–${meta.steps.length}.`);
+          const st = computeStatus(ont);
+          const leaving = st.steps.find((s) => s.order === ont.step)!;
+          ont.manifest.currentStep = target;
+          ont.save();
+          return { target, leaving };
+        });
         if (target > leaving.order && !leaving.complete) {
           console.log(c.yellow(`Moving on with step ${leaving.order} unfinished (${leaving.items.filter((i) => i.done === false).map((i) => i.text).join("; ")}). That's allowed; the method is iterative.`));
         }
@@ -511,8 +516,25 @@ async function main(argvIn: string[]) {
         return mutate(v, (ont) => prov.addSource(ont, p[0], { title: v.title, url: v.url, repoUrl: v["repo-url"], id: v.id }));
       }
       if (sub === "refresh") {
-        const { v, p } = parse(rest2);
-        return mutate(v, (ont) => prov.refreshSource(ont, p[0]));
+        const { v, p } = parse(rest2, { all: bool, record: bool, "dry-run": bool, strict: bool });
+        if (!v.all) return mutate(v, (ont) => prov.refreshSource(ont, p[0]));
+        if (p.length) throw new OkbError("--all re-checks every source; leave out the source name (or drop --all).");
+        const ont = load(v);
+        const pages = await loadSourcePages(ont);
+        const o = { write: !v["dry-run"], record: !!v.record && !v["dry-run"] };
+        let report = resync(ont, pages, { write: false, record: false });
+        // Take the lock only when something has to be written.
+        if (o.write && (report.moved.length || o.record)) {
+          report = Ontology.edit(v.C ?? ".", (locked) => {
+            const r = locked.tick(() => resync(locked, pages, o));
+            locked.save();
+            return r;
+          });
+        }
+        output(v, () => report, () => say(renderResync(report, { dryRun: !o.write })));
+        // 1 when the KB no longer matches its documents (a quote is gone or a source can't be read); --strict also when blocks need work.
+        if (!report.ok || (v.strict && report.worklist.length)) process.exitCode = 1;
+        return;
       }
       if (sub === "outline") {
         const { v, p } = parse(rest2, { quotable: bool, problems: bool });
@@ -567,9 +589,11 @@ async function main(argvIn: string[]) {
       if (sub === "add") {
         const { v, p } = parse(rest.slice(1), { cites: strs, line: str, "allow-code": bool });
         if (p.length < 2) throw new OkbError('Usage: okb quote add <source> "verbatim text" [--cites <node>] [--line N]');
-        const ont = load(v);
-        const notes = await prov.addQuote(ont, p[0], p.slice(1).join(" "), { cites: v.cites, line: num(v.line, "--line"), allowCode: v["allow-code"] });
-        ont.save();
+        const notes = await Ontology.edit(v.C ?? ".", async (ont) => {
+          const notes = await prov.addQuote(ont, p[0], p.slice(1).join(" "), { cites: v.cites, line: num(v.line, "--line"), allowCode: v["allow-code"] });
+          ont.save();
+          return notes;
+        });
         return void say(notes);
       }
       const { v, p } = parse(sub === "list" ? rest.slice(1) : rest);
@@ -616,9 +640,9 @@ async function main(argvIn: string[]) {
     }
 
     case "verify": {
-      const { v, p } = parse(rest, { status: str, corrected: str, confidence: str, note: str, approve: bool });
-      if (!p[0]) throw new OkbError('Usage: okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--confidence verbatim|paraphrased]  ·  okb verify <node> --approve');
-      return mutate(v, (ont) => prov.verify(ont, p[0], { status: v.status, corrected: v.corrected, confidence: v.confidence, note: v.note, approve: v.approve }));
+      const { v, p } = parse(rest, { status: str, corrected: str, confidence: str, note: str, ref: str, approve: bool });
+      if (!p[0]) throw new OkbError('Usage: okb verify <node> --status SUPPORTED|OVERREACH|UNSUPPORTED [--corrected "..."] [--confidence verbatim|paraphrased] [--note "..."] [--ref <url>]  ·  okb verify <node> --approve');
+      return mutate(v, (ont) => prov.verify(ont, p[0], { status: v.status, corrected: v.corrected, confidence: v.confidence, note: v.note, ref: v.ref, approve: v.approve }));
     }
 
     case "drift": {
@@ -630,6 +654,90 @@ async function main(argvIn: string[]) {
         if (!hits.length) return void console.log(`${SYMBOL.ok} No near-duplicate quotes across different sources.`);
         for (const h of hits) console.log(`${SYMBOL.info} ${h.message}`);
       });
+    }
+
+    case "release": {
+      if (sub === "verify") {
+        const { v, p } = parse(rest.slice(1));
+        if (p.length) throw new OkbError("Usage: okb release verify   (checks the folder against its manifest.json; read-only)");
+        const r = verifyRelease(resolve(v.C ?? "."));
+        output(v, () => r, () => {
+          if (r.ok) return void console.log(`${SYMBOL.ok} ${r.id} ${r.version} matches its manifest (${r.checked} files).`);
+          console.log(`${SYMBOL.error} ${r.id} ${r.version} doesn't match its manifest:`);
+          for (const pr of r.problems) console.log(`  - ${pr}`);
+          console.log(c.dim("  If the changes are intended, cut a new release: okb release <version>. If not, restore the files (git checkout)."));
+        });
+        process.exitCode = r.ok ? 0 : 1;
+        return;
+      }
+      const { v, p } = parse(rest);
+      if (p.length !== 1) throw new OkbError("Usage: okb release <version>  ·  okb release verify   (version is semver, like 1.0.0)");
+      const dir = v.C ?? ".";
+      const result = await Ontology.edit(dir, async (ont) => {
+        const findings = runChecks(ont, { all: false }, { pages: await loadSourcePages(ont) }).findings;
+        return cutRelease(ont, p[0], findings);
+      });
+      output(v, () => ({ version: result.version, previous: result.previous ?? null, manifest: result.manifest }), () => say(result.notes));
+      return;
+    }
+
+    case "pin": {
+      const { v, p } = parse(rest);
+      if (p.length) throw new OkbError("Usage: okb pin   (records the installed okb version in okb.json)");
+      Ontology.edit(v.C ?? ".", (ont) => {
+        ont.manifest.okbVersion = PACKAGE_VERSION;
+        ont.save();
+      });
+      console.log(`${SYMBOL.ok} Pinned okb ${PACKAGE_VERSION} in okb.json. okb check warns anyone with an older okb, and the CI workflow installs this version.`);
+      return;
+    }
+
+    case "check": {
+      const { v, p } = parse(rest);
+      if (p.length) throw new OkbError("Usage: okb check [--json]   (checks the current folder; use -C <folder> for another)");
+      const ont = load(v);
+      const report = await runCheck(ont, PACKAGE_VERSION);
+      output(v, () => report, () => console.log(formatCheck(report, ont.meta.name)));
+      process.exitCode = report.ok ? 0 : 1;
+      return;
+    }
+
+    case "diff": {
+      const { v, p } = parse(rest);
+      if (p.length < 1 || p.length > 2) throw new OkbError("Usage: okb diff <old> [<new>]   (each a folder or a git ref; with one, <new> is the current folder)");
+      const here = v.C ?? ".";
+      const a = loadSide(p[0], here);
+      const b = p[1] ? loadSide(p[1], here) : { ont: Ontology.load(here), name: "working folder" };
+      const d = diffOntologies(a.ont, b.ont, a.name, b.name);
+      return output(v, () => d, () => process.stdout.write(diffMarkdown(d)));
+    }
+
+    case "docs": {
+      const DOCS_USAGE = "Usage: okb docs --out <folder>  ·  okb docs --out <folder> --changed <ref> [--hops N]  ·  okb docs --out <folder> --context";
+      const { v, p } = parse(rest, { out: str, changed: str, hops: str, context: bool });
+      if (p.length || !v.out) throw new OkbError(DOCS_USAGE);
+      const out = resolve(v.out);
+      const done = (files: string[], what: string, hint: string, extra: object = {}) => output(v, () => ({ out: v.out, files, ...extra }), () => console.log(`${SYMBOL.ok} Wrote ${what} to ${v.out}${hint}.`));
+      if (v.context && (v.changed !== undefined || v.hops !== undefined)) throw new OkbError("--context is its own view of every rule; it doesn't combine with --changed or --hops.");
+      if (v.hops !== undefined && v.changed === undefined) throw new OkbError("--hops adds neighbors to a --changed view; give --changed <ref> too.");
+      if (v.context) {
+        const ont = load(v);
+        return done(writePages(out, { "rules-in-context.md": contextPage(ont, await loadSourcePages(ont)) }), "rules-in-context.md", "");
+      }
+      if (v.changed !== undefined) {
+        const hops = num(v.hops, "--hops") ?? 0;
+        const ont = load(v);
+        const old = loadSide(v.changed, v.C ?? ".");
+        const { pages, changes } = changedPageSet(kbDocs(old.ont), kbDocs(ont), hops);
+        const after = kbDocs(ont);
+        const report = resync(ont, await loadSourcePages(ont), { write: false, record: false });
+        const files = Object.fromEntries(pages.map((n) => [n, after[n]]));
+        files["changes.md"] = changesPage({ against: v.changed, name: ont.meta.name, changes, hops, resync: report });
+        const stale = report.gone.length + report.moved.length + report.worklist.length;
+        return done(writeChangedPages(out, files), `${pages.length} changed ${pages.length === 1 ? "page" : "pages"} and changes.md (${stale} source ${stale === 1 ? "change" : "changes"} not yet in the KB)`, " (start at changes.md)", changes);
+      }
+      const files = writeKbDocs(load(v), out);
+      return done(files, `${files.length} pages`, " (start at index.md)");
     }
 
     case "skills": {

@@ -5,11 +5,11 @@ description: Use when extracting design-system (or other) documentation, usually
 
 # Build a domain KB from docs
 
-**Version 2.4.2.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.3.** It should match the meta-KB version that `okb version` prints.
 
 Turns a documentation source (usually a markdown component doc, sometimes a PDF) into an okb ontology: Class, Slot and Instance nodes plus domain Rule nodes, each tied to a verbatim quote with its heading path and line numbers. It follows the meta-KB's rules in `packages/okb/meta-kb/` and the pipeline in `docs/EXTRACTION-PIPELINE.md` (both in the ontology-kit repository, usually `~/Projects/ontology-kit`).
 
-The point of this skill is to be deterministic where possible and to stop for human review everywhere else. Never auto-merge a finding this pipeline can't fully verify itself. Everything goes through okb commands; don't hand-edit nodes.json/edges.json.
+The point of this skill is to be deterministic where possible and to stop for human review everywhere else. Never auto-merge a finding this pipeline can't fully verify itself. Everything goes through okb commands; don't hand-edit nodes.jsonl/edges.jsonl.
 
 ## Step 0: Set up
 
@@ -63,6 +63,8 @@ Record each result:
 - `okb verify <node> --status OVERREACH --corrected "<narrower statement>"`: the original is kept in `_originalDraft`, and the node stays blocked until a person runs `okb verify <node> --approve`.
 - `okb verify <node> --status UNSUPPORTED`, then `okb remove <node>`. It never ships.
 
+**Say why, briefly.** Add `--note "..."` to every OVERREACH and UNSUPPORTED result, and to an approval that rests on a conversation. For OVERREACH, okb prints a suggested note and the exact command that stores it (a changed modality, number or few words); check it says what you meant, then pass it. For UNSUPPORTED, name the part of the statement the quote doesn't support. A note is one sentence that names the word or number, never restates the verdict ("narrowed MUST to SHOULD: the quote says \"should\"", not "overreach"). Add `--ref <url>` (a PR comment, issue or review thread, `http` or `https`) when the reasoning lives in a conversation. Never put a name, email or date in either: git and the PR keep who and when. A SUPPORTED result needs no note.
+
 ## Step 4: Spot-check sources
 
 For a random 10% of quotes (minimum 5), open their `sourceLink` (from `okb quote list --json`) and confirm the quote comes from the section it's about. This catches quotes taken from the wrong component's section, which Step 3 can't see.
@@ -75,6 +77,22 @@ okb drift <this-ontology> <other-ontologies-from-the-same-doc-set>   # optional,
 ```
 
 Errors block the output, including `prov-verified` (unverified, UNSUPPORTED, or corrections not yet approved), `prov-cites-quote` and `prov-quote-current` (a quote no longer in the file). Warnings and hints aren't blocking, but they must be carried into the review diff, not silently dropped. When the source doc changes later, `okb source refresh <source>` re-locates every quote and reports the ones that are gone.
+
+## When the docs change
+
+Run this path instead of starting over when a source file you already extracted from has changed. Start from the worklist:
+
+```bash
+okb source refresh --all --json
+```
+
+It re-locates every quote in every source (updating the lines and links of quotes that only moved) and prints one report: `gone` (quotes no longer in the text, each with `citedBy`, the rules and facts that cite it), `moved`, and `worklist`, the new, changed and removed blocks since the KB last recorded the document. It exits with code 1 when a quote is gone. Add `--dry-run` to write nothing. If a source has no baseline yet (a KB from before hashes), the report says so; there's no worklist for it until you run `okb source refresh --all --record` once.
+
+1. **Gone quotes first.** For each `gone` entry, read the current text near `was.locator`. If the passage was reworded, re-extract it (Step 1, `okb quote add`), re-cite the nodes in `citedBy` with `okb cite`, and verify them again (Step 3). Once every node in `citedBy` has its new citation, remove the old quote with `okb remove <old quote id>`; otherwise it stays in the KB and every refresh and `okb check` reports it as gone again. If the passage no longer exists, the nodes that cite it are no longer supported: ask the user whether to remove or rewrite them, and never keep a citation to text that isn't there.
+2. **Then the worklist.** `changed` blocks have `oldPreview` and `preview`: check whether a quote or a fact drawn from the old text is now wrong. `new` blocks are not extracted yet: do Steps 1 to 3 for the ones that state facts or rules. `removed` blocks usually show up as gone quotes already; if nothing cites them, nothing is needed. Skip blocks that aren't relevant, and say so in the review diff.
+3. **Run Step 5** (`okb validate --all`), then record the new baseline with `okb source refresh --all --record` so the next run lists only what changes after this one. Don't record before the worklist is handled: the baseline is how the next refresh knows what you've seen.
+
+Each worklist item has a stable `id` (`<source id>:<first 12 hex of the block hash>`) so a later extraction ledger can track an outcome per block. `okb check` fails on gone quotes too, so a docs change can't merge with stale citations.
 
 ## Output
 

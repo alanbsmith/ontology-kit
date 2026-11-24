@@ -44,22 +44,22 @@ okb cq add "How much does each drink cost?"
 ```
 
 ```text
-Added cq.1.
+Added cq.an5hqz.
 
-Added cq.2.
+Added cq.ffbmq8.
 
-Added cq.3.
+Added cq.tmq6hs.
 
-Added cq.4.
+Added cq.pv8gg4.
 
-Added cq.5.
+Added cq.s7b99r.
 
-Added cq.6.
+Added cq.4mz6a9.
 ```
 
 ## Read the output
 
-- okb numbers each question (`cq.1`, `cq.2` and so on). You'll use the numbers in step 8.
+- `okb cq list` numbers the questions 1, 2 and so on, in the order you added them. You'll use those numbers in step 8. (The ids underneath, like `cq.k7x2mq`, end in a random tag so two people adding questions on different branches never pick the same one.)
 - The questions mix kinds (see [Why start with questions?](../../../../../docs/learn/competency-questions.md)): one filters ("no milk"), one compares, one lists ingredients. Good questions pull different parts out of the model.
 
 ## Check your work

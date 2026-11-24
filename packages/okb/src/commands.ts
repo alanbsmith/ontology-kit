@@ -452,6 +452,37 @@ export const COMMANDS: Command[] = [
     }],
   },
   {
+    name: "docs",
+    group: "Reviewing and sharing",
+    description: "Writes Markdown reference pages for the ontology, so people can read its structure and rules without okb: an index, one page per class, a rules page and a sources page.",
+    forms: [
+      {
+        description: "Writes `index.md` (scope, competency questions, class tree, decisions), `classes/<id>.md` (slots with allowed values, inherited and own rules with their quotes, instances, decisions), `rules.md` and `sources.md`. Every rule links to its quote on the sources page. Items have stable anchors made from their ids (`rule.breve` becomes `#rule-breve`), links are relative, and the output has no dates, so you can commit it and check it for drift. It replaces pages an earlier run wrote and leaves other files alone. It never changes the ontology.",
+        examples: ["okb docs --out docs/kb"],
+        args: [["--out", "folder", "Where to write the pages. Required; it is created if it doesn't exist."]],
+      },
+      {
+        sub: "--changed",
+        description: "A review view of a change: only the pages whose text differs from `<ref>` (a git ref or a folder, the same as `okb diff`). A rule changed on a class changes the page of every subclass that inherits it, so those pages come with it. It also writes `changes.md`, which lists the changed pages and the stale-quote worklist from `okb source refresh --all --dry-run` (quotes that are gone or moved, and blocks that are new or changed, each with the nodes that cite them), because a source edit that hasn't been re-synced yet changes no page. Pages are the same text as the full render, so links to pages that aren't in the folder point into the full output. It only adds and overwrites files, so write it to a scratch folder, not to the committed pages. It never changes the ontology.",
+        examples: ["okb docs --out review --changed main", "okb docs --out review --changed v1.0.0 --hops 1"],
+        args: [
+          ["--out", "folder", "Where to write the pages. Required."],
+          ["--changed", "ref", "The git ref (or folder) to compare the working folder with."],
+          ["--hops", "number", "Also write the class pages that link to or from a changed class page, this many links away. Default 0. It doesn't go through the index, rules or sources pages, which link to everything."],
+        ],
+      },
+      {
+        sub: "--context",
+        description: "A review view of every rule beside the source text around its quote: the statement, modality, verification status, the verifier's note (when `okb verify --note` stored one), the original draft of a corrected rule, the quote, and the lines around it with the quoted lines marked. Rules that need a person come first (UNSUPPORTED, OVERREACH not yet approved, not verified, no quote, quote no longer in the source), then the rest by name. It reads the source files, so it needs them on disk. A source that isn't Markdown shows the quote alone. It writes `rules-in-context.md` and never changes the ontology.",
+        examples: ["okb docs --out review --context"],
+        args: [
+          ["--out", "folder", "Where to write `rules-in-context.md`. Required."],
+          ["--context", "flag", "Write the rules-in-context page instead of the reference pages. It doesn't combine with `--changed`."],
+        ],
+      },
+    ],
+  },
+  {
     name: "source",
     group: "Working from documents",
     description: "Registers documents you are extracting from, so quotes and rules can point back to them.",
@@ -474,7 +505,18 @@ export const COMMANDS: Command[] = [
         examples: ["okb source outline button --quotable"],
         args: [["<source>", "name", "The source."], ["--quotable", "flag", "Show only blocks you can quote."], ["--problems", "flag", "Show only problems in the document."]],
       },
-      { sub: "refresh", description: "Checks quotes again after the document changes.", examples: ["okb source refresh button"], args: [["<source>", "name", "The source."]] },
+      {
+        sub: "refresh",
+        description: "Checks quotes again after the document changes. With `--all` it checks every source, reports quotes that are gone (with the rules and facts that cite them) or moved, and lists the new, changed and removed blocks as a worklist. With `--all` it exits with code 1 when a quote is gone or a source can't be read (a single source only reports).",
+        examples: ["okb source refresh button", "okb source refresh --all", "okb source refresh --all --json --dry-run"],
+        args: [
+          ["[<source>]", "name", "The source to check (leave it out with --all)."],
+          ["--all", "flag", "Check every source and list the worklist of new, changed and removed blocks."],
+          ["--dry-run", "flag", "With --all: write nothing, not even moved quotes."],
+          ["--record", "flag", "With --all: store the current blocks as the baseline once the worklist is dealt with."],
+          ["--strict", "flag", "With --all: also exit with code 1 when the worklist isn't empty."],
+        ],
+      },
       { sub: "list", description: "Lists the sources. Bare `okb source` does the same.", examples: ["okb source list"], args: [] },
     ],
   },
@@ -552,7 +594,8 @@ export const COMMANDS: Command[] = [
         ["--status", "SUPPORTED, OVERREACH or UNSUPPORTED", "What the check found."],
         ["--corrected", "text", "A corrected wording, for OVERREACH."],
         ["--confidence", "verbatim or paraphrased", "How closely the node follows the quote."],
-        ["--note", "text", "A note about the check."],
+        ["--note", "text", "One sentence on why: the word or number you changed, or the part of the statement the quote doesn't support. OVERREACH prints a suggestion."],
+        ["--ref", "url", "An http or https link to the PR comment, issue or review thread where the reasoning happened."],
         ["--approve", "flag", "Approve it after review."],
       ],
     }],
@@ -597,6 +640,57 @@ export const COMMANDS: Command[] = [
     group: "Housekeeping",
     description: "Compares quotes with the documents they came from and reports quotes that no longer match.",
     forms: [{ description: "Checks one or more ontology folders. With none it checks the current folder.", examples: ["okb drift .", "okb drift ../wine ../food"], args: [["[folder]...", "paths", "The ontology folders to check."]] }],
+  },
+  {
+    name: "check",
+    group: "Housekeeping",
+    description: "Says whether a knowledge base is safe to merge: no validation errors, every quote still in its source, and nothing unverified, unsupported or waiting for approval. Exits non-zero when a check fails, so a CI job can gate on it.",
+    forms: [{
+      description: "Checks the current folder. It reads the folder and its source files and never changes them or takes the write lock. Warnings from `okb validate` don't block a merge. It also warns when the installed okb is older than the `okbVersion` the KB pins in okb.json.",
+      examples: ["okb check", "okb check --json", "okb check -C ../wine"],
+      args: [["--json", "flag", "Print the result as JSON: `ok`, the installed and pinned versions, and each check with its status, summary and problems."]],
+    }],
+  },
+  {
+    name: "pin",
+    group: "Housekeeping",
+    description: "Records the installed okb version in okb.json as `okbVersion`, so `okb check` warns anyone with an older okb and the CI workflow installs that version. Run it again after you upgrade okb.",
+    forms: [{ description: "Pins the installed version.", examples: ["okb pin"], args: [] }],
+  },
+  {
+    name: "diff",
+    group: "Housekeeping",
+    description: "Shows what changed in the knowledge between two versions of an ontology: added, removed, renamed and changed things, rules side by side, moved quotes and changed links, in words rather than JSON lines.",
+    forms: [{
+      description: "Each side is an ontology folder or a git ref. With one argument, the other side is the current folder, so `okb diff main` shows what this branch changes. It never modifies the folder or checks anything out. The output is Markdown, ready for a PR comment; createdAt and updatedAt changes are not reported.",
+      examples: ["okb diff main", "okb diff v1.0 v1.1", "okb diff ../wine-old .", "okb diff main --json"],
+      args: [
+        ["<old>", "folder or git ref", "The earlier version. An existing folder is read as it is; anything else is a branch, tag or commit in the repository around the current folder. A name that is both is an error that shows both spellings (`./name` for the folder, `refs/heads/name` for the branch)."],
+        ["[new]", "folder or git ref", "The later version. Defaults to the current folder."],
+        ["--json", "flag", "Print the changes as JSON for other tools."],
+      ],
+    }],
+  },
+  {
+    name: "release",
+    group: "Housekeeping",
+    description: "Cuts a numbered release of the knowledge base that other tools can pin: a manifest with the SHA-256 of every file and source, and a change log of what changed since the last release.",
+    forms: [
+      {
+        description: "Writes `manifest.json` (the pin), `RELEASES.md` (every release's change log, newest first) and `releases/<version>/` (the files as released, plus `CHANGES.md` and `changes.json`), and records the version in `okb.json`. The change log is `okb diff` against the previous release's snapshot, so it lists renames with old and new names and renamed edge types. It stops, and writes nothing, if `okb validate` reports an error, if the version isn't newer than the last release, if a registered source file is missing or if nothing changed. Commit the files it writes.",
+        examples: ["okb release 1.0.0", "okb release 1.1.0 --json"],
+        args: [
+          ["<version>", "semver", "The new version: `1.0.0`, `1.2.3` or `2.0.0-rc.1`. It must be higher than the version in `manifest.json`."],
+          ["--json", "flag", "Print the version and the manifest as JSON."],
+        ],
+      },
+      {
+        sub: "verify",
+        description: "Checks the files against `manifest.json`: every pinned file must exist and match its SHA-256, and `okb.json` must carry the manifest's version. It changes nothing. It exits 1 when something differs, so it can run in CI or before a server starts.",
+        examples: ["okb release verify", "okb release verify -C ../wine --json"],
+        args: [["--json", "flag", "Print the result as JSON."]],
+      },
+    ],
   },
   {
     name: "help",

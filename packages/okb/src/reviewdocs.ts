@@ -1,0 +1,265 @@
+/**
+ * Review aids built on `okb docs` (issue #133), for a subject matter expert or a PR reviewer.
+ *
+ * 1. The changed-only view (`okb docs --changed <ref>`): render the pages at `<ref>` and for the working
+ *    folder, keep the pages whose text differs. A changed inherited rule changes every subclass page that
+ *    shows it, so the ripple comes for free. `--hops N` adds the class pages that link to or from a changed
+ *    class page, for context. `changes.md` lists what changed and adds the stale-quote worklist from
+ *    `okb source refresh --all`, because a source edit that hasn't been re-synced changes no page.
+ * 2. The context view (`okb docs --context`): each rule beside the source text around its quote.
+ *
+ * Everything here is pure (loaded ontologies and parsed documents in, Markdown out). No clock, no disk,
+ * stable ordering, so the same inputs always give the same text.
+ */
+import { posix } from "node:path";
+import { nameOrText, type Ontology, type RuleNode, type SourceLocationNode } from "@ontology-kit/format";
+import { BANNER, type DocFiles } from "./kbdocs.ts";
+import { locate, type MdDoc } from "./markdown.ts";
+import type { ResyncReport } from "./resync.ts";
+
+const byText = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+const oneLine = (s: string) => s.replace(/\s*\n\s*/g, " ").trim();
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
+
+// ---------------------------------------------------------------------------
+// The changed-only view
+// ---------------------------------------------------------------------------
+
+export interface PageChanges {
+  /** Pages whose text differs between the two renderings. */
+  changed: string[];
+  /** Pages that exist now and didn't at the ref. */
+  added: string[];
+  /** Pages that existed at the ref and no longer do. */
+  removed: string[];
+  /** Pages included only because they link to or from a changed class page (`--hops`). */
+  context: string[];
+}
+
+/** Compare two renderings page by page. Pure. */
+export function diffPages(before: DocFiles, after: DocFiles): Omit<PageChanges, "context"> {
+  const names = (pred: (n: string) => boolean) => Object.keys({ ...before, ...after }).filter(pred).sort(byText);
+  return {
+    changed: names((n) => n in before && n in after && before[n] !== after[n]),
+    added: names((n) => !(n in before) && n in after),
+    removed: names((n) => n in before && !(n in after)),
+  };
+}
+
+const isClassPage = (name: string) => name.startsWith("classes/");
+
+/** The class pages a page links to (`](c-x.md#anchor)`, resolved against its own folder). */
+function classLinks(name: string, text: string): string[] {
+  const out = new Set<string>();
+  for (const m of text.matchAll(/\]\(([^)\s#]+\.md)(?:#[^)\s]*)?\)/g)) {
+    if (/^[a-z]+:/i.test(m[1])) continue;
+    const target = posix.normalize(posix.join(posix.dirname(name), m[1]));
+    if (isClassPage(target)) out.add(target);
+  }
+  return [...out];
+}
+
+/**
+ * Class pages within `hops` links of the starting pages, in either direction. Only class pages are walked:
+ * the index, rules and sources pages link to everything, so going through them would pull in the whole KB.
+ * Returns the pages that are new to the set, sorted.
+ */
+export function expandHops(files: DocFiles, start: string[], hops: number): string[] {
+  const links = new Map<string, Set<string>>();
+  const touch = (a: string, b: string) => {
+    if (!links.has(a)) links.set(a, new Set());
+    links.get(a)!.add(b);
+  };
+  for (const [name, text] of Object.entries(files)) {
+    if (!isClassPage(name)) continue;
+    for (const t of classLinks(name, text)) if (t in files) { touch(name, t); touch(t, name); }
+  }
+  const seen = new Set(start);
+  let edge = start.filter(isClassPage);
+  for (let i = 0; i < hops; i++) {
+    const next: string[] = [];
+    for (const p of edge) for (const q of links.get(p) ?? []) if (!seen.has(q)) { seen.add(q); next.push(q); }
+    edge = next;
+  }
+  return [...seen].filter((p) => !start.includes(p)).sort(byText);
+}
+
+/** The pages to write for a changed-only view: changed and added ones, plus the `--hops` neighbors. */
+export function changedPageSet(before: DocFiles, after: DocFiles, hops = 0): { pages: string[]; changes: PageChanges } {
+  const d = diffPages(before, after);
+  const core = [...d.changed, ...d.added].sort(byText);
+  const context = hops > 0 ? expandHops(after, core, hops) : [];
+  return { pages: [...core, ...context].sort(byText), changes: { ...d, context } };
+}
+
+const pageLink = (name: string) => `[${name}](${name})`;
+
+/** `changes.md`: what changed, which pages follow, and the quotes and source blocks the sources changed under the KB. */
+export function changesPage(o: { against: string; name: string; changes: PageChanges; hops: number; resync: ResyncReport | null }): string {
+  const { changes: c } = o;
+  const out = [BANNER, "", `# Changes in ${o.name} since ${o.against}`, ""];
+  out.push(
+    `This folder holds only the reference pages whose text differs from \`${o.against}\`${o.hops ? `, plus the class pages within ${plural(o.hops, "link")} of one that changed` : ""}. Links to pages that aren't here point into the full \`okb docs\` output.`,
+    "",
+  );
+  const section = (title: string, pages: string[], none: string) => {
+    out.push(`## ${title}`, "");
+    if (pages.length) out.push(...pages.map((p) => `- ${pageLink(p)}`));
+    else out.push(none);
+    out.push("");
+  };
+  section("Pages that changed", [...c.changed, ...c.added].sort(byText), "No page's text changed.");
+  if (c.added.length) out.push(`New pages: ${c.added.map((p) => `\`${p}\``).join(", ")}.`, "");
+  if (o.hops) section(`Neighbors, for context (${plural(o.hops, "hop")})`, c.context, "No class page links to a changed one.");
+  if (c.removed.length) out.push("## Pages that no longer exist", "", ...c.removed.map((p) => `- \`${p}\``), "");
+  out.push(...staleSection(o.resync));
+  return out.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
+function staleSection(r: ResyncReport | null): string[] {
+  const out = ["## Source changes not yet in the knowledge base", ""];
+  if (!r) return [...out, "Not checked.", ""];
+  out.push("A document that changed since the last `okb source refresh` changes no page until someone acts on it. This is what `okb source refresh --all --dry-run` finds now.", "");
+  const unreadable = r.sources.filter((s) => s.state === "unreadable");
+  for (const s of unreadable) out.push(`- Can't read \`${s.id}\` (${s.problem}); its quotes weren't checked.`);
+  if (unreadable.length) out.push("");
+  if (!r.gone.length && !r.moved.length && !r.worklist.length && !unreadable.length) return [...out, "Nothing: every quote is still in its source, and no block changed since the baseline.", ""];
+  const cites = (cs: { type: string; label: string; id: string }[]) => (cs.length ? cs.map((x) => `${x.type.toLowerCase()} ${x.label} (\`${x.id}\`)`).join(", ") : "nothing");
+  if (r.gone.length) {
+    out.push(`### Quotes that are gone (${r.gone.length})`, "", "The text is no longer in the source. Whatever cites it needs a new quote or a decision.", "");
+    for (const g of [...r.gone].sort((a, b) => byText(a.quote, b.quote))) out.push(`- \`${g.quote}\` in \`${g.source}\` (was ${g.was.locator ?? "?"}${g.was.lines ? `, line ${g.was.lines}` : ""}): "${oneLine(g.text)}"`, `  - Cited by ${cites(g.citedBy)}.`);
+    out.push("");
+  }
+  if (r.moved.length) {
+    out.push(`### Quotes that moved (${r.moved.length})`, "", "Still in the source, at other lines. `okb source refresh --all` updates them.", "");
+    for (const m of [...r.moved].sort((a, b) => byText(a.quote, b.quote))) out.push(`- \`${m.quote}\`: line ${m.was.lines ?? "?"} → ${m.now.lines ?? "?"}${m.now.locator !== m.was.locator ? ` (now under ${m.now.locator})` : ""}. Cited by ${cites(m.citedBy)}.`);
+    out.push("");
+  }
+  if (r.worklist.length) {
+    out.push(`### Blocks to extract or re-check (${r.worklist.length})`, "");
+    for (const w of r.worklist) {
+      const where = w.lines ? `line ${w.lines[0]}${w.lines[1] > w.lines[0] ? `-${w.lines[1]}` : ""}` : "removed";
+      out.push(`- ${w.change}, \`${w.source}\`, ${where}, ${w.headingPath.join(" > ") || "(top)"}: ${oneLine((w.change === "removed" ? w.oldPreview : w.preview) ?? "")}`);
+    }
+    out.push("");
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// The context view
+// ---------------------------------------------------------------------------
+
+/** Source lines shown above and below a quote. */
+export const CONTEXT_LINES = 3;
+
+/** Why a rule needs a person's attention, most urgent first. Rules with none go in the second half of the page. */
+type Problem = "unsupported" | "overreach" | "unverified" | "no quote" | "quote gone";
+const PROBLEM_ORDER: Problem[] = ["unsupported", "overreach", "unverified", "no quote", "quote gone"];
+const PROBLEM_TEXT: Record<Problem, string> = {
+  unsupported: "UNSUPPORTED: the verifier found nothing in the quote that supports it",
+  overreach: "OVERREACH: corrected, and no person has approved the correction yet",
+  unverified: "Not verified yet",
+  "no quote": "Cites no quote",
+  "quote gone": "Its quote is no longer in the source",
+};
+
+interface Shown {
+  loc: SourceLocationNode;
+  /** How the source text around the quote came out. */
+  context: { lines: string[]; first: number; marked: [number, number] } | { note: string };
+}
+
+function quoteContext(loc: SourceLocationNode, doc: string[] | MdDoc | Error | undefined, hasFile: boolean): Shown["context"] {
+  if (doc === undefined) return { note: hasFile ? "The source file wasn't loaded." : "This source has no local file, so there is no text around the quote to show." };
+  if (doc instanceof Error) return { note: `Can't read the source (${doc.message}).` };
+  if (Array.isArray(doc)) return { note: `The source isn't markdown. The quote is on page ${loc.page ?? "?"}; open the document to read around it.` };
+  const hits = locate(doc, loc.quote);
+  if (!hits.length) return { note: "The quote is no longer in the source (okb source refresh --all says more)." };
+  const want = loc.startLine ?? 0;
+  const hit = hits.reduce((a, b) => (Math.abs(b.startLine - want) < Math.abs(a.startLine - want) ? b : a));
+  const first = Math.max(1, hit.startLine - CONTEXT_LINES);
+  const last = Math.min(doc.lines.length, hit.endLine + CONTEXT_LINES);
+  return { lines: doc.lines.slice(first - 1, last), first, marked: [hit.startLine, hit.endLine] };
+}
+
+/** A fence longer than any run of backticks in the text, so source code samples can't close it early. */
+function fenced(body: string[]): string[] {
+  const longest = Math.max(0, ...body.map((l) => Math.max(0, ...(l.match(/`+/g) ?? []).map((r) => r.length))));
+  const fence = "`".repeat(Math.max(3, longest + 1));
+  return [`${fence}text`, ...body, fence];
+}
+
+/** Every reason the rule needs a person, most urgent first. */
+function problemsOf(rule: RuleNode, shown: Shown[]): Problem[] {
+  const v = rule.verification;
+  const out: Problem[] = [];
+  if (v?.status === "UNSUPPORTED") out.push("unsupported");
+  if (v?.status === "OVERREACH") out.push("overreach");
+  if (!v) out.push("unverified");
+  if (!shown.length) out.push("no quote");
+  if (shown.some((s) => "note" in s.context && s.context.note.startsWith("The quote is no longer"))) out.push("quote gone");
+  return out;
+}
+
+function ruleInContext(ont: Ontology, rule: RuleNode, problems: Problem[], shown: Shown[]): string[] {
+  const out = [`### ${rule.name}`, "", `**${rule.modality.replace("_", " ")}.** ${rule.statement}`, ""];
+  const v = rule.verification;
+  const bullets: string[] = [];
+  for (const p of problems) bullets.push(`- Needs a person: ${PROBLEM_TEXT[p]}.`);
+  bullets.push(`- Rule: \`${rule.id}\`${rule.authored ? " (written by the owner)" : ""}`);
+  const governs = ont.targets(rule.id, "GOVERNS").map((g) => nameOrText(ont.require(g)) ?? g).sort(byText);
+  if (governs.length) bullets.push(`- Governs: ${governs.join(", ")}`);
+  bullets.push(`- Verification: ${v ? v.status.toLowerCase() : "not verified"}${v?.approvedAfter ? ` (a person approved it after ${v.approvedAfter.toLowerCase()})` : ""}${rule.extractionConfidence ? `, confidence ${rule.extractionConfidence}` : ""}`);
+  if (v?.note || v?.ref) bullets.push(`- Verifier's note: ${[v.note ? oneLine(v.note) : "", v.ref ? `<${v.ref}>` : ""].filter(Boolean).join(" ")}`);
+  if (rule._originalDraft) bullets.push(`- Original draft, before the correction: ${oneLine(rule._originalDraft)}`);
+  out.push(...bullets, "");
+  for (const { loc, context } of shown) {
+    const src = ont.targets(loc.id, "PART_OF").map((i) => ont.get(i)).find((n) => n?.type === "Source");
+    out.push(`**Quote** (${src && "title" in src ? `${src.title}, ` : ""}${loc.locator ?? loc.id}${loc.lines ? `, line ${loc.lines}` : ""}):`, "", `> ${oneLine(loc.quote)}`, "");
+    if ("note" in context) {
+      out.push(context.note, "");
+      continue;
+    }
+    const width = String(context.first + context.lines.length - 1).length;
+    out.push(`The source around it (the quoted lines are marked with \`>\`):`, "");
+    out.push(...fenced(context.lines.map((text, i) => {
+      const n = context.first + i;
+      const mark = n >= context.marked[0] && n <= context.marked[1] ? ">" : " ";
+      return `${mark} ${String(n).padStart(width)} | ${text}`.trimEnd();
+    })), "");
+  }
+  return out;
+}
+
+/**
+ * `rules-in-context.md`: every rule beside the source text around its quote, problem cases first (then by
+ * name). `pages` is `loadSourcePages(ont)`; sources that aren't there or aren't markdown show the quote alone.
+ */
+export function contextPage(ont: Ontology, pages: Map<string, string[] | MdDoc | Error>): string {
+  const rules = ont.ofType("Rule");
+  const rows = rules.map((rule) => {
+    const shown: Shown[] = ont.targets(rule.id, "CITES").map((id) => ont.get(id)).filter((n): n is SourceLocationNode => n?.type === "SourceLocation")
+      .sort((a, b) => byText(a.id, b.id)).map((loc) => {
+        const src = ont.targets(loc.id, "PART_OF").map((i) => ont.get(i)).find((n) => n?.type === "Source");
+        return { loc, context: quoteContext(loc, src ? pages.get(src.id) : undefined, !!(src && src.type === "Source" && src.localPath)) };
+      });
+    return { rule, shown, problems: problemsOf(rule, shown) };
+  });
+  const rank = (p: Problem[]) => (p.length ? PROBLEM_ORDER.indexOf(p[0]) : PROBLEM_ORDER.length);
+  rows.sort((a, b) => rank(a.problems) - rank(b.problems) || byText(a.rule.name.toLowerCase(), b.rule.name.toLowerCase()) || byText(a.rule.id, b.rule.id));
+  const problems = rows.filter((r) => r.problems.length);
+  const out = [BANNER, "", `# Rules in context: ${ont.meta.name}`, ""];
+  if (!rows.length) return [...out, "This knowledge base has no rules yet.", ""].join("\n");
+  out.push(`${plural(rows.length, "rule")}, each beside the source text around its quote, so you can check the rule against what the document says nearby, not just the sentence it quotes. The verifier saw only the quote and the statement; this page is the first place the rule meets its surroundings.`, "");
+  out.push("## Needs a person", "");
+  if (!problems.length) out.push("Nothing is flagged. Every rule is verified and its quote is in the source.", "");
+  else out.push(`${plural(problems.length, "rule")}: ${PROBLEM_ORDER.map((p) => [p, problems.filter((r) => r.problems[0] === p).length] as const).filter(([, n]) => n).map(([p, n]) => `${n} ${p}`).join(", ")}.`, "");
+  for (const r of problems) out.push(...ruleInContext(ont, r.rule, r.problems, r.shown));
+  const rest = rows.filter((r) => !r.problems.length);
+  if (rest.length) {
+    out.push("## Everything else", "");
+    for (const r of rest) out.push(...ruleInContext(ont, r.rule, [], r.shown));
+  }
+  return out.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}

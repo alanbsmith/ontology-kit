@@ -129,7 +129,9 @@ export class Relationships {
   /** A slot's value type became Instance: give it an edge type, unless it already has one. */
   /** @internal */
   becomeRelationship(slot: SlotNode): void {
-    if (!slot.relType) slot.relType = this.typeFor(slot.name, slot.id);
+    if (slot.relType) return;
+    slot.relType = this.typeFor(slot.name, slot.id);
+    this.ont.touch(slot);
   }
 
   /**
@@ -143,6 +145,7 @@ export class Relationships {
     if (type && this.isPrimary(slot.id)) this.ont.removeEdges((e) => e.type === type);
     this.ont.removeEdges((e) => e.type === "INVERSE_OF" && (e.from === slot.id || e.to === slot.id));
     delete slot.relType;
+    this.ont.touch(slot);
     return { type, links };
   }
 
@@ -161,7 +164,11 @@ export class Relationships {
       else this.ont.addEdge(e.to, a.relType, e.from, edgeProps(e));
     }
     const declared = a.edgeProperties ?? [];
-    if (b.edgeProperties?.length) a.edgeProperties = [...declared, ...b.edgeProperties.filter((p) => !declared.some((q) => q.name === p.name))];
+    const copied = (b.edgeProperties ?? []).filter((p) => !declared.some((q) => q.name === p.name));
+    if (copied.length) {
+      a.edgeProperties = [...declared, ...copied];
+      this.ont.touch(a); // only a stamp for content that changed on the node; the INVERSE_OF edge below is not
+    }
     this.ont.addEdge(a.id, "INVERSE_OF", b.id);
     return moved.length;
   }
@@ -176,6 +183,7 @@ export class Relationships {
     if (t === slot.relType) return null;
     const from = slot.relType;
     slot.relType = t;
+    this.ont.touch(slot);
     if (!this.isPrimary(slot.id)) return null;
     if (from) this.ont.retypeEdges(from, t);
     return { from, to: t };
@@ -200,7 +208,10 @@ export class Relationships {
     const moved = this.ont.edgesOf(type);
     this.ont.removeEdges((e) => e.type === type || (e.type === "INVERSE_OF" && e.from === slot.id));
     for (const e of moved) this.ont.addEdge(e.to, invNode.relType, e.from, edgeProps(e));
-    if (slot.edgeProperties?.length && !invNode.edgeProperties?.length) invNode.edgeProperties = slot.edgeProperties;
+    if (slot.edgeProperties?.length && !invNode.edgeProperties?.length) {
+      invNode.edgeProperties = slot.edgeProperties;
+      this.ont.touch(invNode);
+    }
     return { links: moved.length, type: invNode.relType, name: invNode.name };
   }
 }

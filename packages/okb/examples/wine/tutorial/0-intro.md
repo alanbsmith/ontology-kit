@@ -18,7 +18,7 @@ You don't need any background in ontologies, knowledge graphs or the wine trade.
 
 ## What you'll build
 
-A folder called `wine` with three files in it: `okb.json`, `nodes.json` and `edges.json`. By the last page it holds 21 [classes](../../../../../docs/GLOSSARY.md#concept-class) (kinds of thing, such as Wine), 11 [slots](../../../../../docs/GLOSSARY.md#concept-slot) (facts you can state about a class, such as color), 9 [instances](../../../../../docs/GLOSSARY.md#concept-instance) (real things, such as one winery) and 6 [competency questions](../../../../../docs/GLOSSARY.md#concept-competency-question) (questions the ontology should answer), and `okb validate --all` reports no errors.
+A folder called `wine` with three files in it: `okb.json`, `nodes.jsonl` and `edges.jsonl`. By the last page it holds 21 [classes](../../../../../docs/GLOSSARY.md#concept-class) (kinds of thing, such as Wine), 11 [slots](../../../../../docs/GLOSSARY.md#concept-slot) (facts you can state about a class, such as color), 9 [instances](../../../../../docs/GLOSSARY.md#concept-instance) (real things, such as one winery) and 6 [competency questions](../../../../../docs/GLOSSARY.md#concept-competency-question) (questions the ontology should answer), and `okb validate --all` reports no errors.
 
 ## Before you start
 

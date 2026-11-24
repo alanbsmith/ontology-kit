@@ -1,211 +1,112 @@
 {
   "format": "okb-export/2",
   "ontology": "Wine and Food",
-  "metaKbVersion": "2.4.2",
+  "metaKbVersion": "2.6.3",
   "nodes": [
     {
-      "id": "i.chateau-morgon",
-      "labels": [
-        "Winery"
-      ],
-      "properties": {
-        "okbId": "i.chateau-morgon",
-        "name": "Chateau Morgon",
-        "location": "Beaujolais, France"
-      }
-    },
-    {
-      "id": "i.sterling-vineyards",
-      "labels": [
-        "Winery"
-      ],
-      "properties": {
-        "okbId": "i.sterling-vineyards",
-        "name": "Sterling Vineyards",
-        "location": "Napa Valley, California"
-      }
-    },
-    {
-      "id": "i.gamay",
-      "labels": [
-        "WineGrape"
-      ],
-      "properties": {
-        "okbId": "i.gamay",
-        "name": "Gamay"
-      }
-    },
-    {
-      "id": "i.merlot-grape",
-      "labels": [
-        "WineGrape"
-      ],
-      "properties": {
-        "okbId": "i.merlot-grape",
-        "name": "Merlot grape"
-      }
-    },
-    {
-      "id": "i.chardonnay-grape",
-      "labels": [
-        "WineGrape"
-      ],
-      "properties": {
-        "okbId": "i.chardonnay-grape",
-        "name": "Chardonnay grape"
-      }
-    },
-    {
-      "id": "i.riesling-grape",
-      "labels": [
-        "WineGrape"
-      ],
-      "properties": {
-        "okbId": "i.riesling-grape",
-        "name": "Riesling grape"
-      }
-    },
-    {
-      "id": "i.beaujolais-region",
+      "id": "i.beaujolais-region-jz521c",
       "labels": [
         "WineRegion"
       ],
       "properties": {
-        "okbId": "i.beaujolais-region",
+        "okbId": "i.beaujolais-region-jz521c",
         "name": "Beaujolais region"
       }
     },
     {
-      "id": "i.chateau-morgon-beaujolais",
+      "id": "i.chardonnay-grape-jwb195",
+      "labels": [
+        "WineGrape"
+      ],
+      "properties": {
+        "okbId": "i.chardonnay-grape-jwb195",
+        "name": "Chardonnay grape"
+      }
+    },
+    {
+      "id": "i.chateau-morgon-beaujolais-ygb1b8",
       "labels": [
         "Beaujolais",
         "RedWine",
         "Wine"
       ],
       "properties": {
-        "okbId": "i.chateau-morgon-beaujolais",
+        "okbId": "i.chateau-morgon-beaujolais-ygb1b8",
         "name": "Chateau Morgon Beaujolais",
         "tanninLevel": "low",
-        "color": "red",
         "body": "light",
+        "color": "red",
         "flavor": "delicate",
         "sugar": "dry"
       }
     },
     {
-      "id": "i.sterling-vineyards-merlot",
+      "id": "i.chateau-morgon-ypqfhf",
+      "labels": [
+        "Winery"
+      ],
+      "properties": {
+        "okbId": "i.chateau-morgon-ypqfhf",
+        "name": "Chateau Morgon",
+        "location": "Beaujolais, France"
+      }
+    },
+    {
+      "id": "i.gamay-kfjm22",
+      "labels": [
+        "WineGrape"
+      ],
+      "properties": {
+        "okbId": "i.gamay-kfjm22",
+        "name": "Gamay"
+      }
+    },
+    {
+      "id": "i.merlot-grape-egah0e",
+      "labels": [
+        "WineGrape"
+      ],
+      "properties": {
+        "okbId": "i.merlot-grape-egah0e",
+        "name": "Merlot grape"
+      }
+    },
+    {
+      "id": "i.riesling-grape-139wgt",
+      "labels": [
+        "WineGrape"
+      ],
+      "properties": {
+        "okbId": "i.riesling-grape-139wgt",
+        "name": "Riesling grape"
+      }
+    },
+    {
+      "id": "i.sterling-vineyards-agkt52",
+      "labels": [
+        "Winery"
+      ],
+      "properties": {
+        "okbId": "i.sterling-vineyards-agkt52",
+        "name": "Sterling Vineyards",
+        "location": "Napa Valley, California"
+      }
+    },
+    {
+      "id": "i.sterling-vineyards-merlot-8nm0jf",
       "labels": [
         "Merlot",
         "RedWine",
         "Wine"
       ],
       "properties": {
-        "okbId": "i.sterling-vineyards-merlot",
+        "okbId": "i.sterling-vineyards-merlot-8nm0jf",
         "name": "Sterling Vineyards Merlot",
         "tanninLevel": "moderate",
-        "color": "red",
         "body": "medium",
+        "color": "red",
         "flavor": "moderate",
         "sugar": "dry"
-      }
-    },
-    {
-      "id": "c.wine",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.wine",
-        "name": "Wine",
-        "description": "A specific wine produced by a specific winery (not an individual bottle)."
-      }
-    },
-    {
-      "id": "c.red-wine",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.red-wine",
-        "name": "RedWine",
-        "description": "Wine made from dark-skinned grapes with skin contact; described by tannin level."
-      }
-    },
-    {
-      "id": "c.white-wine",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.white-wine",
-        "name": "WhiteWine",
-        "description": "Wine fermented without grape skins."
-      }
-    },
-    {
-      "id": "c.rose-wine",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.rose-wine",
-        "name": "RoseWine",
-        "description": "Wine with brief skin contact giving a pink color."
-      }
-    },
-    {
-      "id": "c.dessert-wine",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.dessert-wine",
-        "name": "DessertWine",
-        "description": "Sweet wine served with or as dessert."
-      }
-    },
-    {
-      "id": "c.bordeaux",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.bordeaux",
-        "name": "Bordeaux",
-        "description": "Red wine from the Bordeaux region of France."
-      }
-    },
-    {
-      "id": "c.medoc",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.medoc",
-        "name": "Medoc",
-        "description": "Bordeaux from the Médoc sub-region."
-      }
-    },
-    {
-      "id": "c.pauillac",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.pauillac",
-        "name": "Pauillac",
-        "description": "Médoc wine from the Pauillac appellation."
-      }
-    },
-    {
-      "id": "c.margaux",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.margaux",
-        "name": "Margaux",
-        "description": "Médoc wine from the Margaux appellation."
       }
     },
     {
@@ -220,25 +121,14 @@
       }
     },
     {
-      "id": "c.merlot",
+      "id": "c.bordeaux",
       "labels": [
         "OkbClass"
       ],
       "properties": {
-        "okbId": "c.merlot",
-        "name": "Merlot",
-        "description": "Red wine made from the Merlot grape."
-      }
-    },
-    {
-      "id": "c.port",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.port",
-        "name": "Port",
-        "description": "Fortified sweet red wine from Portugal. (Only red Ports are modeled, as in the paper.)"
+        "okbId": "c.bordeaux",
+        "name": "Bordeaux",
+        "description": "Red wine from the Bordeaux region of France."
       }
     },
     {
@@ -253,6 +143,106 @@
       }
     },
     {
+      "id": "c.dessert-wine",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.dessert-wine",
+        "name": "DessertWine",
+        "description": "Sweet wine served with or as dessert."
+      }
+    },
+    {
+      "id": "c.food",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.food",
+        "name": "Food",
+        "description": "A kind of dish or ingredient a wine can be paired with.",
+        "abstract": true
+      }
+    },
+    {
+      "id": "c.margaux",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.margaux",
+        "name": "Margaux",
+        "description": "Médoc wine from the Margaux appellation."
+      }
+    },
+    {
+      "id": "c.medoc",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.medoc",
+        "name": "Medoc",
+        "description": "Bordeaux from the Médoc sub-region."
+      }
+    },
+    {
+      "id": "c.merlot",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.merlot",
+        "name": "Merlot",
+        "description": "Red wine made from the Merlot grape."
+      }
+    },
+    {
+      "id": "c.pauillac",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.pauillac",
+        "name": "Pauillac",
+        "description": "Médoc wine from the Pauillac appellation."
+      }
+    },
+    {
+      "id": "c.port",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.port",
+        "name": "Port",
+        "description": "Fortified sweet red wine from Portugal. (Only red Ports are modeled, as in the paper.)"
+      }
+    },
+    {
+      "id": "c.red-meat",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.red-meat",
+        "name": "RedMeat",
+        "description": "Beef, lamb and similar dishes, including grilled meat."
+      }
+    },
+    {
+      "id": "c.red-wine",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.red-wine",
+        "name": "RedWine",
+        "description": "Wine made from dark-skinned grapes with skin contact; described by tannin level."
+      }
+    },
+    {
       "id": "c.riesling",
       "labels": [
         "OkbClass"
@@ -261,6 +251,17 @@
         "okbId": "c.riesling",
         "name": "Riesling",
         "description": "White wine made from the Riesling grape."
+      }
+    },
+    {
+      "id": "c.rose-wine",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.rose-wine",
+        "name": "RoseWine",
+        "description": "Wine with brief skin contact giving a pink color."
       }
     },
     {
@@ -275,14 +276,36 @@
       }
     },
     {
-      "id": "c.winery",
+      "id": "c.seafood",
       "labels": [
         "OkbClass"
       ],
       "properties": {
-        "okbId": "c.winery",
-        "name": "Winery",
-        "description": "A business that makes wine."
+        "okbId": "c.seafood",
+        "name": "Seafood",
+        "description": "Fish and shellfish dishes."
+      }
+    },
+    {
+      "id": "c.white-wine",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.white-wine",
+        "name": "WhiteWine",
+        "description": "Wine fermented without grape skins."
+      }
+    },
+    {
+      "id": "c.wine",
+      "labels": [
+        "OkbClass"
+      ],
+      "properties": {
+        "okbId": "c.wine",
+        "name": "Wine",
+        "description": "A specific wine produced by a specific winery (not an individual bottle)."
       }
     },
     {
@@ -308,119 +331,48 @@
       }
     },
     {
-      "id": "c.food",
+      "id": "c.winery",
       "labels": [
         "OkbClass"
       ],
       "properties": {
-        "okbId": "c.food",
-        "name": "Food",
-        "description": "A kind of dish or ingredient a wine can be paired with.",
-        "abstract": true
-      }
-    },
-    {
-      "id": "c.seafood",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.seafood",
-        "name": "Seafood",
-        "description": "Fish and shellfish dishes."
-      }
-    },
-    {
-      "id": "c.red-meat",
-      "labels": [
-        "OkbClass"
-      ],
-      "properties": {
-        "okbId": "c.red-meat",
-        "name": "RedMeat",
-        "description": "Beef, lamb and similar dishes, including grilled meat."
+        "okbId": "c.winery",
+        "name": "Winery",
+        "description": "A business that makes wine."
       }
     }
   ],
   "relationships": [
     {
       "type": "GRAPE",
-      "from": "i.sterling-vineyards-merlot",
-      "to": "i.merlot-grape",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
+      "to": "i.merlot-grape-egah0e",
       "properties": {
         "inheritedFrom": "Merlot"
       }
     },
     {
       "type": "GRAPE",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.gamay",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.gamay-kfjm22",
       "properties": {}
     },
     {
       "type": "MAKER",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.chateau-morgon",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.chateau-morgon-ypqfhf",
       "properties": {}
     },
     {
       "type": "REGION",
-      "from": "i.chateau-morgon-beaujolais",
-      "to": "i.beaujolais-region",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
+      "to": "i.beaujolais-region-jz521c",
       "properties": {}
     },
     {
       "type": "MAKER",
-      "from": "i.sterling-vineyards-merlot",
-      "to": "i.sterling-vineyards",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.red-wine",
-      "to": "c.wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.white-wine",
-      "to": "c.wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.rose-wine",
-      "to": "c.wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.dessert-wine",
-      "to": "c.wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.bordeaux",
-      "to": "c.red-wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.medoc",
-      "to": "c.bordeaux",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.pauillac",
-      "to": "c.medoc",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.margaux",
-      "to": "c.medoc",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
+      "to": "i.sterling-vineyards-agkt52",
       "properties": {}
     },
     {
@@ -431,20 +383,8 @@
     },
     {
       "type": "IS_A",
-      "from": "c.merlot",
+      "from": "c.bordeaux",
       "to": "c.red-wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.port",
-      "to": "c.red-wine",
-      "properties": {}
-    },
-    {
-      "type": "IS_A",
-      "from": "c.port",
-      "to": "c.dessert-wine",
       "properties": {}
     },
     {
@@ -455,14 +395,68 @@
     },
     {
       "type": "IS_A",
+      "from": "c.dessert-wine",
+      "to": "c.wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.margaux",
+      "to": "c.medoc",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.medoc",
+      "to": "c.bordeaux",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.merlot",
+      "to": "c.red-wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.pauillac",
+      "to": "c.medoc",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.port",
+      "to": "c.dessert-wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.port",
+      "to": "c.red-wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.red-meat",
+      "to": "c.food",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
+      "from": "c.red-wine",
+      "to": "c.wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
       "from": "c.riesling",
       "to": "c.white-wine",
       "properties": {}
     },
     {
       "type": "IS_A",
-      "from": "c.sauternes",
-      "to": "c.white-wine",
+      "from": "c.rose-wine",
+      "to": "c.wine",
       "properties": {}
     },
     {
@@ -473,69 +467,91 @@
     },
     {
       "type": "IS_A",
+      "from": "c.sauternes",
+      "to": "c.white-wine",
+      "properties": {}
+    },
+    {
+      "type": "IS_A",
       "from": "c.seafood",
       "to": "c.food",
       "properties": {}
     },
     {
       "type": "IS_A",
-      "from": "c.red-meat",
-      "to": "c.food",
+      "from": "c.white-wine",
+      "to": "c.wine",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.chateau-morgon",
-      "to": "c.winery",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.sterling-vineyards",
-      "to": "c.winery",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.gamay",
-      "to": "c.wine-grape",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.merlot-grape",
-      "to": "c.wine-grape",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.chardonnay-grape",
-      "to": "c.wine-grape",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.riesling-grape",
-      "to": "c.wine-grape",
-      "properties": {}
-    },
-    {
-      "type": "INSTANCE_OF",
-      "from": "i.beaujolais-region",
+      "from": "i.beaujolais-region-jz521c",
       "to": "c.wine-region",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.chateau-morgon-beaujolais",
+      "from": "i.chardonnay-grape-jwb195",
+      "to": "c.wine-grape",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.chateau-morgon-beaujolais-ygb1b8",
       "to": "c.beaujolais",
       "properties": {}
     },
     {
       "type": "INSTANCE_OF",
-      "from": "i.sterling-vineyards-merlot",
+      "from": "i.chateau-morgon-ypqfhf",
+      "to": "c.winery",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.gamay-kfjm22",
+      "to": "c.wine-grape",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.merlot-grape-egah0e",
+      "to": "c.wine-grape",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.riesling-grape-139wgt",
+      "to": "c.wine-grape",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.sterling-vineyards-agkt52",
+      "to": "c.winery",
+      "properties": {}
+    },
+    {
+      "type": "INSTANCE_OF",
+      "from": "i.sterling-vineyards-merlot-8nm0jf",
       "to": "c.merlot",
       "properties": {}
+    },
+    {
+      "type": "GRAPE",
+      "from": "c.chardonnay",
+      "to": "i.chardonnay-grape-jwb195",
+      "properties": {
+        "classLevel": true
+      }
+    },
+    {
+      "type": "GRAPE",
+      "from": "c.merlot",
+      "to": "i.merlot-grape-egah0e",
+      "properties": {
+        "classLevel": true
+      }
     },
     {
       "type": "GOES_WELL_WITH",
@@ -547,33 +563,17 @@
       }
     },
     {
+      "type": "GRAPE",
+      "from": "c.riesling",
+      "to": "i.riesling-grape-139wgt",
+      "properties": {
+        "classLevel": true
+      }
+    },
+    {
       "type": "GOES_WELL_WITH",
       "from": "c.white-wine",
       "to": "c.seafood",
-      "properties": {
-        "classLevel": true
-      }
-    },
-    {
-      "type": "GRAPE",
-      "from": "c.merlot",
-      "to": "i.merlot-grape",
-      "properties": {
-        "classLevel": true
-      }
-    },
-    {
-      "type": "GRAPE",
-      "from": "c.chardonnay",
-      "to": "i.chardonnay-grape",
-      "properties": {
-        "classLevel": true
-      }
-    },
-    {
-      "type": "GRAPE",
-      "from": "c.riesling",
-      "to": "i.riesling-grape",
       "properties": {
         "classLevel": true
       }
