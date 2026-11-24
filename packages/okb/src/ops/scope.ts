@@ -1,7 +1,7 @@
 /** Step 1 to 3: scope, competency questions, reuse, and the brainstormed term list. */
 import * as naming from "../naming.ts";
 import { questionFamilies } from "../families.ts";
-import { OkbError, type Ontology, DISPOSITIONS, type Disposition, type ReusedOntologyNode } from "@ontology-kit/format";
+import { OkbError, type Ontology, DISPOSITIONS, type Disposition, type ReusedOntologyNode } from "@ontology-kit/reader";
 import { isOneOf } from "../types.ts";
 import { splitList as list, type Notes } from "./common.ts";
 import { addDecision } from "./admin.ts";

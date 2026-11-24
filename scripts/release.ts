@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 // In publish order: okb depends on format, and the ontology-kit wrapper depends on okb.
-export const PACKAGES = ["packages/format", "packages/okb", "packages/ontology-kit"];
+export const PACKAGES = ["packages/reader", "packages/okb", "packages/ontology-kit"];
 
 const SEMVER = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 

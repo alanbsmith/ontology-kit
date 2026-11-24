@@ -3,7 +3,7 @@
  * or takes the lock. Each check is one entry in CHECK_STEPS; to add a check (the ledger check, `okb cq check`),
  * add an entry and, if it handles a rule that `validate` also reports, list the rule in its `rules`.
  */
-import type { Ontology } from "@ontology-kit/format";
+import type { Ontology } from "@ontology-kit/reader";
 import { loadSourcePages, runChecks, type CheckContext } from "./checks.ts";
 import { compareVersions as compareSemver } from "./release.ts";
 import type { Finding } from "./types.ts";

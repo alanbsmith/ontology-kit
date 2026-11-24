@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { after, before, describe, it } from "node:test";
-import { Ontology, OkbError, type GraphEdge, type OkbNode } from "@ontology-kit/format";
+import { Ontology, OkbError, type GraphEdge, type OkbNode } from "@ontology-kit/reader";
 import { verify } from "../src/provenance.ts";
 import { statedModality, suggestNote } from "../src/verifynote.ts";
 

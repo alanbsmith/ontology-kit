@@ -13,11 +13,11 @@ sources/*.pdf
 # Docs site (site/ is its own package)
 site/node_modules/
 site/dist/
-# The reader's declarations with the write side left in, which okb builds against (packages/format; never published)
+# The reader's declarations with the write side left in, which okb builds against (packages/reader; never published)
 types-internal/
 site/.astro/
 
 # Compiled okb (pnpm build); published, never committed
 dist/
-# The reader's declarations with the write side left in, which okb builds against (packages/format; never published)
+# The reader's declarations with the write side left in, which okb builds against (packages/reader; never published)
 types-internal/

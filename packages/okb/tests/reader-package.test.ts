@@ -8,22 +8,22 @@ import { fileURLToPath } from "node:url";
 import { after, before, describe, it } from "node:test";
 
 /**
- * Packs @ontology-kit/format, installs the tarball offline (with no okb in sight) and uses it the way
+ * Packs @ontology-kit/reader, installs the tarball offline (with no okb in sight) and uses it the way
  * another tool would: it imports the entry, reads the espresso example, and type-checks a small
  * TypeScript consumer against the shipped declarations (so the .d.ts files must ship and resolve).
- * (package.test.ts packs all three and checks that okb resolves the format package it depends on.)
+ * (package.test.ts packs all three and checks that okb resolves the reader package it depends on.)
  */
 const PKG = dirname(dirname(fileURLToPath(import.meta.url)));
 const PACKAGES = dirname(PKG);
-const FORMAT = join(PACKAGES, "format");
+const READER = join(PACKAGES, "reader");
 const SKIP = process.env.OKB_SKIP_PACKAGE_TEST ? "OKB_SKIP_PACKAGE_TEST is set" : false;
 const require = createRequire(import.meta.url);
 
 const run = (cmd: string, args: string[], cwd: string): string =>
   execFileSync(cmd, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 64 * 1024 * 1024 });
 
-const CONSUMER = `import { Ontology, STRUCTURAL_EDGE_TYPES, isRelationship } from "@ontology-kit/format";
-import type { ClassNode, GraphEdge, OkbNode, RelationshipSlot } from "@ontology-kit/format";
+const CONSUMER = `import { Ontology, STRUCTURAL_EDGE_TYPES, isRelationship } from "@ontology-kit/reader";
+import type { ClassNode, GraphEdge, OkbNode, RelationshipSlot } from "@ontology-kit/reader";
 
 const ont = Ontology.load("./espresso");
 export const classes: ClassNode[] = ont.ofType("Class");
@@ -42,29 +42,29 @@ ont.save();
 ont.rel.link("i.a", "s.b", "i.c");
 `;
 
-describe("@ontology-kit/format from the packed tarball", { skip: SKIP }, () => {
+describe("@ontology-kit/reader from the packed tarball", { skip: SKIP }, () => {
   let work = "";
   let install = "";
 
   before(() => {
-    work = mkdtempSync(join(tmpdir(), "okb-format-package-"));
+    work = mkdtempSync(join(tmpdir(), "okb-reader-package-"));
     const tarballs = join(work, "tarballs");
     mkdirSync(tarballs);
-    run("pnpm", ["pack", "--pack-destination", tarballs], FORMAT);
+    run("pnpm", ["pack", "--pack-destination", tarballs], READER);
     const names = readdirSync(tarballs);
     const find = (re: RegExp) => join(tarballs, names.find((n) => re.test(n)) as string);
     install = join(work, "install");
     mkdirSync(install);
     writeFileSync(join(install, "package.json"), '{"name":"format-consumer","private":true,"type":"module"}\n');
     run("npm", ["install", "--offline", "--omit=optional", "--no-audit", "--no-fund", "--loglevel=error",
-      find(/^ontology-kit-format-/)], install);
+      find(/^ontology-kit-reader-/)], install);
     cpSync(join(PKG, "examples", "espresso"), join(install, "espresso"), { recursive: true });
   });
 
   after(() => rmSync(work, { recursive: true, force: true }));
 
   it("ships the entry and its declarations, and the exports map has types", () => {
-    const dir = join(install, "node_modules", "@ontology-kit", "format");
+    const dir = join(install, "node_modules", "@ontology-kit", "reader");
     const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
     assert.equal(pkg.exports["."].types, "./dist/index.d.ts");
     assert.equal(pkg.exports["."].default, "./dist/index.js");
@@ -76,7 +76,7 @@ describe("@ontology-kit/format from the packed tarball", { skip: SKIP }, () => {
   });
 
   it("loads an ontology and reads edge types and relationship values", () => {
-    const script = `import { Ontology, STRUCTURAL_EDGE_TYPES, PROVENANCE_EDGE_TYPES, isRelationship } from "@ontology-kit/format";
+    const script = `import { Ontology, STRUCTURAL_EDGE_TYPES, PROVENANCE_EDGE_TYPES, isRelationship } from "@ontology-kit/reader";
       const ont = Ontology.load("./espresso");
       const values = ont.rel.values(ont.find("Vertex Cortado", "Instance").id, "s.contains").map((id) => ont.label(id));
       console.log(JSON.stringify({ structural: STRUCTURAL_EDGE_TYPES, provenance: PROVENANCE_EDGE_TYPES,
@@ -90,9 +90,9 @@ describe("@ontology-kit/format from the packed tarball", { skip: SKIP }, () => {
   });
 
   it("refuses paths outside the exports map", () => {
-    const script = `await import("@ontology-kit/format/dist/model.js").then(() => console.log("imported"), (e) => console.log(e.code));`;
+    const script = `await import("@ontology-kit/reader/dist/model.js").then(() => console.log("imported"), (e) => console.log(e.code));`;
     assert.equal(run(process.execPath, ["--input-type=module", "-e", script], install).trim(), "ERR_PACKAGE_PATH_NOT_EXPORTED");
-    const src = `await import("@ontology-kit/format/src/index.ts").then(() => console.log("imported"), (e) => console.log(e.code));`;
+    const src = `await import("@ontology-kit/reader/src/index.ts").then(() => console.log("imported"), (e) => console.log(e.code));`;
     assert.equal(run(process.execPath, ["--input-type=module", "-e", src], install).trim(), "ERR_PACKAGE_PATH_NOT_EXPORTED");
   });
 

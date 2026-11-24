@@ -2,14 +2,14 @@ import assert from "node:assert/strict";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
-import { FORMAT, NODE_TYPES, Ontology, PROVENANCE_EDGE_TYPES, STRUCTURAL_EDGE_TYPES, isStructuralEdgeType } from "@ontology-kit/format";
+import { FORMAT, NODE_TYPES, Ontology, PROVENANCE_EDGE_TYPES, STRUCTURAL_EDGE_TYPES, isStructuralEdgeType } from "@ontology-kit/reader";
 import { MetaKB } from "../src/metakb.ts";
 
 const ESPRESSO = join(dirname(dirname(fileURLToPath(import.meta.url))), "examples", "espresso");
 
 /**
  * The format registry has one source, meta-kb/src/format.yaml. The meta-KB build compiles it into the
- * meta-KB (which `okb validate` reads) and into packages/format/src/registry.ts (which the reader
+ * meta-KB (which `okb validate` reads) and into packages/reader/src/registry.ts (which the reader
  * ships as data). These tests fail if the two copies drift apart, e.g. after a YAML edit without
  * `pnpm build:meta`.
  */

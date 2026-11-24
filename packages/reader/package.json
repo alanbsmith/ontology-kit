@@ -1,5 +1,5 @@
 {
-  "name": "@ontology-kit/format",
+  "name": "@ontology-kit/reader",
   "version": "0.1.0",
   "license": "MIT",
   "description": "Read the okb file format: an ontology folder's typed nodes and edges, loading with migrations, the reserved edge types and relationship values. No CLI, no meta-KB.",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alanbsmith/ontology-kit.git",
-    "directory": "packages/format"
+    "directory": "packages/reader"
   },
   "bugs": {
     "url": "https://github.com/alanbsmith/ontology-kit/issues"

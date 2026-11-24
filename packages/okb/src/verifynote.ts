@@ -1,7 +1,7 @@
 // Suggested verification notes (issue #138): what a verifier could write after OVERREACH, built from
 // the difference between the original draft and the correction. Pure text in, text out; nothing here
 // stores anything.
-import type { Modality } from "@ontology-kit/format";
+import type { Modality } from "@ontology-kit/reader";
 
 const MODALITY = /\b(MUST\s+NOT|SHOULD\s+NOT|MUST|SHOULD|MAY)\b/gi;
 const keyword = (m: string): string => m.toUpperCase().replace(/\s+/g, " ");

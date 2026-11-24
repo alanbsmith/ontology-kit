@@ -1,12 +1,16 @@
 # Changelog
 
-What changed in each release. `okb version` prints two versions, the package's and the meta-KB's. The package version covers the CLI, the file format and the `@ontology-kit/format` exports. The meta-KB version covers the method and rules, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). [Releases](../CONTRIBUTING.md#releases) says how the two relate and what the numbers promise. How to edit the meta-KB, and when to bump its version, is in the [meta-KB internals](../packages/okb/meta-kb/README.md).
+What changed in each release. `okb version` prints two versions, the package's and the meta-KB's. The package version covers the CLI, the file format and the `@ontology-kit/reader` exports. The meta-KB version covers the method and rules, and each ontology's `okb.json` records the one it started with (`metaKbVersion`). [Releases](../CONTRIBUTING.md#releases) says how the two relate and what the numbers promise. How to edit the meta-KB, and when to bump its version, is in the [meta-KB internals](../packages/okb/meta-kb/README.md).
 
 Package releases come first, newest first, in the [Keep a Changelog](https://keepachangelog.com) style. The release workflow publishes a version's entry as its GitHub release notes, so each entry sits under a `### <version>` heading with a date.
 
 ## Package releases
 
 ### 0.2.0 (unreleased)
+
+#### Breaking
+
+- `@ontology-kit/format` is now `@ontology-kit/reader`. The package reads an okb folder (types, loading with migrations, relationship values) and nothing in it is a supported way to change one: writes go through `okb`. To upgrade, change the dependency and every import from `@ontology-kit/format` to `@ontology-kit/reader`; the exports are the same. `@ontology-kit/format` 0.1.0 stays installable and is deprecated with a pointer to the new name.
 
 #### Review views
 

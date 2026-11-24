@@ -37,7 +37,7 @@ function problems(dir: string): string[] {
 
 describe("relationship types that start with a digit", () => {
   it("are accepted, because relType() makes '24 Hour Support' into 24_HOUR_SUPPORT", async () => {
-    const { relType } = await import("@ontology-kit/format");
+    const { relType } = await import("@ontology-kit/reader");
     const type = relType("24 Hour Support");
     assert.equal(type, "24_HOUR_SUPPORT");
     assert.ok(v.edge({ from: "c.a", type, to: "c.b" }), JSON.stringify(v.edge.errors));

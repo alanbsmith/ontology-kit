@@ -2,7 +2,7 @@
  * The on-disk layout of an ontology folder (okb-lpg/3): `okb.json` plus `nodes.jsonl` and `edges.jsonl`,
  * one node or edge per line, sorted, with a fixed key order, so two branches that edit different nodes
  * touch different lines and `git merge` has nothing to conflict on. Older folders (`nodes.json` and
- * `edges.json`, each one JSON array) still load. Part of @ontology-kit/format.
+ * `edges.json`, each one JSON array) still load. Part of @ontology-kit/reader.
  */
 import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

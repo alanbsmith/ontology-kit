@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
-import { OkbError, Ontology, findRoot, MANIFEST } from "@ontology-kit/format";
+import { OkbError, Ontology, findRoot, MANIFEST } from "@ontology-kit/reader";
 
 const FILES = [MANIFEST, "nodes.jsonl", "edges.jsonl", "nodes.json", "edges.json"];
 

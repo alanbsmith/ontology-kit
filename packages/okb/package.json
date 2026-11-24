@@ -61,7 +61,7 @@
     "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
     "test": "node --test --test-concurrency=1 \"tests/*.test.ts\"",
-    "build": "pnpm --filter @ontology-kit/format run build && rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts.ts",
+    "build": "pnpm --filter @ontology-kit/reader run build && rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts.ts",
     "prepack": "npm run build",
     "prepublishOnly": "node ../../scripts/publish-guard.ts"
   },
@@ -74,7 +74,7 @@
     "pdfjs-dist": "^6.3.289"
   },
   "dependencies": {
-    "@ontology-kit/format": "workspace:*",
+    "@ontology-kit/reader": "workspace:*",
     "yaml": "^2.8.0"
   }
 }

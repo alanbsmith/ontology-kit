@@ -119,7 +119,7 @@ jobs:
       - name: Pack the three packages
         run: |
           mkdir "$RUNNER_TEMP/tarballs"
-          pnpm --filter @ontology-kit/format pack --pack-destination "$RUNNER_TEMP/tarballs"
+          pnpm --filter @ontology-kit/reader pack --pack-destination "$RUNNER_TEMP/tarballs"
           pnpm --filter @ontology-kit/okb pack --pack-destination "$RUNNER_TEMP/tarballs"
           pnpm --filter ontology-kit pack --pack-destination "$RUNNER_TEMP/tarballs"
       # The floor in `engines`: a user on Node 24 installs the tarballs and runs okb.
@@ -137,6 +137,6 @@ jobs:
           node node_modules/ontology-kit/bin/okb.js version
           ./node_modules/.bin/okb init my-ontology
           # The reader package, installed beside okb, loads the ontology okb just made.
-          node --input-type=module -e 'import { Ontology } from "@ontology-kit/format"; console.log(Ontology.load("./my-ontology").manifest.format)'
+          node --input-type=module -e 'import { Ontology } from "@ontology-kit/reader"; console.log(Ontology.load("./my-ontology").manifest.format)'
           cd my-ontology
           ../node_modules/.bin/okb validate

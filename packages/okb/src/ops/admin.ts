@@ -5,7 +5,7 @@ import * as naming from "../naming.ts";
 import { runChecks } from "../checks.ts";
 import { today } from "../clock.ts";
 import { MetaKB } from "../metakb.ts";
-import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType } from "@ontology-kit/format";
+import { FORMAT, MANIFEST, OkbError, Ontology, nameOrText, type Manifest, type NodeType } from "@ontology-kit/reader";
 import type { Notes } from "./common.ts";
 import { checkName } from "./naming.ts";
 

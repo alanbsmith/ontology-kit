@@ -10,8 +10,8 @@
     "outDir": "dist",
     "sourceMap": false,
     "paths": {
-      "@ontology-kit/format": [
-        "../format/types-internal/index.d.ts"
+      "@ontology-kit/reader": [
+        "../reader/types-internal/index.d.ts"
       ]
     }
   },

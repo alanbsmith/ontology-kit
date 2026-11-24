@@ -1,6 +1,6 @@
 /** One relationship value at a time, with edge properties (okb link / unlink). */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology, edgeProps, type EdgePropertyDecl, type Literal } from "@ontology-kit/format";
+import { OkbError, type Ontology, edgeProps, type EdgePropertyDecl, type Literal } from "@ontology-kit/reader";
 import type { Notes } from "./common.ts";
 import { assign, findSlotFor, parseAssignments } from "./values.ts";
 

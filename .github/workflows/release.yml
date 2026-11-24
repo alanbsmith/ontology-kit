@@ -109,7 +109,7 @@ jobs:
       - name: Pack the three packages
         run: |
           mkdir tarballs
-          pnpm --filter @ontology-kit/format pack --pack-destination tarballs
+          pnpm --filter @ontology-kit/reader pack --pack-destination tarballs
           pnpm --filter @ontology-kit/okb pack --pack-destination tarballs
           pnpm --filter ontology-kit pack --pack-destination tarballs
           ls -l tarballs
@@ -171,16 +171,16 @@ jobs:
           name: tarballs
           path: tarballs
       # The tarball paths start with ./ because npm reads `tarballs/x.tgz` as a GitHub owner/repo shorthand.
-      # In dependency order: the format package, then okb (which depends on it), then the wrapper.
+      # In dependency order: the reader package, then okb (which depends on it), then the wrapper.
       # A version already on npm is skipped, so a re-run finishes a release that stopped halfway.
       # `npm publish` of a tarball does the OIDC token exchange; provenance is on explicitly so the
       # publish fails rather than going out without it.
-      - name: Publish @ontology-kit/format, @ontology-kit/okb, then ontology-kit
+      - name: Publish @ontology-kit/reader, @ontology-kit/okb, then ontology-kit
         run: |
           set -eu
           flags="--access public --provenance"
           case "$VERSION" in *-*) flags="$flags --tag next" ;; esac
-          for entry in "@ontology-kit/format:./tarballs/ontology-kit-format-${VERSION}.tgz" "@ontology-kit/okb:./tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:./tarballs/ontology-kit-${VERSION}.tgz"; do
+          for entry in "@ontology-kit/reader:./tarballs/ontology-kit-reader-${VERSION}.tgz" "@ontology-kit/okb:./tarballs/ontology-kit-okb-${VERSION}.tgz" "ontology-kit:./tarballs/ontology-kit-${VERSION}.tgz"; do
             name="${entry%%:*}"
             tarball="${entry#*:}"
             if [ -n "$(npm view "${name}@${VERSION}" version 2>/dev/null)" ]; then

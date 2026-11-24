@@ -1,7 +1,7 @@
 /**
  * A lock for one ontology folder, so two okb commands running at once can't lose a write (each
  * command loads the whole folder and saves it back). The lock is the file `.okb.lock`, created
- * exclusively and holding the owner's process id. Part of @ontology-kit/format.
+ * exclusively and holding the owner's process id. Part of @ontology-kit/reader.
  */
 import { randomBytes } from "node:crypto";
 import { existsSync, linkSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from "node:fs";

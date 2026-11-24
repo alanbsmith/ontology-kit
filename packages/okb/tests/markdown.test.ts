@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { loadSourcePages, runChecks } from "../src/checks.ts";
 import { deepLinks, inlineToText, locate, parseMarkdown, splitRow } from "../src/markdown.ts";
-import { OkbError } from "@ontology-kit/format";
+import { OkbError } from "@ontology-kit/reader";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 

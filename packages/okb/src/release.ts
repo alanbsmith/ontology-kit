@@ -16,7 +16,7 @@
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { OkbError, Ontology, slug } from "@ontology-kit/format";
+import { OkbError, Ontology, slug } from "@ontology-kit/reader";
 import { today } from "./clock.ts";
 import { diffMarkdown, diffOntologies, isEmpty, type OntologyDiff } from "./diff.ts";
 import { sourcePath } from "./provenance.ts";

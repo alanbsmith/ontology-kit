@@ -10,7 +10,7 @@
 import { existsSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 import { MetaKB } from "./metakb.ts";
-import { Ontology, VALUE_TYPES, DISPOSITIONS, type ClassNode, type ExtractedFields, type Facets, type OkbNode, type SourceLocationNode } from "@ontology-kit/format";
+import { Ontology, VALUE_TYPES, DISPOSITIONS, type ClassNode, type ExtractedFields, type Facets, type OkbNode, type SourceLocationNode } from "@ontology-kit/reader";
 import { isOneOf, type Finding, type Severity } from "./types.ts";
 import * as naming from "./naming.ts";
 import { findQuote, loadPages, normalize } from "./quotes.ts";
