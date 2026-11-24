@@ -101,7 +101,7 @@ const COUNTS = metaCounts();
 const META_VERSION = (JSON.parse(read(`${PKG}/meta-kb/data/manifest.json`)) as { version: string }).version;
 
 const RULE_ID = /`((?:struct|hier|inst|slot|disjoint|naming|scope|doc|reuse|terms|prov)-[a-z0-9-]+)`/g;
-const REPO_PATH = /(?<![\w./-])((?:packages\/(?:okb|reader)\/)?(?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
+const REPO_PATH = /(?<![\w./-])((?:packages\/[\w-]+\/)?(?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
 
 function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
   const problems: Problem[] = [];
