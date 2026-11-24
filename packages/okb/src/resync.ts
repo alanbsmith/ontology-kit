@@ -14,7 +14,7 @@
  * what to extract again.
  */
 import { createHash } from "node:crypto";
-import type { Ontology, SourceBlock, SourceLocationNode } from "@ontology-kit/format";
+import type { Ontology, SourceBlock, SourceLocationNode } from "@ontology-kit/reader";
 import { locate, type MdDoc } from "./markdown.ts";
 import { locFields } from "./provenance.ts";
 import { findQuote, normalize } from "./quotes.ts";

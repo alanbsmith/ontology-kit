@@ -1,5 +1,5 @@
 /**
- * @ontology-kit/format: the okb file format, as a library.
+ * @ontology-kit/reader: the okb file format, as a library.
  *
  * Everything another tool needs to read an okb ontology folder: the typed nodes, loading with
  * migrations of older formats, the edge types okb reserves, reading relationship values, and the

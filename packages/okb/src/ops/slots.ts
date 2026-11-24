@@ -1,6 +1,6 @@
 /** Slots (properties and relationships), their facets, inverses and edge-property declarations. */
 import * as naming from "../naming.ts";
-import { OkbError, type Ontology, isRelationship, CARDINALITIES, VALUE_TYPES, type EdgePropertyDecl, type LiteralType } from "@ontology-kit/format";
+import { OkbError, type Ontology, isRelationship, CARDINALITIES, VALUE_TYPES, type EdgePropertyDecl, type LiteralType } from "@ontology-kit/reader";
 import { isOneOf } from "../types.ts";
 import { splitList as list, type Notes } from "./common.ts";
 import { checkName } from "./naming.ts";

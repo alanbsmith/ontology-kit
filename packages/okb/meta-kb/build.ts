@@ -15,7 +15,7 @@
  *   - (with --pdf) a quote isn't found verbatim, or is on a different page than declared
  *
  * It also writes the file-format registry's names (from src/format.yaml) into the
- * @ontology-kit/format package, which ships them as data so the reader needs no meta-KB,
+ * @ontology-kit/reader package, which ships them as data so the reader needs no meta-KB,
  * and the JSON Schema files for the format into packages/okb/schema/ (see schema.ts).
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -27,7 +27,7 @@ import { CHECKS } from "../src/checks.ts";
 import { findQuote, loadPages } from "../src/quotes.ts";
 import { buildSchemas, schemaText } from "./schema.ts";
 import { STEP_CHECKS } from "../src/status.ts";
-import type { GraphEdge, GraphNode } from "@ontology-kit/format";
+import type { GraphEdge, GraphNode } from "@ontology-kit/reader";
 
 export const VERSION = "2.6.3";
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -38,7 +38,7 @@ const SEVERITIES = ["error", "warning", "info"];
 const DEFAULT_SEVERITY: Record<string, string> = { MUST: "error", MUST_NOT: "error", SHOULD: "warning", SHOULD_NOT: "warning", MAY: "info" };
 
 const SCHEMA_DIR = join(HERE, "..", "schema");
-const REGISTRY_OUT = join(HERE, "..", "..", "format", "src", "registry.ts");
+const REGISTRY_OUT = join(HERE, "..", "..", "reader", "src", "registry.ts");
 
 const load = (name: string): any => parse(readFileSync(join(HERE, "src", name), "utf8"));
 const pageRange = (p: string | number) => {
@@ -46,7 +46,7 @@ const pageRange = (p: string | number) => {
   return Array.from({ length: (b ?? a) - a + 1 }, (_, i) => a + i);
 };
 
-/** The generated packages/format/src/registry.ts: only the names the reader needs, in the registry's order. */
+/** The generated packages/reader/src/registry.ts: only the names the reader needs, in the registry's order. */
 function registrySource(fmt: any): string {
   const list = (names: string[]) => `[\n${names.map((n) => `  ${JSON.stringify(n)},`).join("\n")}\n]`;
   const edgeTypes: any[] = fmt.edgeTypes;

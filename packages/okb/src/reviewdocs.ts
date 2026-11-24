@@ -12,7 +12,7 @@
  * stable ordering, so the same inputs always give the same text.
  */
 import { posix } from "node:path";
-import { nameOrText, type Ontology, type RuleNode, type SourceLocationNode } from "@ontology-kit/format";
+import { nameOrText, type Ontology, type RuleNode, type SourceLocationNode } from "@ontology-kit/reader";
 import { BANNER, type DocFiles } from "./kbdocs.ts";
 import { locate, type MdDoc } from "./markdown.ts";
 import type { ResyncReport } from "./resync.ts";

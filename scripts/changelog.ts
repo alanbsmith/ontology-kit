@@ -45,7 +45,7 @@ const indent = (text: string) =>
     .map((l) => (l.trim() ? `  ${l}` : ""))
     .join("\n");
 
-/** `- feat(format): Add better formatting ([#12](url), [@alan](https://github.com/alan))`, then its notes. */
+/** `- feat(reader): Add better formatting ([#12](url), [@alan](https://github.com/alan))`, then its notes. */
 function entry(pr: MergedPr): string {
   const who = pr.author.replace(/^app\//, "").replace(/\[bot\]$/, "");
   const line = `- ${pr.title} ([#${pr.number}](${pr.url}), [@${who}](https://github.com/${who}))`;

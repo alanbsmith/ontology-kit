@@ -1,5 +1,5 @@
 <!--
-The title is a Conventional Commit, like `feat(format): Add a reader for okb-lpg/3`: a type, an optional scope, then a subject that starts with a capital. It becomes the line for this PR in the changelog. CONTRIBUTING.md ("Commits and pull requests") lists the types and scopes.
+The title is a Conventional Commit, like `feat(reader): Add a reader for okb-lpg/3`: a type, an optional scope, then a subject that starts with a capital. It becomes the line for this PR in the changelog. CONTRIBUTING.md ("Commits and pull requests") lists the types and scopes.
 -->
 
 ## Summary
@@ -16,7 +16,7 @@ CLI, Format, Method, Skills, Documentation, Infrastructure, Dependencies
 ## Release Notes
 
 <!--
-What someone using okb or @ontology-kit/format should know: what's new or fixed, and how to use it. This text goes into the changelog and the GitHub release notes, under the PR's title.
+What someone using okb or @ontology-kit/reader should know: what's new or fixed, and how to use it. This text goes into the changelog and the GitHub release notes, under the PR's title.
 Required for feat, fix and perf PRs. For anything else, write "None".
 -->
 

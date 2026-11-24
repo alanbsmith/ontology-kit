@@ -8,13 +8,13 @@ import { fileURLToPath } from "node:url";
 import { after, before, describe, it } from "node:test";
 
 /**
- * Packs @ontology-kit/format, @ontology-kit/okb and the unscoped ontology-kit wrapper, installs the tarballs into a temp
+ * Packs @ontology-kit/reader, @ontology-kit/okb and the unscoped ontology-kit wrapper, installs the tarballs into a temp
  * folder and runs the installed `okb`, the way a user who never cloned the repo would. Nothing is
  * published and nothing is fetched: the yaml dependency is packed from this workspace's own copy.
  */
 const PKG = dirname(dirname(fileURLToPath(import.meta.url)));
 const WRAPPER = join(dirname(PKG), "ontology-kit");
-const FORMAT = join(dirname(PKG), "format");
+const READER = join(dirname(PKG), "reader");
 const SKIP = process.env.OKB_SKIP_PACKAGE_TEST ? "OKB_SKIP_PACKAGE_TEST is set" : false;
 
 const run = (cmd: string, args: string[], cwd: string, env: NodeJS.ProcessEnv = process.env): string =>
@@ -23,7 +23,7 @@ const run = (cmd: string, args: string[], cwd: string, env: NodeJS.ProcessEnv = 
 describe("published packages", { skip: SKIP }, () => {
   let work = "";
   let install = "";
-  let formatFiles: string[] = [];
+  let readerFiles: string[] = [];
   let okbFiles: string[] = [];
   let wrapperFiles: string[] = [];
   const okb = (...args: string[]): string => run(join(install, "node_modules", ".bin", "okb"), args, cwd);
@@ -34,13 +34,13 @@ describe("published packages", { skip: SKIP }, () => {
     const tarballs = join(work, "tarballs");
     mkdirSync(tarballs);
     // `pnpm pack` swaps the wrapper's workspace:* range for the real version; its prepack builds dist/.
-    for (const dir of [FORMAT, PKG, WRAPPER]) run("pnpm", ["pack", "--pack-destination", tarballs], dir);
+    for (const dir of [READER, PKG, WRAPPER]) run("pnpm", ["pack", "--pack-destination", tarballs], dir);
     const yamlDir = dirname(createRequire(import.meta.url).resolve("yaml/package.json"));
     run("npm", ["pack", yamlDir, "--pack-destination", tarballs], work);
     const names = readdirSync(tarballs);
     const find = (re: RegExp) => join(tarballs, names.find((n) => re.test(n)) as string);
     const files = (tgz: string) => run("tar", ["-tzf", tgz], work).split("\n").filter(Boolean).map((f) => f.replace(/^package\//, ""));
-    formatFiles = files(find(/^ontology-kit-format-/));
+    readerFiles = files(find(/^ontology-kit-reader-/));
     okbFiles = files(find(/^ontology-kit-okb-/));
     wrapperFiles = files(find(/^ontology-kit-\d/));
 
@@ -49,7 +49,7 @@ describe("published packages", { skip: SKIP }, () => {
     mkdirSync(install);
     writeFileSync(join(install, "package.json"), '{"name":"install-test","private":true}\n');
     run("npm", ["install", "--offline", "--omit=optional", "--no-audit", "--no-fund", "--loglevel=error",
-      find(/^ontology-kit-format-/), find(/^ontology-kit-okb-/), find(/^ontology-kit-\d/), find(/^yaml-/)], install);
+      find(/^ontology-kit-reader-/), find(/^ontology-kit-okb-/), find(/^ontology-kit-\d/), find(/^yaml-/)], install);
   });
 
   after(() => rmSync(work, { recursive: true, force: true }));
@@ -64,32 +64,32 @@ describe("published packages", { skip: SKIP }, () => {
       assert.doesNotMatch(f, /(^|\/)(tests|examples|docs|site|sources)\/|\.ya?ml$|\.pdf$|(?<!\.d)\.ts$|\.map$/, `unwanted file ${f}`);
     }
     assert.ok(!okbFiles.includes("dist/gendocs.js"), "the docs generator stays out of the package");
-    assert.ok(!okbFiles.some((f) => /^dist\/(model|relationships|errors|format)\./.test(f)), "the reader lives in @ontology-kit/format, not in okb");
+    assert.ok(!okbFiles.some((f) => /^dist\/(model|relationships|errors|format)\./.test(f)), "the reader lives in @ontology-kit/reader, not in okb");
   });
 
-  it("ships the format package as compiled code and declarations, with no meta-KB, YAML, tests or CLI", () => {
+  it("ships the reader package as compiled code and declarations, with no meta-KB, YAML, tests or CLI", () => {
     for (const f of ["package.json", "README.md", "LICENSE", "dist/index.js", "dist/index.d.ts", "dist/model.js", "dist/model.d.ts", "dist/registry.js"]) {
-      assert.ok(formatFiles.includes(f), `${f} is in the tarball`);
+      assert.ok(readerFiles.includes(f), `${f} is in the tarball`);
     }
-    for (const f of formatFiles) {
+    for (const f of readerFiles) {
       assert.match(f, /^(package\.json|README\.md|LICENSE|dist\/)/, `unexpected file ${f}`);
       assert.doesNotMatch(f, /(^|\/)(tests|fixtures|meta-kb|skills|bin)\/|\.ya?ml$|(?<!\.d)\.ts$|\.map$|cli\.|metakb\./, `unwanted file ${f}`);
     }
-    const installedFormat = JSON.parse(readFileSync(join(install, "node_modules", "@ontology-kit", "format", "package.json"), "utf8"));
-    assert.equal(installedFormat.exports["."].default, "./dist/index.js", "the packed exports point at dist");
+    const installedReader = JSON.parse(readFileSync(join(install, "node_modules", "@ontology-kit", "reader", "package.json"), "utf8"));
+    assert.equal(installedReader.exports["."].default, "./dist/index.js", "the packed exports point at dist");
   });
 
   it("ships the wrapper as a bin, README and LICENSE only, at the same version", () => {
     assert.deepEqual(wrapperFiles.sort(), ["LICENSE", "README.md", "bin/okb.js", "package.json"]);
     const read = (dir: string) => JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
     assert.equal(read(WRAPPER).version, read(PKG).version);
-    assert.equal(read(FORMAT).version, read(PKG).version);
-    assert.equal(read(PKG).dependencies["@ontology-kit/format"], "workspace:*");
+    assert.equal(read(READER).version, read(PKG).version);
+    assert.equal(read(PKG).dependencies["@ontology-kit/reader"], "workspace:*");
     const installedOkb = JSON.parse(readFileSync(join(install, "node_modules", "@ontology-kit", "okb", "package.json"), "utf8"));
-    assert.equal(installedOkb.dependencies["@ontology-kit/format"], read(PKG).version);
+    assert.equal(installedOkb.dependencies["@ontology-kit/reader"], read(PKG).version);
     assert.equal(installedOkb.exports["./format"], undefined, "okb has no format subpath");
-    assert.equal(read(FORMAT).private, undefined, "the format package is publishable");
-    assert.equal(read(FORMAT).engines.node, ">=24");
+    assert.equal(read(READER).private, undefined, "the reader package is publishable");
+    assert.equal(read(READER).engines.node, ">=24");
     assert.equal(read(WRAPPER).dependencies["@ontology-kit/okb"], "workspace:*");
     const installed = JSON.parse(readFileSync(join(install, "node_modules", "ontology-kit", "package.json"), "utf8"));
     assert.equal(installed.dependencies["@ontology-kit/okb"], read(PKG).version);
@@ -120,16 +120,16 @@ describe("published packages", { skip: SKIP }, () => {
     assert.equal(run(process.execPath, [bin, "version"], install), okb("version"));
   });
 
-  it("reads through the installed format package, and okb has no format path of its own", () => {
-    const script = `import { Ontology } from "@ontology-kit/format";
+  it("reads through the installed reader package, and okb has no format path of its own", () => {
+    const script = `import { Ontology } from "@ontology-kit/reader";
       const ont = Ontology.load("./my-ontology");
       console.log(ont.manifest.format);
       await import("@ontology-kit/okb/format").then(() => console.log("imported"), (e) => console.log(e.code));`;
     const out = run(process.execPath, ["--input-type=module", "-e", script], install).trim().split("\n");
     assert.deepEqual(out, ["okb-lpg/3", "ERR_PACKAGE_PATH_NOT_EXPORTED"]);
     const dir = join(install, "node_modules", "@ontology-kit");
-    assert.ok(existsSync(join(dir, "format", "dist", "index.js")));
-    assert.ok(!existsSync(join(dir, "okb", "node_modules", "@ontology-kit")), "okb uses the one installed format package");
+    assert.ok(existsSync(join(dir, "reader", "dist", "index.js")));
+    assert.ok(!existsSync(join(dir, "okb", "node_modules", "@ontology-kit")), "okb uses the one installed reader package");
   });
 
   it("runs the compiled sources, not the TypeScript ones", () => {

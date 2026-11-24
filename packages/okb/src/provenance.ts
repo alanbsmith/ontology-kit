@@ -6,7 +6,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { deepLinks, locate, parseMarkdown, type MdDoc, type QuoteHit } from "./markdown.ts";
-import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
+import { OkbError, nameOrText, type Ontology, MODALITIES, VERIFICATION_STATUSES as STATUSES, type SourceLocationNode, type SourceNode } from "@ontology-kit/reader";
 import { isOneOf } from "./types.ts";
 import { UNSUPPORTED_NOTE_TIP, overreachNoteTips, shellQuote, statedModality } from "./verifynote.ts";
 import * as naming from "./naming.ts";

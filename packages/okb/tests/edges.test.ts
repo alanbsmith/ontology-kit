@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { runChecks } from "../src/checks.ts";
 import { exportGraph, toCypher } from "../src/export.ts";
-import { Ontology } from "@ontology-kit/format";
+import { Ontology } from "@ontology-kit/reader";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 import { show } from "../src/render.ts";
@@ -180,7 +180,7 @@ describe("export: rules", () => {
 
 describe("ancestors order", () => {
   it("is nearest first, and the same whatever order the edges were stored in", async () => {
-    const { Ontology } = await import("@ontology-kit/format");
+    const { Ontology } = await import("@ontology-kit/reader");
     const cls = (id: string) => ({ id, type: "Class", name: id.slice(2) }) as never;
     const e = (from: string, to: string) => ({ from, type: "IS_A", to });
     // d is a c and a b; b is an a; c is a z. Both parents come before a and z.

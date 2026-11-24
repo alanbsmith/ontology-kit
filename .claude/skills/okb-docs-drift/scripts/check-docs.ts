@@ -8,7 +8,7 @@
  *   - okb commands/subcommands and their --flags, checked against packages/okb/src/cli.ts
  *   - `pnpm <script>`, checked against the scripts in the root package.json and packages/okb/package.json
  *   - contributor commands that use npm (`npm run`, `npm ci`, `npm link`, `npm test`, `npm install`, `npx`): contributors use pnpm
- *   - repo paths (docs/..., sources/..., and packages/okb/{src,meta-kb,tests,examples,skills,bin}/... and packages/format/{src,tests}/...; a bare src/... resolves inside packages/okb)
+ *   - repo paths (docs/..., sources/..., and packages/okb/{src,meta-kb,tests,examples,skills,bin}/... and packages/reader/{src,tests}/...; a bare src/... resolves inside packages/okb)
  *   - rule ids (hier-*, slot-*, naming-*, ...), checked against the compiled meta-KB
  *   - node and edge types in docs/FORMAT.md tables, checked against packages/okb/meta-kb/src/format.yaml
  *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
@@ -34,7 +34,7 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, PKG, "examples"))
 const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 const DEFAULT_DOCS = [
-  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", `${PKG}/meta-kb/README.md`, "sources/README.md", "packages/format/README.md",
+  "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", `${PKG}/meta-kb/README.md`, "sources/README.md", "packages/reader/README.md",
   `${PKG}/skills/ontology-coach/SKILL.md`, `${PKG}/skills/ontology-review/SKILL.md`, `${PKG}/skills/ontology-maintainer/SKILL.md`, `${PKG}/skills/ontology-signoff/SKILL.md`, `${PKG}/skills/build-domain-kb-from-docs/SKILL.md`, ...TUTORIAL_SOURCES,
   ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
 ];
@@ -144,7 +144,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
       if (m[1] !== META_VERSION) problems.push({ file, line, kind: "version", message: `Says meta-KB ${m[1]}; it's ${META_VERSION}.` });
     }
     for (const m of text.matchAll(/(?:^|`)\s*pnpm (?:run )?([a-z][\w:-]*)/g)) {
-      if (!scripts.has(m[1]) && !PNPM_BUILTINS.has(m[1])) problems.push({ file, line, kind: "pnpm-script", message: `no package.json (root, packages/okb or packages/format) has a '${m[1]}' script.` });
+      if (!scripts.has(m[1]) && !PNPM_BUILTINS.has(m[1])) problems.push({ file, line, kind: "pnpm-script", message: `no package.json (root, packages/okb or packages/reader) has a '${m[1]}' script.` });
     }
     if (/(?:^|`)\s*pnpm docs\b(?!:)/.test(text)) problems.push({ file, line, kind: "pnpm-script", message: "'pnpm docs' is pnpm's own docs command, not our script; write 'pnpm run docs'." });
     // A package README is its npm page, so it says how a user installs the package.
@@ -198,7 +198,7 @@ const files = args.filter((a) => !a.startsWith("--")).map((f) => relative(ROOT, 
 const cli = cliSurface();
 const rules = ruleKeys();
 const fmt = formatTypes();
-const scripts = new Set(["package.json", `${PKG}/package.json`, "packages/format/package.json"].flatMap((p) => Object.keys((JSON.parse(read(p)) as { scripts: Record<string, string> }).scripts)));
+const scripts = new Set(["package.json", `${PKG}/package.json`, "packages/reader/package.json"].flatMap((p) => Object.keys((JSON.parse(read(p)) as { scripts: Record<string, string> }).scripts)));
 const problems = (files.length ? files : DEFAULT_DOCS).filter((f) => existsSync(join(ROOT, f))).flatMap((f) => checkFile(f, cli, rules, fmt, scripts));
 
 if (json) console.log(JSON.stringify(problems, null, 2));

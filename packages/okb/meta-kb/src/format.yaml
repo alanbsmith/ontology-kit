@@ -5,10 +5,10 @@
 #   models   - the glossary concept this type implements
 #   origin   - ontology101 (Ontology 101's modeling primitive) or operational (toolkit/LPG plumbing)
 #   provenance - (edge types) true for the quote, source and rule layer; the public API's
-#                PROVENANCE_EDGE_TYPES list in @ontology-kit/format is built from it
+#                PROVENANCE_EDGE_TYPES list in @ontology-kit/reader is built from it
 #
 # The meta-KB build (meta-kb/build.ts) compiles this file into the meta-KB graph and writes the
-# type names into packages/format/src/registry.ts, which the reader package ships as data.
+# type names into packages/reader/src/registry.ts, which the reader package ships as data.
 
 version: "okb-lpg/3"
 

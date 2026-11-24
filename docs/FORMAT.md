@@ -105,7 +105,7 @@ A file with no stamps (written before they existed) loads as it is. okb never in
 
 A Rule is **prescriptive**: a requirement on any implementation, with a modality. A descriptive statement about one implementation (what Button does) is an ordinary Instance of a domain class, such as `Behavior`, with no modality. `okb validate` treats them separately, and `FULFILLS` connects them.
 
-- **`verification.note`** is one sentence on why a check came out as it did, and **`verification.ref`** is an `http` or `https` link to the PR comment, issue or review thread where the reasoning happened (`okb verify --note ... --ref ...`). Both are optional, and `--approve` keeps them unless it gets new ones. The graph never holds a reviewer's name, email or a timestamp of their own; git and the PR keep who and when. `ref` is an optional field on `Verification` in `@ontology-kit/format`.
+- **`verification.note`** is one sentence on why a check came out as it did, and **`verification.ref`** is an `http` or `https` link to the PR comment, issue or review thread where the reasoning happened (`okb verify --note ... --ref ...`). Both are optional, and `--approve` keeps them unless it gets new ones. The graph never holds a reviewer's name, email or a timestamp of their own; git and the PR keep who and when. `ref` is an optional field on `Verification` in `@ontology-kit/reader`.
 - **`authored`** (Boolean) marks a rule the ontology's owner wrote instead of extracting. `okb rule add --authored` sets `authored: true` and `extracted: false`. It still needs `--cites` (a quote in an owner-written Source) and verification, so `prov-cites-quote` and `prov-verified` apply unchanged.
 - **Qualifier values** `values{slotId: value | [values]}` hold when or for whom a rule applies (for example `condition`, `inputModality`). Rules aren't instances of a class, so a slot declares that it applies to rules with `appliesToRules: true`: `okb slot add condition --on-rules --type Enumerated --values open,disabled` (`--off-rules` undoes it). The slot is then available on every rule and refused on instances, unless you also attach it to a class with `--on`. Whether a value is required follows the slot's cardinality. **Rules have no inheritance:** each rule states its own values, and nothing is inherited through `REFINES`, because a refining rule often narrows or adds a condition and an inherited value would claim something its quote doesn't say. Set values with `okb rule add ... --value condition=open`. They're checked like instance values (`slot-values-respect-facets`, `slot-value-slot-applies`). A rule's qualifiers must be properties, not relationships. Attach the same slot to a Behavior class with `--on Behavior` too, and a rule and a fact are described in the same terms.
 - **`REFINES`** (Rule → Rule) is stored in one direction, specific → broad. The optional `adds` property (String) names what the narrower rule adds. Set it with `okb rule refines <rule> <broader> --adds "..."` or `okb rule add --refines <broader> --adds "..."`. A rule can't refine itself, directly or through other rules.
@@ -114,10 +114,10 @@ A Rule is **prescriptive**: a requirement on any implementation, with a modality
 
 ## Reading ontologies from code
 
-Other tools can read an okb ontology without copying its types. [`@ontology-kit/format`](https://www.npmjs.com/package/@ontology-kit/format) is the supported way: the typed nodes, loading with migrations, the edge types okb reserves, and reading relationship values. It's a package of its own, with no runtime dependencies and none of okb's CLI, meta-KB or skills, and it needs Node 24 or newer. Add it to your project with npm, pnpm or any other package manager.
+Other tools can read an okb ontology without copying its types. [`@ontology-kit/reader`](https://www.npmjs.com/package/@ontology-kit/reader) is the supported way: the typed nodes, loading with migrations, the edge types okb reserves, and reading relationship values. It's a package of its own, with no runtime dependencies and none of okb's CLI, meta-KB or skills, and it needs Node 24 or newer. Add it to your project with npm, pnpm or any other package manager.
 
 ```ts
-import { Ontology, isRelationship, isStructuralEdgeType } from "@ontology-kit/format";
+import { Ontology, isRelationship, isStructuralEdgeType } from "@ontology-kit/reader";
 
 const ont = Ontology.load("./my-ontology");
 
@@ -135,11 +135,11 @@ const links = ont.edges.filter((e) => !isStructuralEdgeType(e.type));
 console.log(`${links.length} relationship edges`);
 ```
 
-The test suite runs this example against a small ontology in `packages/format/tests/fixtures/coffee` (`packages/format/tests/format-api.test.ts`), so it stays true.
+The test suite runs this example against a small ontology in `packages/reader/tests/fixtures/coffee` (`packages/reader/tests/reader-api.test.ts`), so it stays true.
 
 ### What's public
 
-Everything is exported from `packages/format/src/index.ts`, and nothing else in the package is public. The tests pin the list of exported names.
+Everything is exported from `packages/reader/src/index.ts`, and nothing else in the package is public. The tests pin the list of exported names.
 
 | Export                                                                                                         | What it is                                                                                                                                                                                                                                                                                                                 |
 | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -161,11 +161,11 @@ Loading trusts the files, as the CLI does. A hand-edited file may hold nodes tha
 
 - **Writing.** Adding and removing nodes and edges, `save()` and the relationship-changing operations on `ont.rel` exist for okb's own commands. They're tagged `@internal` in the source, which leaves them out of the type declarations, but they are in the compiled code, because okb runs on it. Change an ontology with `okb` commands. A supported write API needs the operations designed as a public surface first, so it isn't part of this one. Starting a new folder (`okb init`) is okb's, not this package's.
 - **Validation.** The checks behind `okb validate` depend on the meta-KB rules and change with them. They stay in `@ontology-kit/okb` until a tool needs them as a library.
-- **Anything under `dist/`.** Import only from `@ontology-kit/format`; the `exports` map refuses other paths.
+- **Anything under `dist/`.** Import only from `@ontology-kit/reader`; the `exports` map refuses other paths.
 
 ### Versions and semver
 
-The exports above follow semver. The format package has its own version, but while the packages are young all three (`@ontology-kit/format`, `@ontology-kit/okb` and the unscoped `ontology-kit`) release together at one version. Before 1.0, any release may break the API; [Releases](../CONTRIBUTING.md#releases) says what 1.0 will promise and how the package versions relate to the meta-KB version.
+The exports above follow semver. The reader package has its own version, but while the packages are young all three (`@ontology-kit/reader`, `@ontology-kit/okb` and the unscoped `ontology-kit`) release together at one version. Before 1.0, any release may break the API; [Releases](../CONTRIBUTING.md#releases) says what 1.0 will promise and how the package versions relate to the meta-KB version.
 
 - **Major (breaking):** removing or renaming an export; narrowing a type or signature; removing a node or edge property or changing its meaning; changing what `rel.values`, `rel.edge` or `rel.spec` return for a file that was valid before; dropping the conversion of an older format; raising the Node floor.
 - **Minor:** a new export; a new optional property on a node; a new node type or structural edge type (it appears in the lists, so a tool that reads the lists keeps working and one that copied them doesn't); reading a newer file format.
@@ -179,14 +179,14 @@ The reader first shipped as a subpath of okb, `@ontology-kit/okb/format`, before
 
 Where the line falls:
 
-- **In `@ontology-kit/format`:** the node and edge types, `Ontology` (loading, migration from `okb-lpg/1`, the indexes and every query), the relationship module (`ont.rel`), the name helpers the format's identities use, `OkbError`, and the registry of node and edge types as data (`packages/format/src/registry.ts`).
+- **In `@ontology-kit/reader`:** the node and edge types, `Ontology` (loading, migration from `okb-lpg/1`, the indexes and every query), the relationship module (`ont.rel`), the name helpers the format's identities use, `OkbError`, and the registry of node and edge types as data (`packages/reader/src/registry.ts`).
 - **In `@ontology-kit/okb`:** everything that writes or judges: the commands and operations, creating a folder, the validator and its rules, the meta-KB, the skills, the naming _style_ rules (PascalCase, plurals), the clock and the export.
-- **The write methods stayed on `Ontology`.** `Ontology` keeps its indexes private and every mutation must keep them current, so splitting the class into a reader and a writer would mean exposing those indexes or duplicating them. The write methods (`addNode`, `addEdge`, `removeNode`, `save`, the `rel` intents like `becomeRelationship`) are tagged `@internal` instead: they're in the compiled JavaScript that okb runs, and `stripInternal` leaves them out of the shipped `.d.ts`, so a consumer's compiler doesn't offer them. `packages/format/tsconfig.internal.json` also writes a full set of declarations to the gitignored `packages/format/types-internal/`, which okb's own build compiles against; it isn't published.
-- **The registry has one source.** `packages/okb/meta-kb/src/format.yaml` stays where it is, because the meta-KB build compiles it into the meta-KB graph that `struct-well-formed` reads (and that data must not change). The same build writes the names the reader needs into `packages/format/src/registry.ts`, a generated file that is committed like `meta-kb/data`. The reader needs no YAML parser and no meta-KB at runtime, and a test (`packages/okb/tests/format-registry.test.ts`) fails if the two copies drift apart. The regenerate-and-diff step in CI catches a YAML edit that wasn't rebuilt.
+- **The write methods stayed on `Ontology`.** `Ontology` keeps its indexes private and every mutation must keep them current, so splitting the class into a reader and a writer would mean exposing those indexes or duplicating them. The write methods (`addNode`, `addEdge`, `removeNode`, `save`, the `rel` intents like `becomeRelationship`) are tagged `@internal` instead: they're in the compiled JavaScript that okb runs, and `stripInternal` leaves them out of the shipped `.d.ts`, so a consumer's compiler doesn't offer them. `packages/reader/tsconfig.internal.json` also writes a full set of declarations to the gitignored `packages/reader/types-internal/`, which okb's own build compiles against; it isn't published.
+- **The registry has one source.** `packages/okb/meta-kb/src/format.yaml` stays where it is, because the meta-KB build compiles it into the meta-KB graph that `struct-well-formed` reads (and that data must not change). The same build writes the names the reader needs into `packages/reader/src/registry.ts`, a generated file that is committed like `meta-kb/data`. The reader needs no YAML parser and no meta-KB at runtime, and a test (`packages/okb/tests/format-registry.test.ts`) fails if the two copies drift apart. The regenerate-and-diff step in CI catches a YAML edit that wasn't rebuilt.
 
 ### Moving a tool onto the API
 
-A tool that kept its own copy of the node types and its own list of structural edge types (okb-mcp, for example) replaces them with imports from `@ontology-kit/format`: the node types, `STRUCTURAL_EDGE_TYPES` in place of a hand-written list, and `ont.rel.values` in place of its own edge walking. A new edge type like `REFINES` then reaches it with an upgrade, not a copy edit. A changed `rel.values` result, a removed export or a node property that went away in a new major version are the breaking changes to watch for.
+A tool that kept its own copy of the node types and its own list of structural edge types (okb-mcp, for example) replaces them with imports from `@ontology-kit/reader`: the node types, `STRUCTURAL_EDGE_TYPES` in place of a hand-written list, and `ont.rel.values` in place of its own edge walking. A new edge type like `REFINES` then reaches it with an upgrade, not a copy edit. A changed `rel.values` result, a removed export or a node property that went away in a new major version are the breaking changes to watch for.
 
 ## JSON Schema and editors
 

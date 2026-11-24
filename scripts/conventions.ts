@@ -6,7 +6,7 @@
 
 /** Commit scopes: a package, or a part of the repo that isn't one. The scope is optional. */
 export const SCOPES = [
-  "format", // @ontology-kit/format
+  "reader", // @ontology-kit/reader
   "okb", // @ontology-kit/okb, the CLI
   "ontology-kit", // the unscoped wrapper package
   "meta-kb", // the method, rules, glossary and decision guides
@@ -23,7 +23,7 @@ export const SCOPES = [
  */
 export const CATEGORIES = [
   { name: "CLI", about: "okb commands, flags, output and behavior" },
-  { name: "Format", about: "the okb-lpg file format and the @ontology-kit/format package" },
+  { name: "Format", about: "the okb-lpg file format and the @ontology-kit/reader package" },
   { name: "Method", about: "the meta-KB: the steps, rules, glossary and decision guides" },
   { name: "Skills", about: "the skills that ship with okb" },
   { name: "Documentation", about: "the docs, tutorials and docs site" },

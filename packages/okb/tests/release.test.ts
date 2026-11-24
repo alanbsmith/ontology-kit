@@ -14,8 +14,8 @@ const REPO = dirname(dirname(PKG));
 /** A throwaway repo layout: three package.json files and a changelog. */
 function fixture(versions: [string, string, string], changelog: string): string {
   const root = mkdtempSync(join(tmpdir(), "okb-release-test-"));
-  const names = ["@ontology-kit/format", "@ontology-kit/okb", "ontology-kit"];
-  ["packages/format", "packages/okb", "packages/ontology-kit"].forEach((d, i) => {
+  const names = ["@ontology-kit/reader", "@ontology-kit/okb", "ontology-kit"];
+  ["packages/reader", "packages/okb", "packages/ontology-kit"].forEach((d, i) => {
     mkdirSync(join(root, d), { recursive: true });
     writeFileSync(join(root, d, "package.json"), JSON.stringify({ name: names[i], version: versions[i] }));
   });
@@ -29,7 +29,7 @@ const LOG = "# Changelog\n\n## Package releases\n\n### 0.2.0 (2030-01-02)\n\nNew
 describe("release checks", () => {
   it("keeps all three packages at one version, and okb version reports it", () => {
     const versions = packageVersions(REPO);
-    assert.deepEqual(Object.keys(versions), ["@ontology-kit/format", "@ontology-kit/okb", "ontology-kit"], "every publishable package is checked, in publish order");
+    assert.deepEqual(Object.keys(versions), ["@ontology-kit/reader", "@ontology-kit/okb", "ontology-kit"], "every publishable package is checked, in publish order");
     assert.equal(new Set(Object.values(versions)).size, 1, `the packages must share a version: ${JSON.stringify(versions)}`);
     assert.equal(PACKAGE_VERSION, releaseVersion(REPO));
     const out = execFileSync(process.execPath, [join(PKG, "src", "cli.ts"), "version"], { encoding: "utf8" });
@@ -79,7 +79,7 @@ describe("release checks", () => {
   });
 
   it("refuses to publish a package folder, so only the packed tarballs can go out", () => {
-    for (const dir of ["format", "okb", "ontology-kit"]) {
+    for (const dir of ["reader", "okb", "ontology-kit"]) {
       const pkg = JSON.parse(readFileSync(join(REPO, "packages", dir, "package.json"), "utf8"));
       assert.equal(pkg.scripts.prepublishOnly, "node ../../scripts/publish-guard.ts", dir);
     }

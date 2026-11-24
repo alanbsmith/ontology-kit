@@ -12,7 +12,7 @@ import { MetaKB } from "../src/metakb.ts";
 import { SITE_URL, ruleUrl } from "../src/site.ts";
 import * as naming from "../src/naming.ts";
 import { findQuote } from "../src/quotes.ts";
-import { Ontology, type OkbNode } from "@ontology-kit/format";
+import { Ontology, type OkbNode } from "@ontology-kit/reader";
 import * as ops from "../src/ops.ts";
 import { runChecks } from "../src/checks.ts";
 import { STEP_CHECKS, computeStatus } from "../src/status.ts";

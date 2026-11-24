@@ -1,7 +1,7 @@
 /** Name styles, conversion, and singular/plural guessing. */
-import { rawTokens, stripAccents, tokens, type Conventions } from "@ontology-kit/format";
+import { rawTokens, stripAccents, tokens, type Conventions } from "@ontology-kit/reader";
 
-export { fold, key, rawTokens, relType, slug, stripAccents, tokens } from "@ontology-kit/format";
+export { fold, key, rawTokens, relType, slug, stripAccents, tokens } from "@ontology-kit/reader";
 
 export const CLASS_STYLES = ["PascalCase", "Title Case", "snake_case", "kebab-case", "Sentence case"];
 export const SLOT_STYLES = ["camelCase", "snake_case", "kebab-case", "lower case"];

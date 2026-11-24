@@ -1,7 +1,7 @@
 /** Human-readable output: findings, explanations, trees, node details, Mermaid diagrams. */
 import { ruleUrl } from "./site.ts";
 import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
-import { edgeProps, nodeLabel, type Ontology, type OkbNode, type SlotNode } from "@ontology-kit/format";
+import { edgeProps, nodeLabel, type Ontology, type OkbNode, type SlotNode } from "@ontology-kit/reader";
 import { type Finding } from "./types.ts";
 import * as naming from "./naming.ts";
 import type { CheckReport } from "./check.ts";

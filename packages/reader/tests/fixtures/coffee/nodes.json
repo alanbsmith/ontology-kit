@@ -4,7 +4,7 @@
     "id": "ontology",
     "name": "Coffee",
     "domain": "Espresso drinks",
-    "purpose": "A small fixture for the format package's tests",
+    "purpose": "A small fixture for the reader package's tests",
     "users": [
       "tests"
     ],

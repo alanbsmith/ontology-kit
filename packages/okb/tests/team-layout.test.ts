@@ -6,7 +6,7 @@ import { hostname, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
-import { Ontology, OkbError, type OkbNode } from "@ontology-kit/format";
+import { Ontology, OkbError, type OkbNode } from "@ontology-kit/reader";
 import { runChecks } from "../src/checks.ts";
 
 const CLI = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "cli.ts");

@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { after, before, describe, it } from "node:test";
-import { Ontology, type GraphEdge, type OkbNode } from "@ontology-kit/format";
+import { Ontology, type GraphEdge, type OkbNode } from "@ontology-kit/reader";
 import { diffMarkdown, diffOntologies, isEmpty } from "../src/diff.ts";
 
 const PKG = dirname(dirname(fileURLToPath(import.meta.url)));

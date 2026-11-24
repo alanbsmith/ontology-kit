@@ -11,7 +11,7 @@
  */
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { OkbError, nameOrText, type ClassNode, type DesignDecisionNode, type OkbNode, type Ontology, type RuleNode, type SourceLocationNode, type SourceNode } from "@ontology-kit/format";
+import { OkbError, nameOrText, type ClassNode, type DesignDecisionNode, type OkbNode, type Ontology, type RuleNode, type SourceLocationNode, type SourceNode } from "@ontology-kit/reader";
 import { anchorId } from "./site.ts";
 
 export type DocFiles = Record<string, string>;

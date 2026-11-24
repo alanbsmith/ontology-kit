@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { dirname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Ontology, type GraphEdge, type OkbNode } from "@ontology-kit/format";
+import { Ontology, type GraphEdge, type OkbNode } from "@ontology-kit/reader";
 import { BANNER, kbDocs, writePages, type DocFiles } from "../src/kbdocs.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));

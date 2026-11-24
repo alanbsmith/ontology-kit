@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { Ontology, type OkbNode } from "@ontology-kit/format";
+import { Ontology, type OkbNode } from "@ontology-kit/reader";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 

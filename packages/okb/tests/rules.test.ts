@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { runChecks } from "../src/checks.ts";
 import { exportGraph } from "../src/export.ts";
-import { Ontology } from "@ontology-kit/format";
+import { Ontology } from "@ontology-kit/reader";
 import * as ops from "../src/ops.ts";
 import * as prov from "../src/provenance.ts";
 import { show } from "../src/render.ts";

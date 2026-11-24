@@ -1,4 +1,4 @@
-/** Small types and guards that only okb needs (the file format's own types are in @ontology-kit/format). */
+/** Small types and guards that only okb needs (the file format's own types are in @ontology-kit/reader). */
 
 /** Narrows a string from the command line or a file to one of a fixed set of values. */
 export function isOneOf<T extends string>(values: readonly T[], v: string | undefined): v is T {

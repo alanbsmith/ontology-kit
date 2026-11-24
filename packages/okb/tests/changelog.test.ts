@@ -15,7 +15,7 @@ const body = (category: string, notes: string, breaking?: string) =>
 
 describe("PR titles and bodies", () => {
   it("splits a conventional title", () => {
-    assert.deepEqual(parseTitle("feat(format): Add better formatting"), { type: "feat", scope: "format", breaking: false, subject: "Add better formatting" });
+    assert.deepEqual(parseTitle("feat(reader): Add better formatting"), { type: "feat", scope: "reader", breaking: false, subject: "Add better formatting" });
     assert.equal(parseTitle("fix(okb)!: Drop a flag")?.breaking, true);
     assert.equal(parseTitle("docs: Fix a link")?.scope, undefined);
     assert.equal(parseTitle("Add better formatting"), undefined);
@@ -35,7 +35,7 @@ describe("PR titles and bodies", () => {
   });
 
   it("accepts a well-formed PR", () => {
-    assert.deepEqual(checkPr({ title: "feat(format): Add better formatting", body: body("Format", "Reads `okb-lpg/3`.") }), []);
+    assert.deepEqual(checkPr({ title: "feat(reader): Add better formatting", body: body("Format", "Reads `okb-lpg/3`.") }), []);
     assert.deepEqual(checkPr({ title: "ci: Pin the actions", body: body("Infrastructure", "None") }), []);
   });
 
@@ -81,7 +81,7 @@ describe("the PR template", () => {
 
 describe("commit scopes", () => {
   it("name every package folder", () => {
-    for (const s of ["format", "okb", "ontology-kit"]) assert.ok((SCOPES as readonly string[]).includes(s), `${s} is a scope`);
+    for (const s of ["reader", "okb", "ontology-kit"]) assert.ok((SCOPES as readonly string[]).includes(s), `${s} is a scope`);
   });
 });
 
@@ -90,7 +90,7 @@ const pr = (number: number, title: string, text: string | null, author = "alan")
 describe("changelog entries", () => {
   const prs = [
     pr(12, "docs: Explain the format", body("Documentation", "None")),
-    pr(10, "feat(format): Add better formatting", body("Format", "Formatting is now stable.\n\nSee the format reference.")),
+    pr(10, "feat(reader): Add better formatting", body("Format", "Formatting is now stable.\n\nSee the format reference.")),
     pr(11, "feat(okb)!: Rename a flag", body("CLI", "`--old` is now `--new`.", "Scripts that pass `--old` must change.")),
     pr(13, "chore(deps): Bump yaml", "Bumps yaml.", "dependabot[bot]"),
   ];
@@ -105,7 +105,7 @@ describe("changelog entries", () => {
     const out = renderPrs(prs);
     const headings = out.split("\n").filter((l) => l.startsWith("#### "));
     assert.deepEqual(headings, ["#### Breaking changes", "#### CLI", "#### Format", "#### Documentation", "#### Dependencies"]);
-    assert.match(out, /^- feat\(format\): Add better formatting \(\[#10\]\(https:\/\/github.com\/o\/r\/pull\/10\), \[@alan\]\(https:\/\/github.com\/alan\)\)\n {2}Formatting is now stable\.\n\n {2}See the format reference\.$/m);
+    assert.match(out, /^- feat\(reader\): Add better formatting \(\[#10\]\(https:\/\/github.com\/o\/r\/pull\/10\), \[@alan\]\(https:\/\/github.com\/alan\)\)\n {2}Formatting is now stable\.\n\n {2}See the format reference\.$/m);
     assert.match(out, /#### Breaking changes\n\n- feat\(okb\)!: Rename a flag \(\[#11\]\([^)]+\)\)\n {2}Scripts that pass `--old` must change\./);
     assert.match(out, /- docs: Explain the format \(\[#12\]\([^)]+\), \[@alan\]\([^)]+\)\)\n/);
     assert.match(out, /\[@dependabot\]\(https:\/\/github.com\/dependabot\)/);

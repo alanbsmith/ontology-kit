@@ -20,10 +20,10 @@ const PUBLIC_EXPORTS = [
   "literalValues", "nameOrText", "nodeLabel", "rawTokens", "relType", "slug", "stripAccents", "tokens",
 ];
 
-describe("public file-format API (@ontology-kit/format)", () => {
+describe("public file-format API (@ontology-kit/reader)", () => {
   let work = "";
   before(() => {
-    work = mkdtempSync(join(tmpdir(), "okb-format-api-"));
+    work = mkdtempSync(join(tmpdir(), "okb-reader-api-"));
   });
   after(() => rmSync(work, { recursive: true, force: true }));
 
@@ -105,9 +105,9 @@ describe("public file-format API (@ontology-kit/format)", () => {
     const doc = readFileSync(FORMAT_DOC, "utf8");
     const block = doc.match(/```ts\n([\s\S]*?)```/)?.[1];
     assert.ok(block, "FORMAT.md has a ts usage example");
-    assert.ok(block.includes('"@ontology-kit/format"') && block.includes('"./my-ontology"'));
+    assert.ok(block.includes('"@ontology-kit/reader"') && block.includes('"./my-ontology"'));
     const script = block
-      .replace('"@ontology-kit/format"', JSON.stringify(pathToFileURL(join(PKG, "src", "index.ts")).href))
+      .replace('"@ontology-kit/reader"', JSON.stringify(pathToFileURL(join(PKG, "src", "index.ts")).href))
       .replace('"./my-ontology"', JSON.stringify(COFFEE));
     const file = join(work, "example.mts");
     writeFileSync(file, script);

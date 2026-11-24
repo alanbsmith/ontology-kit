@@ -1,4 +1,4 @@
-/** Loading, saving and navigating an ontology folder (okb.json + nodes.jsonl + edges.jsonl; see layout.ts). Part of @ontology-kit/format. */
+/** Loading, saving and navigating an ontology folder (okb.json + nodes.jsonl + edges.jsonl; see layout.ts). Part of @ontology-kit/reader. */
 import { createHash, randomBytes } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";

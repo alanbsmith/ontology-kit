@@ -5,7 +5,7 @@
  * answers the questions; nothing here is enforced.
  */
 import { MetaKB } from "./metakb.ts";
-import { type Ontology } from "@ontology-kit/format";
+import { type Ontology } from "@ontology-kit/reader";
 import { questionFamilies } from "./families.ts";
 import * as naming from "./naming.ts";
 

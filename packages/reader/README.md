@@ -1,15 +1,15 @@
-# @ontology-kit/format
+# @ontology-kit/reader
 
 Read the file format of [Ontology Kit](https://ontology-kit.dev): an ontology folder of `okb.json`, `nodes.jsonl` and `edges.jsonl`. It gives another tool the typed nodes and edges, loading (with conversion of older formats), the edge types the format reserves and the relationship values, without the `okb` command line, the meta-KB or the skills.
 
 Needs **Node.js 24+**. It has no runtime dependencies.
 
 ```bash
-npm install @ontology-kit/format
+npm install @ontology-kit/reader
 ```
 
 ```ts
-import { Ontology, isRelationship, isStructuralEdgeType } from "@ontology-kit/format";
+import { Ontology, isRelationship, isStructuralEdgeType } from "@ontology-kit/reader";
 
 const ont = Ontology.load("./my-ontology");
 

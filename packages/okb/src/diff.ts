@@ -5,7 +5,7 @@
  * identity and shows as a rename. `createdAt`/`updatedAt` are ignored: a node whose only change is
  * a stamp isn't a change in the knowledge (it's counted in `summary.stampOnly`).
  */
-import { NODE_TYPES, edgeProps, nodeLabel, type GraphEdge, type OkbNode, type Ontology } from "@ontology-kit/format";
+import { NODE_TYPES, edgeProps, nodeLabel, type GraphEdge, type OkbNode, type Ontology } from "@ontology-kit/reader";
 
 /** One changed field. `path` is the raw key path; `field` is how it reads (slot ids become slot names). */
 export interface FieldChange {

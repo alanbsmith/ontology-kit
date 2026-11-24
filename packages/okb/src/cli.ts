@@ -5,7 +5,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { duplicateQuotes, loadSourcePages, runChecks } from "./checks.ts";
 import { MetaKB, explainName } from "./metakb.ts";
-import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNode } from "@ontology-kit/format";
+import { OkbError, Ontology, type CompetencyQuestionNode, type DesignDecisionNode } from "@ontology-kit/reader";
 import * as ops from "./ops.ts";
 import { c, explain, formatCheck, formatFindings, listExplainable, mermaid, show, stepGuide, SYMBOL, tree } from "./render.ts";
 import { exportGraph, toCypher } from "./export.ts";

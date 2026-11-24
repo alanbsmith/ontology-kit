@@ -16,7 +16,7 @@ The title is a Conventional Commit, like `feat(okb): Add a command to list orpha
 ## The problem it solves
 
 <!--
-Required for anything a person using okb, the skills or @ontology-kit/format will see or use. For internal work with no user-facing effect, write "Not user-facing" and say who it helps instead (maintainers, contributors).
+Required for anything a person using okb, the skills or @ontology-kit/reader will see or use. For internal work with no user-facing effect, write "Not user-facing" and say who it helps instead (maintainers, contributors).
 
 - Who hits the problem, and when? Describe a real situation, not a possibility.
 - What do they do today, and what goes wrong, costs too much or can't be done?
