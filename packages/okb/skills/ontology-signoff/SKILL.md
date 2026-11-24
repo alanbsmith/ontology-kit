@@ -5,7 +5,7 @@ description: Use when a subject-matter expert or a pull request reviewer has to 
 
 # Sign off on a KB
 
-**Version 2.6.2.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.3.** It should match the meta-KB version that `okb version` prints.
 
 For the person who knows the subject but may not know git, JSON or the `okb` command: a subject-matter expert (SME) whose documents an agent turned into rules, or a teammate reviewing a pull request that changes a KB. The job is to put each rule in front of them with the words it came from, get a decision, and keep a record. You run the commands. They answer questions.
 
@@ -52,7 +52,7 @@ Scope: everything.
 3. **Walk the problem items, one at a time**, in this order: the checker could not support it (`UNSUPPORTED`), reworded by the checker and not yet approved (`OVERREACH`), not checked at all, no quote, quote missing from the source. For each item use the decision prompt below.
 
 4. **Record the decision.** What "record" means depends on the item:
-   - A reworded rule, the person says yes to the corrected wording: run the approval command for that one rule, print it, and say what it did. If the new wording uses a different MUST, SHOULD or MAY from the original, say so before asking: okb has already changed the rule's stored strength to match, and the original wording is shown beside it.
+   - A reworded rule, the person says yes to the corrected wording: run the approval command for that one rule, print it, and say what it did. If the new wording uses a different MUST, SHOULD or MAY from the original, say so before asking, and say which strength the rule is stored with now (okb changes the stored strength to match only when the corrected statement names exactly one of MUST, MUST NOT, SHOULD, SHOULD NOT or MAY, and it differs from the stored one; with no keyword, or two different ones, it leaves the strength as it was, so check it by hand before approving). The original wording is shown beside it.
 
      ```bash
      okb verify <rule id> --approve

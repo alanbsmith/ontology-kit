@@ -5,7 +5,7 @@ description: Use when someone looks after an existing okb knowledge base that is
 
 # Maintain an existing KB
 
-**Version 2.6.2.** It should match the meta-KB version that `okb version` prints.
+**Version 2.6.3.** It should match the meta-KB version that `okb version` prints.
 
 For the person (or the agent working for them) who looks after a KB that was built once and is now kept in git with `okb check` in CI. It works out what is open, does the routine update, and finishes with the pull request text. It adds no commands of its own: everything goes through `okb`. The same sequences, with their output, are in the maintainer guide (<https://ontology-kit.dev/build/maintaining/>) and the CI guide (<https://ontology-kit.dev/build/check-in-ci/>); read those when a step here is not enough.
 

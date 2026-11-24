@@ -95,3 +95,7 @@ The v1 meta-KB (`build_meta_kb.py`) was rebuilt from scratch in v2. Main differe
 ### v2.6.2
 
 - **A corrected rule keeps its strength in step.** When `okb verify --status OVERREACH --corrected` gives a rule a statement with a different MUST, SHOULD or MAY, okb now changes the rule's `modality` to match and says so. `ontology-coach` and `ontology-signoff` tell the person who approves it that the strength changed, and replace the earlier advice to remove and re-add the rule, which would have lost its links. No rule changed.
+
+### v2.6.3
+
+- **The skills say when okb changes a rule's strength.** `ontology-coach` and `ontology-signoff` said okb always changes a rule's `modality` to match a corrected statement. It does so only when the statement names exactly one of MUST, MUST NOT, SHOULD, SHOULD NOT or MAY and it differs; with none, or two different ones, it leaves the strength as it was. The skills now say that, and tell the approver to check the stored strength by hand in that case. `okb verify` also reads `MUST NOT` and `SHOULD NOT` split across a line break as one keyword. No rule changed.
