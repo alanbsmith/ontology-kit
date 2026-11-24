@@ -27,7 +27,7 @@ const links = ont.edges.filter((e) => !isStructuralEdgeType(e.type));
 console.log(`${links.length} relationship edges`);
 ```
 
-This package reads. To change an ontology, use the [`okb`](https://www.npmjs.com/package/@ontology-kit/okb) command. The exports follow semver, and `docs/FORMAT.md` lists them and says what counts as a breaking change. Before 1.0 any release may break them.
+This package reads. To change an ontology, use the [`okb`](https://www.npmjs.com/package/@ontology-kit/okb) command: it keeps ids, provenance and locking consistent, and the write methods on `Ontology` are internal and may change in any release. The exports follow semver, and `docs/FORMAT.md` lists them and says what counts as a breaking change. Before 1.0 any release may break them.
 
 **Docs: [the format reference](https://ontology-kit.dev/reference/format/)**. The source is at [github.com/alanbsmith/ontology-kit](https://github.com/alanbsmith/ontology-kit).
 
