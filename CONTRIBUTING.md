@@ -188,7 +188,7 @@ echo "feat(reader): Add better formatting" | pnpm exec commitlint
 
 | Scope          | Covers                                                         |
 | -------------- | -------------------------------------------------------------- |
-| `format`       | `@ontology-kit/reader`, the file-format reader                 |
+| `reader`       | `@ontology-kit/reader`, the file-format reader                 |
 | `okb`          | `@ontology-kit/okb`, the CLI                                   |
 | `ontology-kit` | the unscoped wrapper package                                   |
 | `meta-kb`      | the method, rules, glossary and decision guides                |
