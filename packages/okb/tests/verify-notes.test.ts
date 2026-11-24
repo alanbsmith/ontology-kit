@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { after, before, describe, it } from "node:test";
 import { Ontology, OkbError, type GraphEdge, type OkbNode } from "@ontology-kit/format";
 import { verify } from "../src/provenance.ts";
-import { suggestNote } from "../src/verifynote.ts";
+import { statedModality, suggestNote } from "../src/verifynote.ts";
 
 const CLI = join(dirname(dirname(fileURLToPath(import.meta.url))), "src", "cli.ts");
 
@@ -21,6 +21,19 @@ function fixture(statement = "A Button MUST be at least 44px tall."): Ontology {
   const edges: GraphEdge[] = [{ from: "rule.size", type: "GOVERNS", to: "c.button" }, { from: "rule.size", type: "CITES", to: "loc.a" }];
   return Ontology.fromData(nodes, edges, { name: "T" });
 }
+
+describe("statedModality", () => {
+  it("reads a keyword that is split across a line break", () => {
+    assert.equal(statedModality("A Button MUST\nNOT be grey."), "MUST_NOT");
+    assert.equal(statedModality("A Button SHOULD   NOT be grey."), "SHOULD_NOT");
+  });
+  it("names the keyword, or nothing when there are none or two", () => {
+    assert.equal(statedModality("A Button SHOULD be grey."), "SHOULD");
+    assert.equal(statedModality("A Button should be grey."), null);
+    assert.equal(statedModality("A Button MAY or SHOULD be grey."), null);
+  });
+  it("a suggested note treats a split MUST NOT as one keyword", () => assert.equal(suggestNote("A Button MUST NOT be grey.", "A Button MUST\nNOT be blue."), 'replaced "grey" with "blue"'));
+});
 
 describe("suggestNote", () => {
   it("names a narrowed modality", () => assert.equal(suggestNote("A Button MUST be big.", "A Button SHOULD be big."), "narrowed MUST to SHOULD"));

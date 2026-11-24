@@ -3,7 +3,8 @@
 // stores anything.
 import type { Modality } from "@ontology-kit/format";
 
-const MODALITY = /\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b/gi;
+const MODALITY = /\b(MUST\s+NOT|SHOULD\s+NOT|MUST|SHOULD|MAY)\b/gi;
+const keyword = (m: string): string => m.toUpperCase().replace(/\s+/g, " ");
 const NUMBER = /\d+(?:[.,]\d+)*/g;
 const WORD = /[\p{L}'-]+/gu;
 /** Strongest first, so a drop in rank reads as narrowing. */
@@ -38,8 +39,8 @@ function plainWords(text: string): string[] {
 export function suggestNote(original: string, corrected: string): string | null {
   const parts: string[] = [];
 
-  const m0 = found(original, MODALITY).map((m) => m.toUpperCase());
-  const m1 = found(corrected, MODALITY).map((m) => m.toUpperCase());
+  const m0 = found(original, MODALITY).map(keyword);
+  const m1 = found(corrected, MODALITY).map(keyword);
   if (m0.length && m0.length === m1.length) {
     const i = m0.findIndex((m, k) => m !== m1[k]);
     if (i >= 0) {
@@ -78,7 +79,7 @@ export function suggestNote(original: string, corrected: string): string | null 
  * when it states none or more than one. Lower-case "may" or "should" is ordinary prose and doesn't count.
  */
 export function statedModality(statement: string): Modality | null {
-  const found = new Set([...statement.matchAll(/\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b/g)].map((m) => m[1].replace(" ", "_")));
+  const found = new Set([...statement.matchAll(/\b(MUST\s+NOT|SHOULD\s+NOT|MUST|SHOULD|MAY)\b/g)].map((m) => m[1].replace(/\s+/g, "_")));
   return found.size === 1 ? ([...found][0] as Modality) : null;
 }
 
