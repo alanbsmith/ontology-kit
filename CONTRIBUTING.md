@@ -311,6 +311,38 @@ If npm lets you configure the trusted publisher before the package exists, skip 
 
 After the first release, mark the bootstrap versions as superseded, since they were published from a laptop and have no provenance: `npm deprecate "@ontology-kit/format@0.1.0-bootstrap.0" "Superseded by 0.1.0"`, and the same for `@ontology-kit/okb` and `ontology-kit`. Before step 2, check that the unscoped name is free and passes npm's similar-name rule: `npm view ontology-kit` should say it is not found.
 
+### Publishing a new package
+
+The one-time setup above covers the first three packages. A package added later, such as `@ontology-kit/mcp`, follows the same path in the order below. The bootstrap comes before the release, because the release workflow can only publish a name that already exists on npm. A rename counts as a new package: follow these steps for the new name.
+
+1. **Add the package to the repo.** Create `packages/<folder>` with a publishable `package.json`: no `private`, the `engines` floor, `files`, the `publishConfig` pattern the other packages use, a `prepublishOnly` script that runs `node ../../scripts/publish-guard.ts` (so nobody publishes the folder by mistake), and the same `version` as the others. Then list the package everywhere the release path names the packages:
+   - `PACKAGES` in `scripts/release.ts`, which checks that every version matches.
+   - The pack step and the publish loop in `.github/workflows/release.yml`. The loop publishes in order, so put the package after the ones it depends on.
+   - The pack step and the install check in `.github/workflows/ci.yml`, and the packaging tests in `packages/okb/tests/`.
+   - A commit scope in `scripts/conventions.ts`, and a row in the scope table above.
+
+   Merge this change before the next step.
+
+2. **Check the name is free.** `npm view <name>` should say it is not found. A scoped name needs nothing more. For an unscoped name, also check npm's similar-name rule.
+3. **Choose the bootstrap version.** The packages release together at one version, so the new package's first version is the next release, for example 0.3.0. The bootstrap is that version with `-bootstrap.0`, here `0.3.0-bootstrap.0`. It sorts below the real release, and the `bootstrap` tag keeps it away from `latest`.
+4. **Publish the bootstrap by hand, once.** The owner does this, with 2FA, from a clone on Node 26. Set `version` to the bootstrap version in the new package's `package.json` only (don't commit it), then:
+
+   ```bash
+   pnpm install --frozen-lockfile
+   mkdir /tmp/okb-bootstrap
+   pnpm --filter <name> pack --pack-destination /tmp/okb-bootstrap
+   npm publish /tmp/okb-bootstrap/<tarball>.tgz --access public --tag bootstrap
+   git checkout -- packages/<folder>/package.json
+   ```
+
+   `<tarball>` is the file the pack step wrote: the package name without the `@`, with `/` as `-`, then the version, for example `ontology-kit-mcp-0.3.0-bootstrap.0.tgz`. Nothing installs the bootstrap, so it doesn't matter that the packages it depends on aren't published at that version yet.
+
+5. **Configure the trusted publisher.** On npmjs.com, open the new package's **Settings → Trusted Publisher → GitHub Actions** and enter repository owner `alanbsmith`, repository `ontology-kit`, workflow filename `release.yml` and environment `release`. Tick **Allow `npm publish`** and leave **Allow `npm dist-tag`** off, as in the one-time setup. The `release` environment and its tag protection already exist, so there is nothing to do on GitHub.
+6. **Release as usual.** Follow [Cutting a release](#cutting-a-release), with every package at the same version.
+7. **Clean up.** Deprecate the bootstrap, since it was published from a laptop and has no provenance: `npm deprecate "<name>@<version>-bootstrap.0" "Superseded by <version>"`. Then, on the package's **Settings → Publishing access**, choose "Require two-factor authentication and disallow tokens". If the new package replaces an old name, also deprecate the last published version of the old one: `npm deprecate "<old name>@<version>" "Renamed to <name>"`. It can't be unpublished while another published package depends on it.
+
+If npm lets you configure the trusted publisher before the package exists, skip steps 3 and 4.
+
 ## Before you commit
 
 Run these after every change. All of them must pass:
