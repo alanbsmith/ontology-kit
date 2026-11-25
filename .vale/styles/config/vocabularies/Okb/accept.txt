@@ -82,3 +82,4 @@ Dependabot
 husky
 Ajv
 uncited
+codeowners

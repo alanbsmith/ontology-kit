@@ -1,6 +1,6 @@
 {
   "name": "ontology-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "Installs the okb command from Ontology Kit, a toolkit for building knowledge graphs with guardrails. Same as @ontology-kit/okb.",
   "homepage": "https://ontology-kit.dev",
