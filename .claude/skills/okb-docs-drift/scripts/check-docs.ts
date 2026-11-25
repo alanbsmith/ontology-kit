@@ -13,12 +13,15 @@
  *   - node and edge types in docs/FORMAT.md tables, checked against packages/okb/meta-kb/src/format.yaml
  *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
  *     checked against packages/okb/meta-kb/data/manifest.json
- *   - brain/: the living files (README, now, open-questions, milestones/*.md) get every check above. Decision
+ *   - brain/: the living files (every brain/*.md and brain/milestones/*.md) get every check above. Decision
  *     files (brain/decisions/*.md) keep their text, so a path in one that no longer exists is only a warning.
+ *     A decision still marked `status: proposed` once it's on main (DRIFT_MAIN_REF, default origin/main) is a
+ *     warning too: set it to accepted when its PR merges.
  * Exit code 1 if anything but a warning is found. It can't judge prose; the skill covers that.
  * DRIFT_ROOT points the check at another tree (the tests use a temporary copy).
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
@@ -37,7 +40,7 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, PKG, "examples"))
 const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 /** The brain's living files (decisions are checked separately, as warnings). */
-const BRAIN_DOCS = ["brain/README.md", "brain/now.md", "brain/open-questions.md", ...(existsSync(join(ROOT, "brain/milestones")) ? readdirSync(join(ROOT, "brain/milestones")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/milestones/${f}`) : [])];
+const BRAIN_DOCS = [...(existsSync(join(ROOT, "brain")) ? readdirSync(join(ROOT, "brain")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/${f}`) : []), ...(existsSync(join(ROOT, "brain/milestones")) ? readdirSync(join(ROOT, "brain/milestones")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/milestones/${f}`) : [])];
 /** Decision records keep their text (only typos and supersession front matter change), so a stale path in one is a warning, not a failure. */
 const BRAIN_DECISIONS = existsSync(join(ROOT, "brain/decisions")) ? readdirSync(join(ROOT, "brain/decisions")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/decisions/${f}`) : [];
 const isDecision = (f: string) => /^brain\/decisions\/[^/]+\.md$/.test(f);
@@ -56,7 +59,7 @@ const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 interface Problem {
   file: string;
   line: number;
-  kind: "command" | "flag" | "npm-script" | "path" | "rule" | "format-type" | "count" | "version";
+  kind: "command" | "flag" | "npm-script" | "path" | "rule" | "format-type" | "count" | "version" | "status";
   message: string;
   /** A warning is reported but doesn't change the exit code. */
   severity: "error" | "warning";
@@ -117,7 +120,17 @@ const REPO_PATH = /(?<![\w./-])((?:packages\/[\w-]+\/)?(?:src|docs|meta-kb|tests
 function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
   // A decision file is only checked for paths, and what it finds is a warning.
   const found = scan(file, cli, rules, fmt, scripts);
-  return isDecision(file) ? found.filter((p) => p.kind === "path").map((p) => ({ ...p, severity: "warning" as const })) : found;
+  if (!isDecision(file)) return found;
+  const warnings = found.filter((p) => p.kind === "path").map((p) => ({ ...p, severity: "warning" as const }));
+  if (/^status:\s*proposed\s*$/m.test(read(file)) && onMain(file))
+    warnings.push({ file, line: 0, kind: "status", severity: "warning", message: `Still 'status: proposed' on ${MAIN_REF}; set it to accepted now that its PR has merged.` });
+  return warnings;
+}
+
+/** The ref that counts as merged. Outside a git checkout, or if the ref is missing, nothing counts as merged. */
+const MAIN_REF = process.env.DRIFT_MAIN_REF ?? "origin/main";
+function onMain(file: string): boolean {
+  return spawnSync("git", ["-C", ROOT, "cat-file", "-e", `${MAIN_REF}:${file}`], { stdio: "ignore" }).status === 0;
 }
 
 function scan(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
@@ -222,6 +235,6 @@ if (json) console.log(JSON.stringify(problems, null, 2));
 else if (!problems.length) console.log("No drift found in the checked docs.");
 else {
   for (const p of problems) console.log(`${p.file}:${p.line}  ${p.severity === "warning" ? "warning " : ""}[${p.kind}] ${p.message}`);
-  if (!problems.some((p) => p.severity === "error")) console.log("Only warnings (old decisions name paths that have moved); nothing to fix.");
+  if (!problems.some((p) => p.severity === "error")) console.log("Only warnings (old decisions name paths that have moved, or are still marked proposed); nothing that fails the check.");
 }
 process.exitCode = problems.some((p) => p.severity === "error") ? 1 : 0;
