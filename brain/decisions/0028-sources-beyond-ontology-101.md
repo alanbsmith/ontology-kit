@@ -1,6 +1,6 @@
 ---
 summary: The meta-KB grows beyond Ontology 101, from open sources first; proprietary books inspire authored rules but are never quoted.
-status: proposed
+status: accepted
 decided-by: owner, on a recommendation
 date: 2026-11-25
 updated: 2026-11-25

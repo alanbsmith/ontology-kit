@@ -1,6 +1,6 @@
 ---
 summary: Goal 6 means an evaluation runner can connect a model, the eval questions and the KB.
-status: proposed
+status: accepted
 decided-by: owner
 date: 2026-11-25
 updated: 2026-11-25

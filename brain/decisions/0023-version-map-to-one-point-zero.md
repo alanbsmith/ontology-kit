@@ -1,6 +1,6 @@
 ---
 summary: 0.3.0 Serving, 0.4.0 Team guardrails and cross-KB references, 0.5.0 Extraction, 0.6.0 Subject-matter experts, 0.7 and 0.8 soak, then 1.0.
-status: proposed
+status: accepted
 decided-by: owner, on a recommendation
 date: 2026-11-24
 updated: 2026-11-25
