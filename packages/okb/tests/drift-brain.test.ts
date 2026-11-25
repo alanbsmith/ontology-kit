@@ -89,4 +89,21 @@ describe("docs drift check on brain/", () => {
     assert.equal(r.code, 0, r.out);
     assert.doesNotMatch(r.out, /nonesuch/);
   });
+  it("checks every top-level brain file, not only the fixed ones", () => {
+    put("brain/related-projects.md", "See `docs/MOVED.md`.\n");
+    assert.equal(drift().code, 1);
+  });
+
+  it("warns about a proposed decision that is already on main", () => {
+    put("brain/decisions/0002-y.md", "---\nstatus: proposed\n---\n\nWe chose y.\n");
+    const git = (...a: string[]) => spawnSync("git", ["-C", root, ...a], { encoding: "utf8" });
+    git("init", "-q", "-b", "main");
+    git("add", "-A");
+    git("-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "x");
+    const before = spawnSync("node", [SCRIPT], { env: { ...process.env, DRIFT_ROOT: root, DRIFT_MAIN_REF: "nonesuch" }, encoding: "utf8" });
+    assert.doesNotMatch(before.stdout, /\[status\]/);
+    const r = spawnSync("node", [SCRIPT], { env: { ...process.env, DRIFT_ROOT: root, DRIFT_MAIN_REF: "main" }, encoding: "utf8" });
+    assert.equal(r.status, 0, r.stdout);
+    assert.match(r.stdout, /brain\/decisions\/0002-y\.md:0 {2}warning \[status\] Still 'status: proposed' on main/);
+  });
 });

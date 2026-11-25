@@ -1,6 +1,6 @@
 ---
 summary: Where Ontology Kit stands and why the current focus is the focus.
-updated: 2026-11-24
+updated: 2026-11-25
 ---
 
 # Now
@@ -9,13 +9,13 @@ updated: 2026-11-24
 
 ## Focus
 
-The [Create a Project Brain](milestones/create-a-project-brain.md) milestone ([on GitHub](https://github.com/alanbsmith/ontology-kit/milestone/10), tracker #152) is the active work. It adds this `brain/` folder (#149), records the reasons behind decisions that have none yet (#150), and adds a drift check so the brain's paths don't go stale (#151). Work lands on the `project-brain` integration branch and the owner merges the milestone to `main`.
+Planning the road to 1.0. The plan is in [milestones/road-to-1-0.md](milestones/road-to-1-0.md): six user goals (decisions 0021 to 0030 in [decisions/](decisions/)), then 0.3.0 Serving a KB, 0.4.0 Team guardrails with cross-KB references, 0.5.0 Component docs extraction with the tokens and icons KBs, 0.6.0 Subject-matter experts, a soak of 0.7.0 and 0.8.0, and 1.0.0. The owner approved it, and GitHub matches it: each milestone's title carries its version, and the Soak milestone exists.
 
-Before it, [Maintaining a KB](milestones/maintaining-a-kb.md) merged as #140 and shipped in 0.2.0: `okb diff`, `okb check`, `okb pin`, `okb release`, `okb docs`, `okb source refresh` and the maintainer and sign-off skills. Three follow-up fixes and spikes from that milestone are still open (#142, #143, #145).
+Before it, the [Maintaining a KB](milestones/maintaining-a-kb.md) work shipped in 0.2.0. The Create a Project Brain milestone is done and merged.
 
 ## Next
 
-Not decided. The next milestone in #105's order is Serving a KB. How versions map to milestones is an [open question](open-questions.md#what-versions-do-the-milestones-map-to-on-the-way-to-10).
+Start 0.3.0 with the CLI command-table refactor (#8), the prerelease infrastructure (#129), spike #143 and benchmark #29. Open questions that gate 0.3.0 are in [open-questions.md](open-questions.md).
 
 ## Why this order
 
