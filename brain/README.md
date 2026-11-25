@@ -9,21 +9,22 @@ The brain holds the **why** behind Ontology Kit: why it's built this way, why th
 
 ## Where things live
 
-| You need                                                 | Look in                                                                                                                                                                              |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| What we're building, what 1.0 means, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post ([decision 0031](decisions/0031-vision-in-105-plan-in-the-brain.md))           |
-| The plan and order to 1.0                                | [milestones/road-to-1-0.md](milestones/road-to-1-0.md)                                                                                                                               |
-| What's planned, in progress or done                      | The [Ontology Kit project board](https://github.com/users/alanbsmith/projects/4) and the [milestones](https://github.com/alanbsmith/ontology-kit/milestones) (read them live, below) |
-| How to change the code, commands, layout                 | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                                                                  |
-| How to write an issue, a commit or a PR                  | [CONTRIBUTING.md, "Issues"](../CONTRIBUTING.md#issues) and ["Commits and pull requests"](../CONTRIBUTING.md#commits-and-pull-requests)                                               |
-| What shipped in each release                             | [docs/CHANGELOG.md](../docs/CHANGELOG.md)                                                                                                                                            |
-| What 0.x and 1.0 promise                                 | [CONTRIBUTING.md, "What 0.x means"](../CONTRIBUTING.md#what-0x-means)                                                                                                                |
-| Why something is the way it is                           | [decisions/](decisions/) in this folder                                                                                                                                              |
-| What's undecided or deferred                             | [open-questions.md](open-questions.md)                                                                                                                                               |
-| Where things stand right now                             | [now.md](now.md)                                                                                                                                                                     |
-| Other projects, and what's private                       | [related-projects.md](related-projects.md)                                                                                                                                           |
-| The project's own jargon                                 | [glossary.md](glossary.md)                                                                                                                                                           |
-| Why a milestone exists and its lessons                   | [milestones/](milestones/)                                                                                                                                                           |
+| You need                                 | Look in                                                                                                                                                                              |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post ([decision 0031](decisions/0031-vision-in-105-plan-in-the-brain.md))           |
+| What 1.0 means                           | [decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md) and [decision 0022](decisions/0022-one-point-zero-conditions-and-the-soak.md)                                    |
+| The plan and order to 1.0                | [milestones/road-to-1-0.md](milestones/road-to-1-0.md)                                                                                                                               |
+| What's planned, in progress or done      | The [Ontology Kit project board](https://github.com/users/alanbsmith/projects/4) and the [milestones](https://github.com/alanbsmith/ontology-kit/milestones) (read them live, below) |
+| How to change the code, commands, layout | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                                                                  |
+| How to write an issue, a commit or a PR  | [CONTRIBUTING.md, "Issues"](../CONTRIBUTING.md#issues) and ["Commits and pull requests"](../CONTRIBUTING.md#commits-and-pull-requests)                                               |
+| What shipped in each release             | [docs/CHANGELOG.md](../docs/CHANGELOG.md)                                                                                                                                            |
+| What 0.x and 1.0 promise                 | [CONTRIBUTING.md, "What 0.x means"](../CONTRIBUTING.md#what-0x-means)                                                                                                                |
+| Why something is the way it is           | [decisions/](decisions/) in this folder                                                                                                                                              |
+| What's undecided or deferred             | [open-questions.md](open-questions.md)                                                                                                                                               |
+| Where things stand right now             | [now.md](now.md)                                                                                                                                                                     |
+| Other projects, and what's private       | [related-projects.md](related-projects.md)                                                                                                                                           |
+| The project's own jargon                 | [glossary.md](glossary.md)                                                                                                                                                           |
+| Why a milestone exists and its lessons   | [milestones/](milestones/)                                                                                                                                                           |
 
 `docs/DECISIONS.md` is something else: the meta-KB's generated decision guides for people building an ontology.
 
