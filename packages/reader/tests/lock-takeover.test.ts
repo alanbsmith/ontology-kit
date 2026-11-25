@@ -8,7 +8,7 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { hostname, tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, it } from "node:test";
@@ -193,5 +193,107 @@ describe("stale-lock takeover with several contenders", () => {
     utimesSync(lockPath(), old, old);
     assert.throws(() => acquireLock(dir, 100), OkbError);
     assert.deepEqual(leftovers(), []);
+  });
+
+  describe("abandoned and stuck claims", () => {
+    const STALE_RAW = JSON.stringify({ pid: DEAD_PID, host: hostname(), token: "stale" });
+    const claimId = () => createHash("sha1").update(STALE_RAW).digest("hex").slice(0, 16);
+    const claimFile = (n: number) => join(dir, `${LOCK_FILE}.claim-${claimId()}-${n}`);
+    const ageBy = (file: string, ms: number) => utimesSync(file, new Date(clock - ms), new Date(clock - ms));
+    const dead = { pid: DEAD_PID, host: hostname(), token: "crashed" };
+
+    it("waits on a fresh empty claim, and leaves it alone", () => {
+      writeStale();
+      writeFileSync(claimFile(0), ""); // the holder may be between creating it and writing it
+      ageBy(claimFile(0), 5_000);
+      assert.throws(() => acquireLock(dir, 5_000), OkbError);
+      assert.equal(existsSync(claimFile(0)), true);
+      assert.equal(existsSync(lockPath()), true);
+    });
+
+    it("steps over an empty claim once it is 30 seconds old", () => {
+      writeStale();
+      writeFileSync(claimFile(0), "");
+      ageBy(claimFile(0), 31_000);
+      const release = acquireLock(dir, 200);
+      assert.deepEqual(leftovers(), []);
+      release();
+    });
+
+    it("waits out the 30 seconds when the empty claim is fresh, then proceeds", () => {
+      writeStale();
+      writeFileSync(claimFile(0), "");
+      ageBy(claimFile(0), 0);
+      const start = clock;
+      const release = acquireLock(dir, 60_000); // fake time: sleeps advance the clock, nothing really waits
+      assert.ok(clock - start >= 30_000 && clock - start < 31_000, `waited ${clock - start} ms`);
+      assert.deepEqual(leftovers(), []);
+      release();
+    });
+
+    it("steps over a garbled claim and one from another machine once they are 30 seconds old", () => {
+      writeStale();
+      writeFileSync(claimFile(0), "not json {");
+      writeFileSync(claimFile(1), JSON.stringify({ pid: 1, host: "some-other-host", token: "far" }));
+      ageBy(claimFile(0), 31_000);
+      ageBy(claimFile(1), 31_000);
+      const release = acquireLock(dir, 200);
+      assert.deepEqual(leftovers(), []);
+      release();
+    });
+
+    it("never treats a claim owned by a live local process as abandoned, however old", () => {
+      writeStale();
+      writeFileSync(claimFile(0), JSON.stringify({ pid: process.pid, host: hostname(), token: "busy" }));
+      ageBy(claimFile(0), 60 * 60_000);
+      assert.throws(() => acquireLock(dir, 200), OkbError);
+      assert.equal(existsSync(claimFile(0)), true);
+      assert.equal(existsSync(lockPath()), true);
+    });
+
+    it("never treats a claim it can't read as abandoned", { skip: process.getuid?.() === 0 }, () => {
+      writeStale();
+      writeFileSync(claimFile(0), JSON.stringify(dead));
+      ageBy(claimFile(0), 60 * 60_000);
+      chmodSync(claimFile(0), 0o000);
+      try {
+        assert.throws(() => acquireLock(dir, 200), OkbError);
+        assert.equal(existsSync(claimFile(0)), true);
+        assert.equal(existsSync(lockPath()), true);
+      } finally {
+        chmodSync(claimFile(0), 0o600);
+      }
+    });
+
+    it("removes every abandoned claim it stepped over once the stale lock is gone", () => {
+      writeStale();
+      for (const n of [0, 1, 2]) writeFileSync(claimFile(n), JSON.stringify(dead));
+      const release = acquireLock(dir, 200);
+      assert.deepEqual(leftovers(), []);
+      release();
+    });
+
+    it("leaves abandoned claims in place when it backs off behind a live one", () => {
+      // Deleting claim 0 would free its number for a new contender to claim the same stale lock beside claim 1's holder.
+      writeStale();
+      writeFileSync(claimFile(0), JSON.stringify(dead));
+      writeFileSync(claimFile(1), JSON.stringify({ pid: process.pid, host: hostname(), token: "busy" }));
+      assert.throws(() => acquireLock(dir, 200), OkbError);
+      assert.deepEqual(readdirSync(dir).filter((f) => f.includes(".claim-")).sort(), [`${LOCK_FILE}.claim-${claimId()}-0`, `${LOCK_FILE}.claim-${claimId()}-1`]);
+    });
+
+    it("stops with an error naming the files when every claim number is abandoned", () => {
+      writeStale();
+      for (let n = 0; n < 20; n++) writeFileSync(claimFile(n), JSON.stringify(dead));
+      assert.throws(
+        () => acquireLock(dir, 5_000),
+        (e: Error) =>
+          e instanceof OkbError &&
+          e.message.includes(`${LOCK_FILE}.claim-${claimId()}-0`) &&
+          e.message.includes(`${LOCK_FILE}.claim-${claimId()}-19`) &&
+          /delete them/.test(e.message),
+      );
+      assert.equal(readdirSync(dir).filter((f) => f.includes(".claim-")).length, 20, "nothing is deleted behind the user's back");
+    });
   });
 });

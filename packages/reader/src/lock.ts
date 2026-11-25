@@ -6,13 +6,19 @@
 import { createHash, randomBytes } from "node:crypto";
 import { existsSync, readFileSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { OkbError } from "./errors.ts";
 
 export const LOCK_FILE = ".okb.lock";
 const WAIT_MS = 10_000;
 /** A lock this old is stale whatever its owner (another machine on a shared folder, a reused process id). */
 const MAX_AGE_MS = 10 * 60_000;
+/**
+ * A claim is held for milliseconds (one read, one check, one delete), so one this old is abandoned whoever owns it: the
+ * empty file a crash leaves between its creation and its write, one that can't be parsed, or one from another machine.
+ * Only a claim whose owner is a live process on this machine is never old enough.
+ */
+const CLAIM_MAX_AGE_MS = 30_000;
 /** How many abandoned claims on one stale lock a contender steps over before it gives up and waits. */
 const MAX_CLAIMS = 20;
 
@@ -58,15 +64,16 @@ function alive(pid: number): boolean {
 /**
  * The lock's owner is gone: a crashed command (same machine, process not running), or, when the owner can't be
  * checked (another machine on a shared folder, a lock no one can read), a lock older than ten minutes.
- * A command still running on this machine keeps its lock however long it takes.
+ * A command still running on this machine keeps its lock however long it takes. `maxAgeMs` is the age that counts as
+ * stale when the owner can't be checked (ten minutes for a lock, a few seconds' worth of work for a claim).
  */
-function isStale(path: string): boolean {
+function isStale(path: string, maxAgeMs = MAX_AGE_MS): boolean {
   const { owner, unreadable } = readOwner(path);
   if (unreadable) return false; // not knowing who holds it is no proof that nobody does
   const mine = Boolean(owner && owner.host === hostname() && Number.isInteger(owner.pid));
   if (mine) return !alive(owner!.pid);
   try {
-    return testSeam.now() - statSync(path).mtimeMs > MAX_AGE_MS;
+    return testSeam.now() - statSync(path).mtimeMs > maxAgeMs;
   } catch {
     return false; // released while we looked
   }
@@ -90,17 +97,25 @@ export function isLocked(root: string): boolean {
  * command's fresh lock, and no moment exists with the spot empty and a lock being put back. The holder never creates
  * the real lock here; the caller does, with the same `wx` as everyone else, so exactly one contender wins it.
  *
- * A claim can be abandoned by a crash. It is judged like a lock (owner gone, or older than ten minutes), but never
- * deleted by someone else, since that would be the same race again. A contender that finds a stale claim moves on to
- * the next number (`-1`, `-2`, ...), which only one contender can create. The winner removes its own claim and the ones
- * it superseded once the stale lock is gone, and a lock token never comes back, so a claim for it can't matter again.
+ * A claim can be abandoned by a crash. It is judged like a lock (owner gone on this machine; a live local owner is never
+ * stale; one that can't be read is never stale), except that when the owner can't be checked (an empty or garbled
+ * claim, another machine) it counts as abandoned after 30 seconds instead of ten minutes, since a claim is only held for
+ * milliseconds. A claim is never deleted by someone else, since that would be the same race again. A contender that
+ * finds an abandoned claim moves on to the next number (`-1`, `-2`, ...), which only one contender can create. The
+ * winner removes its own claim and the ones it superseded once the stale lock is gone, and a lock token never comes
+ * back, so a claim for it can't matter again. Every early exit below happens while the stale lock still exists, so the
+ * superseded claims stay: deleting one would free its number for a new contender who could then claim the same stale
+ * lock beside the live claim holder. If all `MAX_CLAIMS` numbers are abandoned, the takeover stops with an error that
+ * names the files, so the user can delete them.
  *
  * What remains: a lock judged stale by age alone (another machine on a shared folder, or an owner no one can check) has
  * an owner that may still be running. If that owner releases its lock in the instant between the check and the delete,
  * and a third command creates a new lock in that instant, the delete removes the new lock. The same goes for two
- * contenders who both judge a long-held claim stale by age. Both need an owner on another machine that was silent for
- * ten minutes and then acts within microseconds of the takeover; a plain filesystem has no compare-and-delete to close
- * that. For a command on this machine, the owner's process id decides, and the race is closed.
+ * contenders who both judge a claim abandoned by age (30 seconds) while its holder, on another machine or with a
+ * garbled record, is merely very slow: both then claim the next number. That needs a holder stalled for over 30
+ * seconds in a millisecond step, or an owner on another machine silent for ten minutes that then acts within
+ * microseconds of the takeover; a plain filesystem has no compare-and-delete to close that. For a command on this
+ * machine, the owner's process id decides, and the race is closed.
  */
 function takeOver(path: string, seen: string, me: Owner): boolean {
   const id = createHash("sha1").update(seen).digest("hex").slice(0, 16);
@@ -113,11 +128,16 @@ function takeOver(path: string, seen: string, me: Owner): boolean {
       claim = candidate;
     } catch (e) {
       if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e;
-      if (!isStale(candidate)) return false; // another contender is taking this lock over right now
+      if (!isStale(candidate, CLAIM_MAX_AGE_MS)) return false; // another contender is taking this lock over right now
       superseded.push(candidate);
     }
   }
-  if (!claim) return false;
+  if (!claim) {
+    throw new OkbError(
+      `Can't take over the stale lock ${path}: ${superseded.length} leftover claim files block it (${superseded.map((f) => basename(f)).join(", ")}). ` +
+      "If no okb command is running, delete them.",
+    );
+  }
   try {
     testSeam.at("claimed");
     const now = readOwner(path);
