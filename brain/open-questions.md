@@ -10,7 +10,7 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 ## Where should the vision live: #105 or the brain?
 
 - **Why it's open:** #105 is pinned and public. A file here would be versioned with the code and readable without GitHub. Two copies would drift.
-- **Reopen when:** the next time #105 needs an edit.
+- **Reopen when:** now. [Decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md) defines 1.0 by six user goals, while #105's goals are shaped around features, so the two already disagree.
 
 ## Team rule packs: declarative or code?
 

@@ -1,6 +1,7 @@
 ---
 summary: Six guardrails protect the road to 1.0, from a format freeze after 0.4.0 to a second real KB.
 status: proposed
+decided-by: owner, on a recommendation
 date: 2026-11-25
 updated: 2026-11-25
 links: ["milestones/road-to-1-0.md", "0014-rename-format-package-to-reader.md"]

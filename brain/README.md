@@ -20,6 +20,8 @@ The brain holds the **why** behind Ontology Kit: why it's built this way, why th
 | Why something is the way it is           | [decisions/](decisions/) in this folder                                                                                                                                              |
 | What's undecided or deferred             | [open-questions.md](open-questions.md)                                                                                                                                               |
 | Where things stand right now             | [now.md](now.md)                                                                                                                                                                     |
+| Other projects, and what's private       | [related-projects.md](related-projects.md)                                                                                                                                           |
+| The project's own jargon                 | [glossary.md](glossary.md)                                                                                                                                                           |
 | Why a milestone exists and its lessons   | [milestones/](milestones/)                                                                                                                                                           |
 
 `docs/DECISIONS.md` is something else: the meta-KB's generated decision guides for people building an ontology.
@@ -38,12 +40,14 @@ gh api graphql -f query='{repository(owner:"alanbsmith",name:"ontology-kit"){dis
 
 ## Files
 
-| File                                   | Holds                                                                   |
-| -------------------------------------- | ----------------------------------------------------------------------- |
-| [now.md](now.md)                       | The current focus and why it's the focus. Rewritten often.              |
-| [open-questions.md](open-questions.md) | Undecided and deferred questions, each with what would reopen it.       |
-| [decisions/](decisions/)               | One file per decision: what was chosen, what else was weighed, and why. |
-| [milestones/](milestones/)             | One file per active milestone: why it exists, why now, lessons so far.  |
+| File                                       | Holds                                                                                                                                               |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [now.md](now.md)                           | The current focus and why it's the focus. Rewritten often, so it can lag: if its `updated:` date is older than the last merged PR, check the board. |
+| [open-questions.md](open-questions.md)     | Undecided and deferred questions, each with what would reopen it.                                                                                   |
+| [decisions/](decisions/)                   | One file per decision: what was chosen, what else was weighed, and why.                                                                             |
+| [milestones/](milestones/)                 | One file per active milestone: why it exists, why now, lessons so far.                                                                              |
+| [related-projects.md](related-projects.md) | The projects around this one, which are private, and what's fine to say about each in public.                                                       |
+| [glossary.md](glossary.md)                 | The project's jargon: rule packs, epics, the soak and so on.                                                                                        |
 
 To see every decision in one go, read each one's summary and status instead of the files (a superseded decision names its replacement):
 
@@ -58,8 +62,8 @@ grep -H -E '^(summary|status|superseded-by):' brain/decisions/*.md
 - **Undecided goes in open-questions.md.** When a question is settled, write the decision and remove the entry.
 - **At the end of a session**, update `now.md` if the focus moved, add a line to the milestone's log, and write any decision you made.
 - **Keep files short.** Link to the issue, PR or doc that has the detail instead of repeating it.
-- **This repo is public.** Write nothing here you wouldn't put in a PR description.
+- **This repo is public.** Write nothing here you wouldn't put in a PR description. Check [related-projects.md](related-projects.md) before you describe a private project.
 
 ### Front matter
 
-Every file starts with `summary:` (one line, so a session can choose without opening it) and `updated:`. A decision also has `status:` (`accepted`, `superseded`, or `proposed` while it sits in an open PR), `date:` (when it was decided) and, where they apply, `supersedes:`, `superseded-by:` and `links:`.
+Every file starts with `summary:` (one line, so a session can choose without opening it) and `updated:`. A decision also has `status:` (`accepted`, `superseded`, or `proposed` while it sits in an open PR; set it to `accepted` when the PR merges, and the drift check warns about a `proposed` decision already on `main`), `date:` (when it was decided), `decided-by:` (`owner` when the owner chose and gave the reason, or `owner, on a recommendation` when the owner accepted a recommendation and its reason) and, where they apply, `supersedes:`, `superseded-by:` and `links:`.

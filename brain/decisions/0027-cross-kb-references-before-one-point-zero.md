@@ -1,6 +1,7 @@
 ---
 summary: Cross-KB references ship before 1.0, because the Canvas KB points at the tokens and icons KBs.
 status: proposed
+decided-by: owner
 date: 2026-11-25
 updated: 2026-11-25
 links: ["#31", "#23", "#24", "0023-version-map-to-one-point-zero.md"]

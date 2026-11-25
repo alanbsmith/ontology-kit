@@ -1,6 +1,7 @@
 ---
 summary: The meta-KB grows beyond Ontology 101, from open sources first; proprietary books inspire authored rules but are never quoted.
 status: proposed
+decided-by: owner, on a recommendation
 date: 2026-11-25
 updated: 2026-11-25
 links: ["0018-ontology-101-as-the-method.md", "sources/README.md"]
