@@ -1,6 +1,6 @@
 ---
 summary: Start here. What the brain holds, where everything else lives, and how to keep it current.
-updated: 2026-11-22
+updated: 2026-11-25
 ---
 
 # The brain
@@ -14,6 +14,7 @@ The brain holds the **why** behind Ontology Kit: why it's built this way, why th
 | What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post                                                                                |
 | What's planned, in progress or done      | The [Ontology Kit project board](https://github.com/users/alanbsmith/projects/4) and the [milestones](https://github.com/alanbsmith/ontology-kit/milestones) (read them live, below) |
 | How to change the code, commands, layout | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                                                                  |
+| How to write an issue, a commit or a PR  | [CONTRIBUTING.md, "Issues"](../CONTRIBUTING.md#issues) and ["Commits and pull requests"](../CONTRIBUTING.md#commits-and-pull-requests)                                               |
 | What shipped in each release             | [docs/CHANGELOG.md](../docs/CHANGELOG.md)                                                                                                                                            |
 | What 0.x and 1.0 promise                 | [CONTRIBUTING.md, "What 0.x means"](../CONTRIBUTING.md#what-0x-means)                                                                                                                |
 | Why something is the way it is           | [decisions/](decisions/) in this folder                                                                                                                                              |
