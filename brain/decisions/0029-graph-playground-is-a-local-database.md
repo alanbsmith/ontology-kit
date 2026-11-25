@@ -1,6 +1,6 @@
 ---
 summary: The graph playground loads a KB into a local graph database; nothing is hosted.
-status: proposed
+status: accepted
 decided-by: owner
 date: 2026-11-25
 updated: 2026-11-25

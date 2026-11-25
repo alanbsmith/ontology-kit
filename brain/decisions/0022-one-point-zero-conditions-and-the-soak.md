@@ -1,6 +1,6 @@
 ---
 summary: Three of the four 1.0 conditions block 1.0, the outside-tool one is reworded, and the CLI soaks for two minors.
-status: proposed
+status: accepted
 decided-by: owner, on a recommendation
 date: 2026-11-24
 updated: 2026-11-25

@@ -11,7 +11,9 @@ The brain holds the **why** behind Ontology Kit: why it's built this way, why th
 
 | You need                                 | Look in                                                                                                                                                                              |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post                                                                                |
+| What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post ([decision 0031](decisions/0031-vision-in-105-plan-in-the-brain.md))           |
+| What 1.0 means                           | [decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md) and [decision 0022](decisions/0022-one-point-zero-conditions-and-the-soak.md)                                    |
+| The plan and order to 1.0                | [milestones/road-to-1-0.md](milestones/road-to-1-0.md)                                                                                                                               |
 | What's planned, in progress or done      | The [Ontology Kit project board](https://github.com/users/alanbsmith/projects/4) and the [milestones](https://github.com/alanbsmith/ontology-kit/milestones) (read them live, below) |
 | How to change the code, commands, layout | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                                                                  |
 | How to write an issue, a commit or a PR  | [CONTRIBUTING.md, "Issues"](../CONTRIBUTING.md#issues) and ["Commits and pull requests"](../CONTRIBUTING.md#commits-and-pull-requests)                                               |

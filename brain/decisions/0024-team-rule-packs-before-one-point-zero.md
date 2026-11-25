@@ -1,6 +1,6 @@
 ---
 summary: A team can add its own rules, and that ships before 1.0.
-status: proposed
+status: accepted
 decided-by: owner
 date: 2026-11-24
 updated: 2026-11-25

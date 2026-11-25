@@ -1,6 +1,6 @@
 ---
 summary: 1.0 is defined by six things anyone can do, not by a list of milestones.
-status: proposed
+status: accepted
 decided-by: owner
 date: 2026-11-24
 updated: 2026-11-25

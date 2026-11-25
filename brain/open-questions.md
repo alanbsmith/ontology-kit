@@ -7,11 +7,6 @@ updated: 2026-11-25
 
 One entry per question. When one is settled, write a decision in [decisions/](decisions/) and delete the entry here.
 
-## Where should the vision live: #105 or the brain?
-
-- **Why it's open:** #105 is pinned and public. A file here would be versioned with the code and readable without GitHub. Two copies would drift.
-- **Reopen when:** now. [Decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md) defines 1.0 by six user goals, while #105's goals are shaped around features, so the two already disagree.
-
 ## Team rule packs: declarative or code?
 
 - **Why it's open:** listed as an open question in #105. See [#100](https://github.com/alanbsmith/ontology-kit/issues/100).
