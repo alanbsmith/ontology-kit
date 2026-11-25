@@ -19,7 +19,7 @@ Planned 2026-11-24 and 2026-11-25 with the owner. Issue statuses live on the boa
 | [0027](../decisions/0027-cross-kb-references-before-one-point-zero.md) | Cross-KB references before 1.0; Canvas, tokens and icons KBs as the test bed |
 | [0028](../decisions/0028-sources-beyond-ontology-101.md)               | Sources beyond Ontology 101                                                  |
 | [0029](../decisions/0029-graph-playground-is-a-local-database.md)      | The playground is a local graph database                                     |
-| [0030](../decisions/0030-eval-kit-is-the-eval-harness.md)              | Eval-kit is the eval harness                                                 |
+| [0030](../decisions/0030-an-evaluation-runner-for-goal-6.md)           | An evaluation runner for goal 6                                              |
 
 ## What 1.0 means
 
@@ -47,5 +47,5 @@ Impact checks across linked KBs (#32) and combined export (#33), the rest of Str
 ## Log
 
 - 2026-11-24: plan written with the owner. Nothing changed on GitHub.
-- 2026-11-25: guardrails accepted, cross-KB references and the three test KBs pulled before 1.0, sources beyond Ontology 101, the playground and eval-kit decided.
-- 2026-11-25: GitHub updated: milestones retitled with versions, Soak milestone created, Maintaining a KB closed, issues moved, #157 to #164 created. The eval-kit issue is held.
+- 2026-11-25: guardrails accepted, cross-KB references and the three test KBs pulled before 1.0, sources beyond Ontology 101, the playground and the evaluation runner decided.
+- 2026-11-25: GitHub updated: milestones retitled with versions, Soak milestone created, Maintaining a KB closed, issues moved, #157 to #164 created. The evaluation-runner issue (#165) followed once the owner chose a generic name.
