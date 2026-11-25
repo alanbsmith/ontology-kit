@@ -198,7 +198,9 @@ function writeReleasesMd(root: string, name: string): void {
 }
 
 /** The writer `writeFileAtomic` uses; tests swap `write` to simulate a failed write. */
-export const releaseIo = { write: writeFileSync as (file: string, text: string) => void };
+export const releaseIo: { write: (file: string, text: string) => void } = {
+  write: (file, text) => writeFileSync(file, text, "utf8"),
+};
 
 /**
  * Write `text` to a temp file next to `file`, then rename it into place, so a failed write leaves the
