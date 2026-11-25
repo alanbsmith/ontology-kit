@@ -102,7 +102,8 @@ describe("@ontology-kit/reader from the packed tarball", { skip: SKIP }, () => {
       compilerOptions: { target: "ES2023", module: "NodeNext", moduleResolution: "NodeNext", strict: true, noEmit: true, types: [], skipLibCheck: false },
       files: ["consumer.ts"],
     }));
-    const tsc = require.resolve("typescript/lib/tsc.js");
+    // TypeScript 7 no longer exports lib/tsc.js; its launcher is bin/tsc.
+    const tsc = join(dirname(require.resolve("typescript/package.json")), "bin", "tsc");
     try {
       run(process.execPath, [tsc, "-p", "tsconfig.json"], install);
     } catch (e) {
