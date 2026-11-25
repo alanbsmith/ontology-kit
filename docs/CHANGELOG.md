@@ -6,17 +6,47 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 
 ## Package releases
 
-### 0.2.0 (unreleased)
+### 0.2.0 (2026-11-24)
 
-#### Breaking
+#### Breaking changes
 
-- `@ontology-kit/format` is now `@ontology-kit/reader`. The package reads an okb folder (types, loading with migrations, relationship values) and nothing in it is a supported way to change one: writes go through `okb`. To upgrade, change the dependency and every import from `@ontology-kit/format` to `@ontology-kit/reader`; the exports are the same. `@ontology-kit/format` 0.1.0 stays installable and is deprecated with a pointer to the new name.
+- refactor(reader)!: Rename @ontology-kit/format to @ontology-kit/reader ([#146](https://github.com/alanbsmith/ontology-kit/pull/146))
+  The package name changed. To upgrade, change the dependency and every import from `@ontology-kit/format` to `@ontology-kit/reader`. The exports are the same. `@ontology-kit/format` 0.1.0 stays installable and will be deprecated with a pointer to the new name once the next release is out.
 
-#### Review views
+  Versions: nothing is bumped here. The packages stay at 0.1.0, and breaking changes are expected before 1.0. The next release is 0.2.0, with the rename in its "Breaking" entry.
 
-- `okb docs --out <folder> --changed <ref>` writes only the reference pages whose text differs from a git ref or folder, so a change to a rule on a class includes the pages of the subclasses that inherit it, plus a `changes.md` that lists them and the quotes and source blocks that changed but haven't been re-synced. `--hops N` adds neighboring class pages for context.
-- `okb verify` suggests a note after an OVERREACH correction (a changed MUST, SHOULD or MAY, a changed number, or a few words) with the command that stores it, and tips what a useful note says for UNSUPPORTED. `--ref <url>` stores an `http` or `https` link to the discussion as `verification.ref` (a new optional field on `Verification` in `@ontology-kit/format`); `--approve` keeps it. `okb docs --context` shows it beside the note.
-- `okb docs --out <folder> --context` writes `rules-in-context.md`: each rule with its verification status, the verifier note, its quote and the source lines around it, problem cases first.
+  **After this merges (owner steps that need npm credentials), in this order.** The full procedure is in `CONTRIBUTING.md`, "Publishing a new package".
+  1. Publish a one-time bootstrap pre-release of `@ontology-kit/reader` by hand. npm can configure a trusted publisher only for a package that already exists. The bootstrap has to come before the release.
+  2. Prepare the release: set the same version in all three packages (the published okb 0.1.0 depends on `@ontology-kit/format`, so it can't be republished), write the changelog entry, merge it, and run the release workflow by hand with `dry-run` on.
+  3. Configure the trusted publisher for `@ontology-kit/reader` on npmjs.com, then push the tag the same day. npm expires a trusted publisher that hasn't completed a publish within 2 days.
+  4. Once the workflow has finished and the new version is on npm, deprecate the bootstrap, and deprecate the whole old package: `npm deprecate "@ontology-kit/format" "Renamed to @ontology-kit/reader"`. The old package can't be unpublished, since okb 0.1.0 depends on it.
+
+#### CLI
+
+- feat(okb): Add the tools, format changes and skills for maintaining a KB ([#140](https://github.com/alanbsmith/ontology-kit/pull/140), [@alanbsmith](https://github.com/alanbsmith))
+  okb now supports keeping a knowledge base in git over time. New commands: `okb diff`, `okb check`, `okb pin`, `okb release`, `okb source refresh --all`, `okb docs` (with `--changed` and `--context` review views), and `okb verify --ref` with suggested notes. The file format moves to `okb-lpg/3` (one node or edge per line, ids that two branches can't both create, created and updated stamps); older folders are migrated when okb next saves them. Two new skills, `ontology-maintainer` and `ontology-signoff`, drive these flows. See the new maintainer workflow and sign-off pages in the Build section of the docs.
+
+#### Format
+
+- refactor(reader)!: Rename @ontology-kit/format to @ontology-kit/reader ([#146](https://github.com/alanbsmith/ontology-kit/pull/146), [@alanbsmith](https://github.com/alanbsmith))
+  `@ontology-kit/format` is now `@ontology-kit/reader`. It is the library other tools use to read an okb folder, with the same exports as before. Writes to an ontology go through the `okb` command; the write methods on `Ontology` are internal and may change in any release. See "Reading ontologies from code" in the file format reference.
+
+#### Documentation
+
+- docs: Add steps for publishing a new package ([#147](https://github.com/alanbsmith/ontology-kit/pull/147), [@alanbsmith](https://github.com/alanbsmith))
+
+#### Infrastructure
+
+- ci: Standardize commits, PR descriptions and the changelog ([#128](https://github.com/alanbsmith/ontology-kit/pull/128), [@alanbsmith](https://github.com/alanbsmith))
+- chore: Add codeowners ([#131](https://github.com/alanbsmith/ontology-kit/pull/131), [@alanbsmith](https://github.com/alanbsmith))
+- chore: Add GitHub issue templates ([#134](https://github.com/alanbsmith/ontology-kit/pull/134), [@alanbsmith](https://github.com/alanbsmith))
+- chore: Make the spike template free-form ([#136](https://github.com/alanbsmith/ontology-kit/pull/136), [@alanbsmith](https://github.com/alanbsmith))
+- chore: Count a written answer as a spike outcome ([#137](https://github.com/alanbsmith/ontology-kit/pull/137), [@alanbsmith](https://github.com/alanbsmith))
+
+#### Other
+
+- Add Dependabot for GitHub Actions ([#122](https://github.com/alanbsmith/ontology-kit/pull/122), [@alanbsmith](https://github.com/alanbsmith))
+- Add Dependabot for npm dependencies ([#123](https://github.com/alanbsmith/ontology-kit/pull/123), [@alanbsmith](https://github.com/alanbsmith))
 
 ### 0.1.0 (2026-11-21)
 

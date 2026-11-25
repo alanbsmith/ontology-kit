@@ -1,6 +1,6 @@
 {
   "name": "@ontology-kit/okb",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "A toolkit for building knowledge graphs with guardrails: a checked file format, rules from a meta-KB, provenance down to verbatim quotes, and skills that drive it.",
   "homepage": "https://ontology-kit.dev",

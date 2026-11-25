@@ -1,6 +1,6 @@
 {
   "name": "@ontology-kit/reader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "Read the okb file format: an ontology folder's typed nodes and edges, loading with migrations, the reserved edge types and relationship values. No CLI, no meta-KB.",
   "homepage": "https://ontology-kit.dev",
