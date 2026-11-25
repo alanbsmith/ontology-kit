@@ -12,6 +12,8 @@ Before reading, editing or generating anything, make sure the work sits on an up
 4. If it is stale, bring it up to date before doing any work. Stash uncommitted changes first. Rebase onto `origin/<base>`; if the branch is already pushed or has an open PR, merge `origin/<base>` instead. Reapply the stash, and resolve conflicts in generated files (`docs/*.md`, `packages/okb/meta-kb/data/*.json`) by regenerating them, not by merging by hand.
 5. Say in one line which branch you are on and which base you checked it against.
 
+For planning or "why" questions, start at `brain/README.md` and open only the files it points to; don't grep the repo first. At the end of a session, update `brain/now.md` if the focus moved, add a line to the milestone's log in `brain/milestones/`, and record any decision in `brain/decisions/`.
+
 Check again, and bring the branch up to date, before you commit or open a PR, and whenever the user says the base has moved. A long session drifts too.
 
 ## Commits and pull requests
