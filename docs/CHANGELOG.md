@@ -29,7 +29,7 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 
 #### Infrastructure
 
-- ci: Standardize commits, PR descriptions and the changelog ([#128](https://github.com/alanbsmith/ontology-kit/pull/128), [@alanbsmith](https://github.com/alanbsmith))
+- `ci`: Standardize commits, PR descriptions and the changelog ([#128](https://github.com/alanbsmith/ontology-kit/pull/128), [@alanbsmith](https://github.com/alanbsmith))
 - chore: Add codeowners ([#131](https://github.com/alanbsmith/ontology-kit/pull/131), [@alanbsmith](https://github.com/alanbsmith))
 - chore: Add GitHub issue templates ([#134](https://github.com/alanbsmith/ontology-kit/pull/134), [@alanbsmith](https://github.com/alanbsmith))
 - chore: Make the spike template free-form ([#136](https://github.com/alanbsmith/ontology-kit/pull/136), [@alanbsmith](https://github.com/alanbsmith))
