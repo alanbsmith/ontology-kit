@@ -1,6 +1,6 @@
 ---
 summary: The bundler question doesn't block 1.0; the build stays tsc into dist.
-status: accepted
+status: proposed
 date: 2026-11-24
 updated: 2026-11-24
 links: ["0009-node-26-for-development-24-at-runtime.md", "milestones/road-to-1-0.md"]

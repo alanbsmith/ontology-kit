@@ -1,6 +1,6 @@
 ---
 summary: A team can add its own rules, and that ships before 1.0.
-status: accepted
+status: proposed
 date: 2026-11-24
 updated: 2026-11-24
 links: ["#100", "#101", "#102", "milestones/team-guardrails.md"]

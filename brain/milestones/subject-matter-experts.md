@@ -1,6 +1,6 @@
 ---
 summary: Subject-matter experts, planned as 0.6.0. People who know the domain can read and review a KB without git.
-updated: 2026-11-24
+updated: 2026-11-25
 links: ["https://github.com/alanbsmith/ontology-kit/milestone/9", "Discussion #105"]
 ---
 
@@ -16,8 +16,9 @@ It follows Serving and Team guardrails in #105's order, and it is the last featu
 
 ## Done when
 
-The milestone's issues are merged and released as 0.6.0. The owner wants a way to see the KB as a graph, perhaps a playground or sandbox. The plan proposes folding that into spike #19 (a browsable view) and okb site (#108), with a recipe for a local graph database in the loading guide. The owner left it open as a spike ([open question](../open-questions.md)).
+The milestone's issues are merged and released as 0.6.0, with the browsable view from spike #19 feeding okb site (#108). The graph playground moved to Serving ([0029](../decisions/0029-graph-playground-is-a-local-database.md)).
 
 ## Log
 
 - 2026-11-24: file written from the road-to-1-0 plan.
+- 2026-11-25: playground moved to Serving.

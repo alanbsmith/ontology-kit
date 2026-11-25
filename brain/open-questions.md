@@ -1,6 +1,6 @@
 ---
 summary: Questions that are undecided or deliberately deferred, why, and what would reopen each.
-updated: 2026-11-24
+updated: 2026-11-25
 ---
 
 # Open questions
@@ -20,7 +20,7 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 ## How far do plain files scale?
 
 - **Why it's open:** listed in #105. The format is files in git by design ([decision 0001](decisions/0001-plain-files-in-git.md)), and nobody has measured where that stops working. See [#29](https://github.com/alanbsmith/ontology-kit/issues/29).
-- **Reopen when:** a real KB gets slow to load, check or merge.
+- **Reopen when:** benchmark #29 reports, planned early in 0.3.0, or a real KB gets slow to load, check or merge.
 
 ## Which hosts support skills served over MCP?
 
@@ -32,22 +32,17 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 - **Why it's open:** development runs the TypeScript sources with Node's type stripping, and publishing compiles `src/` to `dist/` with `tsc`. No bundler was ever weighed ([decision 0009](decisions/0009-node-26-for-development-24-at-runtime.md)). It doesn't block 1.0 ([decision 0025](decisions/0025-bundler-after-one-point-zero.md)).
 - **Reopen when:** someone names a concrete benefit to consumers (the published packages) or to maintainers. A change must keep the `exports` map and `bin` identical.
 
-## How do humans query a KB in production?
+## How do humans and programs query a KB in production?
 
-- **Why it's open:** goal 5 of [decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md) says "humans or agents". Agents get the MCP server and apps get the reader. #105 rules out a query language, so a human's tool would be a CLI command or the okb site browser. Not yet chosen.
+- **Why it's open:** the owner's starting point is MCP for agents and a standard API for deterministic queries, open to discussion. The reader library is the API today, and #105 rules out a query language. One option is a single set of read-only queries (`find`, `get`, `traverse`) in the reader that both the MCP server and a command call. A spike in 0.3.0 decides.
 - **Reopen when:** the Serving a KB milestone starts.
 
-## What is the graph playground?
+## What does okb give eval-kit?
 
-- **Why it's open:** the owner wants teams to see how things connect, perhaps in a playground or sandbox, and left it as a spike. The plan proposes folding it into spike #19 and okb site (#108), plus a local graph database recipe in the loading guide. A hosted sandbox would break a #105 non-goal.
-- **Reopen when:** the Subject-matter experts milestone starts, or earlier if the loading guide is written first.
+- **Why it's open:** [decision 0030](decisions/0030-eval-kit-is-the-eval-harness.md) names eval-kit as the harness. Its runner reads `cases.jsonl` and a run config (model, MCP tools, prompt), and pins graph data to a versioned snapshot. One option: okb writes eval-kit cases from competency questions with expected answers, uses the nodes a question needs as the expected retrieval, and points the run config at `@ontology-kit/mcp` serving a released KB version. Coupling would be through eval-kit's versioned file format, which is still young, so it may be better as an adapter outside okb's stable surface.
+- **Reopen when:** the Serving a KB milestone starts, before the competency-question format is settled.
 
-## What does the eval-harness export look like, and for which harness?
+## Does the tokens KB need JSON or YAML citations before the freeze?
 
-- **Why it's open:** goal 6 of [decision 0021](decisions/0021-one-point-zero-is-six-user-goals.md). The owner named an agent eval harness "like eval kit" as the example. The shape and the target harness are undecided, and no issue exists yet. Competency questions with expected answers (#97) are the seed.
-- **Reopen when:** the Serving a KB milestone starts, because the export is format surface and needs settling before the freeze.
-
-## Do the interrupted-save spike and the scale benchmark come before the format freeze?
-
-- **Why it's open:** #143 asks whether interrupted saves can corrupt a KB and whether a KB should be one file. #29 measures scale. Either could change the format, which the plan wants frozen after 0.4.0. Neither is in a milestone before then.
-- **Reopen when:** the Serving a KB milestone starts.
+- **Why it's open:** design tokens usually live in JSON or YAML, and citing them by pointer (#26) adds to the provenance format. The plan puts the tokens spike (#23) in 0.5.0, after the format freezes. If the spike needs #26, #26 has to move to 0.3.0 or 0.4.0.
+- **Reopen when:** the tokens spike is scoped, or before 0.4.0 ships at the latest.

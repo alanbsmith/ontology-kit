@@ -1,6 +1,6 @@
 ---
 summary: Three of the four 1.0 conditions block 1.0, the outside-tool one is reworded, and the CLI soaks for two minors.
-status: accepted
+status: proposed
 date: 2026-11-24
 updated: 2026-11-24
 links: ["CONTRIBUTING.md#what-0x-means", "#129", "milestones/road-to-1-0.md"]

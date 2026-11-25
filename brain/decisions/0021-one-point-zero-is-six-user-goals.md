@@ -1,6 +1,6 @@
 ---
 summary: 1.0 is defined by six things anyone can do, not by a list of milestones.
-status: accepted
+status: proposed
 date: 2026-11-24
 updated: 2026-11-24
 links: ["Discussion #105", "milestones/road-to-1-0.md"]

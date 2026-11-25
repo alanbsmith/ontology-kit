@@ -1,6 +1,6 @@
 ---
 summary: Where Ontology Kit stands and why the current focus is the focus.
-updated: 2026-11-24
+updated: 2026-11-25
 ---
 
 # Now
@@ -9,13 +9,13 @@ updated: 2026-11-24
 
 ## Focus
 
-Planning the road to 1.0. The plan is in [milestones/road-to-1-0.md](milestones/road-to-1-0.md): six user goals ([0021](decisions/0021-one-point-zero-is-six-user-goals.md)), then 0.3.0 Serving a KB, 0.4.0 Team guardrails, 0.5.0 Component docs extraction, 0.6.0 Subject-matter experts, a soak of 0.7.0 and 0.8.0, and 1.0.0. The owner is reviewing it. Nothing on GitHub has changed yet: the milestone and issue moves are only drafted.
+Planning the road to 1.0. The plan is in [milestones/road-to-1-0.md](milestones/road-to-1-0.md): six user goals (decisions 0021 to 0030 in [decisions/](decisions/)), then 0.3.0 Serving a KB, 0.4.0 Team guardrails with cross-KB references, 0.5.0 Component docs extraction with the tokens and icons KBs, 0.6.0 Subject-matter experts, a soak of 0.7.0 and 0.8.0, and 1.0.0. The owner is reviewing it. Nothing on GitHub has changed yet: the milestone and issue moves are only drafted.
 
 Before it, the [Maintaining a KB](milestones/maintaining-a-kb.md) work shipped in 0.2.0. The Create a Project Brain milestone is done and merged.
 
 ## Next
 
-Once the owner approves the plan: create or move the GitHub milestones and issues it names, then start 0.3.0 with the CLI command-table refactor (#8) and the prerelease infrastructure (#129). Open questions that gate 0.3.0 are in [open-questions.md](open-questions.md).
+Once the owner approves the plan: create or move the GitHub milestones and issues it names, then start 0.3.0 with the CLI command-table refactor (#8), the prerelease infrastructure (#129), spike #143 and benchmark #29. Open questions that gate 0.3.0 are in [open-questions.md](open-questions.md).
 
 ## Why this order
 
