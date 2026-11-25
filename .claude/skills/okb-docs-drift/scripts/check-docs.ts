@@ -14,7 +14,7 @@
  *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
  *     checked against packages/okb/meta-kb/data/manifest.json
  *   - brain/: the living files (README, now, open-questions, milestones/*.md) get every check above. Decision
- *     files (brain/decisions/*.md) are never edited, so a path in one that no longer exists is only a warning.
+ *     files (brain/decisions/*.md) keep their text, so a path in one that no longer exists is only a warning.
  * Exit code 1 if anything but a warning is found. It can't judge prose; the skill covers that.
  * DRIFT_ROOT points the check at another tree (the tests use a temporary copy).
  */
@@ -38,7 +38,7 @@ const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/refe
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
 /** The brain's living files (decisions are checked separately, as warnings). */
 const BRAIN_DOCS = ["brain/README.md", "brain/now.md", "brain/open-questions.md", ...(existsSync(join(ROOT, "brain/milestones")) ? readdirSync(join(ROOT, "brain/milestones")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/milestones/${f}`) : [])];
-/** Decision records are never edited (except typos), so a stale path in one is a warning, not a failure. */
+/** Decision records keep their text (only typos and supersession front matter change), so a stale path in one is a warning, not a failure. */
 const BRAIN_DECISIONS = existsSync(join(ROOT, "brain/decisions")) ? readdirSync(join(ROOT, "brain/decisions")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/decisions/${f}`) : [];
 const isDecision = (f: string) => /^brain\/decisions\/[^/]+\.md$/.test(f);
 const DEFAULT_DOCS = [

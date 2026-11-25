@@ -43,10 +43,10 @@ gh api graphql -f query='{repository(owner:"alanbsmith",name:"ontology-kit"){dis
 | [decisions/](decisions/)               | One file per decision: what was chosen, what else was weighed, and why. |
 | [milestones/](milestones/)             | One file per active milestone: why it exists, why now, lessons so far.  |
 
-To see every decision in one go, read the summaries instead of the files:
+To see every decision in one go, read each one's summary and status instead of the files (a superseded decision names its replacement):
 
 ```bash
-grep -H '^summary:' brain/decisions/*.md
+grep -H -E '^(summary|status|superseded-by):' brain/decisions/*.md
 ```
 
 ## Keeping it current
