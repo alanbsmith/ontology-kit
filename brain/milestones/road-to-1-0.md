@@ -50,4 +50,4 @@ Impact checks across linked KBs (#32) and combined export (#33), the rest of Str
 - 2026-11-24: plan written with the owner. Nothing changed on GitHub.
 - 2026-11-25: guardrails accepted, cross-KB references and the three test KBs pulled before 1.0, sources beyond Ontology 101, the playground and the evaluation runner decided.
 - 2026-11-25: GitHub updated: milestones retitled with versions, Soak milestone created, Maintaining a KB closed, issues moved, #157 to #164 created. The evaluation-runner issue (#165) followed once the owner chose a generic name.
-- 2026-11-25: #105 found stale; vision and plan split between #105 and the brain (decision 0031). The #105 edit is drafted for the owner.
+- 2026-11-25: #105 found stale; vision and plan split between #105 and the brain (decision 0031). The owner reviewed the #105 edit, and it was published after #173 merged.
