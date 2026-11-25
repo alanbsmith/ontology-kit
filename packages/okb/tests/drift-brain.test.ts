@@ -56,6 +56,26 @@ describe("docs drift check on brain/", () => {
     assert.equal(drift().code, 1);
   });
 
+  it("fails when brain/now.md names a brain/ file that has moved", () => {
+    put("brain/now.md", "See `brain/milestones/MOVED.md`.\n");
+    const r = drift();
+    assert.equal(r.code, 1);
+    assert.match(r.out, /brain\/now\.md:1 {2}\[path\] 'brain\/milestones\/MOVED\.md' doesn't exist/);
+  });
+
+  it("passes when brain/now.md names a brain/ file that exists", () => {
+    put("brain/now.md", "See `brain/milestones/m.md` and `brain/decisions/0001-x.md`.\n");
+    const r = drift();
+    assert.equal(r.code, 0, r.out);
+  });
+
+  it("reports a moved brain/ file named in a decision as a warning", () => {
+    put("brain/decisions/0001-x.md", "See `brain/decisions/9999-gone.md`.\n");
+    const r = drift();
+    assert.equal(r.code, 0, r.out);
+    assert.match(r.out, /warning \[path\] 'brain\/decisions\/9999-gone\.md' doesn't exist/);
+  });
+
   it("reports a moved file named in a decision as a warning without failing", () => {
     put("brain/decisions/0001-x.md", "We chose `docs/MOVED.md`.\n");
     const r = drift();

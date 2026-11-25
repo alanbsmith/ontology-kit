@@ -9,17 +9,17 @@ The brain holds the **why** behind Ontology Kit: why it's built this way, why th
 
 ## Where things live
 
-| You need                                 | Look in                                                                                               |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post |
-| What's planned, in progress or done      | The Ontology Kit project board and the milestones (read them live, below)                             |
-| How to change the code, commands, layout | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                   |
-| What shipped in each release             | [docs/CHANGELOG.md](../docs/CHANGELOG.md)                                                             |
-| What 0.x and 1.0 promise                 | [CONTRIBUTING.md, "What 0.x means"](../CONTRIBUTING.md#what-0x-means)                                 |
-| Why something is the way it is           | [decisions/](decisions/) in this folder                                                               |
-| What's undecided or deferred             | [open-questions.md](open-questions.md)                                                                |
-| Where things stand right now             | [now.md](now.md)                                                                                      |
-| Why a milestone exists and its lessons   | [milestones/](milestones/)                                                                            |
+| You need                                 | Look in                                                                                                                                                                              |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| What we're building, goals and non-goals | [Discussion #105](https://github.com/alanbsmith/ontology-kit/discussions/105), the pinned vision post                                                                                |
+| What's planned, in progress or done      | The [Ontology Kit project board](https://github.com/users/alanbsmith/projects/4) and the [milestones](https://github.com/alanbsmith/ontology-kit/milestones) (read them live, below) |
+| How to change the code, commands, layout | [CLAUDE.md](../CLAUDE.md) and [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                                                                  |
+| What shipped in each release             | [docs/CHANGELOG.md](../docs/CHANGELOG.md)                                                                                                                                            |
+| What 0.x and 1.0 promise                 | [CONTRIBUTING.md, "What 0.x means"](../CONTRIBUTING.md#what-0x-means)                                                                                                                |
+| Why something is the way it is           | [decisions/](decisions/) in this folder                                                                                                                                              |
+| What's undecided or deferred             | [open-questions.md](open-questions.md)                                                                                                                                               |
+| Where things stand right now             | [now.md](now.md)                                                                                                                                                                     |
+| Why a milestone exists and its lessons   | [milestones/](milestones/)                                                                                                                                                           |
 
 `docs/DECISIONS.md` is something else: the meta-KB's generated decision guides for people building an ontology.
 
