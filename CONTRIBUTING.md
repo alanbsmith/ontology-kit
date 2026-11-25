@@ -41,6 +41,7 @@ packages/okb/           @ontology-kit/okb: the CLI (a pnpm workspace package; de
   tests/                node:test suites (also the docs site's tests)
 packages/ontology-kit/  ontology-kit: the unscoped wrapper, just a bin that forwards to @ontology-kit/okb
 site/                   the docs site (Astro; a private workspace package, reads the markdown in place)
+brain/                  the project's why for planning sessions: decisions, open questions, milestone reasons, current state (start at brain/README.md)
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (pnpm run docs)
 sources/                the source PDFs (gitignored; see sources/README.md)
 scripts/                repo-wide tooling (vale.sh, release.ts, rewrite-dts.ts)
@@ -162,7 +163,9 @@ The Generated files check catches a rule, command or tutorial change that you di
 
 ## Issues
 
-Open an issue from one of the templates in `.github/ISSUE_TEMPLATE/`: **Feature**, **Bug report**, **Chore** or **Spike**. A feature, bug or chore title is a Conventional Commit, like a PR title, so `feat(okb): Add a command to list orphan classes` becomes the PR's title later. A feature, chore or spike issue has the same sections, **Purpose**, **Context**, **Scope** and **Criteria** (a spike adds **Questions**), so a person or an agent can pick it up without asking questions. A bug report has its own layout, with **To reproduce**, **Expected behavior**, **Actual behavior** and **Environment**, and still ends with **Criteria**. A spike is research, so it never ships code or becomes a commit. Its title starts with `Spike:` instead, and it ends in a written answer, a doc, follow-up issues, or a decision not to proceed.
+Open an issue from one of the templates in `.github/ISSUE_TEMPLATE/`: **Feature**, **Bug report**, **Chore**, **Spike** or **Epic Tracker**. A feature, bug or chore title is a Conventional Commit, like a PR title, so `feat(okb): Add a command to list orphan classes` becomes the PR's title later. A feature, chore or spike issue has the same sections, **Purpose**, **Context**, **Scope** and **Criteria** (a spike adds **Questions**), so a person or an agent can pick it up without asking questions. A bug report has its own layout, with **To reproduce**, **Expected behavior**, **Actual behavior** and **Environment**, and still ends with **Criteria**. A spike is research, so it never ships code or becomes a commit. Its title starts with `Spike:` instead, and it ends in a written answer, a doc, follow-up issues, or a decision not to proceed.
+
+An epic tracks one milestone. Its title is `Epic:` followed by the milestone's title, it carries the `epic` label, and it has **Purpose**, **Scope** (in, out and deferred), **Decisions**, a **Checklist** of the milestone's issues in the order they merge, and **Branching**. Like a spike, it never ships code. Each issue in the milestone says `Part of <milestone>, tracked in #<epic>`. To list the epics, filter issues by the `epic` label.
 
 A feature also has **The problem it solves**. Say who hits the problem and when, what they do today, how the feature fixes it, and how you know the problem is real. We add features for problems someone has, not for ones someone might have, so an issue that can't fill this section in waits until the problem shows up. Work with no user-facing effect, like CI or refactors, usually fits the Chore template. A feature that is not user-facing can stay on the Feature template: write "Not user-facing" in that section and say who it helps instead, such as maintainers.
 

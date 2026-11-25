@@ -14,7 +14,7 @@
  * says where it differs.
  */
 import { createHash } from "node:crypto";
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { OkbError, Ontology, slug } from "@ontology-kit/reader";
 import { today } from "./clock.ts";
@@ -197,6 +197,26 @@ function writeReleasesMd(root: string, name: string): void {
   writeFileSync(join(root, "RELEASES.md"), `# Releases of ${name}\n\nEach release's changes, newest first. \`manifest.json\` pins the latest one; \`okb release verify\` checks the files against it.\n\n${sections.join("\n\n")}\n`);
 }
 
+/** The writer `writeFileAtomic` uses; tests swap `write` to simulate a failed write. */
+export const releaseIo: { write: (file: string, text: string) => void } = {
+  write: (file, text) => writeFileSync(file, text, "utf8"),
+};
+
+/**
+ * Write `text` to a temp file next to `file`, then rename it into place, so a failed write leaves the
+ * previous `file` whole. The temp file is removed if the write or the rename fails.
+ */
+function writeFileAtomic(file: string, text: string): void {
+  const tmp = `${file}.tmp`;
+  try {
+    releaseIo.write(tmp, text);
+    renameSync(tmp, file);
+  } catch (e) {
+    rmSync(tmp, { force: true });
+    throw e;
+  }
+}
+
 export interface ReleaseResult {
   version: string;
   previous?: string;
@@ -269,8 +289,8 @@ export function cutRelease(ont: Ontology, version: string, findings: Finding[]):
   // The manifests go last: they are what makes the release exist, so a failure above leaves nothing pinned.
   // Dataset paths are relative to the manifest, so the snapshot's copy points at the sources from its own folder.
   const snapManifest = { ...manifest, datasets: { ...manifest.datasets, ...(docs ? { docs: { ...docs, path: posix(relative(snap, resolve(root, docs.path))) || "." } } : {}) } };
-  writeFileSync(join(snap, MANIFEST_FILE), json(snapManifest));
-  writeFileSync(lastFile, json(manifest));
+  writeFileAtomic(join(snap, MANIFEST_FILE), json(snapManifest));
+  writeFileAtomic(lastFile, json(manifest));
 
   const notes: Notes = [`Released ${version}${last ? ` (was ${last.version})` : ""}: ${countsLine(ont)}`];
   if (diff) {

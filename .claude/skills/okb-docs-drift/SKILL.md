@@ -1,6 +1,6 @@
 ---
 name: okb-docs-drift
-description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md, CLAUDE.md, docs/getting-started/, docs/learn/, docs/build/ and docs/reference/ (every .md in them), the tutorial sources in packages/okb/examples/*/tutorial-src/, docs/CHANGELOG.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, docs/CODE-REVIEW.md, the meta-KB and sources READMEs and the SKILL.md files under skills/) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches packages/okb/src/cli.ts, packages/okb/src/ops/, the meta-KB YAML or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
+description: Check ontology-kit's hand-written docs (README.md, CONTRIBUTING.md, CLAUDE.md, docs/getting-started/, docs/learn/, docs/build/ and docs/reference/ (every .md in them), the tutorial sources in packages/okb/examples/*/tutorial-src/, docs/CHANGELOG.md, docs/FORMAT.md, docs/EXTRACTION-PIPELINE.md, docs/CODE-REVIEW.md, the meta-KB and sources READMEs, the SKILL.md files under skills/ and the brain/ folder) against the real okb CLI, source layout and meta-KB, and fix what has drifted. Use it whenever okb commands, flags, output, file layout, the file format or meta-KB rules change; before a commit or PR that touches packages/okb/src/cli.ts, packages/okb/src/ops/, the meta-KB YAML or the docs; and whenever someone asks whether the docs, README or skills are up to date or accurate, even if they don't say "drift".
 ---
 
 # okb docs drift check
@@ -17,7 +17,7 @@ node .claude/skills/okb-docs-drift/scripts/check-docs.ts --json   # machine-read
 node .claude/skills/okb-docs-drift/scripts/check-docs.ts README.md packages/okb/skills/ontology-coach/SKILL.md
 ```
 
-It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB, sources and `packages/reader` READMEs and the shipped skills. The generated pages (including the tutorial pages under `packages/okb/examples/*/tutorial/`) are left out. It reports, with file and line:
+It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs/getting-started/`, `docs/learn/`, `docs/build/` and `docs/reference/` (new files are picked up automatically), the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`, the hand-written reference pages, the meta-KB, sources and `packages/reader` READMEs, the shipped skills and the brain (below). The generated pages (including the tutorial pages under `packages/okb/examples/*/tutorial/`) are left out. It reports, with file and line:
 
 - **command / flag**: an `okb ...` in code (inline backticks or a fenced block) naming a command, subcommand or `--flag` that `packages/okb/src/cli.ts` doesn't accept. It knows the `property` / `relationship` aliases and their `--from` / `--to` flags.
 - **pnpm-script**: `pnpm x` with no `x` in package.json, and **npm-command**: a contributor command that uses npm where pnpm belongs (running a script, installing or linking the repo, or `npx`). An end-user `npm i -g` is fine.
@@ -25,6 +25,8 @@ It checks `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, every `.md` file in `docs
 - **rule**: a backticked rule id that isn't in the meta-KB.
 - **format-type**: a node or edge type in docs/FORMAT.md's tables that isn't in `packages/okb/meta-kb/src/format.yaml`, or a registered type the doc leaves out.
 - **count / version**: a meta-KB count ("55 rules") or version ("meta-KB 2.2.0") that no longer matches `packages/okb/meta-kb/data/manifest.json`, or a shipped skill whose `**Version X.Y.Z.**` line is missing or doesn't match it.
+
+**The brain.** `brain/README.md`, `brain/now.md`, `brain/open-questions.md` and every `brain/milestones/*.md` get all the checks above, so a file or command they name that has moved fails the check. `brain/decisions/*.md` keep their text (only typo fixes and the supersession front matter change), so an old decision can name a path that has since moved. They get only the path check, and a missing path shows as a `warning` that doesn't change the exit code. Don't edit the decision to silence it; if the path matters, say what moved in a new decision.
 
 Treat each report as real until you've looked. If one is a false positive (for example prose the parser mistook for a command), improve the script rather than ignoring it, so the next run is quiet.
 
@@ -44,4 +46,4 @@ Leave generated docs alone (METHOD, GLOSSARY, RULES, and DECISIONS say "Generate
 
 List what drifted, grouped by doc, each with the evidence (the code or output that shows the truth). Then fix the docs in place, matching each doc's existing voice: the README and the skills are written for beginners in plain language. Fix the doc to match the code, unless the code looks like the mistake (a flag removed by accident, a message that contradicts the paper). In that case, say so and ask rather than documenting a bug.
 
-Finish by re-running the script. It should print "No drift found".
+Finish by re-running the script. It should print "No drift found" (or only `warning` lines for old decisions, which need no fix).

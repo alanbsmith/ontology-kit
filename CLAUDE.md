@@ -12,6 +12,8 @@ Before reading, editing or generating anything, make sure the work sits on an up
 4. If it is stale, bring it up to date before doing any work. Stash uncommitted changes first. Rebase onto `origin/<base>`; if the branch is already pushed or has an open PR, merge `origin/<base>` instead. Reapply the stash, and resolve conflicts in generated files (`docs/*.md`, `packages/okb/meta-kb/data/*.json`) by regenerating them, not by merging by hand.
 5. Say in one line which branch you are on and which base you checked it against.
 
+For planning or "why" questions, start at `brain/README.md` and open only the files it points to; don't grep the repo first. At the end of a session, update `brain/now.md` if the focus moved, add a line to the milestone's log in `brain/milestones/`, and record any decision in `brain/decisions/`.
+
 Check again, and bring the branch up to date, before you commit or open a PR, and whenever the user says the base has moved. A long session drifts too.
 
 ## Commits and pull requests
@@ -98,7 +100,7 @@ A slot with `valueType: "Instance"` is a **relationship**. Its values are stored
 
 ## Hand-written and generated docs
 
-Hand-written (the drift check covers all but the generated tutorial pages): `README.md`, `CONTRIBUTING.md`, `docs/getting-started/`, `docs/learn/` (the Learn course), `docs/build/`, `docs/reference/`, `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md`, `docs/CODE-REVIEW.md`, `packages/okb/meta-kb/README.md`, `packages/reader/README.md`, `sources/README.md` and the tutorial sources `packages/okb/examples/*/tutorial-src/*.md`. Generated (never edit): `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md`, `CLI-CHEAT-SHEET.md`, and everything in `packages/okb/examples/<name>/` except `tutorial-src/` (that includes `docs/`, the reference pages `okb docs` writes from `packages/okb/src/kbdocs.ts`; `packages/okb/tests/kbdocs.test.ts` fails when the committed pages differ from a fresh run). Pages under `docs/getting-started/`, `docs/learn/`, `docs/build/`, `docs/reference/skills.md` and `tutorial-src/` are beginner pages that get the extra `Beginner` Vale rules (`.vale.ini`). The matching development skills are `.claude/skills/write-learn-page` (`docs/learn/*.md`) and `.claude/skills/write-tutorial`.
+Hand-written (the drift check covers all but the generated tutorial pages): `README.md`, `CONTRIBUTING.md`, `docs/getting-started/`, `docs/learn/` (the Learn course), `docs/build/`, `docs/reference/`, `docs/FORMAT.md`, `docs/EXTRACTION-PIPELINE.md`, `docs/CHANGELOG.md`, `docs/CODE-REVIEW.md`, `packages/okb/meta-kb/README.md`, `packages/reader/README.md`, `sources/README.md`, the tutorial sources `packages/okb/examples/*/tutorial-src/*.md` and `brain/` (its decisions only warn about paths that have moved, since their text is never edited). Generated (never edit): `docs/METHOD.md`, `GLOSSARY.md`, `RULES.md`, `DECISIONS.md`, `CLI.md`, `CLI-CHEAT-SHEET.md`, and everything in `packages/okb/examples/<name>/` except `tutorial-src/` (that includes `docs/`, the reference pages `okb docs` writes from `packages/okb/src/kbdocs.ts`; `packages/okb/tests/kbdocs.test.ts` fails when the committed pages differ from a fresh run). Pages under `docs/getting-started/`, `docs/learn/`, `docs/build/`, `docs/reference/skills.md` and `tutorial-src/` are beginner pages that get the extra `Beginner` Vale rules (`.vale.ini`). The matching development skills are `.claude/skills/write-learn-page` (`docs/learn/*.md`) and `.claude/skills/write-tutorial`.
 
 ## Tutorials
 
