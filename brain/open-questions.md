@@ -30,7 +30,7 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 ## Should the project adopt a bundler or other build step before 1.0?
 
 - **Why it's open:** development runs the TypeScript sources with Node's type stripping, and publishing compiles `src/` to `dist/` with `tsc`. No bundler was ever weighed ([decision 0009](decisions/0009-node-26-for-development-24-at-runtime.md)). It doesn't block 1.0 ([decision 0025](decisions/0025-bundler-after-one-point-zero.md)).
-- **Reopen when:** someone names a concrete benefit to consumers (the published packages) or to maintainers. A change must keep the `exports` map and `bin` identical.
+- **Reopen when:** someone names a concrete benefit to consumers (the published packages) or to maintainers. A change must keep the `exports` map, the `bin` and the public reader API (names, types, behavior, files it reads) identical.
 
 ## How do humans and programs query a KB in production?
 

@@ -15,4 +15,4 @@ links: ["milestones/road-to-1-0.md", "Discussion #105"]
 
 **Weighed:** starting with extraction (goal 1 is the core promise) and splitting competency-question work from the rest of extraction were offered. The owner chose the plan as written.
 
-**Consequences:** the issue and milestone moves are drafted for the owner's review in [road-to-1-0.md](../milestones/road-to-1-0.md). Nothing on GitHub has changed.
+**Consequences:** the GitHub milestones and issues were moved to match on 2026-11-25. [road-to-1-0.md](../milestones/road-to-1-0.md) logs what changed.

@@ -13,4 +13,4 @@ links: ["0009-node-26-for-development-24-at-runtime.md", "milestones/road-to-1-0
 
 **Why:** the owner chose to defer it. The recommendation they accepted: consumers see only the `exports` map and the `bin`, so a build change doesn't touch the 1.0 promise as long as those stay the same.
 
-**Consequences:** a later build change must keep the `exports` map and `bin` behavior identical.
+**Consequences:** a later build change must keep everything a consumer relies on identical: the `exports` map, the `bin` behavior, and the public `@ontology-kit/reader` API, meaning its exported names, types and behavior and any file it reads at run time.
