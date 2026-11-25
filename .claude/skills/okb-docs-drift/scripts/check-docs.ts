@@ -13,14 +13,17 @@
  *   - node and edge types in docs/FORMAT.md tables, checked against packages/okb/meta-kb/src/format.yaml
  *   - meta-KB counts ("55 rules", "34 glossary concepts") and versions ("meta-KB 2.3.0"),
  *     checked against packages/okb/meta-kb/data/manifest.json
- * Exit code 1 if anything is found. It can't judge prose; the skill covers that.
+ *   - brain/: the living files (README, now, open-questions, milestones/*.md) get every check above. Decision
+ *     files (brain/decisions/*.md) are never edited, so a path in one that no longer exists is only a warning.
+ * Exit code 1 if anything but a warning is found. It can't judge prose; the skill covers that.
+ * DRIFT_ROOT points the check at another tree (the tests use a temporary copy).
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
+const ROOT = process.env.DRIFT_ROOT ?? join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
 /** The okb package: the CLI, meta-KB, skills, examples and tests (repo-relative). */
 const PKG = "packages/okb";
 /** The tutorial sources (packages/okb/examples/<name>/tutorial-src/*.md); the generated pages next to them copy these. */
@@ -33,10 +36,16 @@ const TUTORIAL_SOURCES = existsSync(join(ROOT, PKG, "examples"))
 /** Hand-written markdown directories (docs/getting-started, learn, build, reference): every .md file in each. */
 const DOC_DIRS = ["docs/getting-started", "docs/learn", "docs/build", "docs/reference"];
 const DIR_DOCS = DOC_DIRS.flatMap((dir) => (existsSync(join(ROOT, dir)) ? readdirSync(join(ROOT, dir)).filter((f) => f.endsWith(".md")).sort().map((f) => `${dir}/${f}`) : []));
+/** The brain's living files (decisions are checked separately, as warnings). */
+const BRAIN_DOCS = ["brain/README.md", "brain/now.md", "brain/open-questions.md", ...(existsSync(join(ROOT, "brain/milestones")) ? readdirSync(join(ROOT, "brain/milestones")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/milestones/${f}`) : [])];
+/** Decision records are never edited (except typos), so a stale path in one is a warning, not a failure. */
+const BRAIN_DECISIONS = existsSync(join(ROOT, "brain/decisions")) ? readdirSync(join(ROOT, "brain/decisions")).filter((f) => f.endsWith(".md")).sort().map((f) => `brain/decisions/${f}`) : [];
+const isDecision = (f: string) => /^brain\/decisions\/[^/]+\.md$/.test(f);
 const DEFAULT_DOCS = [
   "README.md", "CONTRIBUTING.md", "CLAUDE.md", ...DIR_DOCS, "docs/CHANGELOG.md", "docs/FORMAT.md", "docs/EXTRACTION-PIPELINE.md", "docs/CODE-REVIEW.md", `${PKG}/meta-kb/README.md`, "sources/README.md", "packages/reader/README.md",
   `${PKG}/skills/ontology-coach/SKILL.md`, `${PKG}/skills/ontology-review/SKILL.md`, `${PKG}/skills/ontology-maintainer/SKILL.md`, `${PKG}/skills/ontology-signoff/SKILL.md`, `${PKG}/skills/build-domain-kb-from-docs/SKILL.md`, ...TUTORIAL_SOURCES,
   ".claude/skills/write-learn-page/SKILL.md", ".claude/skills/write-tutorial/SKILL.md",
+  ...BRAIN_DOCS, ...BRAIN_DECISIONS,
 ];
 /** pnpm commands and tool names that aren't package.json scripts. */
 const PNPM_BUILTINS = new Set(["install", "i", "add", "remove", "update", "link", "unlink", "exec", "dlx", "run", "store", "list", "why", "tsc", "prettier", "ignored-builds", "approve-builds", "pack"]);
@@ -49,6 +58,8 @@ interface Problem {
   line: number;
   kind: "command" | "flag" | "npm-script" | "path" | "rule" | "format-type" | "count" | "version";
   message: string;
+  /** A warning is reported but doesn't change the exit code. */
+  severity: "error" | "warning";
 }
 
 /** okb command -> its subcommands and flags, from the `case "x":` blocks in packages/okb/src/cli.ts. */
@@ -104,7 +115,13 @@ const RULE_ID = /`((?:struct|hier|inst|slot|disjoint|naming|scope|doc|reuse|term
 const REPO_PATH = /(?<![\w./-])((?:packages\/[\w-]+\/)?(?:src|docs|meta-kb|tests|examples|skills|bin|sources)\/[\w./*-]*[\w*])/g;
 
 function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
-  const problems: Problem[] = [];
+  // A decision file is only checked for paths, and what it finds is a warning.
+  const found = scan(file, cli, rules, fmt, scripts);
+  return isDecision(file) ? found.filter((p) => p.kind === "path").map((p) => ({ ...p, severity: "warning" as const })) : found;
+}
+
+function scan(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<string>, fmt: ReturnType<typeof formatTypes>, scripts: Set<string>): Problem[] {
+  const problems: Omit<Problem, "severity">[] = [];
   const lines = read(file).split("\n");
   let inFence = false;
   lines.forEach((text, i) => {
@@ -183,7 +200,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
     for (const t of fmt.nodes) if (!doc.includes("`" + t + "`")) problems.push({ file, line: 0, kind: "format-type", message: `Registered node type '${t}' isn't documented.` });
     for (const t of fmt.edges) if (!doc.includes("`" + t + "`")) problems.push({ file, line: 0, kind: "format-type", message: `Registered edge type '${t}' isn't documented.` });
   }
-  return problems;
+  return problems.map((p) => ({ ...p, severity: "error" as const }));
 }
 
 /** Paths that only exist after a command runs (PDFs are gitignored, examples are built). */
@@ -203,5 +220,8 @@ const problems = (files.length ? files : DEFAULT_DOCS).filter((f) => existsSync(
 
 if (json) console.log(JSON.stringify(problems, null, 2));
 else if (!problems.length) console.log("No drift found in the checked docs.");
-else for (const p of problems) console.log(`${p.file}:${p.line}  [${p.kind}] ${p.message}`);
-process.exitCode = problems.length ? 1 : 0;
+else {
+  for (const p of problems) console.log(`${p.file}:${p.line}  ${p.severity === "warning" ? "warning " : ""}[${p.kind}] ${p.message}`);
+  if (!problems.some((p) => p.severity === "error")) console.log("Only warnings (old decisions name paths that have moved); nothing to fix.");
+}
+process.exitCode = problems.some((p) => p.severity === "error") ? 1 : 0;
