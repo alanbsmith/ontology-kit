@@ -22,3 +22,4 @@ The milestone's issues are merged and released as 0.6.0, with the browsable view
 
 - 2026-11-24: file written from the road-to-1-0 plan.
 - 2026-11-25: playground moved to Serving.
+- 2026-11-25: milestone retitled with its version; #19 moved in.

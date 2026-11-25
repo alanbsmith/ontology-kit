@@ -48,3 +48,4 @@ Impact checks across linked KBs (#32) and combined export (#33), the rest of Str
 
 - 2026-11-24: plan written with the owner. Nothing changed on GitHub.
 - 2026-11-25: guardrails accepted, cross-KB references and the three test KBs pulled before 1.0, sources beyond Ontology 101, the playground and eval-kit decided.
+- 2026-11-25: GitHub updated: milestones retitled with versions, Soak milestone created, Maintaining a KB closed, issues moved, #157 to #164 created. The eval-kit issue is held.

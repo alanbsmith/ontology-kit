@@ -1,6 +1,6 @@
 ---
 summary: Maintaining a KB, done 2026-11-24 (#140). Making a KB safe for a team to change.
-updated: 2026-11-24
+updated: 2026-11-25
 links: ["https://github.com/alanbsmith/ontology-kit/milestone/2", "Discussion #105"]
 ---
 
@@ -28,3 +28,4 @@ Done: #140 merged on 2026-11-24, covering every item #105 lists for the mileston
 - 2026-11-22: milestone file started with the brain.
 - 2026-11-24: #140 merged; main at meta-KB 2.6.3.
 - 2026-11-24: released in 0.2.0 (#148).
+- 2026-11-25: tracker #87 and the GitHub milestone closed; #143 moved to Serving and #19 to Subject-matter experts.

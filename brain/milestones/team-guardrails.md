@@ -22,3 +22,4 @@ Spike #100 is answered first and decides declarative or code ([open question](..
 
 - 2026-11-24: file written from the road-to-1-0 plan.
 - 2026-11-25: cross-KB references (#31) added.
+- 2026-11-25: milestone retitled with its version; #31 moved in.
