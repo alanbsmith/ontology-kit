@@ -495,9 +495,11 @@ export class Ontology {
   }
 
   /**
-   * Everything reachable with `next`, nearest first (a parent before its own parents), and among classes
-   * the same distance away in id order, so the order is the same in memory and after a save and reload.
-   * Cycle-safe.
+   * Everything reachable with `next`, breadth-first, so nearer classes come before farther ones. Each
+   * class's own parents (or children) are visited in id order. The order is deterministic, so it is the same
+   * in memory and after a save and reload, but it is not sorted by id across all the classes at one distance:
+   * for a class whose parents are `b` and `c`, where `b` has the parent `z` and `c` has the parent `a`,
+   * the walk gives `b, c, z, a`. Cycle-safe.
    */
   private walk(id: string, next: (x: string) => string[]): Set<string> {
     const seen = new Set<string>();
