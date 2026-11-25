@@ -32,6 +32,7 @@ The brain never copies statuses from GitHub, so they can't go stale here. Read t
 gh project item-list 4 --owner alanbsmith --format json --limit 200   # the board
 gh api repos/alanbsmith/ontology-kit/milestones --jq '.[] | "\(.number) \(.title): \(.open_issues) open, \(.closed_issues) closed"'
 gh issue list --repo alanbsmith/ontology-kit --milestone "<title>" --state all
+gh issue list --repo alanbsmith/ontology-kit --label epic --state all     # each milestone's epic (tracker)
 gh api graphql -f query='{repository(owner:"alanbsmith",name:"ontology-kit"){discussion(number:105){title body}}}' --jq '.data.repository.discussion'
 ```
 
