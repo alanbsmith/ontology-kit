@@ -13,14 +13,6 @@ Package releases come first, newest first, in the [Keep a Changelog](https://kee
 - refactor(reader)!: Rename @ontology-kit/format to @ontology-kit/reader ([#146](https://github.com/alanbsmith/ontology-kit/pull/146))
   The package name changed. To upgrade, change the dependency and every import from `@ontology-kit/format` to `@ontology-kit/reader`. The exports are the same. `@ontology-kit/format` 0.1.0 stays installable and will be deprecated with a pointer to the new name once the next release is out.
 
-  Versions: nothing is bumped here. The packages stay at 0.1.0, and breaking changes are expected before 1.0. The next release is 0.2.0, with the rename in its "Breaking" entry.
-
-  **After this merges (owner steps that need npm credentials), in this order.** The full procedure is in `CONTRIBUTING.md`, "Publishing a new package".
-  1. Publish a one-time bootstrap pre-release of `@ontology-kit/reader` by hand. npm can configure a trusted publisher only for a package that already exists. The bootstrap has to come before the release.
-  2. Prepare the release: set the same version in all three packages (the published okb 0.1.0 depends on `@ontology-kit/format`, so it can't be republished), write the changelog entry, merge it, and run the release workflow by hand with `dry-run` on.
-  3. Configure the trusted publisher for `@ontology-kit/reader` on npmjs.com, then push the tag the same day. npm expires a trusted publisher that hasn't completed a publish within 2 days.
-  4. Once the workflow has finished and the new version is on npm, deprecate the bootstrap, and deprecate the whole old package: `npm deprecate "@ontology-kit/format" "Renamed to @ontology-kit/reader"`. The old package can't be unpublished, since okb 0.1.0 depends on it.
-
 #### CLI
 
 - feat(okb): Add the tools, format changes and skills for maintaining a KB ([#140](https://github.com/alanbsmith/ontology-kit/pull/140), [@alanbsmith](https://github.com/alanbsmith))
