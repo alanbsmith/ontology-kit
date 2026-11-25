@@ -41,6 +41,7 @@ packages/okb/           @ontology-kit/okb: the CLI (a pnpm workspace package; de
   tests/                node:test suites (also the docs site's tests)
 packages/ontology-kit/  ontology-kit: the unscoped wrapper, just a bin that forwards to @ontology-kit/okb
 site/                   the docs site (Astro; a private workspace package, reads the markdown in place)
+brain/                  the project's why for planning sessions: decisions, open questions, milestone reasons, current state (start at brain/README.md)
 docs/                   METHOD/GLOSSARY/RULES/DECISIONS are generated (pnpm run docs)
 sources/                the source PDFs (gitignored; see sources/README.md)
 scripts/                repo-wide tooling (vale.sh, release.ts, rewrite-dts.ts)
