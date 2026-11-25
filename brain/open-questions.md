@@ -1,6 +1,6 @@
 ---
 summary: Questions that are undecided or deliberately deferred, why, and what would reopen each.
-updated: 2026-11-22
+updated: 2026-11-24
 ---
 
 # Open questions
@@ -9,7 +9,7 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 
 ## What versions do the milestones map to, on the way to 1.0?
 
-- **Why it's open:** CONTRIBUTING.md lists four conditions for 1.0 (a stable CLI, a format upgrade path, `@ontology-kit/format` used by an outside tool, several clean releases). #105 orders the milestones but names no versions.
+- **Why it's open:** CONTRIBUTING.md lists four conditions for 1.0 (a stable CLI, a format upgrade path, `@ontology-kit/reader` used by an outside tool, several clean releases). #105 orders the milestones but names no versions.
 - **Reopen when:** before the next minor release is planned.
 
 ## Where should the vision live: #105 or the brain?
@@ -31,3 +31,8 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 
 - **Why it's open:** listed in #105. It decides how much of the MCP skills extension is worth building.
 - **Reopen when:** the Serving a KB milestone starts.
+
+## Should the project adopt a bundler or other build step before 1.0?
+
+- **Why it's open:** development runs the TypeScript sources with Node's type stripping, and publishing compiles `src/` to `dist/` with `tsc`. No bundler was ever weighed ([decision 0009](decisions/0009-node-26-for-development-24-at-runtime.md)).
+- **Reopen when:** someone names a concrete benefit to consumers (the published packages) or to maintainers, before 1.0.

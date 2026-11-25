@@ -12,4 +12,4 @@ links: [commit 3667123, CLAUDE.md]
 
 **Why:** type stripping, `node:test` and the PDF fallback all work on 24 as well as 26, so there was no reason to raise the floor for users. Raising it later is a breaking change.
 
-<!-- Alan: why no build step in development (type stripping over a bundler or tsc --watch) isn't written down anywhere I could find. -->
+**No build step in development:** this wasn't a weighed trade-off. The project first ran from a local repo, so it never needed a bundler, and none was considered against type stripping. The published packages do compile (`pnpm build` runs `tsc` into `dist/`). Whether to add a bundler or other build step is open: see [open-questions.md](../open-questions.md).

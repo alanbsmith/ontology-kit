@@ -1,5 +1,5 @@
 ---
-summary: Ship the file-format reader as a subpath export of okb. Superseded by 0007 before anything was published.
+summary: Ship the file-format reader as a subpath export of okb. The subpath was never published; 0007 replaced it with a package, which shipped in 0.1.0 as `@ontology-kit/format`.
 status: superseded
 date: 2026-11-20
 superseded-by: 0007

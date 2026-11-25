@@ -1,8 +1,9 @@
 ---
 summary: The file-format reader is its own package, @ontology-kit/format, with no dependency on okb.
-status: accepted
+status: superseded
 date: 2026-11-21
 supersedes: 0006
+superseded-by: 0014
 updated: 2026-11-22
 links: [commit 05325de, "docs/FORMAT.md#why-a-package-of-its-own"]
 ---
