@@ -51,7 +51,7 @@ grep -H '^summary:' brain/decisions/*.md
 
 ## Keeping it current
 
-- **Decisions are never edited.** Record a change of mind as a new decision with `supersedes:`, and set the old one's `status: superseded`. Fix typos freely.
+- **A decision's text is never edited.** Record a change of mind as a new decision with `supersedes:`. Two things on the old file may change: typo fixes, and its front matter, where you set `status: superseded` and add `superseded-by:` so a reader of the old file (or the `grep` below) can see it was replaced. Never reword its decision, reason or consequences.
 - **Every other file is rewritten in place.** Update its `updated:` date. Git history is its record of changes.
 - **Undecided goes in open-questions.md.** When a question is settled, write the decision and remove the entry.
 - **At the end of a session**, update `now.md` if the focus moved, add a line to the milestone's log, and write any decision you made.
