@@ -16,7 +16,7 @@
  *   - brain/: the living files (every brain/*.md and brain/milestones/*.md) get every check above. Decision
  *     files (brain/decisions/*.md) keep their text, so a path in one that no longer exists is only a warning.
  *     A decision still marked `status: proposed` once it's on main (DRIFT_MAIN_REF, default origin/main) is a
- *     warning too: set it to accepted when its PR merges.
+ *     warning too: the owner accepts or rejects decisions in the milestone's last checklist item, before its PR merges.
  * Exit code 1 if anything but a warning is found. It can't judge prose; the skill covers that.
  * DRIFT_ROOT points the check at another tree (the tests use a temporary copy).
  */
@@ -119,7 +119,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
   if (!isDecision(file)) return found;
   const warnings = found.filter((p) => p.kind === "path").map((p) => ({ ...p, severity: "warning" as const }));
   if (/^status:\s*proposed\s*$/m.test(read(file)) && onMain(file))
-    warnings.push({ file, line: 0, kind: "status", severity: "warning", message: `Still 'status: proposed' on ${MAIN_REF}; set it to accepted now that its PR has merged.` });
+    warnings.push({ file, line: 0, kind: "status", severity: "warning", message: `Still 'status: proposed' on ${MAIN_REF}; the owner accepts or rejects a decision in the milestone's last checklist item, before its PR to main merges (brain/README.md).` });
   return warnings;
 }
 
