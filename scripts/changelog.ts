@@ -112,15 +112,19 @@ function run(cmd: string, args: string[]): string {
 /** The newest `v*` tag before `to`, or undefined if there is none (the first release). */
 export function previousTag(to: string): string | undefined {
   try {
-    return run("git", ["describe", "--tags", "--abbrev=0", "--match", "v*", `${to}^`]) || undefined;
+    return run("git", ["describe", "--tags", "--abbrev=0", "--match", "v*", "--exclude", "v*-*", `${to}^`]) || undefined;
   } catch {
     return undefined;
   }
 }
 
-/** The pull requests merged into the first-parent history in `from..to`, found through the GitHub API. */
+/**
+ * The pull requests merged in `from..to`, found through the GitHub API. It walks every commit in the range, not just
+ * the first-parent line: after the alpha branch is merged into main, the first-parent line is one merge commit, and
+ * the PRs that landed on alpha are on the second parent. PRs are deduplicated by number.
+ */
 export function mergedPrs(from: string, to: string): MergedPr[] {
-  const shas = run("git", ["log", "--first-parent", "--format=%H", `${from}..${to}`]).split("\n").filter(Boolean);
+  const shas = run("git", ["log", "--format=%H", `${from}..${to}`]).split("\n").filter(Boolean);
   const byNumber = new Map<number, MergedPr>();
   for (const sha of shas) {
     const found = JSON.parse(run("gh", ["api", `repos/{owner}/{repo}/commits/${sha}/pulls`])) as {
