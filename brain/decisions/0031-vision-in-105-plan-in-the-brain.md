@@ -1,6 +1,6 @@
 ---
 summary: Discussion #105 holds the vision, which changes rarely; the brain holds the plan, order and reasons, which change often.
-status: proposed
+status: accepted
 decided-by: owner, on a recommendation
 date: 2026-11-25
 updated: 2026-11-25
