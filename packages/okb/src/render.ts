@@ -1,10 +1,16 @@
 /** Human-readable output: findings, explanations, trees, node details, Mermaid diagrams. */
 import { ruleUrl } from "./site.ts";
-import { MetaKB, type Explainable, type MetaStep } from "./metakb.ts";
-import { edgeProps, nodeLabel, type Ontology, type OkbNode, type SlotNode } from "@ontology-kit/reader";
+import { MetaKB, explainName, type Explainable, type MetaStep } from "./metakb.ts";
+import { edgeProps, nodeLabel, type CompetencyQuestionNode, type DesignDecisionNode, type Ontology, type OkbNode, type SlotNode, type SourceLocationNode, type SourceNode } from "@ontology-kit/reader";
 import { type Finding } from "./types.ts";
 import * as naming from "./naming.ts";
 import type { CheckReport } from "./check.ts";
+import type { MdDoc } from "./markdown.ts";
+import type { ReviewItem } from "./review.ts";
+import type { SkillState } from "./skills.ts";
+import type { computeStatus } from "./status.ts";
+
+type Status = ReturnType<typeof computeStatus>;
 
 const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
 const wrap = (code: number) => (s: string) => (useColor ? `\x1b[${code}m${s}\x1b[0m` : s);
@@ -379,4 +385,228 @@ export function formatCheck(report: CheckReport, name: string): string {
   const safe = warned ? `no check failed, but ${warned} warned (marked ${SYMBOL.warning} above).` : "every check passed.";
   out.push("", report.ok ? `${SYMBOL.ok} Safe to merge: ${safe}` : `${SYMBOL.error} Not safe to merge: ${failed} of ${report.steps.length} checks failed.`);
   return out.join("\n");
+}
+
+// ---- Terminal output for the command records (src/commands/). Each returns lines; the runner prints them. ----
+
+/** A note that teaches rather than reports is shown dimmed. */
+const TIP = /^(Tip|Add a|Attach|Decide|Say which|List the)/;
+
+export function formatNotes(notes: readonly string[]): string[] {
+  return notes.map((n) => (TIP.test(n) ? c.dim("  " + n) : n));
+}
+
+export function renderInit(name: string, root: string, folder: string, guide: string): string[] {
+  return [`${SYMBOL.ok} Created ontology '${name}' in ${root}\n`, guide, c.dim(`\nNext: cd ${folder} && okb scope --domain "..." --purpose "..." --users "..."`)];
+}
+
+export function renderScope(m: Ontology["meta"]): string[] {
+  const row = (k: string, val: unknown) => `  ${c.dim(k.padEnd(13))} ${Array.isArray(val) ? val.join(", ") || c.yellow("—") : val || c.yellow("—")}`;
+  return [c.bold(m.name), row("domain", m.domain), row("purpose", m.purpose), row("users", m.users), row("maintainers", m.maintainers), row("out of scope", m.outOfScope), row("kind", m.kind)];
+}
+
+export function renderConvention(ont: Ontology): string {
+  const cv = ont.conventions!;
+  return `Naming convention: classes ${cv.classCase} (${cv.classNumber}) · slots ${cv.slotCase}${cv.slotAffix !== "none" ? ` (${cv.slotAffix})` : ""} · instances ${cv.instanceCase ?? "free text"}`;
+}
+
+export function renderQuestions(ont: Ontology, qs: readonly CompetencyQuestionNode[]): string[] {
+  if (!qs.length) return [c.dim('No competency questions yet. okb cq add "..."')];
+  const out: string[] = [];
+  for (const q of qs) {
+    const needs = ont.targets(q.id, "NEEDS").map((n) => ont.label(n));
+    const num = ont.displayNumber(q);
+    out.push(`${c.bold(String(num).padEnd(3))} ${q.text} ${c.dim(`[${q.status ?? "draft"}]`)}`);
+    out.push(c.dim(`       needs: ${needs.length ? needs.join(", ") : "(not linked yet: okb cq link " + num + " <Class|slot>...)"}`));
+  }
+  return out;
+}
+
+export function renderTerms(ont: Ontology): string[] {
+  const ts = ont.ofType("Term");
+  const groups = new Map<string, string[]>();
+  for (const t of ts) {
+    const d = t.disposition ?? "undecided";
+    const became = ont.targets(t.id, "BECAME").map((x) => ont.label(x));
+    groups.set(d, [...(groups.get(d) ?? []), t.text + (became.length ? c.dim(` → ${became.join(", ")}`) : "")]);
+  }
+  const out = [...groups].map(([d, items]) => `${c.bold(d.padEnd(13))} ${items.join(" · ")}`);
+  if (!ts.length) out.push(c.dim("No terms yet. okb term add wine grape winery ..."));
+  return out;
+}
+
+export function renderReuse(ont: Ontology): string[] {
+  const rs = ont.ofType("ReusedOntology");
+  const out = rs.map((r) => `${c.bold(r.name)} ${c.dim(`[${r.decision}]`)} ${r.url ?? ""} ${r.notes ? "\n  " + r.notes : ""}`);
+  if (!rs.length) out.push(c.dim(ont.meta.reuseReviewed ? "Reviewed: nothing reused." : "Not reviewed yet."));
+  return out;
+}
+
+export function renderDecisions(ont: Ontology, ds: readonly DesignDecisionNode[]): string[] {
+  const out: string[] = [];
+  for (const d of ds) {
+    out.push(`${c.bold(String(ont.displayNumber(d)).padEnd(3))} ${d.title}`);
+    out.push(`   ${d.decision}${d.rationale ? c.dim(" · why: " + d.rationale) : ""}`);
+    const about = ont.targets(d.id, "ABOUT").map((x) => ont.label(x));
+    if (about.length || d.metaRules) out.push(c.dim(`   about: ${about.join(", ") || "—"}${d.metaRules ? " · explains: " + d.metaRules.join(", ") : ""}`));
+  }
+  if (!ds.length) out.push(c.dim("No design decisions recorded yet."));
+  return out;
+}
+
+export function renderFindings(findings: Finding[], hiddenLater: number, ont: Ontology, opts: { all?: boolean; verbose?: boolean }): string[] {
+  const out = [formatFindings(findings, ont, opts)];
+  if (hiddenLater) out.push(c.dim(`(${hiddenLater} warning(s)/hint(s) from later steps are hidden until you get there; okb validate --all shows them. Errors are never hidden.)`));
+  return out;
+}
+
+export function renderStatus(ont: Ontology, findings: Finding[], st: Status): string[] {
+  const meta = MetaKB.get();
+  const shown = findings.filter((f) => !f.explainedBy && (f.severity === "error" || (meta.rule(f.rule).fromStep ?? 1) <= ont.step));
+  const count = (sev: string) => shown.filter((f) => f.severity === sev).length;
+  const out = [c.bold(ont.meta.name) + c.dim(`  · ${ont.ofType("Class").length} classes · ${ont.ofType("Slot").length} slots · ${ont.ofType("Instance").length} instances · ${ont.ofType("CompetencyQuestion").length} questions`), ""];
+  for (const s of st.steps) {
+    const here = s.order === ont.step ? c.cyan(" ◀ you are here") : "";
+    const mark = s.complete ? SYMBOL.ok : s.order === ont.step ? c.cyan("▶") : SYMBOL.todo;
+    out.push(`${mark} ${c.bold(`${s.order}. ${s.name}`)}${here}`);
+    if (s.order === ont.step || (!s.complete && s.order < ont.step)) {
+      for (const it of s.items) out.push(`     ${it.done === null ? SYMBOL.ask : it.done ? SYMBOL.ok : SYMBOL.todo} ${it.text}`);
+    }
+  }
+  out.push("");
+  out.push(`Validator (steps 1–${ont.step}): ${SYMBOL.error} ${count("error")}  ${SYMBOL.warning} ${count("warning")}  ${SYMBOL.info} ${count("info")}   ${c.dim("okb validate for details")}`);
+  const cur = st.steps.find((s) => s.order === ont.step)!;
+  if (cur.complete && ont.step < st.steps.length) out.push(c.green(`\nStep ${ont.step} looks done. When you're happy with it: okb step next`));
+  else if (st.suggested < ont.step) out.push(c.yellow(`\nStep ${st.suggested} still has open items. It's fine to go back: okb step ${st.suggested}`));
+  else out.push(c.dim(`\nSee the guide for this step: okb step`));
+  return out;
+}
+
+/** What `okb step <n>` prints after moving: a warning if the step you left isn't finished, then the new step's guide. */
+export function renderStepMove(target: number, leaving: { order: number; complete: boolean; items: { done: boolean | null; text: string }[] }): string[] {
+  const out: string[] = [];
+  if (target > leaving.order && !leaving.complete) {
+    out.push(c.yellow(`Moving on with step ${leaving.order} unfinished (${leaving.items.filter((i) => i.done === false).map((i) => i.text).join("; ")}). That's allowed; the method is iterative.`));
+  }
+  out.push(c.cyan(`Now on step ${target}.`) + c.dim(` (To read a step's guide without moving: okb explain ${target})`) + "\n");
+  out.push(stepGuide(MetaKB.get().step(target)!));
+  return out;
+}
+
+export function renderExplainHits(hits: readonly Explainable[], q: string): string[] {
+  if (!hits.length) return [`Nothing called '${q}'. Try: okb explain --search ${q}`];
+  const out = [explain(hits[0])];
+  if (hits.length > 1) out.push(c.dim(`\nAlso matches: ${hits.slice(1, 6).map(explainName).join(", ")}`));
+  return out;
+}
+
+export function renderSearchHits(hits: readonly Explainable[], query: string): string[] {
+  if (!hits.length) return [`Nothing mentions '${query}'.`];
+  return hits.map((h) => `${(h.type === "Rule" ? h.key : h.id).padEnd(40)} ${c.dim(h.type)}  ${h.type === "Rule" ? h.statement.slice(0, 60) : h.name}`);
+}
+
+/** `okb review` lists this many prompts per rule in the terminal; --json has them all. */
+const REVIEW_PROMPTS_SHOWN = 12;
+
+export function renderReview(ont: Ontology, items: ReviewItem[], all: boolean): string[] {
+  const out = [c.bold(all ? "Review: what only a person can judge (all rules)" : `Review: what only a person can judge (step ${ont.step} and anything already visible)`) + "\n"];
+  for (const it of items) {
+    out.push(`${SYMBOL.ask} ${c.bold(it.rule)} ${c.dim(`(${it.modality.replace("_", " ")})`)}  ${it.question}`);
+    for (const f of it.flags) out.push(`   ${SYMBOL.warning} ${f}`);
+    for (const x of it.prompts.slice(0, REVIEW_PROMPTS_SHOWN)) out.push(`   · ${x}`);
+    if (it.prompts.length > REVIEW_PROMPTS_SHOWN) out.push(c.dim(`   · ...and ${it.prompts.length - REVIEW_PROMPTS_SHOWN} more (okb review --json)`));
+    if (it.source) out.push(c.dim(`   ${it.source}`));
+    out.push("");
+  }
+  out.push(c.dim("Record answers that needed thought (or that someone might question later): okb decision add ..."));
+  return out;
+}
+
+export function renderSources(ont: Ontology): string[] {
+  const out = ont.ofType("Source").map((s) => `${c.bold(s.id)}  ${s.title} ${c.dim(`(${s.format ?? "?"}, ${ont.sources(s.id, "PART_OF").length} quotes)`)}  ${c.dim(s.localPath ?? s.url ?? "")}`);
+  if (!out.length) out.push(c.dim("No sources yet. okb source add <file>"));
+  return out;
+}
+
+export function renderOutline(src: SourceNode, doc: MdDoc, blocks: MdDoc["blocks"], quoted: ReadonlyMap<number, unknown>, onlyProblems: boolean): string[] {
+  const out = [c.bold(`${doc.title ?? src.id}`) + c.dim(`  ${src.localPath} · ${doc.blocks.length} blocks, ${doc.blocks.filter((b) => b.quotable).length} quotable`)];
+  if (doc.problems.length) {
+    out.push(c.yellow(`\n${doc.problems.length} problem(s) in the document:`));
+    for (const pr of doc.problems) out.push(c.yellow(`  line ${pr.line}: ${pr.message}`));
+  }
+  if (onlyProblems) return out;
+  let lastPath = "";
+  for (const b of blocks) {
+    const pth = b.headingPath.join(" > ");
+    if (pth !== lastPath) {
+      out.push("\n" + c.bold(pth || "(top)"));
+      lastPath = pth;
+    }
+    const mark = !b.quotable ? c.dim("·") : quoted.has(b.startLine) ? SYMBOL.ok : SYMBOL.todo;
+    const where = `L${b.startLine}${b.endLine > b.startLine ? `-${b.endLine}` : ""}`.padEnd(9);
+    const label = b.kind === "code" ? c.dim(`code (${b.lang || "text"}), not quotable`) : b.kind === "comment" ? c.dim("comment") : b.kind === "frontmatter" ? c.dim("frontmatter") : (b.calloutType ? c.cyan(`[${b.calloutType}] `) : "") + b.text.slice(0, 110) + (b.text.length > 110 ? "…" : "");
+    out.push(`  ${mark} ${c.dim(where)} ${c.dim(b.kind.padEnd(10))} ${label}${b.note?.startsWith("malformed") ? c.yellow("  ⚠ " + b.note) : ""}`);
+  }
+  out.push(c.dim(`\n${SYMBOL.ok} quoted   ${SYMBOL.todo} not quoted yet   · not quotable   ·   okb quote add ${src.id} "..."`));
+  return out;
+}
+
+export function renderQuotes(ont: Ontology, locs: readonly SourceLocationNode[]): string[] {
+  return locs.map((l) => {
+    const by = ont.sources(l.id, "CITES").map((x) => ont.label(x));
+    return `${c.bold(l.id)} ${c.dim(`${l.locator}${l.lines ? `, line ${l.lines}` : ""}`)}\n   "${l.quote}"${by.length ? c.dim(`\n   cited by: ${by.join(", ")}`) : ""}`;
+  });
+}
+
+export function renderRules(ont: Ontology): string[] {
+  return ont.ofType("Rule").map((r) => {
+    const st = r.verification?.status ?? "unverified";
+    return `${c.bold(r.id)} ${c.dim(`[${r.modality} · ${r.authored ? "authored · " : ""}${st}${r.extractionConfidence ? " · " + r.extractionConfidence : ""}]`)}\n   ${r.statement}${c.dim(`\n   governs: ${ont.targets(r.id, "GOVERNS").map((x) => ont.label(x)).join(", ") || "—"} · cites: ${ont.targets(r.id, "CITES").join(", ")}`)}`;
+  });
+}
+
+export function renderDrift(hits: readonly { message: string }[]): string[] {
+  if (!hits.length) return [`${SYMBOL.ok} No near-duplicate quotes across different sources.`];
+  return hits.map((h) => `${SYMBOL.info} ${h.message}`);
+}
+
+export function renderReleaseVerify(r: { ok: boolean; id: string; version: string; checked: number; problems: string[] }): string[] {
+  if (r.ok) return [`${SYMBOL.ok} ${r.id} ${r.version} matches its manifest (${r.checked} files).`];
+  return [
+    `${SYMBOL.error} ${r.id} ${r.version} doesn't match its manifest:`,
+    ...r.problems.map((pr) => `  - ${pr}`),
+    c.dim("  If the changes are intended, cut a new release: okb release <version>. If not, restore the files (git checkout)."),
+  ];
+}
+
+export function renderPin(version: string): string {
+  return `${SYMBOL.ok} Pinned okb ${version} in okb.json. okb check warns anyone with an older okb, and the CI workflow installs this version.`;
+}
+
+export function renderSkillsInstall(dir: string, lines: readonly string[]): string[] {
+  return [`${SYMBOL.ok} Skills in ${dir}`, ...lines.map((l) => `  ${l}`), c.dim("\n  Start a new Claude Code or Cursor session to load them.")];
+}
+
+export function renderSkillsStatus(dir: string, metaVersion: string, skills: readonly { name: string; state: SkillState; detail: string }[]): string[] {
+  const good = (s: SkillState) => s === "current";
+  const out = [c.bold(`Skills in ${dir}`) + c.dim(`  (okb meta-KB ${metaVersion})`)];
+  for (const s of skills) out.push(`  ${good(s.state) ? SYMBOL.ok : s.state === "missing" ? SYMBOL.todo : SYMBOL.warning} ${s.name.padEnd(26)} ${s.detail}`);
+  if (!skills.every((s) => good(s.state))) out.push(c.dim("\n  Fix it with: okb skills install"));
+  return out;
+}
+
+export function renderWrote(out: string, what: string, hint: string): string {
+  return `${SYMBOL.ok} Wrote ${what} to ${out}${hint}.`;
+}
+
+export function renderStepGuide(order: number): string {
+  return stepGuide(MetaKB.get().step(order)!);
+}
+
+export function renderDiagramWritten(out: string): string {
+  return `Wrote ${out}. Open it in GitHub, VS Code (Markdown preview), or mermaid.live.`;
+}
+
+export function renderExportWritten(out: string, g: { nodes: unknown[]; relationships: unknown[]; notes: string[] }, fmt: string): string[] {
+  return [`Wrote ${out}: ${g.nodes.length} nodes, ${g.relationships.length} relationships (${fmt}).`, ...g.notes.map((n) => c.dim("  " + n))];
 }

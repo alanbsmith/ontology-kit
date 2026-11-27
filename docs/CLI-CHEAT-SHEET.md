@@ -160,20 +160,20 @@ okb show Wine
 
 <div class="cheat-card">
 
-Add an instance:
+Connect two instances:
 
 ```bash
-okb instance add "Chateau Morgon" --of Beaujolais body=light
+okb link Radio preferredOver SegmentedControl
 ```
 
 </div>
 
 <div class="cheat-card">
 
-Connect two instances:
+Add an instance:
 
 ```bash
-okb link Radio preferredOver SegmentedControl
+okb instance add "Chateau Morgon" --of Beaujolais body=light
 ```
 
 </div>
