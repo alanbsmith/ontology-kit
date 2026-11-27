@@ -1,6 +1,6 @@
 ---
 summary: Serving a KB, planned as 0.3.0. Agents, apps, graph databases and an evaluation runner can use a KB.
-updated: 2026-11-25
+updated: 2026-11-26
 links: ["https://github.com/alanbsmith/ontology-kit/milestone/7", "Discussion #105"]
 ---
 
@@ -30,3 +30,4 @@ The milestone's issues are merged, and 0.3.0 is released with:
 - 2026-11-24: file written from the road-to-1-0 plan.
 - 2026-11-25: playground, evaluation runner, query spike, #143 and #29 added.
 - 2026-11-25: milestone retitled with its version; #8, #129, #143 and #29 moved in; #157 to #159 and #162 to #165 created.
+- 2026-11-26: spike #175 settled #8's approach: a hand-built command table on `parseArgs`, no CLI framework ([0032](../decisions/0032-hand-built-command-table-on-parseargs.md)); #8's scope and criteria updated; the one-step undo follow-up is #176.
