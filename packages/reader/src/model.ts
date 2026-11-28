@@ -65,7 +65,8 @@ export function nodeLabel(n: OkbNode): string {
 
 /** Every name-like field a node can be looked up by (a quote's text counts: its id has a random tag). */
 function lookupNames(n: OkbNode): string[] {
-  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || "", ("quote" in n && typeof n.quote === "string" && n.quote) || ""];
+  // A hand-edited file can hold a number or object here; those can't be looked up by name, and must not reach key().
+  return ["name", "text", "title", "quote"].map((f) => (n as unknown as Record<string, unknown>)[f]).filter((v): v is string => typeof v === "string" && v !== "");
 }
 
 export { isRelationship };
