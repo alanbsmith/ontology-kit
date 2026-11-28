@@ -1,6 +1,6 @@
 ---
 summary: Questions that are undecided or deliberately deferred, why, and what would reopen each.
-updated: 2026-11-25
+updated: 2026-11-28
 ---
 
 # Open questions
@@ -41,3 +41,23 @@ One entry per question. When one is settled, write a decision in [decisions/](de
 
 - **Why it's open:** design tokens usually live in JSON or YAML, and citing them by pointer (#26) adds to the provenance format. The plan puts the tokens spike (#23) in 0.5.0, after the format freezes. If the spike needs #26, #26 has to move to 0.3.0 or 0.4.0.
 - **Reopen when:** the tokens spike is scoped, or before 0.4.0 ships at the latest.
+
+## Do a dependency's rules apply to the KBs that extend it?
+
+- **Why it's open:** [decision 0033](decisions/0033-kbs-interoperate-across-teams.md) lets one team extend another team's KB. If the shared KB has its own rule pack (#101), such as "every tag has a definition", a consumer's new tags may or may not have to pass it. If they don't, KBs drift apart again. If they do, a dependency can make a consumer's KB fail.
+- **Reopen when:** spike #100 designs rule packs, or #31's design reaches validation across KBs.
+
+## How is a dependency fetched and resolved?
+
+- **Why it's open:** #31 says a dependency is "a path or package" with a pinned version. Nothing says how a consumer gets that release (a git tag, a submodule, an npm package), whether there's a lockfile, or what happens when two dependencies pin different releases of a third ([decision 0033](decisions/0033-kbs-interoperate-across-teams.md)).
+- **Reopen when:** #31 is scoped, at the start of 0.4.0.
+
+## What does a KB's version promise its consumers?
+
+- **Why it's open:** `okb release` only checks that a new version is higher. Nothing says removing a term is a major change, and nothing suggests the bump from `changes.json`. Each KB's owner sets its policy, separate from okb's versions ([decision 0033](decisions/0033-kbs-interoperate-across-teams.md)), but okb could suggest a default and check it.
+- **Reopen when:** #104 (deprecation) is built, or a consumer pins a version range.
+
+## Does a merged view of linked KBs have to come before 1.0?
+
+- **Why it's open:** an agent that uses a KB and its dependency needs one graph to read. Combined export (#33) is planned after 1.0, and serving linked KBs over MCP isn't planned at all ([decision 0033](decisions/0033-kbs-interoperate-across-teams.md)).
+- **Reopen when:** the MCP server (#94) is built, or a team that extends another KB needs it before 1.0.
