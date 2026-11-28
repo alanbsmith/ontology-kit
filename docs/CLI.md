@@ -1125,7 +1125,7 @@ $ okb remove genre --type Slot
 <a id="cmd-drift"></a>
 ### okb drift
 
-Compares quotes with the documents they came from and reports quotes that no longer match.
+Finds near-duplicate quotes across the ontologies in the folders you name, which usually means one source was quoted twice or two ontologies drifted apart. It compares quotes with each other, not with their source documents; for that, run `okb source refresh --all`.
 
 ```bash
 $ okb drift .

@@ -56,8 +56,8 @@ export const housekeeping: Command[] = [
   {
     name: "drift",
     group: "Housekeeping",
-    summary: "compare quotes with their documents",
-    description: "Compares quotes with the documents they came from and reports quotes that no longer match.",
+    summary: "find near-duplicate quotes",
+    description: "Finds near-duplicate quotes across the ontologies in the folders you name, which usually means one source was quoted twice or two ontologies drifted apart. It compares quotes with each other, not with their source documents; for that, run `okb source refresh --all`.",
     forms: [
       {
         description: "Checks one or more ontology folders. With none it checks the current folder.",

@@ -122,6 +122,10 @@ export function leadingGlobals(argv: readonly string[]): { globals: Partial<Glob
   const rest = [...argv];
   for (;;) {
     if (rest[0] === "-C" && rest.length > 2) {
+      // Same rule as the trailing form (parseArgs): an operand starting with a dash is a mistake, not a folder. `-C ./--json` is fine.
+      if (rest[1].length > 1 && rest[1].startsWith("-")) {
+        throw new OkbError(`Option '-C' argument is ambiguous.\nDid you forget to specify the option argument for '-C'?\nTo specify an option argument starting with a dash use '--C=-XYZ' or '-C-XYZ'.`);
+      }
       globals.C = rest[1];
       rest.splice(0, 2);
     } else if (rest[0] === "--json" && rest.length > 1) {

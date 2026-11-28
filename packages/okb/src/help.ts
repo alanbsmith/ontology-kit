@@ -2,7 +2,7 @@
  * The text of `okb help`, rendered from the command records so it can't drift from what the
  * commands do. Its own module so the docs generator can read it without running the CLI.
  */
-import type { Command } from "./command-table.ts";
+import type { Arg, Command } from "./command-table.ts";
 
 /** The first sentence of a description. */
 export function summary(text: string): string {
@@ -18,12 +18,22 @@ function usageOf(cmd: Command): string {
   const forms = cmd.forms.filter((f) => !f.sub?.startsWith("--") && !f.hidden);
   const subs = forms.filter((f) => f.sub).map((f) => f.sub);
   const bare = forms.find((f) => !f.sub);
-  if (subs.length) return `${cmd.name} ${bare ? `[${subs.join("|")}]` : subs.join("|")}`;
   const rows = (bare?.args ?? []).filter((a) => a[0] !== "--json");
-  const flags = rows.filter((a) => a[0].startsWith("--"));
   const words = rows.filter((a) => !a[0].startsWith("--")).map((a) => a[0]);
-  const shown = flags.length > MAX_FLAGS ? ["[options]"] : flags.map((a) => `[${a[0]}]`);
+  if (subs.length) {
+    // A bare form that needs an argument (`okb release <version>`) is not optional: show it as one of the alternatives.
+    if (bare && (bare.min ?? 0) > 0) return `${cmd.name} ${[words.join(" "), ...subs].join("|")}`;
+    return `${cmd.name} ${bare ? `[${subs.join("|")}]` : subs.join("|")}`;
+  }
+  const flags = rows.filter((a) => a[0].startsWith("--"));
+  const shown = flags.length > MAX_FLAGS ? ["[options]"] : flags.map((a) => optionUsage(a, bare?.require));
   return [cmd.name, ...words, ...shown].join(" ");
+}
+
+/** A required option shows its operand without brackets (`--out <folder>`); an optional one stays in brackets. */
+export function optionUsage([name, type]: Arg, required: readonly string[] = []): string {
+  if (!required.includes(name.replace(/^--/, ""))) return `[${name}]`;
+  return `${name} <${/^[\w-]+$/.test(type) ? type : "value"}>`;
 }
 
 /** One line per command, grouped by what you are trying to do: its name, its subcommands, and what it does. */
