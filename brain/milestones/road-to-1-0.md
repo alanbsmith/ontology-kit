@@ -1,6 +1,6 @@
 ---
 summary: The plan from 0.2.0 to 1.0. Goals, version map, what blocks 1.0, what moves after, and the guardrails.
-updated: 2026-11-25
+updated: 2026-11-28
 links: ["Discussion #105", "CONTRIBUTING.md#what-0x-means"]
 ---
 
@@ -21,6 +21,7 @@ Planned 2026-11-24 and 2026-11-25 with the owner. Issue statuses live on the boa
 | [0029](../decisions/0029-graph-playground-is-a-local-database.md)      | The playground is a local graph database                                     |
 | [0030](../decisions/0030-an-evaluation-runner-for-goal-6.md)           | An evaluation runner for goal 6                                              |
 | [0031](../decisions/0031-vision-in-105-plan-in-the-brain.md)           | The vision lives in #105, the plan in the brain                              |
+| [0033](../decisions/0033-kbs-interoperate-across-teams.md)             | KBs interoperate across teams; #31 covers extension (proposed)               |
 
 ## What 1.0 means
 
@@ -51,3 +52,4 @@ Impact checks across linked KBs (#32) and combined export (#33), the rest of Str
 - 2026-11-25: guardrails accepted, cross-KB references and the three test KBs pulled before 1.0, sources beyond Ontology 101, the playground and the evaluation runner decided.
 - 2026-11-25: GitHub updated: milestones retitled with versions, Soak milestone created, Maintaining a KB closed, issues moved, #157 to #164 created. The evaluation-runner issue (#165) followed once the owner chose a generic name.
 - 2026-11-25: #105 found stale; vision and plan split between #105 and the brain (decision 0031). The owner reviewed the #105 edit, and it was published after #173 merged.
+- 2026-11-28: decision 0033 proposed: KBs built by different teams interoperate, KB versions stay separate from okb's, and #31 grows to cover extension. Four open questions added.
