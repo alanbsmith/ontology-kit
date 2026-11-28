@@ -38,6 +38,8 @@ jobs:
           ref: prerelease/alpha
           fetch-depth: 0
           token: ${{ secrets.FORWARD_MERGE_TOKEN }}
+          # The token isn't left in .git/config; the pushes below pass it explicitly.
+          persist-credentials: false
       - name: Merge main, or open a pull request when it conflicts
         env:
           MAIN_SHA: ${{ github.sha }}
@@ -45,20 +47,21 @@ jobs:
           set -eu
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch --no-tags origin main
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git"
+          git fetch --no-tags "$remote" main
           if git merge-base --is-ancestor "$MAIN_SHA" HEAD; then
             echo "prerelease/alpha already has ${MAIN_SHA}."
             exit 0
           fi
           if git merge --no-ff -m "chore: Merge main into prerelease/alpha" "$MAIN_SHA"; then
-            git push origin HEAD:prerelease/alpha
+            git push "$remote" HEAD:prerelease/alpha
             exit 0
           fi
           git merge --abort
           # A branch at main's commit: the pull request shows the conflicts, and a person merges
           # prerelease/alpha into it (or resolves them in the web editor) and merges the pull request.
           branch="forward-merge/main-${MAIN_SHA:0:7}"
-          git push --force origin "${MAIN_SHA}:refs/heads/${branch}"
+          git push --force "$remote" "${MAIN_SHA}:refs/heads/${branch}"
           if [ -n "$(gh pr list --head "$branch" --base prerelease/alpha --json number -q '.[].number')" ]; then
             echo "A pull request for ${branch} is already open."
             exit 0
