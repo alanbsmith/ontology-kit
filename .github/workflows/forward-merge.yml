@@ -53,11 +53,26 @@ jobs:
             echo "prerelease/alpha already has ${MAIN_SHA}."
             exit 0
           fi
-          if git merge --no-ff -m "chore: Merge main into prerelease/alpha" "$MAIN_SHA"; then
-            git push "$remote" HEAD:prerelease/alpha
-            exit 0
-          fi
-          git merge --abort
+          # prerelease/alpha can move between the checkout and the push (a pull request merging into it), which
+          # rejects the push as non-fast-forward. Refetch, redo the merge and push again, up to three times; a
+          # merge that conflicts, or a push that keeps failing, falls through to the pull request below.
+          for attempt in 1 2 3; do
+            if ! git merge --no-ff -m "chore: Merge main into prerelease/alpha" "$MAIN_SHA"; then
+              git merge --abort
+              break
+            fi
+            if git push "$remote" HEAD:prerelease/alpha; then
+              exit 0
+            fi
+            echo "The push was rejected (attempt ${attempt}); refetching prerelease/alpha."
+            git reset --hard -q HEAD^
+            git fetch --no-tags "$remote" prerelease/alpha
+            git reset --hard -q FETCH_HEAD
+            if git merge-base --is-ancestor "$MAIN_SHA" HEAD; then
+              echo "prerelease/alpha already has ${MAIN_SHA}."
+              exit 0
+            fi
+          done
           # A branch at main's commit: the pull request shows the conflicts, and a person merges
           # prerelease/alpha into it (or resolves them in the web editor) and merges the pull request.
           branch="forward-merge/main-${MAIN_SHA:0:7}"

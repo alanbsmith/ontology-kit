@@ -63,7 +63,7 @@ jobs:
           fi
           if [ "$alpha" = true ]; then
             # An alpha build: no changelog entry and no tag on main. The version is the next minor after the
-            # newest stable tag plus -alpha.N, so the branch's package.json files are never edited.
+            # newest stable tag plus -alpha.N (N the total commit count), so the branch's package.json files are never edited.
             version="$(node scripts/release.ts alpha-version)"
             {
               echo "version=$version"
@@ -201,7 +201,8 @@ jobs:
           path: tarballs
       # The tarball paths start with ./ because npm reads `tarballs/x.tgz` as a GitHub owner/repo shorthand.
       # In dependency order: the reader package, then okb (which depends on it), then the wrapper.
-      # A version already on npm is skipped, so a re-run finishes a release that stopped halfway.
+      # A version already on npm is skipped, so a re-run finishes a release that stopped halfway. That is safe for
+      # alphas too: an alpha's number is the branch's total commit count, so one version is exactly one commit.
       # `npm publish` of a tarball does the OIDC token exchange; provenance is on explicitly so the
       # publish fails rather than going out without it.
       - name: Publish @ontology-kit/reader, @ontology-kit/okb, then ontology-kit

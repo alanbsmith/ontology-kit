@@ -6,7 +6,7 @@
  *   node scripts/release.ts notes <vX.Y.Z>   Prints the GitHub release notes: that changelog entry, formatted for a release page.
  *   node scripts/release.ts version          Prints the package version.
  *   node scripts/release.ts alpha-version    Prints the alpha version for HEAD: the next minor after the newest stable tag, plus
- *                                            `-alpha.N`, N being the commits since that tag. Nothing is written.
+ *                                            `-alpha.N`, N being the total commit count of HEAD (so it only grows). Nothing is written.
  *   node scripts/release.ts set-version X    Writes X into the three package.json files (the alpha pack job does this, uncommitted).
  *
  * Versions are read from the package.json files, so nothing here is typed by hand.
@@ -107,8 +107,14 @@ export function nextMinor(version: string): string {
 /**
  * The version an alpha build of HEAD publishes as, computed at publish time and never committed (a forward merge of a
  * stable release commit would conflict in the three package.json files if it were): the next minor after the newest
- * stable tag reachable from HEAD, then `-alpha.N`, N being the commits since that tag. It only grows while the branch
- * grows, and it sorts below the stable release it leads up to.
+ * stable tag reachable from HEAD, then `-alpha.N`, N being the total number of commits reachable from HEAD.
+ *
+ * N is the total, not the count since the stable tag, because a forward merge of `main` can make a newer stable tag
+ * reachable (`v0.3.1` after `v0.3.0`) without changing the next minor; a count since the tag would then restart from
+ * a small number and could equal an alpha already on npm. The total only grows as the branch grows (every new commit
+ * and every merge adds commits to the history it descends from), so a later commit never reuses a number, and a
+ * numeric identifier sorts correctly under semver (`alpha.10` after `alpha.9`). The version sorts below the stable
+ * release it leads up to.
  */
 export function alphaVersion(cwd = ROOT): string {
   const git = (args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
@@ -118,7 +124,7 @@ export function alphaVersion(cwd = ROOT): string {
   } catch {
     throw new Error("No stable v* tag is reachable from HEAD, so there is no base for an alpha version. Fetch the tags (fetch-depth: 0).");
   }
-  return `${nextMinor(tag.slice(1))}-alpha.${git(["rev-list", "--count", `${tag}..HEAD`])}`;
+  return `${nextMinor(tag.slice(1))}-alpha.${git(["rev-list", "--count", "HEAD"])}`;
 }
 
 /** Writes `version` into every package's package.json, keeping each file's formatting. */

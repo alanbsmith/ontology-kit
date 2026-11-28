@@ -25,18 +25,61 @@ describe("alpha versions", () => {
     assert.throws(() => nextMinor("0.3.0-alpha.1"), /not a stable/);
   });
 
-  it("counts the commits since the newest stable tag, ignoring alpha tags", () => {
+  it("numbers an alpha by the total commit count, ignoring alpha tags", () => {
     const root = repo();
     commit(root, "one");
     git(root, "tag", "-a", "v0.1.0", "-m", "v0.1.0");
     commit(root, "two");
     git(root, "tag", "-a", "v0.2.0", "-m", "v0.2.0");
-    assert.equal(alphaVersion(root), "0.3.0-alpha.0");
+    assert.equal(alphaVersion(root), "0.3.0-alpha.2");
     commit(root, "three");
     commit(root, "four");
     git(root, "tag", "-a", "v0.3.0-alpha.2", "-m", "alpha");
     commit(root, "five");
-    assert.equal(alphaVersion(root), "0.3.0-alpha.3");
+    assert.equal(alphaVersion(root), "0.3.0-alpha.5");
+  });
+
+  it("keeps growing when a forward merge makes a newer stable patch tag reachable", () => {
+    const root = repo();
+    commit(root, "base");
+    git(root, "tag", "-a", "v0.3.0", "-m", "v0.3.0");
+    git(root, "switch", "-q", "-c", "prerelease/alpha");
+    for (const m of ["a1", "a2", "a3", "a4"]) commit(root, m);
+    const before = alphaVersion(root);
+    assert.match(before, /^0\.4\.0-alpha\.5$/);
+    git(root, "switch", "-q", "main");
+    commit(root, "fix");
+    git(root, "tag", "-a", "v0.3.1", "-m", "v0.3.1");
+    git(root, "switch", "-q", "prerelease/alpha");
+    git(root, "merge", "-q", "--no-ff", "-m", "merge main", "main");
+    const after = alphaVersion(root);
+    assert.ok(Number(after.split(".").pop()) > Number(before.split(".").pop()), `${before} then ${after}`);
+    assert.match(after, /^0\.4\.0-alpha\./);
+  });
+
+  it("never gives two commits on the branch the same version", () => {
+    const root = repo();
+    commit(root, "base");
+    git(root, "tag", "-a", "v0.3.0", "-m", "v0.3.0");
+    git(root, "switch", "-q", "-c", "prerelease/alpha");
+    const seen = new Set<string>();
+    const take = () => {
+      const v = alphaVersion(root);
+      assert.ok(!seen.has(v), `${v} repeated`);
+      seen.add(v);
+    };
+    take();
+    commit(root, "a");
+    take();
+    git(root, "switch", "-q", "main");
+    commit(root, "fix");
+    git(root, "tag", "-a", "v0.3.1", "-m", "v0.3.1");
+    git(root, "switch", "-q", "prerelease/alpha");
+    git(root, "merge", "-q", "--no-ff", "-m", "merge main", "main");
+    take();
+    commit(root, "b");
+    take();
+    assert.equal(seen.size, 4);
   });
 
   it("counts commits merged in from main, and rises with each one", () => {
