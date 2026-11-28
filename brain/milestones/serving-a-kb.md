@@ -31,3 +31,5 @@ The milestone's issues are merged, and 0.3.0 is released with:
 - 2026-11-25: playground, evaluation runner, query spike, #143 and #29 added.
 - 2026-11-25: milestone retitled with its version; #8, #129, #143 and #29 moved in; #157 to #159 and #162 to #165 created.
 - 2026-11-26: spike #175 settled #8's approach: a hand-built command table on `parseArgs`, no CLI framework ([0032](../decisions/0032-hand-built-command-table-on-parseargs.md)); #8's scope and criteria updated; the one-step undo follow-up is #176.
+- 2026-11-26: spike #143 found that a save interrupted after the second rename can leave a KB that passes `okb check`; keep three files and finish the save from a marker on the next load ([0033](../decisions/0033-finish-an-interrupted-save-keep-three-files.md)); three follow-up issues proposed, one file kept as the fallback.
+- 2026-11-26: #8 built: the CLI is a table of command records (`packages/okb/src/commands/`), with one runner and the help and docs rendered from the records. `property`/`relationship` as real commands (step 8) and structured notes (tips as data) are not done.

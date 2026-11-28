@@ -60,6 +60,7 @@
     "docs": "node src/gendocs.ts",
     "example": "node examples/build-wine.ts && node examples/build-espresso.ts",
     "typecheck": "tsc",
+    "bench": "node scripts/bench-scale.ts",
     "test": "node --test --test-concurrency=1 \"tests/*.test.ts\"",
     "build": "pnpm --filter @ontology-kit/reader run build && rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts.ts",
     "prepack": "npm run build",

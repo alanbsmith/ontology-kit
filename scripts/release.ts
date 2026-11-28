@@ -5,11 +5,14 @@
  *                                            and docs/CHANGELOG.md has a dated entry for it.
  *   node scripts/release.ts notes <vX.Y.Z>   Prints the GitHub release notes: that changelog entry, formatted for a release page.
  *   node scripts/release.ts version          Prints the package version.
+ *   node scripts/release.ts alpha-version    Prints the alpha version for HEAD: the next minor after the newest stable tag, plus
+ *                                            `-alpha.N`, N being the total commit count of HEAD (so it only grows). Nothing is written.
+ *   node scripts/release.ts set-version X    Writes X into the three package.json files (the alpha pack job does this, uncommitted).
  *
  * Versions are read from the package.json files, so nothing here is typed by hand.
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -74,10 +77,10 @@ export function releaseNotes(notes: string, opts: { tag: string; repo?: string; 
   return repo && previousTag ? `${out}\n\n**Full changelog**: https://github.com/${repo}/compare/${previousTag}...${tag}\n` : `${out}\n`;
 }
 
-/** The newest `v*` tag before `tag`, or undefined if there is none or the tags aren't fetched. */
+/** The newest stable `v*` tag before `tag` (alpha tags don't count), or undefined if there is none or the tags aren't fetched. */
 function previousTagOf(tag: string): string | undefined {
   try {
-    return execFileSync("git", ["describe", "--tags", "--abbrev=0", "--match", "v*", `${tag}^`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || undefined;
+    return execFileSync("git", ["describe", "--tags", "--abbrev=0", "--match", "v*", "--exclude", "v*-*", `${tag}^`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim() || undefined;
   } catch {
     return undefined;
   }
@@ -94,6 +97,48 @@ export function check(tag?: string, root = ROOT): string {
   return version;
 }
 
+/** `0.2.0` -> `0.3.0`: alphas are builds of the next minor. (Before 1.0 a minor is where breaking changes go.) */
+export function nextMinor(version: string): string {
+  const m = /^(\d+)\.(\d+)\.\d+$/.exec(version);
+  if (!m) throw new Error(`"${version}" is not a stable X.Y.Z version`);
+  return `${m[1]}.${Number(m[2]) + 1}.0`;
+}
+
+/**
+ * The version an alpha build of HEAD publishes as, computed at publish time and never committed (a forward merge of a
+ * stable release commit would conflict in the three package.json files if it were): the next minor after the newest
+ * stable tag reachable from HEAD, then `-alpha.N`, N being the total number of commits reachable from HEAD.
+ *
+ * N is the total, not the count since the stable tag, because a forward merge of `main` can make a newer stable tag
+ * reachable (`v0.3.1` after `v0.3.0`) without changing the next minor; a count since the tag would then restart from
+ * a small number and could equal an alpha already on npm. The total only grows as the branch grows (every new commit
+ * and every merge adds commits to the history it descends from), so a later commit never reuses a number, and a
+ * numeric identifier sorts correctly under semver (`alpha.10` after `alpha.9`). The version sorts below the stable
+ * release it leads up to.
+ */
+export function alphaVersion(cwd = ROOT): string {
+  const git = (args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  let tag: string;
+  try {
+    tag = git(["describe", "--tags", "--abbrev=0", "--match", "v*", "--exclude", "v*-*", "HEAD"]);
+  } catch {
+    throw new Error("No stable v* tag is reachable from HEAD, so there is no base for an alpha version. Fetch the tags (fetch-depth: 0).");
+  }
+  return `${nextMinor(tag.slice(1))}-alpha.${git(["rev-list", "--count", "HEAD"])}`;
+}
+
+/** Writes `version` into every package's package.json, keeping each file's formatting. */
+export function setVersion(version: string, root = ROOT): void {
+  if (!SEMVER.test(version)) throw new Error(`"${version}" is not a semver version`);
+  for (const dir of PACKAGES) {
+    const file = join(root, dir, "package.json");
+    const text = readFileSync(file, "utf8");
+    const next = text.replace(/^(\s*"version":\s*)"[^"]*"/m, `$1"${version}"`);
+    if (next === text && JSON.parse(text).version !== version) throw new Error(`Could not find the version in ${dir}/package.json`);
+    writeFileSync(file, next);
+  }
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [cmd, arg] = process.argv.slice(2);
   try {
@@ -104,7 +149,14 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       if (arg !== `v${version}`) throw new Error(`Expected a tag like v${version}`);
       process.stdout.write(releaseNotes(changelogEntry(version).notes, { tag: arg, repo: process.env.GITHUB_REPOSITORY, previousTag: previousTagOf(arg) }));
     } else if (cmd === "version") console.log(releaseVersion());
-    else throw new Error("Usage: release.ts check [vX.Y.Z] | notes vX.Y.Z | version");
+    else if (cmd === "alpha-version") {
+      releaseVersion(); // the three packages must still agree
+      console.log(alphaVersion());
+    } else if (cmd === "set-version") {
+      if (!arg) throw new Error("Usage: release.ts set-version X.Y.Z");
+      setVersion(arg);
+      console.log(`OK: ${releaseVersion()}`);
+    } else throw new Error("Usage: release.ts check [vX.Y.Z] | notes vX.Y.Z | version | alpha-version | set-version X.Y.Z");
   } catch (e) {
     console.error(`::error::${(e as Error).message}`);
     process.exit(1);

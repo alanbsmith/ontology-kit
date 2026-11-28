@@ -1,6 +1,6 @@
 ---
 summary: Start here. What the brain holds, where everything else lives, and how to keep it current.
-updated: 2026-11-25
+updated: 2026-11-26
 ---
 
 # The brain
@@ -68,4 +68,4 @@ grep -H -E '^(summary|status|superseded-by):' brain/decisions/*.md
 
 ### Front matter
 
-Every file starts with `summary:` (one line, so a session can choose without opening it) and `updated:`. A decision also has `status:` (`accepted`, `superseded`, or `proposed` while it sits in an open PR; set it to `accepted` when the PR merges, and the drift check warns about a `proposed` decision already on `main`), `date:` (when it was decided), `decided-by:` (`owner` when the owner chose and gave the reason, or `owner, on a recommendation` when the owner accepted a recommendation and its reason) and, where they apply, `supersedes:`, `superseded-by:` and `links:`.
+Every file starts with `summary:` (one line, so a session can choose without opening it) and `updated:`. A decision also has `status:` (`accepted`, `superseded`, or `proposed` until the owner accepts it; a session that writes a decision, such as a spike's outcome, leaves it `proposed`. The milestone's last checklist item is where the owner accepts or rejects each one, as a single commit on the integration branch before its PR to `main` is marked ready; the drift check warns about a `proposed` decision already on `main`, as a backstop), `date:` (when it was decided), `decided-by:` (`owner` when the owner chose and gave the reason, or `owner, on a recommendation` when the owner accepted a recommendation and its reason) and, where they apply, `supersedes:`, `superseded-by:` and `links:`.

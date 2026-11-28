@@ -5,7 +5,7 @@
  *
  * Reads the docs (default: every hand-written markdown file) and reports anything
  * that names something that doesn't exist:
- *   - okb commands/subcommands and their --flags, checked against packages/okb/src/cli.ts
+ *   - okb commands/subcommands and their --flags, checked against the command records in packages/okb/src/commands/
  *   - `pnpm <script>`, checked against the scripts in the root package.json and packages/okb/package.json
  *   - contributor commands that use npm (`npm run`, `npm ci`, `npm link`, `npm test`, `npm install`, `npx`): contributors use pnpm
  *   - repo paths (docs/..., sources/..., and packages/okb/{src,meta-kb,tests,examples,skills,bin}/... and packages/reader/{src,tests}/...; a bare src/... resolves inside packages/okb)
@@ -16,7 +16,7 @@
  *   - brain/: the living files (every brain/*.md and brain/milestones/*.md) get every check above. Decision
  *     files (brain/decisions/*.md) keep their text, so a path in one that no longer exists is only a warning.
  *     A decision still marked `status: proposed` once it's on main (DRIFT_MAIN_REF, default origin/main) is a
- *     warning too: set it to accepted when its PR merges.
+ *     warning too: the owner accepts or rejects decisions in the milestone's last checklist item, before its PR merges.
  * Exit code 1 if anything but a warning is found. It can't judge prose; the skill covers that.
  * DRIFT_ROOT points the check at another tree (the tests use a temporary copy).
  */
@@ -65,30 +65,26 @@ interface Problem {
   severity: "error" | "warning";
 }
 
-/** okb command -> its subcommands and flags, from the `case "x":` blocks in packages/okb/src/cli.ts. */
+/** The command records (packages/okb/src/commands/), read from the repo this script lives in, not DRIFT_ROOT. */
+const { COMMANDS } = (await import(join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..", PKG, "src", "commands.ts"))) as typeof import("../../../../packages/okb/src/commands.ts");
+
+/** okb command -> its subcommands and flags, from the command records. */
 function cliSurface(): Map<string, { subs: Set<string>; flags: Set<string> }> {
-  const src = read(`${PKG}/src/cli.ts`);
   const out = new Map<string, { subs: Set<string>; flags: Set<string> }>();
-  const global = ["C", "json", "help", "h"];
-  const optionKeys = (text: string) =>
-    [...text.matchAll(/(?:"([a-z][a-z-]*)"|\b([a-z][a-zA-Z]*)): (?:str|strs|bool)\b/g)].map((m) => m[1] ?? m[2]);
-  const shared = optionKeys(src.slice(src.indexOf("const slotOpts"), src.indexOf("const toOpts")));
-  const blocks = src.split(/\n\s*case "/).slice(1);
-  let pending: string[] = [];
-  for (const block of blocks) {
-    const name = block.slice(0, block.indexOf('"'));
-    pending.push(name);
-    if (/^[^\n]*":\s*$/.test(block.split("\n")[0]) && block.split("\n").length < 3) continue; // fallthrough case label
-    const subs = new Set([...block.matchAll(/sub === "([a-z-]+)"/g)].map((m) => m[1]));
-    const flags = new Set([...global, ...optionKeys(block), ...(block.includes("slotOpts") ? shared : [])]);
-    for (const n of pending) out.set(n, { subs, flags });
-    pending = [];
-  }
-  // Everyday aliases rewritten before dispatch (see main() in cli.ts).
-  const slot = out.get("slot");
-  if (slot) {
-    out.set("property", slot);
-    out.set("relationship", { subs: new Set([...slot.subs, "property"]), flags: new Set([...slot.flags, "from", "to", ...(out.get("edgeprop")?.flags ?? [])]) });
+  const own = (cmd: (typeof COMMANDS)[number]) => ({
+    subs: new Set(cmd.forms.map((f) => f.sub).filter((s): s is string => !!s && !s.startsWith("--"))),
+    flags: new Set(["C", "json", "help", "h", ...cmd.forms.flatMap((f) => [...Object.keys(f.options ?? {}), ...f.args.map((a) => a[0]).filter((n) => n.startsWith("--")).map((n) => n.slice(2))])]),
+  });
+  for (const cmd of COMMANDS) out.set(cmd.name, own(cmd));
+  for (const cmd of COMMANDS) {
+    // Everyday names (property, relationship) rewrite to another command, which takes its subcommands and flags too.
+    if (!cmd.rewrite) continue;
+    const mine = out.get(cmd.name)!;
+    for (const probe of ["add", "property"]) {
+      const target = out.get(cmd.rewrite([probe])[0]);
+      for (const x of target?.subs ?? []) mine.subs.add(x);
+      for (const x of target?.flags ?? []) mine.flags.add(x);
+    }
   }
   return out;
 }
@@ -123,7 +119,7 @@ function checkFile(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<
   if (!isDecision(file)) return found;
   const warnings = found.filter((p) => p.kind === "path").map((p) => ({ ...p, severity: "warning" as const }));
   if (/^status:\s*proposed\s*$/m.test(read(file)) && onMain(file))
-    warnings.push({ file, line: 0, kind: "status", severity: "warning", message: `Still 'status: proposed' on ${MAIN_REF}; set it to accepted now that its PR has merged.` });
+    warnings.push({ file, line: 0, kind: "status", severity: "warning", message: `Still 'status: proposed' on ${MAIN_REF}; the owner accepts or rejects a decision in the milestone's last checklist item, before its PR to main merges (brain/README.md).` });
   return warnings;
 }
 
@@ -150,7 +146,7 @@ function scan(file: string, cli: ReturnType<typeof cliSurface>, rules: Set<strin
       const [cmd, maybeSub] = m[1].split(" ");
       const spec = cli.get(cmd);
       if (!spec) {
-        problems.push({ file, line, kind: "command", message: `'okb ${cmd}' isn't a command in packages/okb/src/cli.ts.` });
+        problems.push({ file, line, kind: "command", message: `'okb ${cmd}' isn't a command in packages/okb/src/commands/.` });
         continue;
       }
       // class/slot/instance (and their aliases) always take a subcommand; the others can take

@@ -43,9 +43,10 @@ Keep it short. The child issues hold the detail, and brain/milestones/ holds why
 
 ## Checklist (merge in this order)
 
-<!-- One line per child issue: its number and title, then what it waits on ("after #94", "independent"). Tick each as it merges into the integration branch. Each child issue says "Part of <milestone>, tracked in #<this epic>". -->
+<!-- One line per child issue: its number and title, then what it waits on ("after #94", "independent"). Tick each as it merges into the integration branch. Each child issue says "Part of <milestone>, tracked in #<this epic>". Keep the last line: decisions from the milestone's spikes stay `proposed` until the owner accepts them here. -->
 
 - [ ] #
+- [ ] Accept or reject the milestone's `proposed` decisions in one commit on the integration branch (the owner decides; child sessions never change a `status`), before the PR to `main` is marked ready
 
 ## Branching
 

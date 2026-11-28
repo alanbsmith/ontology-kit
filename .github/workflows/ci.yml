@@ -6,7 +6,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, prerelease/alpha]
   workflow_call:
   workflow_dispatch:
 
@@ -126,6 +126,8 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+          # Nothing here installs from a lockfile, so there is nothing to cache (and no cache to poison).
+          package-manager-cache: false
       - name: Install and run okb on Node 24
         run: |
           node --version

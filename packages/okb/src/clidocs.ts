@@ -1,8 +1,6 @@
-/**
- * Renders docs/CLI.md from the command reference in src/commands.ts. The help text
- * (src/help.ts) stays the terminal summary; `undocumentedFlags` keeps the two from drifting.
- */
-import { CHEAT_SHEET, COMMANDS, type Arg, type Command, type Form } from "./commands.ts";
+/** Renders docs/CLI.md and docs/CLI-CHEAT-SHEET.md from the command records in src/commands/. */
+import type { Arg, Command, Form } from "./command-table.ts";
+import { cheatSheet, documented } from "./commands.ts";
 
 /** A stable anchor for a command or subcommand section: `cmd-class`, `cmd-class-add`. */
 export const cmdAnchor = (cmd: string, sub?: string) => `cmd-${cmd}${sub ? `-${sub}` : ""}`;
@@ -27,7 +25,7 @@ function form(cmd: Command, f: Form, lines: string[]) {
 /** Commands in `COMMANDS` order, grouped by their `group`, each group once. */
 function groups(): [string, Command[]][] {
   const out = new Map<string, Command[]>();
-  for (const c of COMMANDS) out.set(c.group, [...(out.get(c.group) ?? []), c]);
+  for (const c of documented()) out.set(c.group, [...(out.get(c.group) ?? []), c]);
   return [...out];
 }
 
@@ -49,7 +47,7 @@ export function renderCliDocs(): string {
     lines.push(`## ${group}`, "");
     for (const cmd of cmds) {
       lines.push(`<a id="${cmdAnchor(cmd.name)}"></a>`, `### okb ${cmd.name}`, "", cmd.description, "");
-      for (const f of cmd.forms) form(cmd, f, lines);
+      for (const f of cmd.forms.filter((f) => !f.hidden)) form(cmd, f, lines);
     }
   }
   return lines.join("\n");
@@ -62,29 +60,12 @@ export function renderCheatSheet(): string {
     "The `okb` commands you will use most, in the order you usually need them. For every command and argument, see the [full reference](CLI.md).",
     "",
   ];
-  const rows = CHEAT_SHEET.map((c) => ({ ...c, group: COMMANDS.find((k) => k.name === c.example.split(" ")[1])?.group ?? "" }));
+  const rows = cheatSheet(documented());
   for (const [group] of groups()) {
-    const mine = rows.filter((r) => r.group === group);
+    const mine = rows.filter((r) => r.command.group === group);
     if (!mine.length) continue;
     lines.push(`## ${group}`, "");
     for (const r of mine) lines.push('<div class="cheat-card">', "", `${r.description}:`, "", "```bash", r.example, "```", "", "</div>", "");
   }
   return lines.join("\n");
-}
-
-/** Flags the help text shows for a command that its reference entry doesn't document. */
-export function undocumentedFlags(help: string): string[] {
-  const missing: string[] = [];
-  const known = new Map(COMMANDS.map((c) => [c.name, new Set(c.forms.flatMap((f) => f.args.map((a) => a[0])))]));
-  for (const line of help.split("\n")) {
-    for (const piece of line.split(/\s+·\s+|\s{3,}(?=okb [a-z])/)) {
-      const m = piece.trim().match(/^okb ([a-z]+)/);
-      if (!m) continue;
-      const doc = known.get(m[1]);
-      for (const [, flag] of piece.matchAll(/(?<![\w-])(--[a-z][a-z-]*)/g)) {
-        if (!doc?.has(flag) && !["--json", "--help"].includes(flag)) missing.push(`okb ${m[1]} ${flag}`);
-      }
-    }
-  }
-  return missing;
 }

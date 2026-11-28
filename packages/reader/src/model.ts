@@ -65,7 +65,8 @@ export function nodeLabel(n: OkbNode): string {
 
 /** Every name-like field a node can be looked up by (a quote's text counts: its id has a random tag). */
 function lookupNames(n: OkbNode): string[] {
-  return [("name" in n && n.name) || "", ("text" in n && n.text) || "", ("title" in n && n.title) || "", ("quote" in n && typeof n.quote === "string" && n.quote) || ""];
+  // A hand-edited file can hold a number or object here; those can't be looked up by name, and must not reach key().
+  return ["name", "text", "title", "quote"].map((f) => (n as unknown as Record<string, unknown>)[f]).filter((v): v is string => typeof v === "string" && v !== "");
 }
 
 export { isRelationship };
@@ -95,6 +96,15 @@ export class Ontology {
   readonly rel = new Relationships(this);
   private outIdx = new Map<string, GraphEdge[]>();
   private incIdx = new Map<string, GraphEdge[]>();
+  /**
+   * Name index: `naming.key()` of each name-like field (see lookupNames) -> the nodes with that key, in node order.
+   * `find()` reads it instead of scanning every node. Kept current by reindex (load, removal), addNode and touch
+   * (every op that changes a node's name calls touch, see `rename`).
+   */
+  private nameIdx = new Map<string, OkbNode[]>();
+  /** The keys each node is indexed under, and its position in node order (buckets are kept sorted by it). */
+  private nameKeys = new Map<OkbNode, { keys: string[]; seq: number }>();
+  private nextSeq = 0;
 
   constructor(root: string, manifest: Manifest, nodes: readonly OkbNode[], edges: readonly GraphEdge[]) {
     this.root = root;
@@ -197,6 +207,50 @@ export class Ontology {
     this.outIdx = new Map();
     this.incIdx = new Map();
     for (const e of this.edges) this.indexEdge(e);
+    this.nameIdx = new Map();
+    this.nameKeys = new Map();
+    this.nextSeq = 0;
+    for (const n of this.nodes) this.indexName(n);
+  }
+
+  /** Index a node under the keys of its current names, as the last in node order. */
+  private indexName(n: OkbNode): void {
+    const keys = [...new Set(lookupNames(n).map(naming.key).filter(Boolean))];
+    this.nameKeys.set(n, { keys, seq: this.nextSeq++ });
+    for (const k of keys) {
+      const bucket = this.nameIdx.get(k);
+      if (bucket) bucket.push(n);
+      else this.nameIdx.set(k, [n]);
+    }
+  }
+
+  /** A node's name changed in place: move it to the keys of its new names, keeping buckets in node order. */
+  private reindexName(n: OkbNode): void {
+    const entry = this.nameKeys.get(n);
+    if (!entry) return; // not (or no longer) one of this ontology's nodes
+    const keys = [...new Set(lookupNames(n).map(naming.key).filter(Boolean))];
+    for (const k of entry.keys) {
+      if (keys.includes(k)) continue;
+      const bucket = this.nameIdx.get(k);
+      const at = bucket?.indexOf(n) ?? -1;
+      if (bucket && at >= 0) bucket.splice(at, 1);
+      if (bucket && !bucket.length) this.nameIdx.delete(k);
+    }
+    for (const k of keys) {
+      if (entry.keys.includes(k)) continue;
+      const bucket = this.nameIdx.get(k);
+      if (!bucket) this.nameIdx.set(k, [n]);
+      else {
+        bucket.push(n);
+        bucket.sort((a, b) => (this.nameKeys.get(a)?.seq ?? 0) - (this.nameKeys.get(b)?.seq ?? 0));
+      }
+    }
+    entry.keys = keys;
+  }
+
+  /** The nodes (in node order) any of whose names has this key. */
+  private byKey(k: string): readonly OkbNode[] {
+    return k ? this.nameIdx.get(k) ?? [] : [];
   }
 
   private indexEdge(e: GraphEdge): void {
@@ -288,7 +342,7 @@ export class Ontology {
     const direct = this.byId.get(ref);
     if (direct && ok(direct)) return direct;
     const k = naming.key(ref);
-    let hits = this.nodes.filter((n) => ok(n) && k && lookupNames(n).some((x) => naming.key(x) === k));
+    let hits = this.byKey(k).filter(ok);
     if (hits.length === 0 && /^\d+$/.test(ref) && ts) {
       // A bare number is a position in `okb cq list` / `okb decision list` (display order; ids carry no number),
       // or, for ids made before okb-lpg/3, the number inside `cq.3` / `d.3`.
@@ -316,7 +370,7 @@ export class Ontology {
     const what = ts ? ts.join(" or ") : "node";
     if (ts) {
       const wanted = ts;
-      const other = this.nodes.find((n) => !wanted.includes(n.type) && k && lookupNames(n).slice(0, 2).some((x) => naming.key(x) === k));
+      const other = this.byKey(k).find((n) => !wanted.includes(n.type) && lookupNames(n).slice(0, 2).some((x) => naming.key(x) === k));
       if (other) {
         const extra = other.type === "Instance" && ts.includes("Class")
           ? " Instances can't have subclasses or be used as a class (rule inst-are-leaves); if you need that, make it a class."
@@ -408,6 +462,7 @@ export class Ontology {
     // Never before createdAt: a question or decision added in the same second as another was stamped a second later.
     const now = this.opTime ?? timestamp();
     node.updatedAt = node.createdAt && node.createdAt > now ? node.createdAt : now;
+    this.reindexName(node);
   }
 
   /** @internal */
@@ -424,6 +479,7 @@ export class Ontology {
     node.updatedAt = now;
     this._nodes.push(node);
     this.byId.set(node.id, node);
+    this.indexName(node);
     return node;
   }
 
