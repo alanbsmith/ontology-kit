@@ -58,8 +58,8 @@ Prototypes, none shipped:
 
 **Consequences:** the follow-ups are three issues, in this order:
 
-1. **Finish an interrupted save** (reader). Marker, roll-forward under the lock, `okb.json` renamed last, a test with a kill after each rename, and a decision on flushing the temp files and the folder to disk. Today nothing is flushed, so a power loss could leave an empty file after a rename; that wasn't tested here.
+1. **Finish an interrupted save** (reader). Marker, roll-forward under the lock, `okb.json` renamed last, a test with a kill after each rename, roll-forward that also removes a leftover legacy `nodes.json` and `edges.json` from an interrupted migration (otherwise `readGraph` still rejects the folder, and the current "delete the old file" advice leaves new nodes with old edges), and a decision on flushing the temp files and the folder to disk. Today nothing is flushed, so a power loss could leave an empty file after a rename; that wasn't tested here.
 2. **Report what an interrupted save leaves** (okb). `okb validate` and `okb check` warn about a leftover `okb.json.tmp`, `nodes.jsonl.tmp` or `edges.jsonl.tmp` or a marker, which also covers KBs last saved by an older okb, and the "Both … exist" message stops telling the user to delete the old file blindly.
-3. **Say how to read a KB from another program** (docs, and part of the loader guide in #162): take the lock or reread until nothing changed, and treat a marker as a save in flight.
+3. **Say how to read a KB from another program** (docs, and part of the loader guide in #162): take the lock, as `Ontology.load` does, and treat a marker as a save in flight. Don't suggest rereading until nothing changed: a writer that stops between two renames, or one older than the marker, leaves a mix that two rereads can both accept.
 
 The lock from #142 stays: it stops two commands overwriting each other, which no layout changes. A merge that deletes a node on one branch and adds an edge to it on another still produces a dangling edge, which `struct-well-formed` already reports.
